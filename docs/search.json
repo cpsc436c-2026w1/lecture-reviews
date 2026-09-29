@@ -1,0 +1,72 @@
+[
+  {
+    "objectID": "w2-l6.html",
+    "href": "w2-l6.html",
+    "title": "L6 review: how Spark runs a query, and why it might be slow",
+    "section": "",
+    "text": "Each part repeats the quizzes from the slides, with what the slide showed before each quiz."
+  },
+  {
+    "objectID": "w2-l6.html#part-how-spark-runs-our-query",
+    "href": "w2-l6.html#part-how-spark-runs-our-query",
+    "title": "L6 review: how Spark runs a query, and why it might be slow",
+    "section": "How Spark runs our query",
+    "text": "How Spark runs our query\n\nWhich steps can a task do on its own partition?\n\n---\nshuffle_answers: true\n---\n\n## For each step of the query, can a task do it on its own partition?\nAnswers can repeat.\n\n\n- read the files: `spark.read.parquet` / `FROM` :: own partition\n    &gt; Each task reads its own input partition.\n- keep only the trips for June 2012: `filter` / `WHERE` :: own partition\n    &gt; Row by row: a task keeps or drops each of its rows.\n- drop the columns no longer needed (Spark adds this step itself) :: own partition\n    &gt; Row by row again.\n- count and average per payment type: `groupBy().agg()` / `GROUP BY` :: needs other partitions\n    &gt; A task can total its own rows per payment type, but each payment type's rows sit in every partition, so the totals must be brought together.\n- return the answer: `collect()` :: the driver gathers the result\n    &gt; The final rows go to the driver, your program."
+  },
+  {
+    "objectID": "w2-l6.html#part-from-code-to-a-physical-plan",
+    "href": "w2-l6.html#part-from-code-to-a-physical-plan",
+    "title": "L6 review: how Spark runs a query, and why it might be slow",
+    "section": "From code to a physical plan",
+    "text": "From code to a physical plan\n\nSelf-check: what does an Exchange do?\n\n---\nshuffle_answers: true\n---\n\n## What moves over the network in an `Exchange` (shuffle)?\n\n- [ ] The input files, read again from S3\n    &gt; The files were read once, in stage 1. The next stage reads what stage 1 wrote.\n- [x] Rows written for a task on another node\n    &gt; A stage-1 task's rows for a stage-2 task on another node go over the network; rows for a task on the same node are read from that node's own disk.\n- [ ] Every row of the table, always\n    &gt; Only what the stage before produced: after partial totals, a few rows per key.\n\n## Between the two stages, where do the rows wait?\n\n- [x] On the writing node's disk\n    &gt; Each stage-1 task writes its rows to its node's disk, grouped by the stage-2 partition each row goes to.\n- [ ] In S3, next to the input\n    &gt; S3 holds this query's input files; `collect()` returns the result to the driver. Rows between stages stay on the nodes.\n- [ ] In the driver's memory\n    &gt; The driver only tracks where the rows are; the rows stay on the nodes.\n\n## What decides which stage-2 task gets a row?\n\n- [x] The row's key (payment type)\n    &gt; All rows with the same payment type go to the same task: `hashpartitioning(payment_type, …)`, a hash of the key picks the partition.\n- [ ] The node that wrote the row\n    &gt; A row can go to a task on any node.\n- [ ] The order in which rows were read\n    &gt; Rows with the same key must meet in one task, whatever order they were read in."
+  },
+  {
+    "objectID": "w2-l6.html#part-running-the-plan-stages-tasks-and-waves",
+    "href": "w2-l6.html#part-running-the-plan-stages-tasks-and-waves",
+    "title": "L6 review: how Spark runs a query, and why it might be slow",
+    "section": "Running the plan: stages, tasks and waves",
+    "text": "Running the plan: stages, tasks and waves\n\nWhich stage explains the wait?\nRides and average total per payment type, June 2012, over 36 monthly files, on 2 core nodes. The parts of the run, in order:\n\n\n\n\n\n\n\n\nPart of the run\nWhat happened\nTime\n\n\n\n\nStage 1, scan: read, keep the June 2012 trips, partial totals\n52 tasks, 36 of them read rows; a typical task took 1.65 s (9 in 10 took under 1.75 s)\n8.58 s\n\n\nExchange: partial rows to stage 2\n5 rows, 367 B, written by 1 task; stage 2 waited 0 ms to fetch them (9 in 10 runs: under 1 ms)\nnone of its own: writing is in stage 1, fetching in stage 2\n\n\nStage 2, group totals\n1 task\n0.011 s\n\n\nWhole query\n\n8.90 s\n\n\n\nEach time is the median over 50 runs of the query (5 runs on each of 10 clusters).\n\n---\nshuffle_answers: true\n---\n\n## The run waited mainly for:\n\n- [x] stage 1: scan\n    &gt; 8.58 s of the 8.90 s query, against 0.011 s for stage 2. The field that shows it is the stage time.\n- [ ] stage 2: group totals\n    &gt; It ran one task for 0.011 s.\n- [ ] `Exchange`\n    &gt; 5 rows, 367 bytes, went into it, and stage 2 waited 0 ms for them. Reading 520 million rows is the cost, not moving them.\n\n\n\nCan we speed up Stage 1 with more cores?\nIt depends on how many tasks are lined up, and how many can run at once.\n\nTasks come from partitions. Spark cut the 36 files into 52 input partitions, one task each. 36 tasks read rows (about 1.65 s each); the other 16 find nothing and finish in milliseconds.\nCores set how many run at once. Each executor runs one task per core, a slot: 2 executors × 4 cores = 8 tasks at a time. The rest wait in line.\nWave: tasks that run at the same time, one per slot. (term comes from Hadoop). Note that the Spark UI does not name it, but its event timeline shows each wave as a column of task bars.\n\n\n---\nshuffle_answers: true\n---\n\n## One task per slot at a time: what sets how long the stage takes?\n&gt; Hint: a task cannot be split between cores.\n\n- [ ] Total work split evenly over 8 cores\n    &gt; That would need tasks to be split. A task runs whole on one core.\n- [x] The number of waves of tasks\n    &gt; 36 tasks fill 4 waves of 8 and a fifth wave of 4, while the other 4 cores wait: the last wave is only partly full.\n- [ ] The slowest single task\n    &gt; That matters when one task is much slower than the rest. Here they take about the same time."
+  },
+  {
+    "objectID": "w2-l6.html#part-what-can-make-queries-slow",
+    "href": "w2-l6.html#part-what-can-make-queries-slow",
+    "title": "L6 review: how Spark runs a query, and why it might be slow",
+    "section": "What can make queries slow",
+    "text": "What can make queries slow\n\nRows or totals into the Exchange?\n\n---\nshuffle_answers: true\n---\n\n## Sort each step: what goes into an `Exchange` (shuffle)?\nTrips not bucketed; both large tables over 10 MB. Answers can repeat.\n\n\n- count and average per payment type: `groupBy().agg()` :: totals\n    &gt; Each task sends one partial total per payment type it saw.\n- each trip gets its payment type's average next to it: a window query :: every row\n    &gt; The average goes onto every trip of that payment type, so all the trip rows go into the `Exchange`.\n- join two large tables, both over 10 MB :: every row\n    &gt; Neither side is small enough to copy, so both sides send their rows, by the join key.\n- join the trips to the 265-row zone table: `F.broadcast(zones)` :: no `Exchange`\n    &gt; The small table is copied to every executor; each task matches its own trips.\n- keep only the trips for May 2012 and calculate two new columns :: no `Exchange`\n    &gt; A narrow step: each task does it on its own partition."
+  },
+  {
+    "objectID": "w2-l6.html#part-checks-for-a-slow-stage",
+    "href": "w2-l6.html#part-checks-for-a-slow-stage",
+    "title": "L6 review: how Spark runs a query, and why it might be slow",
+    "section": "Checks for a slow stage",
+    "text": "Checks for a slow stage\n\nDiagnostics questions\n\n---\nshuffle_answers: true\n---\n\n## After an `Exchange` (shuffle), a stage has 8 tasks. The median task takes 0.25 s; the longest takes 6.8 s and processes 7.8 million rows. No other task processes more than 90,000 rows. Which diagnosis fits best?\n\n- [x] One key holds most of the rows\n    &gt; All rows of a key go to one task, so that task gets 7.8 million rows and runs far longer: a hot key. A salt splits it (Problem 2).\n- [ ] The input file has one row group\n    &gt; Row groups shape the scan stage; this stage comes after the `Exchange`, where rows are routed by key.\n- [ ] The slots wait for data from S3\n    &gt; Waiting for S3 would slow every task alike; it would not give one task 80 times the rows of any other.\n\n## Eight tasks of about the same size show nonzero *Shuffle spill (disk)* and a high *GC time*. What happened?\n\n- [x] The rows outgrew task memory\n    &gt; Each task sorted what it held, wrote it to the node's disk and merged it back: a spill. More, smaller partitions after the `Exchange`, or more memory per task, may help.\n- [ ] A task failed and ran again\n    &gt; A failed task shows up as another attempt of that task, not as spill.\n- [ ] One key holds most of the rows\n    &gt; The tasks are about the same size, so no key stands out."
+  },
+  {
+    "objectID": "drafts/l6-new-items.html",
+    "href": "drafts/l6-new-items.html",
+    "title": "L6: three proposed quiz items (for review)",
+    "section": "",
+    "text": "Proposed by the second-model review; options reworded to the same length and shape so the longest one no longer gives the answer away. Report back by number: keep, change (how), or drop."
+  },
+  {
+    "objectID": "drafts/l6-new-items.html#one-long-task",
+    "href": "drafts/l6-new-items.html#one-long-task",
+    "title": "L6: three proposed quiz items (for review)",
+    "section": "1. One long task",
+    "text": "1. One long task\nGoes on its own slide right after “Checks for a slow stage”.\n\n---\nshuffle_answers: true\n---\n\n## After an `Exchange` (shuffle), a stage has 8 tasks. The median task takes 0.25 s; the longest takes 6.8 s and processes 7.8 million rows. No other task processes more than 90,000 rows. Which diagnosis fits best?\n\n- [x] One key holds most of the rows\n    &gt; All rows of a key go to one task, so that task gets 7.8 million rows and runs far longer: a hot key. A salt splits it (Problem 2).\n- [ ] The input file has one row group\n    &gt; Row groups shape the scan stage; this stage comes after the `Exchange`, where rows are routed by key.\n- [ ] The slots wait for data from S3\n    &gt; Waiting for S3 would slow every task alike; it would not give one task 80 times the rows of any other."
+  },
+  {
+    "objectID": "drafts/l6-new-items.html#eight-similar-tasks",
+    "href": "drafts/l6-new-items.html#eight-similar-tasks",
+    "title": "L6: three proposed quiz items (for review)",
+    "section": "2. Eight similar tasks",
+    "text": "2. Eight similar tasks\nGoes on its own slide after item 1.\n\n---\nshuffle_answers: true\n---\n\n## Eight tasks of about the same size show nonzero *Shuffle spill (disk)* and a high *GC time*. What happened?\n\n- [x] The rows outgrew task memory\n    &gt; Each task sorted what it held, wrote it to the node's disk and merged it back: a spill. More, smaller partitions after the `Exchange`, or more memory per task, may help.\n- [ ] A task failed and ran again\n    &gt; A failed task shows up as another attempt of that task, not as spill.\n- [ ] One key holds most of the rows\n    &gt; The tasks are about the same size, so no key stands out."
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Lecture reviews",
+    "section": "",
+    "text": "Each page follows one lecture part by part, with the quizzes from the slides. The 📝 on a quiz slide links to the same quiz here.\n\nL6: how Spark runs a query, and why it might be slow"
+  }
+]

@@ -1,0 +1,17 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "CPSC 436C lecture reviews"
+  page-navigation: false
+  navbar:
+    left:
+      - href: index.qmd
+        text: Lectures
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-location: left

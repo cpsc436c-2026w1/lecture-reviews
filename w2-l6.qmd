@@ -1,0 +1,183 @@
+---
+title: "L6 review: how Spark runs a query, and why it might be slow"
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-title: "Parts"
+filters:
+  - quizdown
+---
+
+Each part repeats the quizzes from the slides, with what the slide showed before each quiz.
+
+## How Spark runs our query {#part-how-spark-runs-our-query}
+
+### Which steps can a task do on its own partition? {#q-which-steps-can-a-task-do-on-its-own-partition}
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## For each step of the query, can a task do it on its own partition?
+Answers can repeat.
+
+
+- read the files: `spark.read.parquet` / `FROM` :: own partition
+    > Each task reads its own input partition.
+- keep only the trips for June 2012: `filter` / `WHERE` :: own partition
+    > Row by row: a task keeps or drops each of its rows.
+- drop the columns no longer needed (Spark adds this step itself) :: own partition
+    > Row by row again.
+- count and average per payment type: `groupBy().agg()` / `GROUP BY` :: needs other partitions
+    > A task can total its own rows per payment type, but each payment type's rows sit in every partition, so the totals must be brought together.
+- return the answer: `collect()` :: the driver gathers the result
+    > The final rows go to the driver, your program.
+```
+
+## From code to a physical plan {#part-from-code-to-a-physical-plan}
+
+### Self-check: what does an `Exchange` do? {#q-self-check-what-does-an-exchange-do}
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## What moves over the network in an `Exchange` (shuffle)?
+
+- [ ] The input files, read again from S3
+    > The files were read once, in stage 1. The next stage reads what stage 1 wrote.
+- [x] Rows written for a task on another node
+    > A stage-1 task's rows for a stage-2 task on another node go over the network; rows for a task on the same node are read from that node's own disk.
+- [ ] Every row of the table, always
+    > Only what the stage before produced: after partial totals, a few rows per key.
+
+## Between the two stages, where do the rows wait?
+
+- [x] On the writing node's disk
+    > Each stage-1 task writes its rows to its node's disk, grouped by the stage-2 partition each row goes to.
+- [ ] In S3, next to the input
+    > S3 holds this query's input files; `collect()` returns the result to the driver. Rows between stages stay on the nodes.
+- [ ] In the driver's memory
+    > The driver only tracks where the rows are; the rows stay on the nodes.
+
+## What decides which stage-2 task gets a row?
+
+- [x] The row's key (payment type)
+    > All rows with the same payment type go to the same task: `hashpartitioning(payment_type, …)`, a hash of the key picks the partition.
+- [ ] The node that wrote the row
+    > A row can go to a task on any node.
+- [ ] The order in which rows were read
+    > Rows with the same key must meet in one task, whatever order they were read in.
+```
+
+## Running the plan: stages, tasks and waves {#part-running-the-plan-stages-tasks-and-waves}
+
+### Which stage explains the wait? {#q-which-stage-explains-the-wait}
+
+Rides and average total per payment type, June 2012, over 36 monthly files, on 2 core nodes. The parts of the run, in order:
+
+| Part of the run | What happened | Time |
+|---|---|---|
+| **Stage 1, scan**: read, keep the June 2012 trips, partial totals | 52 tasks, 36 of them read rows; a typical task took 1.65 s (9 in 10 took under 1.75 s) | **8.58 s** |
+| **`Exchange`**: partial rows to stage 2 | 5 rows, 367 B, written by 1 task; stage 2 waited 0 ms to fetch them (9 in 10 runs: under 1 ms) | none of its own: writing is in stage 1, fetching in stage 2 |
+| **Stage 2, group totals** | 1 task | 0.011 s |
+| **Whole query** | | 8.90 s |
+
+: {tbl-colwidths="[28,50,22]"}
+
+Each time is the median over 50 runs of the query (5 runs on each of 10 clusters).
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## The run waited mainly for:
+
+- [x] stage 1: scan
+    > 8.58 s of the 8.90 s query, against 0.011 s for stage 2. The field that shows it is the stage time.
+- [ ] stage 2: group totals
+    > It ran one task for 0.011 s.
+- [ ] `Exchange`
+    > 5 rows, 367 bytes, went into it, and stage 2 waited 0 ms for them. Reading 520 million rows is the cost, not moving them.
+```
+
+### Can we speed up Stage 1 with more cores? {#q-can-we-speed-up-stage-1-with-more-cores}
+
+It depends on how many tasks are lined up, and how many can run at once.
+
+- **Tasks come from partitions.** Spark cut the 36 files into 52 input partitions, one task each. 36 tasks read rows (about 1.65 s each); the other 16 find nothing and finish in milliseconds.
+- **Cores set how many run at once.** Each executor runs one task per core, a *slot*: 2 executors × 4 cores = 8 tasks at a time. The rest wait in line.
+- **Wave**: tasks that run at the same time, one per slot. (term comes from Hadoop). Note that the Spark UI does not name it, but its event timeline shows each wave as a column of task bars.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## One task per slot at a time: what sets how long the stage takes?
+> Hint: a task cannot be split between cores.
+
+- [ ] Total work split evenly over 8 cores
+    > That would need tasks to be split. A task runs whole on one core.
+- [x] The number of waves of tasks
+    > 36 tasks fill 4 waves of 8 and a fifth wave of 4, while the other 4 cores wait: the last wave is only partly full.
+- [ ] The slowest single task
+    > That matters when one task is much slower than the rest. Here they take about the same time.
+```
+
+## What can make queries slow {#part-what-can-make-queries-slow}
+
+### Rows or totals into the `Exchange`? {#q-rows-or-totals-into-the-exchange}
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## Sort each step: what goes into an `Exchange` (shuffle)?
+Trips not bucketed; both large tables over 10 MB. Answers can repeat.
+
+
+- count and average per payment type: `groupBy().agg()` :: totals
+    > Each task sends one partial total per payment type it saw.
+- each trip gets its payment type's average next to it: a window query :: every row
+    > The average goes onto every trip of that payment type, so all the trip rows go into the `Exchange`.
+- join two large tables, both over 10 MB :: every row
+    > Neither side is small enough to copy, so both sides send their rows, by the join key.
+- join the trips to the 265-row zone table: `F.broadcast(zones)` :: no `Exchange`
+    > The small table is copied to every executor; each task matches its own trips.
+- keep only the trips for May 2012 and calculate two new columns :: no `Exchange`
+    > A narrow step: each task does it on its own partition.
+```
+
+## Checks for a slow stage {#part-checks-for-a-slow-stage}
+
+### Diagnostics questions {#q-diagnostics-questions}
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## After an `Exchange` (shuffle), a stage has 8 tasks. The median task takes 0.25 s; the longest takes 6.8 s and processes 7.8 million rows. No other task processes more than 90,000 rows. Which diagnosis fits best?
+
+- [x] One key holds most of the rows
+    > All rows of a key go to one task, so that task gets 7.8 million rows and runs far longer: a hot key. A salt splits it (Problem 2).
+- [ ] The input file has one row group
+    > Row groups shape the scan stage; this stage comes after the `Exchange`, where rows are routed by key.
+- [ ] The slots wait for data from S3
+    > Waiting for S3 would slow every task alike; it would not give one task 80 times the rows of any other.
+
+## Eight tasks of about the same size show nonzero *Shuffle spill (disk)* and a high *GC time*. What happened?
+
+- [x] The rows outgrew task memory
+    > Each task sorted what it held, wrote it to the node's disk and merged it back: a spill. More, smaller partitions after the `Exchange`, or more memory per task, may help.
+- [ ] A task failed and ran again
+    > A failed task shows up as another attempt of that task, not as spill.
+- [ ] One key holds most of the rows
+    > The tasks are about the same size, so no key stands out.
+```
