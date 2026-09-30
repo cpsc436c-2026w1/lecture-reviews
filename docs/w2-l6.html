@@ -184,8 +184,8 @@ Answers can repeat.
     &gt; Row by row: a task keeps or drops each of its rows.
 - drop the columns no longer needed (Spark adds this step itself) :: own partition
     &gt; Row by row again.
-- count and average per payment type: `groupBy().agg()` / `GROUP BY` :: needs other partitions
-    &gt; A task can total its own rows per payment type, but each payment type's rows sit in every partition, so the totals must be brought together.
+- finish the count and average per payment type: `groupBy().agg()` / `GROUP BY` :: needs other partitions
+    &gt; A task can total its own rows per payment type, but a payment type's rows can sit in any partition, so the partial totals must be brought together by key.
 - return the answer: `collect()` :: the driver gathers the result
     &gt; The final rows go to the driver, your program.
 </div>
@@ -203,7 +203,7 @@ shuffle_answers: true
 ## What moves over the network in an `Exchange` (shuffle)?
 
 - [ ] The input files, read again from S3
-    &gt; The files were read once, in stage 1. The next stage reads what stage 1 wrote.
+    &gt; The `Exchange` does not read the input files again: the next stage reads what stage 1 wrote.
 - [x] Rows written for a task on another node
     &gt; A stage-1 task's rows for a stage-2 task on another node go over the network; rows for a task on the same node are read from that node's own disk.
 - [ ] Every row of the table, always
@@ -279,7 +279,7 @@ shuffle_answers: true
 ## The run waited mainly for:
 
 - [x] stage 1: scan
-    &gt; 8.58 s of the 8.90 s query, against 0.011 s for stage 2. The field that shows it is the stage time.
+    &gt; 8.58 s of the 8.90 s query, against 0.011 s for stage 2. The field that shows it is the stage's *Duration*.
 - [ ] stage 2: group totals
     &gt; It ran one task for 0.011 s.
 - [ ] `Exchange`
@@ -299,13 +299,13 @@ shuffle_answers: true
 shuffle_answers: true
 ---
 
-## One task per slot at a time: what sets how long the stage takes?
+## One task per slot at a time: what sets how long this stage takes?
 &gt; Hint: a task cannot be split between cores.
 
 - [ ] Total work split evenly over 8 cores
     &gt; That would need tasks to be split. A task runs whole on one core.
 - [x] The number of waves of tasks
-    &gt; 36 tasks fill 4 waves of 8 and a fifth wave of 4, while the other 4 cores wait: the last wave is only partly full.
+    &gt; The 36 tasks that read rows fill 4 waves of 8 and a fifth wave of 4, while the other 4 cores wait: the last wave is only partly full. The 16 empty tasks add only milliseconds.
 - [ ] The slowest single task
     &gt; That matters when one task is much slower than the rest. Here they take about the same time.
 </div>
@@ -330,9 +330,9 @@ Trips not bucketed; both large tables over 10 MB. Answers can repeat.
     &gt; The average goes onto every trip of that payment type, so all the trip rows go into the `Exchange`.
 - join two large tables, both over 10 MB :: every row
     &gt; Neither side is small enough to copy, so both sides send their rows, by the join key.
-- join the trips to the 265-row zone table: `F.broadcast(zones)` :: no `Exchange`
-    &gt; The small table is copied to every executor; each task matches its own trips.
-- keep only the trips for May 2012 and calculate two new columns :: no `Exchange`
+- join the trips to the 265-row zone table: `F.broadcast(zones)` :: no shuffle `Exchange`
+    &gt; No shuffle `Exchange`: the plan shows a `BroadcastExchange`, which copies the 265-row table to every executor. The trips stay where they are, and each task matches its own.
+- keep only the trips for May 2012 and calculate two new columns from values in each row :: no shuffle `Exchange`
     &gt; A narrow step: each task does it on its own partition.
 </div>
 </section>
@@ -349,13 +349,13 @@ shuffle_answers: true
 ## After an `Exchange` (shuffle), a stage has 8 tasks. The median task takes 0.25 s; the longest takes 6.8 s and processes 7.8 million rows. No other task processes more than 90,000 rows. Which diagnosis fits best?
 
 - [x] One key holds most of the rows
-    &gt; All rows of a key go to one task, so that task gets 7.8 million rows and runs far longer: a hot key. A salt splits it (Problem 2).
+    &gt; All rows of a key go to one task, so that task gets 7.8 million rows and runs far longer: a hot key (or a few keys that land in the same task). For an aggregation or a join, a salted rewrite can split it (Problem 2).
 - [ ] The input file has one row group
     &gt; Row groups shape the scan stage; this stage comes after the `Exchange`, where rows are routed by key.
 - [ ] The slots wait for data from S3
-    &gt; Waiting for S3 would slow every task alike; it would not give one task 80 times the rows of any other.
+    &gt; Waiting for S3 would not explain why one task after the `Exchange` has over 80 times the rows of any other.
 
-## Eight tasks of about the same size show nonzero *Shuffle spill (disk)* and a high *GC time*. What happened?
+## Eight tasks of about the same size show nonzero *Spill (disk)* and a high *GC time*. What happened?
 
 - [x] The rows outgrew task memory
     &gt; Each task sorted what it held, wrote it to the node's disk and merged it back: a spill. More, smaller partitions after the `Exchange`, or more memory per task, may help.
