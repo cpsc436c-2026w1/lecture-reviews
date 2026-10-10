@@ -128,13 +128,13 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#part-storage-side" id="toc-part-storage-side" class="nav-link active" data-scroll-target="#part-storage-side">The storage side of scaling up</a>
   <ul class="collapse">
   <li><a href="#q-what-does-each-filter-condition-make-spark-read" id="toc-q-what-does-each-filter-condition-make-spark-read" class="nav-link" data-scroll-target="#q-what-does-each-filter-condition-make-spark-read">What does each filter condition make Spark read?</a></li>
-  <li><a href="#q-which-folder-key-best-supports-these-queries" id="toc-q-which-folder-key-best-supports-these-queries" class="nav-link" data-scroll-target="#q-which-folder-key-best-supports-these-queries">Which folder key best supports these queries?</a></li>
+  <li><a href="#q-which-folder-key-best-supports-these-queries" id="toc-q-which-folder-key-best-supports-these-queries" class="nav-link" data-scroll-target="#q-which-folder-key-best-supports-these-queries">Which folder key best supports the analysts’ one-day and one-month queries?</a></li>
   <li><a href="#q-which-changes-spread-the-scan-over-all-four-threads" id="toc-q-which-changes-spread-the-scan-over-all-four-threads" class="nav-link" data-scroll-target="#q-which-changes-spread-the-scan-over-all-four-threads">Which changes spread the scan over all four threads?</a></li>
   </ul></li>
   <li><a href="#part-scaling-out" id="toc-part-scaling-out" class="nav-link" data-scroll-target="#part-scaling-out">Scaling out: more nodes, and a network between them</a>
   <ul class="collapse">
   <li><a href="#q-which-first-change-cuts-the-daily-querys-time-most" id="toc-q-which-first-change-cuts-the-daily-querys-time-most" class="nav-link" data-scroll-target="#q-which-first-change-cuts-the-daily-querys-time-most">Which first change cuts the daily query’s time most?</a></li>
-  <li><a href="#q-which-node-type-should-they-add" id="toc-q-which-node-type-should-they-add" class="nav-link" data-scroll-target="#q-which-node-type-should-they-add">Which node type should they add?</a></li>
+  <li><a href="#q-which-node-type-should-they-add" id="toc-q-which-node-type-should-they-add" class="nav-link" data-scroll-target="#q-which-node-type-should-they-add">Which node type should the team add for this job?</a></li>
   <li><a href="#q-after-how-many-queries-has-the-rewrite-paid-back" id="toc-q-after-how-many-queries-has-the-rewrite-paid-back" class="nav-link" data-scroll-target="#q-after-how-many-queries-has-the-rewrite-paid-back">After how many queries has the rewrite paid back?</a></li>
   </ul></li>
   <li><a href="#part-the-case" id="toc-part-the-case" class="nav-link" data-scroll-target="#part-the-case">The case (A2): Best model search for the taxi data</a>
@@ -196,13 +196,13 @@ ul.task-list li input[type="checkbox"] {
 │   └── part-0.parquet
 └── month=2025-12/
     └── part-0.parquet</code></pre>
-<p>Each file, about 150 MB, holds only its month’s loans, in many row groups (the blocks of rows inside a Parquet file). Inside a file the rows are sorted by <code>branch_id</code>; the other columns (<code>loan_date</code>, a DATE column, <code>loan_days</code> and <code>patron_id</code>) are in no particular order. Spark on an EMR cluster runs queries that each have one filter condition.</p>
+<p>Each file holds only its month’s loans, in many row groups (the blocks of rows inside a Parquet file). Inside a file the rows are sorted by <code>branch_id</code>; the other columns, <code>loan_date</code> (a DATE), <code>loan_days</code> and <code>patron_id</code>, are in no particular order. Spark on an EMR cluster runs queries that each have one filter condition.</p>
 <div class="quizdown">
 ---
 shuffle_answers: true
 ---
 
-## For each condition, what does Spark open and read? Each option may be used once, more than once, or not at all.
+## For each filter condition on the loans folder, what does Spark open and read? Each option may be used once, more than once, or not at all.
 
 - `month = '2025-11'` :: 1 or 2 files opened, every row group read
     &gt; The condition names the folder key, so Spark keeps the November folder and rules out the other 3 by their names, without opening their files. Every row in the November file is a November loan, so every row matches and every row group is read.
@@ -222,22 +222,22 @@ shuffle_answers: true
 <p>Slide: 15, 20, 21, 23, 31</p>
 </section>
 <section id="q-which-folder-key-best-supports-these-queries" class="level3">
-<h3 class="anchored" data-anchor-id="q-which-folder-key-best-supports-these-queries">Which folder key best supports these queries?</h3>
-<p>A news site keeps its page views from January 2024 to December 2025 as one Parquet file in S3. There is no folder key yet:</p>
+<h3 class="anchored" data-anchor-id="q-which-folder-key-best-supports-these-queries">Which folder key best supports the analysts’ one-day and one-month queries?</h3>
+<p>A news site keeps its page views from January 2024 to December 2025 in S3 as one Parquet file, with no folder partitions:</p>
 <pre><code>s3://news-site/page-views/
 └── page-views.parquet    4 GB, rows sorted by view time, many row groups</code></pre>
-<p>The analysts’ common queries filter on the view time, one day or one month, and count views per article category; they will write every time filter to name the folder key you choose. The rewrite keeps the rows sorted by view time, with many row groups in each file. DuckDB recommends at least 100 MB per folder partition.</p>
+<p>The analysts query the file with DuckDB. Their common queries filter on the view time, one day or one month, and count views per article category. The team will rewrite the file into folder partitions on one key, and the analysts will write each time filter so that it also names that key. The rewrite keeps the rows sorted by view time, with many row groups in each file. DuckDB recommends at least 100 MB per folder partition.</p>
 <div class="quizdown">
 ---
 shuffle_answers: true
 ---
 
-## Which folder key best supports these queries?
+## Which folder key best supports the analysts' one-day and one-month queries?
 
 - [x] `month`: 24 folders of about 170 MB
     &gt; Each query names one month, so it opens one folder. Inside that folder, the footer's minimum and maximum view times let a daily query skip other days' row groups, and each folder partition is over 100 MB.
 - [ ] `day`: 731 folders of about 5.5 MB
-    &gt; The `day` key matches the daily filter, and day folders helped the lecture's one-day query on the June file, but each 5.5 MB folder partition here is below the 100 MB guidance. A monthly query opens about 30 small folder partitions, while sorting by view time already lets a daily query skip row groups within a monthly folder partition.
+    &gt; The `day` key matches the daily filter, and day folders helped the lecture's one-day query on the June file, but each 5.5 MB folder partition here is below the 100 MB guidance. A monthly query opens about 30 small folder partitions, one per day of the month, while sorting by view time already lets a daily query skip row groups within a monthly folder partition.
 - [ ] `category`: 12 folders of about 330 MB
     &gt; The queries group by category and filter on dates. Every query needs all 12 categories, so it opens all 12 folders and the key rules nothing out.
 </div>
@@ -278,7 +278,7 @@ shuffle_answers: true
 ├── part-0.csv
 │   …
 └── part-N.csv            450 GB in all, 25 columns, 2023 to 2025</code></pre>
-<p>A daily query counts late parcels per depot for one month and uses 3 of the columns. On one m6a.xlarge it takes 50 minutes, and for most of that time the instance’s network is at its limit reading from S3: the m6a.xlarge’s baseline is 1.56 Gbps, about 195 MB/s, so 450 GB alone takes about 38 minutes to arrive.</p>
+<p>A query that runs every day counts late parcels per depot for one month and reads 3 of the 25 columns. On one m6a.xlarge it takes 50 minutes, and for most of that time the instance’s network is at its limit reading from S3: the m6a.xlarge’s baseline is 1.56 Gbps, about 195 MB/s, so reading all 450 GB takes about 38 minutes.</p>
 <div class="quizdown">
 ---
 shuffle_answers: true
@@ -288,7 +288,7 @@ shuffle_answers: true
 
 - [x] Convert the CSV once to Parquet
     &gt; The query then fetches 3 of the 25 columns, compressed and stored as typed values, so most of the 450 GB never crosses the network. L1's taxi query went from 14 min to 5.5 s this way on one instance.
-- [ ] Run it on EMR with three core nodes
+- [ ] Run the query on EMR with three core nodes
     &gt; Three nodes bring about three times the network, so at best about a third of the time, and together they still read every byte of the CSV.
 - [ ] Split the CSV into many smaller files
     &gt; Smaller files cut the same 450 GB into more pieces, and every piece still crosses the same network.
@@ -296,14 +296,14 @@ shuffle_answers: true
 <p>Slide: 3, 24, 30</p>
 </section>
 <section id="q-which-node-type-should-they-add" class="level3">
-<h3 class="anchored" data-anchor-id="q-which-node-type-should-they-add">Which node type should they add?</h3>
-<p>An EMR cluster with one primary node and two core nodes runs a long Spark job that reads its input from S3 and writes its results back to S3. To finish sooner, the team wants to add nodes for this job and remove them afterwards without losing any data the cluster stores.</p>
+<h3 class="anchored" data-anchor-id="q-which-node-type-should-they-add">Which node type should the team add for this job?</h3>
+<p>An EMR cluster with one primary node and two core nodes runs a long Spark job that reads its input from S3 and writes its results back to S3. To make the job finish sooner, the team that runs it wants to add nodes for this job and remove them afterwards without losing any data the cluster stores.</p>
 <div class="quizdown">
 ---
 shuffle_answers: true
 ---
 
-## Which node type should they add?
+## Which node type should the team add for this job?
 
 - [x] Task nodes
     &gt; Task nodes do work and store none of the cluster's distributed data, so removing them later loses nothing; the input and the results stay in S3.
@@ -316,12 +316,12 @@ shuffle_answers: true
 </section>
 <section id="q-after-how-many-queries-has-the-rewrite-paid-back" class="level3">
 <h3 class="anchored" data-anchor-id="q-after-how-many-queries-has-the-rewrite-paid-back">After how many queries has the rewrite paid back?</h3>
-<p>The City of Vancouver publishes its 3-1-1 non-emergency service requests as open data. A team keeps five years of them as CSV in S3, and a weekly query reads them:</p>
+<p>The City of Vancouver publishes its 3-1-1 non-emergency service requests as open data. A team keeps five years of them in S3 as one CSV file per year, and a weekly query reads them all:</p>
 <pre><code>s3://van-311/requests/
 ├── 2021.csv
 │   …
-└── 2025.csv               five years of service requests</code></pre>
-<p>Rewriting them once as sorted, partitioned Parquet uses 1,200 CPU-seconds. The weekly query uses 50 CPU-seconds on the CSV and 10 CPU-seconds on the rewritten files.</p>
+└── 2025.csv</code></pre>
+<p>Rewriting the CSV files once as sorted Parquet in folder partitions uses 1,200 CPU-seconds. The weekly query uses 50 CPU-seconds on the CSV and 10 CPU-seconds on the rewritten files.</p>
 <div class="quizdown">
 ---
 shuffle_answers: true
@@ -330,11 +330,13 @@ shuffle_answers: true
 ## After how many weekly queries has the rewrite paid back its CPU-seconds?
 
 - [x] 30 queries
-    &gt; Each query saves 50 − 10 = 40 CPU-seconds, and 1,200 / 40 = 30: about seven months of weekly runs.
+    &gt; Each query saves 50 − 10 = 40 CPU-seconds, and 1,200 / 40 = 30 weekly runs.
 - [ ] 24 queries
     &gt; 1,200 / 50 divides by what the old query cost. The rewrite is paid back by what each query saves, 40 CPU-seconds.
 - [ ] 120 queries
     &gt; 1,200 / 10 divides by what the new query costs. The rewrite is paid back by what each query saves, 40 CPU-seconds.
+- [ ] 20 queries
+    &gt; 1,200 / (50 + 10) adds the two costs together. The rewrite is paid back by what each query saves, 50 − 10 = 40 CPU-seconds.
 </div>
 <p>Slide: 32</p>
 </section>
@@ -343,7 +345,7 @@ shuffle_answers: true
 <h2 class="anchored" data-anchor-id="part-the-case">The case (A2): Best model search for the taxi data</h2>
 <section id="q-scale-up-scale-out-or-neither" class="level3">
 <h3 class="anchored" data-anchor-id="q-scale-up-scale-out-or-neither">Scale up, scale out, or neither?</h3>
-<p>Each workload below runs today on one EC2 instance, an m6a.large (2 vCPU, 8 GB of RAM), unless the row says otherwise. The three moves from the lecture:</p>
+<p>Each workload below runs today on one EC2 instance, an m6a.large (2 vCPU, 8 GiB of RAM), unless the row says otherwise. The lecture named these moves for a workload on one instance:</p>
 <pre><code>scale up    replace the instance with a larger one (more vCPUs, RAM and network on one instance)
 scale out   run the work on a cluster of several nodes
 neither     keep the one instance as it is</code></pre>
@@ -354,17 +356,17 @@ shuffle_answers: true
 
 ## Which scaling move does each workload need? Each option may be used once, more than once, or not at all.
 
-- A team of 3 shares a Jupyter environment on the m6a.large and now needs 64 GB of RAM for a 24 GB dataset :: Scale up
+- A team of 3 shares a Jupyter environment on the m6a.large and now needs 64 GiB of RAM for a 24 GB dataset :: Scale up
     &gt; One larger EC2 instance gives the team the RAM, and the data fits on one instance.
 - Training 100 random forest models with different hyperparameters on a 6 GB dataset takes 12 hours on the largest instance you can get, and the results are needed in 3 hours :: Scale out
-    &gt; The models are independent, so they can run on several nodes at once. Because no larger instance is available, four equivalent nodes with ideal scaling reduce the 12-hour run to about 3 hours.
+    &gt; The models are independent, so they can run on several nodes at once. Because no larger instance is available, four equivalent nodes (12 hours / 3 hours) with ideal scaling reduce the 12-hour run to about 3 hours.
 - A dashboard queries a 500 MB SQLite database on the m6a.large :: Neither
     &gt; 500 MB fits in memory on a small instance, and nothing else in the task asks for more.
-- A weekly report on an m6a.xlarge (16 GB of RAM) reads 2 of 40 columns from a 7 GB Parquet file and finishes in 20 seconds :: Neither
+- A weekly report on an m6a.xlarge (16 GiB of RAM) reads 2 of 40 columns from a 7 GB Parquet file and finishes in 20 seconds :: Neither
     &gt; The reader fetches only the 2 columns it needs, and the report already finishes in seconds, so there is nothing for a larger instance or a cluster to fix.
 - Processing 2 PB of genomic sequencing data from 200 research institutions, which the m6a.large would read through one network link :: Scale out
     &gt; One instance reads all 2 PB through one network and works on it with one instance's vCPUs, and even the largest instance is a ceiling. A cluster reads and works on parts of the data on every node at once.
-- The m6a.large's 8 GB of RAM cannot hold a 15 GB Parquet file that a training step needs in memory all at once :: Scale up
+- The m6a.large's 8 GiB of RAM cannot hold a 15 GB Parquet file that a training step needs in memory all at once :: Scale up
     &gt; One larger instance holds the data in memory, and no cluster is needed. The file is compressed, so the loaded data takes more than 15 GB: pick an instance with well over 15 GB of RAM.
 - :: Larger EBS volume
     &gt; None of these workloads is short of disk space. A volume stores files; it adds no RAM, vCPUs or network.
