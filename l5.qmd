@@ -90,9 +90,9 @@ shuffle_answers: true
 
 ## For each line, what happens when its cell runs? Each option may be used once, more than once, or not at all.
 
-- `rides = spark.read.parquet("s3://…/bikeshare/rides/")` :: Spark records a step on the driver; no task runs yet
-    > Reading is a transformation. On the driver, Spark lists the files and reads their schema, then records the read as the first step of the plan; no ride rows are scanned until an action asks for a result.
-- `per_city.explain()` :: Spark records a step on the driver; no task runs yet
+- `rides = spark.read.parquet("s3://…/bikeshare/rides/")` :: Spark records a step on the driver; no rows are read yet
+    > Reading is a transformation. The driver lists the files and records the read as the first step of the plan; Spark learns the columns from one file's footer, a one-task job that reads no ride rows. The rows are scanned only when an action asks for them.
+- `per_city.explain()` :: Spark records a step on the driver; no rows are read yet
     > `.explain()` makes the driver print the plan it has recorded so far, without running it: no task, no rows.
 - `top = per_city.toPandas()` :: Spark sends tasks to the executors; they run now
     > `toPandas()` needs the rows of `per_city`, so the driver turns the plan into tasks and the executors read and count the rides.
