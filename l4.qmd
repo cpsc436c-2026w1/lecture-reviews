@@ -162,7 +162,7 @@ Slide: 29
 
 ### After how many queries has the rewrite paid back? {#q-after-how-many-queries-has-the-rewrite-paid-back}
 
-The City of Vancouver publishes its 3-1-1 non-emergency service requests as open data. A team keeps five years of them in S3 as one CSV file per year, and a weekly query reads them all:
+Vancouver publishes its Van311 non-emergency service requests as open data. A team keeps five years of them in S3 as one CSV file per year, and a weekly query reads them all:
 
     s3://van-311/requests/
     ├── 2021.csv
