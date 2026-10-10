@@ -11,7 +11,7 @@ filters:
 
 Numbers in the scenarios are made up for practice unless a price or an instance size is named. If you need to look up a term, the [relevant vocabulary is below](#part-terms).
 
-## The storage side of scaling up {#part-storage-side}
+## Storage side of scaling up {#part-storage-side}
 
 ### What does each filter condition make Spark read? {#q-what-does-each-filter-condition-make-spark-read}
 
@@ -154,7 +154,7 @@ shuffle_answers: true
     > Task nodes do work and store none of the cluster's distributed data, so removing them later loses nothing; the input and the results stay in S3.
 1. [ ] Core nodes
     > Core nodes also do work, but they store the cluster's distributed data on their disks, so removing one later takes its share of that data with it.
-1. [ ] A larger primary node
+1. [ ] Larger primary node
     > The primary node manages the cluster and coordinates its services. The job runs on the core and task nodes, so enlarging the primary does not add processing capacity to those nodes.
 ```
 
@@ -190,7 +190,7 @@ shuffle_answers: true
 
 Slide: 32
 
-## The case (A2): Best model search for the taxi data {#part-the-case}
+## Case (A2): Best model search for the taxi data {#part-the-case}
 
 ### Scale up, scale out, or neither? {#q-scale-up-scale-out-or-neither}
 
@@ -236,11 +236,11 @@ shuffle_answers: true
 
 ## A university's course-registration site gets almost no traffic for weeks. When registration opens at 8:00 one morning, about 20,000 students load its pages within ten minutes, and the traffic is back to almost nothing by noon. Which time shape of demand is this?
 
-1. [x] A burst
+1. [x] Burst
     > Nothing for weeks, then nearly all the load within minutes: what must be bought is capacity for those ten minutes.
-1. [ ] A daily rhythm
+1. [ ] Daily rhythm
     > A daily rhythm repeats every day, busy at midday and near zero overnight. This peak comes on one morning, with weeks of near silence around it.
-1. [ ] A scheduled job
+1. [ ] Scheduled job
     > A clock sets when the students arrive, but the load is thousands of separate requests from people. A scheduled job is one run started by a clock, with nothing between runs.
 ```
 

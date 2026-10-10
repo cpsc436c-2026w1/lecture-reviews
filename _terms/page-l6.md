@@ -1,3 +1,17 @@
+### Spark: shuffles and slow stages
+
+**Narrow transformation.** A step each task does on its own partition, so no rows move between partitions: `filter`, `select`, `withColumn`.
+
+**Wide transformation.** A step that needs rows from other partitions, such as `groupBy`, `orderBy`, a window or most joins. Spark adds a shuffle before it.
+
+**Shuffle (Exchange).** Moving rows between partitions for the next stage: each task writes its rows to its node's disk, and the next stage's tasks read them, often from other nodes.
+
+**Window query.** A step that computes a value over a group of rows and puts it on each row, such as each trip's payment-type average next to the trip. Every row goes into an `Exchange`.
+
+**Hot key.** One join, window or sort value with far more rows than the others. All its rows go to one task, which runs long after the rest of its stage; more nodes do not help.
+
+**Spill.** Writing to the node's disk when the rows a task sorts, groups or shuffles do not fit in its share of executor memory. The result is correct but slower.
+
 ### Spark: how a job runs
 
 **Driver.** The program that coordinates a Spark application: it runs your code, builds the query plan and sends tasks to the executors.
@@ -18,20 +32,6 @@
 
 **Action.** On a Spark DataFrame, a call such as `df.count()`, `df.collect()` or `df.write.parquet()` that makes Spark run the plan built so far. Unlike pandas, where each step runs as soon as you call it.
 
-### Spark: shuffles and slow stages
-
-**Narrow transformation.** A step each task does on its own partition, so no rows move between partitions: `filter`, `select`, `withColumn`.
-
-**Wide transformation.** A step that needs rows from other partitions, such as `groupBy`, `orderBy`, a window or most joins. Spark adds a shuffle before it.
-
-**Shuffle (Exchange).** Moving rows between partitions for the next stage: each task writes its rows to its node's disk, and the next stage's tasks read them, often from other nodes.
-
-**Window query.** A step that computes a value over a group of rows and puts it on each row, such as each trip's payment-type average next to the trip. Every row goes into an `Exchange`.
-
-**Hot key.** One join, window or sort value with far more rows than the others. All its rows go to one task, which runs long after the rest of its stage; more nodes do not help.
-
-**Spill.** Writing to the node's disk when the rows a task sorts, groups or shuffles do not fit in its share of executor memory. The result is correct but slower.
-
 ### EMR cluster
 
 **Amazon EMR.** AWS's managed service that launches a cluster of EC2 instances with Spark installed. You pay for the nodes from launch until you terminate the cluster.
@@ -42,12 +42,12 @@
 
 **Task node.** An optional EMR instance that runs executors and stores no HDFS data, so it can be removed or bought as spot capacity without losing data.
 
-**HDFS.** A file system that splits files into blocks across a cluster's core nodes' disks. Its data is lost when the cluster terminates, so our inputs and outputs stay on S3.
-
 ### Also used on this page
 
 **Parquet.** A columnar file format. Rows are grouped into blocks that each store every column separately, and metadata at the end of the file says where each part is.
 
-**Instance type.** The size you pick when you launch an EC2 server: how many vCPUs and how much memory it has, how fast its network is, and whether it has its own local disk.
+**Row group.** A horizontal block inside one Parquet file, holding one column chunk per column. Its size is set when the file is written, and a file can hold one or many.
 
-**S3.** AWS's object store. You reach each object over the network by its name inside a bucket, and the data stays with no server running.
+**Folder partition.** A dataset layout with one named location per value of a column, such as `day=2012-06-14/` (on S3, a prefix). A filter on that column skips the other locations without opening them.
+
+**Instance type.** The size you pick when you launch an EC2 server: how many vCPUs and how much memory it has, how fast its network is, and whether it has its own local disk.

@@ -146,7 +146,7 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#spark-how-a-job-runs" id="toc-spark-how-a-job-runs" class="nav-link" data-scroll-target="#spark-how-a-job-runs">Spark: how a job runs</a></li>
   <li><a href="#spark-shuffles-and-slow-stages" id="toc-spark-shuffles-and-slow-stages" class="nav-link" data-scroll-target="#spark-shuffles-and-slow-stages">Spark: shuffles and slow stages</a></li>
-  <li><a href="#the-emr-cluster" id="toc-the-emr-cluster" class="nav-link" data-scroll-target="#the-emr-cluster">The EMR cluster</a></li>
+  <li><a href="#emr-cluster" id="toc-emr-cluster" class="nav-link" data-scroll-target="#emr-cluster">EMR cluster</a></li>
   <li><a href="#also-used-on-this-page" id="toc-also-used-on-this-page" class="nav-link" data-scroll-target="#also-used-on-this-page">Also used on this page</a></li>
   </ul></li>
   </ul>
@@ -420,8 +420,8 @@ shuffle_answers: true
 <p><strong>Hot key.</strong> One join, window or sort value with far more rows than the others. All its rows go to one task, which runs long after the rest of its stage; more nodes do not help.</p>
 <p><strong>Spill.</strong> Writing to the node’s disk when the rows a task sorts, groups or shuffles do not fit in its share of executor memory. The result is correct but slower.</p>
 </section>
-<section id="the-emr-cluster" class="level3">
-<h3 class="anchored" data-anchor-id="the-emr-cluster">The EMR cluster</h3>
+<section id="emr-cluster" class="level3">
+<h3 class="anchored" data-anchor-id="emr-cluster">EMR cluster</h3>
 <p><strong>Amazon EMR.</strong> AWS’s managed service that launches a cluster of EC2 instances with Spark installed. You pay for the nodes from launch until you terminate the cluster.</p>
 <p><strong>Primary node.</strong> The one EMR instance that runs the cluster manager and the HDFS name service. It runs no executors.</p>
 <p><strong>Core node.</strong> An EMR instance that runs executors and stores HDFS data. A role an instance plays in the cluster, not a Spark slot.</p>

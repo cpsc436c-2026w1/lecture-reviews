@@ -127,7 +127,7 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#part-how-spark-runs-our-query" id="toc-part-how-spark-runs-our-query" class="nav-link active" data-scroll-target="#part-how-spark-runs-our-query">How Spark runs our query</a>
   <ul class="collapse">
-  <li><a href="#q-which-steps-can-a-task-do-on-its-own-partition" id="toc-q-which-steps-can-a-task-do-on-its-own-partition" class="nav-link" data-scroll-target="#q-which-steps-can-a-task-do-on-its-own-partition">Which steps can a task do on its own partition?</a></li>
+  <li><a href="#q-which-steps-can-a-task-do-on-its-own-partition" id="toc-q-which-steps-can-a-task-do-on-its-own-partition" class="nav-link" data-scroll-target="#q-which-steps-can-a-task-do-on-its-own-partition">Where does each step of the query run?</a></li>
   </ul></li>
   <li><a href="#part-from-code-to-a-physical-plan" id="toc-part-from-code-to-a-physical-plan" class="nav-link" data-scroll-target="#part-from-code-to-a-physical-plan">From code to a physical plan</a>
   <ul class="collapse">
@@ -135,8 +135,8 @@ ul.task-list li input[type="checkbox"] {
   </ul></li>
   <li><a href="#part-running-the-plan-stages-tasks-and-waves" id="toc-part-running-the-plan-stages-tasks-and-waves" class="nav-link" data-scroll-target="#part-running-the-plan-stages-tasks-and-waves">Running the plan: stages, tasks and waves</a>
   <ul class="collapse">
-  <li><a href="#q-which-stage-explains-the-wait" id="toc-q-which-stage-explains-the-wait" class="nav-link" data-scroll-target="#q-which-stage-explains-the-wait">Which stage explains the wait?</a></li>
-  <li><a href="#q-can-we-speed-up-stage-1-with-more-cores" id="toc-q-can-we-speed-up-stage-1-with-more-cores" class="nav-link" data-scroll-target="#q-can-we-speed-up-stage-1-with-more-cores">Can we speed up Stage 1 with more cores?</a></li>
+  <li><a href="#q-which-stage-explains-the-wait" id="toc-q-which-stage-explains-the-wait" class="nav-link" data-scroll-target="#q-which-stage-explains-the-wait">Which part of the run explains the wait?</a></li>
+  <li><a href="#q-can-we-speed-up-stage-1-with-more-cores" id="toc-q-can-we-speed-up-stage-1-with-more-cores" class="nav-link" data-scroll-target="#q-can-we-speed-up-stage-1-with-more-cores">What sets the time of stage 1?</a></li>
   </ul></li>
   <li><a href="#part-what-can-make-queries-slow" id="toc-part-what-can-make-queries-slow" class="nav-link" data-scroll-target="#part-what-can-make-queries-slow">What can make queries slow</a>
   <ul class="collapse">
@@ -144,7 +144,14 @@ ul.task-list li input[type="checkbox"] {
   </ul></li>
   <li><a href="#part-checks-for-a-slow-stage" id="toc-part-checks-for-a-slow-stage" class="nav-link" data-scroll-target="#part-checks-for-a-slow-stage">Checks for a slow stage</a>
   <ul class="collapse">
-  <li><a href="#q-diagnostics-questions" id="toc-q-diagnostics-questions" class="nav-link" data-scroll-target="#q-diagnostics-questions">Diagnostics questions</a></li>
+  <li><a href="#q-diagnostics-questions" id="toc-q-diagnostics-questions" class="nav-link" data-scroll-target="#q-diagnostics-questions">Which change fixes a hot key, and which a spill?</a></li>
+  </ul></li>
+  <li><a href="#part-terms" id="toc-part-terms" class="nav-link" data-scroll-target="#part-terms">Terms used on this page</a>
+  <ul class="collapse">
+  <li><a href="#spark-shuffles-and-slow-stages" id="toc-spark-shuffles-and-slow-stages" class="nav-link" data-scroll-target="#spark-shuffles-and-slow-stages">Spark: shuffles and slow stages</a></li>
+  <li><a href="#spark-how-a-job-runs" id="toc-spark-how-a-job-runs" class="nav-link" data-scroll-target="#spark-how-a-job-runs">Spark: how a job runs</a></li>
+  <li><a href="#emr-cluster" id="toc-emr-cluster" class="nav-link" data-scroll-target="#emr-cluster">EMR cluster</a></li>
+  <li><a href="#also-used-on-this-page" id="toc-also-used-on-this-page" class="nav-link" data-scroll-target="#also-used-on-this-page">Also used on this page</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -175,76 +182,92 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Each part repeats the quizzes from the slides, with what the slide showed before each quiz.</p>
+<p>The scenarios follow the lecture’s worked example and its measured runs; the numbers in the last part are made up for practice. If you need to look up a term, the <a href="#part-terms">relevant vocabulary is below</a>.</p>
 <section id="part-how-spark-runs-our-query" class="level2">
 <h2 class="anchored" data-anchor-id="part-how-spark-runs-our-query">How Spark runs our query</h2>
 <section id="q-which-steps-can-a-task-do-on-its-own-partition" class="level3">
-<h3 class="anchored" data-anchor-id="q-which-steps-can-a-task-do-on-its-own-partition">Which steps can a task do on its own partition?</h3>
+<h3 class="anchored" data-anchor-id="q-which-steps-can-a-task-do-on-its-own-partition">Where does each step of the query run?</h3>
+<p>The lecture’s example data are the New York City yellow taxi trips from 2011 to 2013, about 520 million trips in 36 monthly Parquet files on S3. An EMR cluster of 1 primary and 2 core nodes, all m7g.xlarge, runs the query from L5: the rides and the average total per payment type for June 2012. Each core node runs one executor with 4 cores, so the cluster has 8 slots.</p>
+<pre><code>by_pay = (spark.read.parquet("s3://…/taxi/parquet/")
+  .filter((F.col("tpep_pickup_datetime") &gt;= "2012-06-01")
+        &amp; (F.col("tpep_pickup_datetime") &lt;  "2012-07-01"))
+  .groupBy("payment_type")
+  .agg(F.count("*").alias("rides"),
+       F.avg("total_amount").alias("avg_total")))
+by_pay.collect()</code></pre>
 <div class="quizdown">
 ---
 shuffle_answers: true
 ---
 
-## For each step of the query, can a task do it on its own partition?
-Answers can repeat.
+## For each step of the June 2012 query, where does it run? Each option may be used once, more than once, or not at all.
 
-
-- read the files: `spark.read.parquet` / `FROM` :: own partition
-    &gt; Each task reads its own input partition.
-- keep only the trips for June 2012: `filter` / `WHERE` :: own partition
-    &gt; Row by row: a task keeps or drops each of its rows.
-- drop the columns no longer needed (Spark adds this step itself) :: own partition
-    &gt; Row by row again.
-- finish the count and average per payment type: `groupBy().agg()` / `GROUP BY` :: needs other partitions
-    &gt; A task can total its own rows per payment type, but a payment type's rows can sit in any partition, so the partial totals must be brought together by key.
-- return the answer: `collect()` :: the driver gathers the result
-    &gt; The final rows go to the driver, your program.
+- read the trip rows from the files: `spark.read.parquet` / `FROM` :: a task, on its own partition
+    &gt; Each task fetches the byte ranges of its own Spark partition.
+- keep only the trips for June 2012: `filter` / `WHERE` :: a task, on its own partition
+    &gt; The filter keeps or drops each row without looking at any other partition.
+- drop the columns no longer needed (Spark adds this step itself) :: a task, on its own partition
+    &gt; The driver adds this step to the plan; each task does it, reading only the columns needed.
+- finish the count and average per payment type: `groupBy().agg()` / `GROUP BY` :: a task, after the Exchange
+    &gt; A task can total its own rows, but a payment type's rows sit in several partitions, so the partial totals cross an Exchange first. "The driver" is wrong here: it never adds up trip rows.
+- return the answer to your program: `collect()` :: the driver
+    &gt; `collect()` hands the 5 final rows to the driver, the process that runs your program.
+- :: YARN, on the primary node
+    &gt; This reads the cluster manager as doing the work. YARN only hands each executor its memory and cores on a core node; the query's steps run in those executors, and the driver plans them.
 </div>
+<p>Slide: 10 (also 7, 9, 11)</p>
 </section>
 </section>
 <section id="part-from-code-to-a-physical-plan" class="level2">
 <h2 class="anchored" data-anchor-id="part-from-code-to-a-physical-plan">From code to a physical plan</h2>
 <section id="q-self-check-what-does-an-exchange-do" class="level3">
 <h3 class="anchored" data-anchor-id="q-self-check-what-does-an-exchange-do">Self-check: what does an <code>Exchange</code> do?</h3>
+<p>In the measured run of the June 2012 query on the 2 core nodes, stage 1 reads the 36 monthly files and computes partial totals, and stage 2 finishes the count and average per payment type. Between them is an <code>Exchange</code> (shuffle). This is what happened around it:</p>
+<pre><code>stage 1, scan       52 tasks on core nodes 1 and 2; 1 task, on node 1, had June 2012 trips
+partial rows        5 from that task, one per payment type, 367 B in all
+stage 2, planned    1000 shuffle partitions (EMR's default)
+stage 2, ran        1 task, on core node 2: adaptive execution merged the 1000 into 1
+result              5 rows, to the driver</code></pre>
 <div class="quizdown">
 ---
 shuffle_answers: true
 ---
 
-## What moves over the network in an `Exchange` (shuffle)?
+## In the June 2012 run, what moves over the network in the `Exchange` (shuffle)?
 
-- [ ] The input files, read again from S3
-    &gt; The `Exchange` does not read the input files again: the next stage reads what stage 1 wrote.
-- [x] Rows written for a task on another node
-    &gt; A stage-1 task's rows for a stage-2 task on another node go over the network; rows for a task on the same node are read from that node's own disk.
-- [ ] Every row of the table, always
-    &gt; Only what the stage before produced: after partial totals, a few rows per key.
+1. [ ] Input files, read again from S3
+    &gt; This treats the `Exchange` as a second scan. Stage 2 reads what stage 1 wrote, here 5 partial rows; the input files are read once, by stage 1.
+1. [ ] Every June 2012 trip the scan kept
+    &gt; This skips the partial totals. Stage 1 already added up its June 2012 trips into one row per payment type, so only those 5 rows go into the `Exchange`.
+1. [x] Rows for a task on another node
+    &gt; The task on node 1 wrote 5 rows for the stage-2 task on node 2, so those 367 B went over the network. Had the stage-2 task run on node 1, those rows would not have crossed the network.
 
-## Between the two stages, where do the rows wait?
+## In the June 2012 run, when could the stage-2 task start?
 
-- [x] On the writing node's disk
-    &gt; Each stage-1 task writes its rows to its node's disk, grouped by the stage-2 partition each row goes to.
-- [ ] In S3, next to the input
-    &gt; S3 holds this query's input files; `collect()` returns the result to the driver. Rows between stages stay on the nodes.
-- [ ] In the driver's memory
-    &gt; The driver only tracks where the rows are; the rows stay on the nodes.
+1. [ ] As soon as the task with the June 2012 trips had written its 5 rows
+    &gt; This starts stage 2 on the only rows that exist. Spark cannot know that the other 51 tasks will add nothing until they finish, so every task of stage 1 must end first.
+1. [x] Once the last of the 52 stage-1 tasks had finished
+    &gt; Stage 2 needs the partial rows from all of stage 1, which is what makes the `Exchange` a stage boundary: the one stage-2 task started once the last scan task had finished, although only one of the 52 had rows for it.
+1. [ ] As soon as the driver had built the plan
+    &gt; This option confuses building the plan with producing data. The driver builds the plan before tasks run, but stage 2 must wait until the stage-1 tasks produce their rows.
 
-## What decides which stage-2 task gets a row?
+## Spark planned 1000 shuffle partitions for stage 2 of the June 2012 query. What decides which of them gets a row?
 
-- [x] The row's key (payment type)
-    &gt; All rows with the same payment type go to the same task: `hashpartitioning(payment_type, …)`, a hash of the key picks the partition.
-- [ ] The node that wrote the row
-    &gt; A row can go to a task on any node.
-- [ ] The order in which rows were read
-    &gt; Rows with the same key must meet in one task, whatever order they were read in.
+1. [ ] Node that wrote the row
+    &gt; This expects rows to stay where they were written. A row can go to a task on any node; here the rows from node 1 went to a task on node 2.
+1. [x] Row's key, its payment type
+    &gt; All rows with the same payment type go to the same shuffle partition. The plan's `hashpartitioning(payment_type, …)` hashes the key to choose that partition, so one task can finish the payment type's totals.
+1. [ ] Order in which rows were read
+    &gt; This option assigns rows by read order, which would split one payment type across several tasks. Rows with the same key must go to the same shuffle partition regardless of read order.
 </div>
+<p>Slide: 17 (also 16, 18)</p>
 </section>
 </section>
 <section id="part-running-the-plan-stages-tasks-and-waves" class="level2">
 <h2 class="anchored" data-anchor-id="part-running-the-plan-stages-tasks-and-waves">Running the plan: stages, tasks and waves</h2>
 <section id="q-which-stage-explains-the-wait" class="level3">
-<h3 class="anchored" data-anchor-id="q-which-stage-explains-the-wait">Which stage explains the wait?</h3>
-<p>Rides and average total per payment type, June 2012, over 36 monthly files, on 2 core nodes. The parts of the run, in order:</p>
+<h3 class="anchored" data-anchor-id="q-which-stage-explains-the-wait">Which part of the run explains the wait?</h3>
+<p>The rides and average total per payment type for June 2012 ran over the 36 monthly files of taxi trips, about 520 million trips, on an EMR cluster with 2 core nodes (8 slots). The parts of the run, in order:</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 28%">
@@ -261,12 +284,12 @@ shuffle_answers: true
 <tbody>
 <tr class="odd">
 <td><strong>Stage 1, scan</strong>: read, keep the June 2012 trips, partial totals</td>
-<td>52 tasks, 36 of them read rows; a typical task took 1.65 s (9 in 10 took under 1.75 s)</td>
-<td><strong>8.58 s</strong></td>
+<td>52 tasks, 36 of them read rows; a typical task took 1.65 s (9 in 10 took 1.75 s or less)</td>
+<td>8.58 s</td>
 </tr>
 <tr class="even">
 <td><strong><code>Exchange</code></strong>: partial rows to stage 2</td>
-<td>5 rows, 367 B, written by 1 task; stage 2 waited 0 ms to fetch them (9 in 10 runs: under 1 ms)</td>
+<td>5 rows, 367 B, written by 1 task; stage 2 waited 0 ms to fetch them (9 in 10 runs: 1 ms or less)</td>
 <td>none of its own: writing is in stage 1, fetching in stage 2</td>
 </tr>
 <tr class="odd">
@@ -287,94 +310,160 @@ shuffle_answers: true
 shuffle_answers: true
 ---
 
-## The run waited mainly for:
+## A teammate wants to shorten the June 2012 query and starts with the group-by, because it is the one step that needs rows from other nodes. Which part of the run should a change target first?
 
-- [x] stage 1: scan
-    &gt; 8.58 s of the 8.90 s query, against 0.011 s for stage 2. The field that shows it is the stage's *Duration*.
-- [ ] stage 2: group totals
-    &gt; It ran one task for 0.011 s.
-- [ ] `Exchange`
-    &gt; 5 rows, 367 bytes, went into it, and stage 2 waited 0 ms for them. Reading 520 million rows is the cost, not moving them.
+1. [ ] Stage 2: group totals
+    &gt; This expects the group-by to be the heavy step. Stage 2 ran one task for 0.011 s, because it added up only 5 partial rows.
+1. [ ] `Exchange` between the stages
+    &gt; This expects moving data between nodes to cost most. 5 rows, 367 B, went into it, and stage 2 waited 0 ms to fetch them.
+1. [x] Stage 1: scan
+    &gt; 8.58 s of the 8.90 s query, against 0.011 s for stage 2: reading the 36 files is the cost. The field that shows it is the stage's *Duration*.
 </div>
+<p>Slide: 22 (also 19)</p>
 </section>
 <section id="q-can-we-speed-up-stage-1-with-more-cores" class="level3">
-<h3 class="anchored" data-anchor-id="q-can-we-speed-up-stage-1-with-more-cores">Can we speed up Stage 1 with more cores?</h3>
-<p>It depends on how many tasks are lined up, and how many can run at once.</p>
-<ul>
-<li><strong>Tasks come from partitions.</strong> Spark cut the 36 files into 52 input partitions, one task each. 36 tasks read rows (about 1.65 s each); the other 16 find nothing and finish in milliseconds.</li>
-<li><strong>Cores set how many run at once.</strong> Each executor runs one task per core, a <em>slot</em>: 2 executors × 4 cores = 8 tasks at a time. The rest wait in line.</li>
-<li><strong>Wave</strong>: tasks that run at the same time, one per slot. (term comes from Hadoop). Note that the Spark UI does not name it, but its event timeline shows each wave as a column of task bars.</li>
-</ul>
+<h3 class="anchored" data-anchor-id="q-can-we-speed-up-stage-1-with-more-cores">What sets the time of stage 1?</h3>
+<p>Stage 1 of the June 2012 query reads the 36 monthly files of taxi trips, keeps the June 2012 trips and computes partial totals. It runs on 2 core nodes, each with one executor of 4 cores; one executor core, a slot, runs one task at a time. Spark cut the files into 52 input partitions, one task each:</p>
+<pre><code>tasks that read rows     36, about 1.65 s each (9 in 10 at 1.75 s or less)
+tasks that read nothing  16, a few milliseconds each
+slots                    2 executors × 4 cores = 8
+stage time               8.58 s</code></pre>
+<p>The tasks that run at the same time, one per slot, form a <em>wave</em> (a term from Hadoop). The Spark UI does not name it, but its event timeline shows each wave as a column of task bars.</p>
 <div class="quizdown">
 ---
 shuffle_answers: true
 ---
 
-## One task per slot at a time: what sets how long this stage takes?
-&gt; Hint: a task cannot be split between cores.
+## Each slot runs one task at a time. What sets how long stage 1 takes on the 8 slots?
 
-- [ ] Total work split evenly over 8 cores
-    &gt; That would need tasks to be split. A task runs whole on one core.
-- [x] The number of waves of tasks
-    &gt; The 36 tasks that read rows fill 4 waves of 8 and a fifth wave of 4, while the other 4 cores wait: the last wave is only partly full. The 16 empty tasks add only milliseconds.
-- [ ] The slowest single task
-    &gt; That matters when one task is much slower than the rest. Here they take about the same time.
+1. [ ] Total work split evenly over 8 slots
+    &gt; This calculation assumes the work can be divided evenly: 36 × 1.65 s ÷ 8 is about 7.4 s. Each task runs as a whole in one slot, so the 36 tasks cannot be spread evenly over 8 slots.
+1. [ ] Slowest single task
+    &gt; This applies when one task is much slower than the rest. Here the reading tasks take about the same time, 1.65 s, and the stage takes 8.58 s, about five of them back to back.
+1. [x] Number of waves of tasks
+    &gt; The 36 tasks that read rows fill 4 waves of 8 and a fifth wave of 4, while the other 4 slots run the 16 empty tasks and then wait: 5 waves of about 1.65 s is about 8.25 s, close to the 8.58 s measured. The 16 tasks that read nothing add only milliseconds.
 </div>
+<p>Slide: 23 (also 24)</p>
 </section>
 </section>
 <section id="part-what-can-make-queries-slow" class="level2">
 <h2 class="anchored" data-anchor-id="part-what-can-make-queries-slow">What can make queries slow</h2>
 <section id="q-rows-or-totals-into-the-exchange" class="level3">
 <h3 class="anchored" data-anchor-id="q-rows-or-totals-into-the-exchange">Rows or totals into the <code>Exchange</code>?</h3>
+<p>From here on the lecture uses only the June 2012 trips, 15,096,468 of them (15.1 M), and steps run on 2 core nodes (8 slots):</p>
+<pre><code>trips       the June 2012 trips: 1 Parquet file, 8 row groups, read by 8 tasks; not bucketed
+zones       the 265-row taxi zone table, a CSV file
+broadcast   Spark automatically copies a table to every executor when it estimates
+            the table at 10 MiB or less</code></pre>
 <div class="quizdown">
 ---
 shuffle_answers: true
 ---
 
-## Sort each step: what goes into an `Exchange` (shuffle)?
-Trips not bucketed; both large tables over 10 MB. Answers can repeat.
+## For each step on the June 2012 trips, what goes into an `Exchange` (shuffle)? Each option may be used once, more than once, or not at all.
 
-
-- count and average per payment type: `groupBy().agg()` :: totals
-    &gt; Each task sends one partial total per payment type it saw.
+- count and average per payment type: `groupBy().agg()` :: partial totals
+    &gt; Each of the 8 reading tasks sends one row containing a count and a sum for each payment type it saw. That produces 40 rows for the 15.1 M trips.
+- number of trips per pickup day: `groupBy().count()` :: partial totals
+    &gt; A count is a sum of ones: each task counts its own rows per day and sends one count per day it saw. The final stage adds those counts, so only a few rows per task cross the `Exchange`.
 - each trip gets its payment type's average next to it: a window query :: every row
-    &gt; The average goes onto every trip of that payment type, so all the trip rows go into the `Exchange`.
-- join two large tables, both over 10 MB :: every row
-    &gt; Neither side is small enough to copy, so both sides send their rows, by the join key.
+    &gt; The average goes onto every trip of that payment type, so no task can add its rows up first: all 15,096,468 trips, 86.5 MB, went into the `Exchange`.
+- join the trips to another large table, over 10 MiB :: every row
+    &gt; Neither table is small enough for Spark to copy, so both tables send their rows into an `Exchange` by the join key. The trips joined to the zone table with broadcast turned off sent all 15.1 M trips, 88 MB.
 - join the trips to the 265-row zone table: `F.broadcast(zones)` :: no shuffle `Exchange`
-    &gt; No shuffle `Exchange`: the plan shows a `BroadcastExchange`, which copies the 265-row table to every executor. The trips stay where they are, and each task matches its own.
-- keep only the trips for May 2012 and calculate two new columns from values in each row :: no shuffle `Exchange`
-    &gt; A narrow step: each task does it on its own partition.
+    &gt; The plan uses a `BroadcastExchange` to copy the 265-row table to every executor, while the shuffle `Exchange` named in the answer would repartition the trips by key. The trips remain in their Spark partitions, where each task matches its rows against the copied table.
+- keep only the trips for the first week of June 2012 and calculate two new columns from values in each row :: no shuffle `Exchange`
+    &gt; This is a narrow step because each task keeps its rows and computes the columns within its own Spark partition, without moving data between Spark partitions.
+- :: one average per task
+    &gt; With one average per payment type from each task, the final stage could only average the averages, which is wrong when the tasks hold different numbers of trips (L5). A task sends a count and a sum instead, which the final stage adds up and divides.
 </div>
+<p>Slide: 45 (also 38, 39, 42, 43)</p>
 </section>
 </section>
 <section id="part-checks-for-a-slow-stage" class="level2">
 <h2 class="anchored" data-anchor-id="part-checks-for-a-slow-stage">Checks for a slow stage</h2>
 <section id="q-diagnostics-questions" class="level3">
-<h3 class="anchored" data-anchor-id="q-diagnostics-questions">Diagnostics questions</h3>
+<h3 class="anchored" data-anchor-id="q-diagnostics-questions">Which change fixes a hot key, and which a spill?</h3>
+<p>A later query joins the June 2012 trips to the 5-row payment-type names table, a CSV file, with Spark’s automatic broadcast turned off. It runs on 2 core nodes (8 slots) and takes 1.65 s. The Spark UI’s stage page shows this for the stage after the <code>Exchange</code> (shuffle):</p>
+<pre><code>tasks             3; adaptive execution merged payment types 4 and 5 into the other two
+records           7.8 million in one task, the trips paid by cash; 7.2 million in one, paid by card;
+                  about 36,000 in the third, payment type 3
+other slots       idle while the two large tasks run</code></pre>
 <div class="quizdown">
 ---
 shuffle_answers: true
 ---
 
-## After an `Exchange` (shuffle), a stage has 8 tasks. The median task takes 0.25 s; the longest takes 6.8 s and processes 7.8 million rows. No other task processes more than 90,000 rows. Which diagnosis fits best?
+## Cash and card are hot keys because each key sends millions of rows to one task. Which change shortens this stage the most?
 
-- [x] One key holds most of the rows
-    &gt; All rows of a key go to one task, so that task gets 7.8 million rows and runs far longer: a hot key (or a few keys that land in the same task). For an aggregation or a join, a salted rewrite can split it (Problem 2).
-- [ ] The input file has one row group
-    &gt; Row groups shape the scan stage; this stage comes after the `Exchange`, where rows are routed by key.
-- [ ] The slots wait for data from S3
-    &gt; Waiting for S3 would not explain why one task after the `Exchange` has over 80 times the rows of any other.
-
-## Eight tasks of about the same size show nonzero *Spill (disk)* and a high *GC time*. What happened?
-
-- [x] The rows outgrew task memory
-    &gt; Each task sorted what it held, wrote it to the node's disk and merged it back: a spill. More, smaller partitions after the `Exchange`, or more memory per task, may help.
-- [ ] A task failed and ran again
-    &gt; A failed task shows up as another attempt of that task, not as spill.
-- [ ] One key holds most of the rows
-    &gt; The tasks are about the same size, so no key stands out.
+1. [x] Broadcast the names table
+    &gt; Copying the names table to every executor keeps the trips out of the `Exchange` and in their Spark partitions, so each task joins its own rows. On the same cluster, this reduced the measured time from 1.65 s to 0.71 s; case P2.2 recommends broadcast before adaptive execution and reserves salting for last.
+1. [ ] Give each task more memory
+    &gt; This treats the long tasks as spills. More memory moves no rows: the cash trips still land in one task, and that task still processes all 7.8 million of them.
+1. [ ] Run the join on the salted copy of the trips (a copy with an extra value that splits each payment type among several files in its folder partition)
+    &gt; This layout lets more tasks share the scan, while the join still routes every cash row to one task by payment type. The salt can split the join only when both sides include it in the join key (case P2.2).
 </div>
+<p>Another query sorts the June 2012 trips by pickup time, on the same cluster but with each executor given 1 GiB of memory. A spill occurs when a task runs short of memory and writes intermediate data to disk. The stage after the <code>Exchange</code> shows this:</p>
+<pre><code>shuffle partitions  8, set with spark.sql.shuffle.partitions
+tasks             8
+task duration     median 2.4 s, longest 2.6 s
+records           about 1.9 million in every task
+Spill (disk)      about 150 MB in every task
+GC time           about 0.8 s in every task</code></pre>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## Every task spilled, and the tasks are of even size, so the cause is memory per task. Which change helps?
+
+1. [ ] Fewer shuffle partitions, so fewer tasks compete for memory
+    &gt; Fewer shuffle partitions put more rows in each task, which increases the memory needed by each task.
+1. [ ] Write the input with more row groups
+    &gt; This applies the scan fix to the wrong stage. Row groups divide the reading tasks; the rows per task after the `Exchange` are set by the number of shuffle partitions.
+1. [x] More shuffle partitions, so each task holds fewer rows
+    &gt; More shuffle partitions reduce the rows per task after the `Exchange`. With 16 shuffle partitions, the stage runs 16 tasks of about 0.95 million rows, each needing half as much memory; giving each task more memory also works (Problem 4).
+</div>
+<p>Slide: 49 (also 36, 46, 48, 50)</p>
+</section>
+</section>
+<section id="part-terms" class="level2">
+<h2 class="anchored" data-anchor-id="part-terms">Terms used on this page</h2>
+<p>From the <a href="https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/quiz">course flashcards</a>, grouped by topic. Practise them in <a href="https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/quiz">quiz mode</a>, or try the <a href="https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/match">match game</a>.</p>
+<section id="spark-shuffles-and-slow-stages" class="level3">
+<h3 class="anchored" data-anchor-id="spark-shuffles-and-slow-stages">Spark: shuffles and slow stages</h3>
+<p><strong>Narrow transformation.</strong> A step each task does on its own partition, so no rows move between partitions: <code>filter</code>, <code>select</code>, <code>withColumn</code>.</p>
+<p><strong>Wide transformation.</strong> A step that needs rows from other partitions, such as <code>groupBy</code>, <code>orderBy</code>, a window or most joins. Spark adds a shuffle before it.</p>
+<p><strong>Shuffle (Exchange).</strong> Moving rows between partitions for the next stage: each task writes its rows to its node’s disk, and the next stage’s tasks read them, often from other nodes.</p>
+<p><strong>Window query.</strong> A step that computes a value over a group of rows and puts it on each row, such as each trip’s payment-type average next to the trip. Every row goes into an <code>Exchange</code>.</p>
+<p><strong>Hot key.</strong> One join, window or sort value with far more rows than the others. All its rows go to one task, which runs long after the rest of its stage; more nodes do not help.</p>
+<p><strong>Spill.</strong> Writing to the node’s disk when the rows a task sorts, groups or shuffles do not fit in its share of executor memory. The result is correct but slower.</p>
+</section>
+<section id="spark-how-a-job-runs" class="level3">
+<h3 class="anchored" data-anchor-id="spark-how-a-job-runs">Spark: how a job runs</h3>
+<p><strong>Driver.</strong> The program that coordinates a Spark application: it runs your code, builds the query plan and sends tasks to the executors.</p>
+<p><strong>Executor.</strong> A Spark program running on an EMR core or task node. It runs tasks and keeps their data in its memory or on the node’s disk.</p>
+<p><strong>Partition.</strong> A chunk of rows that one task processes as one unit. When reading files it holds one or more splits, each a byte range of one file, planned from the file sizes and the number of slots.</p>
+<p><strong>Task.</strong> One stage’s work on one chunk of rows, run in one slot: by default, one executor core.</p>
+<p><strong>Slot.</strong> One executor core, as room to run one task on one Spark partition at a time. An executor with 4 cores runs 4 tasks at once; our EMR nodes have one per vCPU.</p>
+<p><strong>Stage.</strong> A set of tasks Spark can run before rows have to move between partitions. Every task in it runs the same steps on a different partition.</p>
+<p><strong>Wave.</strong> The set of a stage’s tasks that run at the same time, one per slot. 36 reading tasks on 8 slots need 5 of them.</p>
+<p><strong>Transformation.</strong> A step such as <code>filter</code> or <code>groupBy(...).count()</code> that is only recorded in the plan. No task runs until an action asks for a result.</p>
+<p><strong>Action.</strong> On a Spark DataFrame, a call such as <code>df.count()</code>, <code>df.collect()</code> or <code>df.write.parquet()</code> that makes Spark run the plan built so far. Unlike pandas, where each step runs as soon as you call it.</p>
+</section>
+<section id="emr-cluster" class="level3">
+<h3 class="anchored" data-anchor-id="emr-cluster">EMR cluster</h3>
+<p><strong>Amazon EMR.</strong> AWS’s managed service that launches a cluster of EC2 instances with Spark installed. You pay for the nodes from launch until you terminate the cluster.</p>
+<p><strong>Primary node.</strong> The one EMR instance that runs the cluster manager and the HDFS name service. It runs no executors.</p>
+<p><strong>Core node.</strong> An EMR instance that runs executors and stores HDFS data. A role an instance plays in the cluster, not a Spark slot.</p>
+<p><strong>Task node.</strong> An optional EMR instance that runs executors and stores no HDFS data, so it can be removed or bought as spot capacity without losing data.</p>
+</section>
+<section id="also-used-on-this-page" class="level3">
+<h3 class="anchored" data-anchor-id="also-used-on-this-page">Also used on this page</h3>
+<p><strong>Parquet.</strong> A columnar file format. Rows are grouped into blocks that each store every column separately, and metadata at the end of the file says where each part is.</p>
+<p><strong>Row group.</strong> A horizontal block inside one Parquet file, holding one column chunk per column. Its size is set when the file is written, and a file can hold one or many.</p>
+<p><strong>Folder partition.</strong> A dataset layout with one named location per value of a column, such as <code>day=2012-06-14/</code> (on S3, a prefix). A filter on that column skips the other locations without opening them.</p>
+<p><strong>Instance type.</strong> The size you pick when you launch an EC2 server: how many vCPUs and how much memory it has, how fast its network is, and whether it has its own local disk.</p>
 
 
 </section>

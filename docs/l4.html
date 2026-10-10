@@ -125,7 +125,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Parts</h2>
    
   <ul>
-  <li><a href="#part-storage-side" id="toc-part-storage-side" class="nav-link active" data-scroll-target="#part-storage-side">The storage side of scaling up</a>
+  <li><a href="#part-storage-side" id="toc-part-storage-side" class="nav-link active" data-scroll-target="#part-storage-side">Storage side of scaling up</a>
   <ul class="collapse">
   <li><a href="#q-what-does-each-filter-condition-make-spark-read" id="toc-q-what-does-each-filter-condition-make-spark-read" class="nav-link" data-scroll-target="#q-what-does-each-filter-condition-make-spark-read">What does each filter condition make Spark read?</a></li>
   <li><a href="#q-which-folder-key-best-supports-these-queries" id="toc-q-which-folder-key-best-supports-these-queries" class="nav-link" data-scroll-target="#q-which-folder-key-best-supports-these-queries">Which folder key best supports the analysts’ one-day and one-month queries?</a></li>
@@ -137,7 +137,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#q-which-node-type-should-they-add" id="toc-q-which-node-type-should-they-add" class="nav-link" data-scroll-target="#q-which-node-type-should-they-add">Which node type should the team add for this job?</a></li>
   <li><a href="#q-after-how-many-queries-has-the-rewrite-paid-back" id="toc-q-after-how-many-queries-has-the-rewrite-paid-back" class="nav-link" data-scroll-target="#q-after-how-many-queries-has-the-rewrite-paid-back">After how many queries has the rewrite paid back?</a></li>
   </ul></li>
-  <li><a href="#part-the-case" id="toc-part-the-case" class="nav-link" data-scroll-target="#part-the-case">The case (A2): Best model search for the taxi data</a>
+  <li><a href="#part-the-case" id="toc-part-the-case" class="nav-link" data-scroll-target="#part-the-case">Case (A2): Best model search for the taxi data</a>
   <ul class="collapse">
   <li><a href="#q-scale-up-scale-out-or-neither" id="toc-q-scale-up-scale-out-or-neither" class="nav-link" data-scroll-target="#q-scale-up-scale-out-or-neither">Scale up, scale out, or neither?</a></li>
   </ul></li>
@@ -183,7 +183,7 @@ ul.task-list li input[type="checkbox"] {
 
 <p>Numbers in the scenarios are made up for practice unless a price or an instance size is named. If you need to look up a term, the <a href="#part-terms">relevant vocabulary is below</a>.</p>
 <section id="part-storage-side" class="level2">
-<h2 class="anchored" data-anchor-id="part-storage-side">The storage side of scaling up</h2>
+<h2 class="anchored" data-anchor-id="part-storage-side">Storage side of scaling up</h2>
 <section id="q-what-does-each-filter-condition-make-spark-read" class="level3">
 <h3 class="anchored" data-anchor-id="q-what-does-each-filter-condition-make-spark-read">What does each filter condition make Spark read?</h3>
 <p>A city library keeps its loan records for September to December 2025 in S3 as Parquet, one folder partition per month of <code>loan_date</code>:</p>
@@ -309,7 +309,7 @@ shuffle_answers: true
     &gt; Task nodes do work and store none of the cluster's distributed data, so removing them later loses nothing; the input and the results stay in S3.
 1. [ ] Core nodes
     &gt; Core nodes also do work, but they store the cluster's distributed data on their disks, so removing one later takes its share of that data with it.
-1. [ ] A larger primary node
+1. [ ] Larger primary node
     &gt; The primary node manages the cluster and coordinates its services. The job runs on the core and task nodes, so enlarging the primary does not add processing capacity to those nodes.
 </div>
 <p>Slide: 29</p>
@@ -342,7 +342,7 @@ shuffle_answers: true
 </section>
 </section>
 <section id="part-the-case" class="level2">
-<h2 class="anchored" data-anchor-id="part-the-case">The case (A2): Best model search for the taxi data</h2>
+<h2 class="anchored" data-anchor-id="part-the-case">Case (A2): Best model search for the taxi data</h2>
 <section id="q-scale-up-scale-out-or-neither" class="level3">
 <h3 class="anchored" data-anchor-id="q-scale-up-scale-out-or-neither">Scale up, scale out, or neither?</h3>
 <p>Each workload below runs today on one EC2 instance, an m6a.large (2 vCPU, 8 GiB of RAM), unless the row says otherwise. The lecture named these moves for a workload on one instance:</p>
@@ -385,11 +385,11 @@ shuffle_answers: true
 
 ## A university's course-registration site gets almost no traffic for weeks. When registration opens at 8:00 one morning, about 20,000 students load its pages within ten minutes, and the traffic is back to almost nothing by noon. Which time shape of demand is this?
 
-1. [x] A burst
+1. [x] Burst
     &gt; Nothing for weeks, then nearly all the load within minutes: what must be bought is capacity for those ten minutes.
-1. [ ] A daily rhythm
+1. [ ] Daily rhythm
     &gt; A daily rhythm repeats every day, busy at midday and near zero overnight. This peak comes on one morning, with weeks of near silence around it.
-1. [ ] A scheduled job
+1. [ ] Scheduled job
     &gt; A clock sets when the students arrive, but the load is thousands of separate requests from people. A scheduled job is one run started by a clock, with nothing between runs.
 </div>
 <p>Slide: L2 23, L3 38–39</p>
