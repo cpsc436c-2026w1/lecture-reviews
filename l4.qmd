@@ -9,7 +9,7 @@ filters:
   - quizdown
 ---
 
-Practice questions for lecture 4, part by part, with feedback on every option. The slide numbers refer to the lecture PDF on Canvas. Numbers in the scenarios are made up for practice unless a price or an instance size is named.
+Numbers in the scenarios are made up for practice unless a price or an instance size is named. If you need to look up a term, the [relevant vocabulary is below](#part-terms).
 
 ## The storage side of scaling up {#part-storage-side}
 
