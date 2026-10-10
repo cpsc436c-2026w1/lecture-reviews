@@ -234,11 +234,11 @@ shuffle_answers: true
 
 ## Which folder key best supports the analysts' one-day and one-month queries?
 
-- [x] `month`: 24 folders of about 170 MB
+1. [x] `month`: 24 folders of about 170 MB
     &gt; Each query names one month, so it opens one folder. Inside that folder, the footer's minimum and maximum view times let a daily query skip other days' row groups, and each folder partition is over 100 MB.
-- [ ] `day`: 731 folders of about 5.5 MB
+1. [ ] `day`: 731 folders of about 5.5 MB
     &gt; The `day` key matches the daily filter, and day folders helped the lecture's one-day query on the June file, but each 5.5 MB folder partition here is below the 100 MB guidance. A monthly query opens about 30 small folder partitions, one per day of the month, while sorting by view time already lets a daily query skip row groups within a monthly folder partition.
-- [ ] `category`: 12 folders of about 330 MB
+1. [ ] `category`: 12 folders of about 330 MB
     &gt; The queries group by category and filter on dates. Every query needs all 12 categories, so it opens all 12 folders and the key rules nothing out.
 </div>
 <p>Slide: 22–23</p>
@@ -286,11 +286,11 @@ shuffle_answers: true
 
 ## Which first change is likely to cut the daily query's time most?
 
-- [x] Convert the CSV once to Parquet
+1. [x] Convert the CSV once to Parquet
     &gt; The query then fetches 3 of the 25 columns, compressed and stored as typed values, so most of the 450 GB never crosses the network. L1's taxi query went from 14 min to 5.5 s this way on one instance.
-- [ ] Run the query on EMR with three core nodes
+1. [ ] Run the query on EMR with three core nodes
     &gt; Three nodes bring about three times the network, so at best about a third of the time, and together they still read every byte of the CSV.
-- [ ] Split the CSV into many smaller files
+1. [ ] Split the CSV into many smaller files
     &gt; Smaller files cut the same 450 GB into more pieces, and every piece still crosses the same network.
 </div>
 <p>Slide: 3, 24, 30</p>
@@ -305,11 +305,11 @@ shuffle_answers: true
 
 ## Which node type should the team add for this job?
 
-- [x] Task nodes
+1. [x] Task nodes
     &gt; Task nodes do work and store none of the cluster's distributed data, so removing them later loses nothing; the input and the results stay in S3.
-- [ ] Core nodes
+1. [ ] Core nodes
     &gt; Core nodes also do work, but they store the cluster's distributed data on their disks, so removing one later takes its share of that data with it.
-- [ ] A larger primary node
+1. [ ] A larger primary node
     &gt; The primary node manages the cluster and coordinates its services. The job runs on the core and task nodes, so enlarging the primary does not add processing capacity to those nodes.
 </div>
 <p>Slide: 29</p>
@@ -329,13 +329,13 @@ shuffle_answers: true
 
 ## After how many weekly queries has the rewrite paid back its CPU-seconds?
 
-- [x] 30 queries
+1. [x] 30 queries
     &gt; Each query saves 50 − 10 = 40 CPU-seconds, and 1,200 / 40 = 30 weekly runs.
-- [ ] 24 queries
+1. [ ] 24 queries
     &gt; 1,200 / 50 divides by what the old query cost. The rewrite is paid back by what each query saves, 40 CPU-seconds.
-- [ ] 120 queries
+1. [ ] 120 queries
     &gt; 1,200 / 10 divides by what the new query costs. The rewrite is paid back by what each query saves, 40 CPU-seconds.
-- [ ] 20 queries
+1. [ ] 20 queries
     &gt; 1,200 / (50 + 10) adds the two costs together. The rewrite is paid back by what each query saves, 50 − 10 = 40 CPU-seconds.
 </div>
 <p>Slide: 32</p>
@@ -385,11 +385,11 @@ shuffle_answers: true
 
 ## A university's course-registration site gets almost no traffic for weeks. When registration opens at 8:00 one morning, about 20,000 students load its pages within ten minutes, and the traffic is back to almost nothing by noon. Which time shape of demand is this?
 
-- [x] A burst
+1. [x] A burst
     &gt; Nothing for weeks, then nearly all the load within minutes: what must be bought is capacity for those ten minutes.
-- [ ] A daily rhythm
+1. [ ] A daily rhythm
     &gt; A daily rhythm repeats every day, busy at midday and near zero overnight. This peak comes on one morning, with weeks of near silence around it.
-- [ ] A scheduled job
+1. [ ] A scheduled job
     &gt; A clock sets when the students arrive, but the load is thousands of separate requests from people. A scheduled job is one run started by a clock, with nothing between runs.
 </div>
 <p>Slide: L2 23, L3 38–39</p>
