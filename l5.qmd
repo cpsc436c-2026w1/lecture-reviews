@@ -1,0 +1,207 @@
+---
+title: "L5 review: Spark on a cluster"
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-title: "Parts"
+filters:
+  - quizdown
+---
+
+Numbers in the scenarios are made up for practice unless a price or an instance size is named. If you need to look up a term, the [relevant vocabulary is below](#part-terms).
+
+## How Spark divides and coordinates the work {#part-how-spark-divides-and-coordinates-the-work}
+
+### What does Spark run again when a core node is lost? {#q-what-does-spark-run-again-when-a-core-node-is-lost}
+
+A Spark query over a year of lift-gate scans in S3 runs on an EMR cluster of 1 primary and 2 core nodes, all m7g.xlarge. Each core node has an executor, a process that runs 4 tasks at a time (8 slots in total). The query's scan stage has 36 tasks, each reading one piece of the input. This is the snapshot of what the cluster had run before the failure:
+
+    scan stage, 36 tasks      finished   running   not started
+    core node 1                  10         4
+    core node 2                  10         4
+    total                        20         8           8
+
+Then core node 2 fails, taking its executor and its disk with it.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## After the core node 2 failure, besides the 8 tasks that have not started, how many scan tasks does Spark run again?
+
+1. [x] 14
+    > When core node 2 was lost, its 4 running tasks stopped and the output of its 10 finished tasks went with the node. Spark reruns those 14 tasks from their pieces in S3, while the output of core node 1's finished tasks is still there.
+1. [ ] 4
+    > This treats a finished task as safe. A finished scan task's output waits on its own node for the next stage; when that node is lost, that output is lost too, and the task that wrote it reruns.
+1. [ ] 36
+    > This applies the single-process rule from L4, where a failed DuckDB process restarts the whole query. Spark can reread the input pieces from S3, so it reruns only the tasks whose work was lost.
+1. [ ] 28
+    > Core node 1 is still there, with its executor and its disk, so its 10 finished tasks keep their output and its 4 running tasks carry on. Only core node 2's work is lost.
+```
+
+Slide: 10 (also 8)
+
+## Amazon EMR {#part-amazon-emr}
+
+### How many tasks can the cluster run at once (how many slots does it have)? {#q-how-many-tasks-can-this-cluster-run-at-once}
+
+An EMR cluster has three kinds of nodes, all m7g.xlarge with 4 vCPUs each, at \$0.2227 an hour per node:
+
+    primary   1 node
+    core      4 nodes
+    task      3 nodes
+
+A node runs at most one executor, which gets 4 cores, one per vCPU of the node, and so runs 4 tasks at a time (4 slots).
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## How many tasks can the cluster run at once (how many slots does it have)?
+
+1. [x] 28
+    > The 4 core nodes and 3 task nodes run executors, so 7 × 4 = 28 tasks run at once. The primary node manages the cluster and runs no executor. You pay for 8 nodes, about \$1.78 an hour at \$0.2227 each, and 7 of them run tasks.
+1. [ ] 32
+    > This counts the primary node as a worker. It manages the cluster and runs no executor.
+1. [ ] 56
+    > This gives each node 8 slots, two per vCPU. On our m7g nodes one vCPU is one core, and an executor gets one slot per vCPU: 4 per node.
+1. [ ] 12
+    > This reads "task node" as the only node type that runs tasks. Core nodes also run executors and store blocks for the Hadoop Distributed File System (HDFS), while task nodes run executors without storing HDFS data.
+```
+
+Slide: 18 (also 16)
+
+## Spark, PySpark and Spark SQL {#part-pyspark}
+
+### What runs where: the plan, an action, or pandas on the driver {#q-what-runs-where}
+
+A notebook on an EMR cluster works with a bike-share company's rides, stored as Parquet files on S3. Earlier cells left two DataFrames in the notebook:
+
+    per_city   Spark DataFrame    ride counts per city, built earlier from the rides files
+    stations   pandas DataFrame   docks per station, with each station's city
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## For each line, what happens when its cell runs? Each option may be used once, more than once, or not at all.
+
+- `rides = spark.read.parquet("s3://…/bikeshare/rides/")` :: Spark records a step on the driver; no task runs yet
+    > Reading is a transformation. On the driver, Spark lists the files and reads their schema, then records the read as the first step of the plan; no ride rows are scanned until an action asks for a result.
+- `per_city.explain()` :: Spark records a step on the driver; no task runs yet
+    > `.explain()` makes the driver print the plan it has recorded so far, without running it: no task, no rows.
+- `top = per_city.toPandas()` :: Spark sends tasks to the executors; they run now
+    > `toPandas()` needs the rows of `per_city`, so the driver turns the plan into tasks and the executors read and count the rides.
+- `rows = per_city.collect()` :: Spark sends tasks to the executors; they run now
+    > `.collect()` asks for the rows of `per_city`, so the plan runs as tasks on the executors.
+- `stations.groupby("city")["docks"].sum()` :: pandas computes on the driver; no task runs
+    > `stations` is a pandas DataFrame, and pandas has no Spark plan: the sum is computed where the cell runs, and no executor gets a task.
+- `top.to_csv("per_city.csv")` :: pandas computes on the driver; no task runs
+    > `top` is already a pandas DataFrame, so this pandas call writes the file from the driver's Python process without starting a Spark task.
+- :: pandas computes on the executors, split across them
+    > A cluster does not split a pandas operation across executors. pandas runs in the driver's Python process; only a Spark action sends tasks to executors.
+```
+
+A delivery company keeps its fees in one 1 GB Parquet file on S3. You have a JupyterHub notebook open in your laptop's browser; it runs on an EMR cluster of 1 primary and 2 core nodes, all m7g.xlarge with 4 vCPUs and 16 GiB of memory each. A cell reads the file with pandas:
+
+    fees = pd.read_parquet("s3://…/delivery/fees.parquet")
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## Where are the rows of `fees` held, and what is the most memory the cell can use?
+
+1. [x] In the driver's Python process, within one node's 16 GiB
+    > Every cell runs in the Spark driver. pandas works in that one Python process on one node, so the other nodes' memory does not help, and the driver's own process may be allocated less than the node's 16 GiB.
+1. [ ] Across both core nodes' executors, within 32 GiB in total
+    > Executors get work only from a Spark action. A pandas call is not Spark: no task is created, so the rows never leave the driver.
+1. [ ] On your laptop, where the notebook is open, within its memory
+    > This carries over local Jupyter, where Python runs on your laptop. On EMR the browser only sends cells and shows output: JupyterHub is on the primary node, and the cells run in the driver on a core node, so the rows of `fees` stay on the cluster.
+```
+
+Slide: 22, 24, 25 (also 16, 21)
+
+### What goes into the `Exchange` (shuffle)? {#q-what-goes-into-the-exchange}
+
+A ferry company keeps its 2025 ticket sales as one Parquet file on S3. Each row is one ticket:
+
+| sale_date | route | fare |
+|:--|:--|--:|
+| 2025-03-02 | Tsawwassen to Swartz Bay | \$8 |
+| 2025-03-02 | Tsawwassen to Swartz Bay | \$10 |
+| 2025-03-05 | Horseshoe Bay to Nanaimo | \$18 |
+| … | … | … |
+
+A PySpark query computes the average fare per route for March 2025; `sales` is the Spark DataFrame read from the file and `F` is `pyspark.sql.functions`:
+
+    march = sales.filter(F.col("sale_date").between("2025-03-01", "2025-03-31"))
+    by_route = march.groupBy("route").agg(F.avg("fare").alias("avg_fare"))
+
+The scan stage reads the file in pieces, one piece per task, and tickets are stored in the order they were sold, so a route's tickets are spread over several tasks. The Tsawwassen to Swartz Bay route sold 4 tickets in March, for \$60 in all, so its average fare is \$15. Two tasks hold those tickets:
+
+| | tickets | fares | sum | average |
+|:--|--:|:--|--:|--:|
+| task 1 | 3 | \$8, \$10, \$12 | \$30 | \$10 |
+| task 2 | 1 | \$30 | \$30 | \$30 |
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## What should each task send into the `Exchange` (shuffle), so that the final stage gets \$15 from the least data?
+
+1. [x] Its count and sum of fares for the route
+    > Task 1 sends 3 and \$30, task 2 sends 1 and \$30; the final stage adds them and divides: \$60 / 4 = \$15. Each task sends two numbers per route, however many tickets it holds.
+1. [ ] Its average of all its fares for the route
+    > The final stage would receive two averages, \$10 from task 1 and \$30 from task 2, and could only average them: (\$10 + \$30) / 2 = \$20, not \$15. It cannot weight task 1's average by its 3 tickets, because the count did not travel. An average of averages is wrong whenever the groups differ in size.
+1. [ ] Every ticket row it holds for the route
+    > This also gives \$15, but every row goes into the `Exchange`. Partial totals give the same answer with two numbers per route from each task.
+```
+
+Slide: 27, 29 (also 38)
+
+## Storage on the cluster {#part-storage-on-the-cluster}
+
+### Where is each piece of data kept? {#q-where-is-each-piece-of-data-kept}
+
+A team keeps Vancouver's Van311 non-emergency service requests for 2025 as Parquet files on S3, and a notebook on an EMR cluster works with them:
+
+    cluster    1 primary + 2 core nodes
+    notebook   builds `late`, the requests that took more than 45 days to close
+    end        the cluster is terminated when the notebook's work ends
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## Where is each of these kept? Each option may be used once, more than once, or not at all.
+
+- rows a task cannot fit in memory while it works :: the node's disk
+    > When a task spills rows that do not fit in memory, it writes them to its node's disk and reads them back later.
+- Spark's cache of a DataFrame once executor memory is full :: the node's disk
+    > By default the cache goes into executor memory first, then onto the node's local disk; it is gone when the cluster ends.
+- the rows `.collect()` returns :: driver memory
+    > `.collect()` brings every row of the result into the driver's process.
+- the number `late.count()` returns to the notebook :: driver memory
+    > The executors count their parts; the total comes back to the driver as one Python number.
+- :: S3
+    > Nothing in this list is written to S3 by the cluster: these are working data that live and die with the cluster or the notebook. The inputs on S3 are not in the list.
+- :: HDFS
+    > HDFS pools the core nodes' disks for data that a job writes there deliberately, such as a result it will reread while the cluster runs, and it is deleted with the cluster. Shuffle files and spills use each node's local disk.
+```
+
+Slide: 32, 33 (also 17, 18, 24)
+
+## Terms used on this page {#part-terms}
+
+From the [course flashcards](https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/quiz), grouped by topic. Practise them in [quiz mode](https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/quiz), or try the [match game](https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/match).
+
+{{< include _terms/page-l5.md >}}

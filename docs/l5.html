@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>L5 review: Spark on a cluster – CPSC 436C lecture reviews</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-fc5028672c55bc042a1fdef173a2e080.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/quizdown-0.6.0/quizdown.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-0.6.0/quizdownKatex.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-0.6.0/quizdownHighlight.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-0.6.0/quizdown-init.js"></script>
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">CPSC 436C lecture reviews</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Lecture reviews</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://cpsc436c-2026w1.github.io/a1-starter/"> 
+<span class="menu-text">A1 starter</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://cpsc436c-2026w1.github.io/a2-starter/"> 
+<span class="menu-text">A2 starter</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Parts</h2>
+   
+  <ul>
+  <li><a href="#part-how-spark-divides-and-coordinates-the-work" id="toc-part-how-spark-divides-and-coordinates-the-work" class="nav-link active" data-scroll-target="#part-how-spark-divides-and-coordinates-the-work">How Spark divides and coordinates the work</a>
+  <ul class="collapse">
+  <li><a href="#q-what-does-spark-run-again-when-a-core-node-is-lost" id="toc-q-what-does-spark-run-again-when-a-core-node-is-lost" class="nav-link" data-scroll-target="#q-what-does-spark-run-again-when-a-core-node-is-lost">What does Spark run again when a core node is lost?</a></li>
+  </ul></li>
+  <li><a href="#part-amazon-emr" id="toc-part-amazon-emr" class="nav-link" data-scroll-target="#part-amazon-emr">Amazon EMR</a>
+  <ul class="collapse">
+  <li><a href="#q-how-many-tasks-can-this-cluster-run-at-once" id="toc-q-how-many-tasks-can-this-cluster-run-at-once" class="nav-link" data-scroll-target="#q-how-many-tasks-can-this-cluster-run-at-once">How many tasks can the cluster run at once (how many slots does it have)?</a></li>
+  </ul></li>
+  <li><a href="#part-pyspark" id="toc-part-pyspark" class="nav-link" data-scroll-target="#part-pyspark">Spark, PySpark and Spark SQL</a>
+  <ul class="collapse">
+  <li><a href="#q-what-runs-where" id="toc-q-what-runs-where" class="nav-link" data-scroll-target="#q-what-runs-where">What runs where: the plan, an action, or pandas on the driver</a></li>
+  <li><a href="#q-what-goes-into-the-exchange" id="toc-q-what-goes-into-the-exchange" class="nav-link" data-scroll-target="#q-what-goes-into-the-exchange">What goes into the <code>Exchange</code> (shuffle)?</a></li>
+  </ul></li>
+  <li><a href="#part-storage-on-the-cluster" id="toc-part-storage-on-the-cluster" class="nav-link" data-scroll-target="#part-storage-on-the-cluster">Storage on the cluster</a>
+  <ul class="collapse">
+  <li><a href="#q-where-is-each-piece-of-data-kept" id="toc-q-where-is-each-piece-of-data-kept" class="nav-link" data-scroll-target="#q-where-is-each-piece-of-data-kept">Where is each piece of data kept?</a></li>
+  </ul></li>
+  <li><a href="#part-terms" id="toc-part-terms" class="nav-link" data-scroll-target="#part-terms">Terms used on this page</a>
+  <ul class="collapse">
+  <li><a href="#spark-how-a-job-runs" id="toc-spark-how-a-job-runs" class="nav-link" data-scroll-target="#spark-how-a-job-runs">Spark: how a job runs</a></li>
+  <li><a href="#spark-shuffles-and-slow-stages" id="toc-spark-shuffles-and-slow-stages" class="nav-link" data-scroll-target="#spark-shuffles-and-slow-stages">Spark: shuffles and slow stages</a></li>
+  <li><a href="#the-emr-cluster" id="toc-the-emr-cluster" class="nav-link" data-scroll-target="#the-emr-cluster">The EMR cluster</a></li>
+  <li><a href="#also-used-on-this-page" id="toc-also-used-on-this-page" class="nav-link" data-scroll-target="#also-used-on-this-page">Also used on this page</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">L5 review: Spark on a cluster</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Numbers in the scenarios are made up for practice unless a price or an instance size is named. If you need to look up a term, the <a href="#part-terms">relevant vocabulary is below</a>.</p>
+<section id="part-how-spark-divides-and-coordinates-the-work" class="level2">
+<h2 class="anchored" data-anchor-id="part-how-spark-divides-and-coordinates-the-work">How Spark divides and coordinates the work</h2>
+<section id="q-what-does-spark-run-again-when-a-core-node-is-lost" class="level3">
+<h3 class="anchored" data-anchor-id="q-what-does-spark-run-again-when-a-core-node-is-lost">What does Spark run again when a core node is lost?</h3>
+<p>A Spark query over a year of lift-gate scans in S3 runs on an EMR cluster of 1 primary and 2 core nodes, all m7g.xlarge. Each core node has an executor, a process that runs 4 tasks at a time (8 slots in total). The query’s scan stage has 36 tasks, each reading one piece of the input. This is the snapshot of what the cluster had run before the failure:</p>
+<pre><code>scan stage, 36 tasks      finished   running   not started
+core node 1                  10         4
+core node 2                  10         4
+total                        20         8           8</code></pre>
+<p>Then core node 2 fails, taking its executor and its disk with it.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## After the core node 2 failure, besides the 8 tasks that have not started, how many scan tasks does Spark run again?
+
+1. [x] 14
+    &gt; When core node 2 was lost, its 4 running tasks stopped and the output of its 10 finished tasks went with the node. Spark reruns those 14 tasks from their pieces in S3, while the output of core node 1's finished tasks is still there.
+1. [ ] 4
+    &gt; This treats a finished task as safe. A finished scan task's output waits on its own node for the next stage; when that node is lost, that output is lost too, and the task that wrote it reruns.
+1. [ ] 36
+    &gt; This applies the single-process rule from L4, where a failed DuckDB process restarts the whole query. Spark can reread the input pieces from S3, so it reruns only the tasks whose work was lost.
+1. [ ] 28
+    &gt; Core node 1 is still there, with its executor and its disk, so its 10 finished tasks keep their output and its 4 running tasks carry on. Only core node 2's work is lost.
+</div>
+<p>Slide: 10 (also 8)</p>
+</section>
+</section>
+<section id="part-amazon-emr" class="level2">
+<h2 class="anchored" data-anchor-id="part-amazon-emr">Amazon EMR</h2>
+<section id="q-how-many-tasks-can-this-cluster-run-at-once" class="level3">
+<h3 class="anchored" data-anchor-id="q-how-many-tasks-can-this-cluster-run-at-once">How many tasks can the cluster run at once (how many slots does it have)?</h3>
+<p>An EMR cluster has three kinds of nodes, all m7g.xlarge with 4 vCPUs each, at $0.2227 an hour per node:</p>
+<pre><code>primary   1 node
+core      4 nodes
+task      3 nodes</code></pre>
+<p>A node runs at most one executor, which gets 4 cores, one per vCPU of the node, and so runs 4 tasks at a time (4 slots).</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## How many tasks can the cluster run at once (how many slots does it have)?
+
+1. [x] 28
+    &gt; The 4 core nodes and 3 task nodes run executors, so 7 × 4 = 28 tasks run at once. The primary node manages the cluster and runs no executor. You pay for 8 nodes, about \$1.78 an hour at \$0.2227 each, and 7 of them run tasks.
+1. [ ] 32
+    &gt; This counts the primary node as a worker. It manages the cluster and runs no executor.
+1. [ ] 56
+    &gt; This gives each node 8 slots, two per vCPU. On our m7g nodes one vCPU is one core, and an executor gets one slot per vCPU: 4 per node.
+1. [ ] 12
+    &gt; This reads "task node" as the only node type that runs tasks. Core nodes also run executors and store blocks for the Hadoop Distributed File System (HDFS), while task nodes run executors without storing HDFS data.
+</div>
+<p>Slide: 18 (also 16)</p>
+</section>
+</section>
+<section id="part-pyspark" class="level2">
+<h2 class="anchored" data-anchor-id="part-pyspark">Spark, PySpark and Spark SQL</h2>
+<section id="q-what-runs-where" class="level3">
+<h3 class="anchored" data-anchor-id="q-what-runs-where">What runs where: the plan, an action, or pandas on the driver</h3>
+<p>A notebook on an EMR cluster works with a bike-share company’s rides, stored as Parquet files on S3. Earlier cells left two DataFrames in the notebook:</p>
+<pre><code>per_city   Spark DataFrame    ride counts per city, built earlier from the rides files
+stations   pandas DataFrame   docks per station, with each station's city</code></pre>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## For each line, what happens when its cell runs? Each option may be used once, more than once, or not at all.
+
+- `rides = spark.read.parquet("s3://…/bikeshare/rides/")` :: Spark records a step on the driver; no task runs yet
+    &gt; Reading is a transformation. On the driver, Spark lists the files and reads their schema, then records the read as the first step of the plan; no ride rows are scanned until an action asks for a result.
+- `per_city.explain()` :: Spark records a step on the driver; no task runs yet
+    &gt; `.explain()` makes the driver print the plan it has recorded so far, without running it: no task, no rows.
+- `top = per_city.toPandas()` :: Spark sends tasks to the executors; they run now
+    &gt; `toPandas()` needs the rows of `per_city`, so the driver turns the plan into tasks and the executors read and count the rides.
+- `rows = per_city.collect()` :: Spark sends tasks to the executors; they run now
+    &gt; `.collect()` asks for the rows of `per_city`, so the plan runs as tasks on the executors.
+- `stations.groupby("city")["docks"].sum()` :: pandas computes on the driver; no task runs
+    &gt; `stations` is a pandas DataFrame, and pandas has no Spark plan: the sum is computed where the cell runs, and no executor gets a task.
+- `top.to_csv("per_city.csv")` :: pandas computes on the driver; no task runs
+    &gt; `top` is already a pandas DataFrame, so this pandas call writes the file from the driver's Python process without starting a Spark task.
+- :: pandas computes on the executors, split across them
+    &gt; A cluster does not split a pandas operation across executors. pandas runs in the driver's Python process; only a Spark action sends tasks to executors.
+</div>
+<p>A delivery company keeps its fees in one 1 GB Parquet file on S3. You have a JupyterHub notebook open in your laptop’s browser; it runs on an EMR cluster of 1 primary and 2 core nodes, all m7g.xlarge with 4 vCPUs and 16 GiB of memory each. A cell reads the file with pandas:</p>
+<pre><code>fees = pd.read_parquet("s3://…/delivery/fees.parquet")</code></pre>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## Where are the rows of `fees` held, and what is the most memory the cell can use?
+
+1. [x] In the driver's Python process, within one node's 16 GiB
+    &gt; Every cell runs in the Spark driver. pandas works in that one Python process on one node, so the other nodes' memory does not help, and the driver's own process may be allocated less than the node's 16 GiB.
+1. [ ] Across both core nodes' executors, within 32 GiB in total
+    &gt; Executors get work only from a Spark action. A pandas call is not Spark: no task is created, so the rows never leave the driver.
+1. [ ] On your laptop, where the notebook is open, within its memory
+    &gt; This carries over local Jupyter, where Python runs on your laptop. On EMR the browser only sends cells and shows output: JupyterHub is on the primary node, and the cells run in the driver on a core node, so the rows of `fees` stay on the cluster.
+</div>
+<p>Slide: 22, 24, 25 (also 16, 21)</p>
+</section>
+<section id="q-what-goes-into-the-exchange" class="level3">
+<h3 class="anchored" data-anchor-id="q-what-goes-into-the-exchange">What goes into the <code>Exchange</code> (shuffle)?</h3>
+<p>A ferry company keeps its 2025 ticket sales as one Parquet file on S3. Each row is one ticket:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">sale_date</th>
+<th style="text-align: left;">route</th>
+<th style="text-align: right;">fare</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">2025-03-02</td>
+<td style="text-align: left;">Tsawwassen to Swartz Bay</td>
+<td style="text-align: right;">$8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2025-03-02</td>
+<td style="text-align: left;">Tsawwassen to Swartz Bay</td>
+<td style="text-align: right;">$10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">2025-03-05</td>
+<td style="text-align: left;">Horseshoe Bay to Nanaimo</td>
+<td style="text-align: right;">$18</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">…</td>
+<td style="text-align: left;">…</td>
+<td style="text-align: right;">…</td>
+</tr>
+</tbody>
+</table>
+<p>A PySpark query computes the average fare per route for March 2025; <code>sales</code> is the Spark DataFrame read from the file and <code>F</code> is <code>pyspark.sql.functions</code>:</p>
+<pre><code>march = sales.filter(F.col("sale_date").between("2025-03-01", "2025-03-31"))
+by_route = march.groupBy("route").agg(F.avg("fare").alias("avg_fare"))</code></pre>
+<p>The scan stage reads the file in pieces, one piece per task, and tickets are stored in the order they were sold, so a route’s tickets are spread over several tasks. The Tsawwassen to Swartz Bay route sold 4 tickets in March, for $60 in all, so its average fare is $15. Two tasks hold those tickets:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">tickets</th>
+<th style="text-align: left;">fares</th>
+<th style="text-align: right;">sum</th>
+<th style="text-align: right;">average</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">task 1</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">$8, $10, $12</td>
+<td style="text-align: right;">$30</td>
+<td style="text-align: right;">$10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">task 2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">$30</td>
+<td style="text-align: right;">$30</td>
+<td style="text-align: right;">$30</td>
+</tr>
+</tbody>
+</table>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## What should each task send into the `Exchange` (shuffle), so that the final stage gets \$15 from the least data?
+
+1. [x] Its count and sum of fares for the route
+    &gt; Task 1 sends 3 and \$30, task 2 sends 1 and \$30; the final stage adds them and divides: \$60 / 4 = \$15. Each task sends two numbers per route, however many tickets it holds.
+1. [ ] Its average of all its fares for the route
+    &gt; The final stage would receive two averages, \$10 from task 1 and \$30 from task 2, and could only average them: (\$10 + \$30) / 2 = \$20, not \$15. It cannot weight task 1's average by its 3 tickets, because the count did not travel. An average of averages is wrong whenever the groups differ in size.
+1. [ ] Every ticket row it holds for the route
+    &gt; This also gives \$15, but every row goes into the `Exchange`. Partial totals give the same answer with two numbers per route from each task.
+</div>
+<p>Slide: 27, 29 (also 38)</p>
+</section>
+</section>
+<section id="part-storage-on-the-cluster" class="level2">
+<h2 class="anchored" data-anchor-id="part-storage-on-the-cluster">Storage on the cluster</h2>
+<section id="q-where-is-each-piece-of-data-kept" class="level3">
+<h3 class="anchored" data-anchor-id="q-where-is-each-piece-of-data-kept">Where is each piece of data kept?</h3>
+<p>A team keeps Vancouver’s Van311 non-emergency service requests for 2025 as Parquet files on S3, and a notebook on an EMR cluster works with them:</p>
+<pre><code>cluster    1 primary + 2 core nodes
+notebook   builds `late`, the requests that took more than 45 days to close
+end        the cluster is terminated when the notebook's work ends</code></pre>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## Where is each of these kept? Each option may be used once, more than once, or not at all.
+
+- rows a task cannot fit in memory while it works :: the node's disk
+    &gt; When a task spills rows that do not fit in memory, it writes them to its node's disk and reads them back later.
+- Spark's cache of a DataFrame once executor memory is full :: the node's disk
+    &gt; By default the cache goes into executor memory first, then onto the node's local disk; it is gone when the cluster ends.
+- the rows `.collect()` returns :: driver memory
+    &gt; `.collect()` brings every row of the result into the driver's process.
+- the number `late.count()` returns to the notebook :: driver memory
+    &gt; The executors count their parts; the total comes back to the driver as one Python number.
+- :: S3
+    &gt; Nothing in this list is written to S3 by the cluster: these are working data that live and die with the cluster or the notebook. The inputs on S3 are not in the list.
+- :: HDFS
+    &gt; HDFS pools the core nodes' disks for data that a job writes there deliberately, such as a result it will reread while the cluster runs, and it is deleted with the cluster. Shuffle files and spills use each node's local disk.
+</div>
+<p>Slide: 32, 33 (also 17, 18, 24)</p>
+</section>
+</section>
+<section id="part-terms" class="level2">
+<h2 class="anchored" data-anchor-id="part-terms">Terms used on this page</h2>
+<p>From the <a href="https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/quiz">course flashcards</a>, grouped by topic. Practise them in <a href="https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/quiz">quiz mode</a>, or try the <a href="https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/match">match game</a>.</p>
+<section id="spark-how-a-job-runs" class="level3">
+<h3 class="anchored" data-anchor-id="spark-how-a-job-runs">Spark: how a job runs</h3>
+<p><strong>Driver.</strong> The program that coordinates a Spark application: it runs your code, builds the query plan and sends tasks to the executors.</p>
+<p><strong>Executor.</strong> A Spark program running on an EMR core or task node. It runs tasks and keeps their data in its memory or on the node’s disk.</p>
+<p><strong>Partition.</strong> A chunk of rows that one task processes as one unit. When reading files it holds one or more splits, each a byte range of one file, planned from the file sizes and the number of slots.</p>
+<p><strong>Task.</strong> One stage’s work on one chunk of rows, run in one slot: by default, one executor core.</p>
+<p><strong>Slot.</strong> One executor core, as room to run one task on one Spark partition at a time. An executor with 4 cores runs 4 tasks at once; our EMR nodes have one per vCPU.</p>
+<p><strong>Stage.</strong> A set of tasks Spark can run before rows have to move between partitions. Every task in it runs the same steps on a different partition.</p>
+<p><strong>Wave.</strong> The set of a stage’s tasks that run at the same time, one per slot. 36 reading tasks on 8 slots need 5 of them.</p>
+<p><strong>Transformation.</strong> A step such as <code>filter</code> or <code>groupBy(...).count()</code> that is only recorded in the plan. No task runs until an action asks for a result.</p>
+<p><strong>Action.</strong> On a Spark DataFrame, a call such as <code>df.count()</code>, <code>df.collect()</code> or <code>df.write.parquet()</code> that makes Spark run the plan built so far. Unlike pandas, where each step runs as soon as you call it.</p>
+</section>
+<section id="spark-shuffles-and-slow-stages" class="level3">
+<h3 class="anchored" data-anchor-id="spark-shuffles-and-slow-stages">Spark: shuffles and slow stages</h3>
+<p><strong>Narrow transformation.</strong> A step each task does on its own partition, so no rows move between partitions: <code>filter</code>, <code>select</code>, <code>withColumn</code>.</p>
+<p><strong>Wide transformation.</strong> A step that needs rows from other partitions, such as <code>groupBy</code>, <code>orderBy</code>, a window or most joins. Spark adds a shuffle before it.</p>
+<p><strong>Shuffle (Exchange).</strong> Moving rows between partitions for the next stage: each task writes its rows to its node’s disk, and the next stage’s tasks read them, often from other nodes.</p>
+<p><strong>Window query.</strong> A step that computes a value over a group of rows and puts it on each row, such as each trip’s payment-type average next to the trip. Every row goes into an <code>Exchange</code>.</p>
+<p><strong>Hot key.</strong> One join, window or sort value with far more rows than the others. All its rows go to one task, which runs long after the rest of its stage; more nodes do not help.</p>
+<p><strong>Spill.</strong> Writing to the node’s disk when the rows a task sorts, groups or shuffles do not fit in its share of executor memory. The result is correct but slower.</p>
+</section>
+<section id="the-emr-cluster" class="level3">
+<h3 class="anchored" data-anchor-id="the-emr-cluster">The EMR cluster</h3>
+<p><strong>Amazon EMR.</strong> AWS’s managed service that launches a cluster of EC2 instances with Spark installed. You pay for the nodes from launch until you terminate the cluster.</p>
+<p><strong>Primary node.</strong> The one EMR instance that runs the cluster manager and the HDFS name service. It runs no executors.</p>
+<p><strong>Core node.</strong> An EMR instance that runs executors and stores HDFS data. A role an instance plays in the cluster, not a Spark slot.</p>
+<p><strong>Task node.</strong> An optional EMR instance that runs executors and stores no HDFS data, so it can be removed or bought as spot capacity without losing data.</p>
+<p><strong>HDFS.</strong> A file system that splits files into blocks across a cluster’s core nodes’ disks. Its data is lost when the cluster terminates, so our inputs and outputs stay on S3.</p>
+</section>
+<section id="also-used-on-this-page" class="level3">
+<h3 class="anchored" data-anchor-id="also-used-on-this-page">Also used on this page</h3>
+<p><strong>Parquet.</strong> A columnar file format. Rows are grouped into blocks that each store every column separately, and metadata at the end of the file says where each part is.</p>
+<p><strong>Instance type.</strong> The size you pick when you launch an EC2 server: how many vCPUs and how much memory it has, how fast its network is, and whether it has its own local disk.</p>
+<p><strong>S3.</strong> AWS’s object store. You reach each object over the network by its name inside a bucket, and the data stays with no server running.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
