@@ -8,7 +8,11 @@ website:
   navbar:
     left:
       - href: index.qmd
-        text: Lectures
+        text: Lecture reviews
+      - href: https://cpsc436c-2026w1.github.io/a1-starter/
+        text: A1 starter
+      - href: https://cpsc436c-2026w1.github.io/a2-starter/
+        text: A2 starter
 
 format:
   html:

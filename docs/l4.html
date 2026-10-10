@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>L4 review: scaling up, scaling out, and where the data lives – CPSC 436C lecture reviews</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-fc5028672c55bc042a1fdef173a2e080.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/quizdown-0.6.0/quizdown.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-0.6.0/quizdownKatex.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-0.6.0/quizdownHighlight.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-0.6.0/quizdown-init.js"></script>
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">CPSC 436C lecture reviews</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Lecture reviews</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://cpsc436c-2026w1.github.io/a1-starter/"> 
+<span class="menu-text">A1 starter</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://cpsc436c-2026w1.github.io/a2-starter/"> 
+<span class="menu-text">A2 starter</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Parts</h2>
+   
+  <ul>
+  <li><a href="#part-storage-side" id="toc-part-storage-side" class="nav-link active" data-scroll-target="#part-storage-side">The storage side of scaling up</a>
+  <ul class="collapse">
+  <li><a href="#q-what-does-each-filter-condition-make-spark-read" id="toc-q-what-does-each-filter-condition-make-spark-read" class="nav-link" data-scroll-target="#q-what-does-each-filter-condition-make-spark-read">What does each filter condition make Spark read?</a></li>
+  <li><a href="#q-which-folder-key-best-supports-these-queries" id="toc-q-which-folder-key-best-supports-these-queries" class="nav-link" data-scroll-target="#q-which-folder-key-best-supports-these-queries">Which folder key best supports these queries?</a></li>
+  <li><a href="#q-which-changes-spread-the-scan-over-all-four-threads" id="toc-q-which-changes-spread-the-scan-over-all-four-threads" class="nav-link" data-scroll-target="#q-which-changes-spread-the-scan-over-all-four-threads">Which changes spread the scan over all four threads?</a></li>
+  </ul></li>
+  <li><a href="#part-scaling-out" id="toc-part-scaling-out" class="nav-link" data-scroll-target="#part-scaling-out">Scaling out: more nodes, and a network between them</a>
+  <ul class="collapse">
+  <li><a href="#q-which-first-change-cuts-the-daily-querys-time-most" id="toc-q-which-first-change-cuts-the-daily-querys-time-most" class="nav-link" data-scroll-target="#q-which-first-change-cuts-the-daily-querys-time-most">Which first change cuts the daily query’s time most?</a></li>
+  <li><a href="#q-which-node-type-should-they-add" id="toc-q-which-node-type-should-they-add" class="nav-link" data-scroll-target="#q-which-node-type-should-they-add">Which node type should they add?</a></li>
+  <li><a href="#q-after-how-many-queries-has-the-rewrite-paid-back" id="toc-q-after-how-many-queries-has-the-rewrite-paid-back" class="nav-link" data-scroll-target="#q-after-how-many-queries-has-the-rewrite-paid-back">After how many queries has the rewrite paid back?</a></li>
+  </ul></li>
+  <li><a href="#part-the-case" id="toc-part-the-case" class="nav-link" data-scroll-target="#part-the-case">The case (A2): Best model search for the taxi data</a>
+  <ul class="collapse">
+  <li><a href="#q-scale-up-scale-out-or-neither" id="toc-q-scale-up-scale-out-or-neither" class="nav-link" data-scroll-target="#q-scale-up-scale-out-or-neither">Scale up, scale out, or neither?</a></li>
+  </ul></li>
+  <li><a href="#part-mixed" id="toc-part-mixed" class="nav-link" data-scroll-target="#part-mixed">Mixed: from L1–L3</a>
+  <ul class="collapse">
+  <li><a href="#q-which-shape-of-demand-is-this" id="toc-q-which-shape-of-demand-is-this" class="nav-link" data-scroll-target="#q-which-shape-of-demand-is-this">Which shape of demand is this?</a></li>
+  </ul></li>
+  <li><a href="#part-terms" id="toc-part-terms" class="nav-link" data-scroll-target="#part-terms">Terms used on this page</a>
+  <ul class="collapse">
+  <li><a href="#parquet" id="toc-parquet" class="nav-link" data-scroll-target="#parquet">Parquet</a></li>
+  <li><a href="#layout-and-files-on-s3" id="toc-layout-and-files-on-s3" class="nav-link" data-scroll-target="#layout-and-files-on-s3">Layout and files on S3</a></li>
+  <li><a href="#memory-and-resources" id="toc-memory-and-resources" class="nav-link" data-scroll-target="#memory-and-resources">Memory and resources</a></li>
+  <li><a href="#also-used-on-this-page" id="toc-also-used-on-this-page" class="nav-link" data-scroll-target="#also-used-on-this-page">Also used on this page</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">L4 review: scaling up, scaling out, and where the data lives</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Practice questions for lecture 4, part by part, with feedback on every option. The slide numbers refer to the lecture PDF on Canvas. Numbers in the scenarios are made up for practice unless a price or an instance size is named.</p>
+<section id="part-storage-side" class="level2">
+<h2 class="anchored" data-anchor-id="part-storage-side">The storage side of scaling up</h2>
+<section id="q-what-does-each-filter-condition-make-spark-read" class="level3">
+<h3 class="anchored" data-anchor-id="q-what-does-each-filter-condition-make-spark-read">What does each filter condition make Spark read?</h3>
+<p>A city library keeps its loan records for September to December 2025 in S3 as Parquet, one folder partition per month of <code>loan_date</code>:</p>
+<pre><code>s3://city-library/loans/
+├── month=2025-09/
+│   └── part-0.parquet        about 150 MB
+├── month=2025-10/
+│   └── part-0.parquet
+├── month=2025-11/
+│   └── part-0.parquet
+└── month=2025-12/
+    └── part-0.parquet</code></pre>
+<p>Each file, about 150 MB, holds only its month’s loans, in many row groups (the blocks of rows inside a Parquet file). Inside a file the rows are sorted by <code>branch_id</code>; the other columns (<code>loan_date</code>, a DATE column, <code>loan_days</code> and <code>patron_id</code>) are in no particular order. Spark on an EMR cluster runs queries that each have one filter condition.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## For each condition, what does Spark open and read? Each option may be used once, more than once, or not at all.
+
+- `month = '2025-11'` :: 1 or 2 files opened, every row group read
+    &gt; The condition names the folder key, so Spark keeps the November folder and rules out the other 3 by their names, without opening their files. Every row in the November file is a November loan, so every row matches and every row group is read.
+- `month IN ('2025-11', '2025-12')` :: 1 or 2 files opened, every row group read
+    &gt; Two values of the key work the same way as one: Spark opens two folders and rules out 2 by name, then reads every row group of both files.
+- `branch_id = 17` :: all 4 files opened, some row groups may be skipped
+    &gt; All 4 files are opened, because the condition does not name `month`. Inside each file the rows are sorted by branch, so each row group holds a narrow range of `branch_id`; where the writer stored each group's min and max in the footer, the reader rules out the groups whose range cannot hold 17 without fetching them.
+- `loan_date = DATE '2025-11-14'` :: all 4 files opened, some row groups may be skipped
+    &gt; The `month` folders were made from the loan date, but this condition names `loan_date`, so no folder is ruled out by name and Spark opens all 4 files. Each file holds one month's loans, so every row group's min and max of `loan_date` fall inside that month: in the September, October and December files no group's range can hold 14 November 2025, so where the footer holds each group's min and max the reader skips them all. In the November file the days are in no order, so every group's range covers the day and every row group is read.
+- `loan_days &gt; 21` :: all 4 files opened, every row group read
+    &gt; The rows are not ordered by loan length, so every row group holds short and long loans and its min and max rule nothing out. Spark reads every row group of every file.
+- `patron_id = 40213` :: all 4 files opened, every row group read
+    &gt; The condition matches few rows, but patron ids are spread over every row group, so each group's min and max cover 40213 and none can be ruled out.
+- :: footers read, no row group read
+    &gt; A footer says where the row groups are and their min and max; it holds no rows. Spark has to read row groups to return a result.
+</div>
+<p>Slide: 15, 20, 21, 23, 31</p>
+</section>
+<section id="q-which-folder-key-best-supports-these-queries" class="level3">
+<h3 class="anchored" data-anchor-id="q-which-folder-key-best-supports-these-queries">Which folder key best supports these queries?</h3>
+<p>A news site keeps its page views from January 2024 to December 2025 as one Parquet file in S3. There is no folder key yet:</p>
+<pre><code>s3://news-site/page-views/
+└── page-views.parquet    4 GB, rows sorted by view time, many row groups</code></pre>
+<p>The analysts’ common queries filter on the view time, one day or one month, and count views per article category; they will write every time filter to name the folder key you choose. The rewrite keeps the rows sorted by view time, with many row groups in each file. DuckDB recommends at least 100 MB per folder partition.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## Which folder key best supports these queries?
+
+- [x] `month`: 24 folders of about 170 MB
+    &gt; Each query names one month, so it opens one folder. Inside that folder, the footer's minimum and maximum view times let a daily query skip other days' row groups, and each folder partition is over 100 MB.
+- [ ] `day`: 731 folders of about 5.5 MB
+    &gt; The `day` key matches the daily filter, and day folders helped the lecture's one-day query on the June file, but each 5.5 MB folder partition here is below the 100 MB guidance. A monthly query opens about 30 small folder partitions, while sorting by view time already lets a daily query skip row groups within a monthly folder partition.
+- [ ] `category`: 12 folders of about 330 MB
+    &gt; The queries group by category and filter on dates. Every query needs all 12 categories, so it opens all 12 folders and the key rules nothing out.
+</div>
+<p>Slide: 22–23</p>
+</section>
+<section id="q-which-changes-spread-the-scan-over-all-four-threads" class="level3">
+<h3 class="anchored" data-anchor-id="q-which-changes-spread-the-scan-over-all-four-threads">Which changes spread the scan over all four threads?</h3>
+<p>A hotel chain exports its 2025 bookings as one Parquet file:</p>
+<pre><code>bookings-2025.parquet     1.2 GB, one row group</code></pre>
+<p>DuckDB with four threads on an m6a.xlarge (4 vCPU, 16 GiB) computes the average nightly price per hotel for July 2025 in 3 s. During the query one vCPU is busy and three stay idle.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## Which of these changes let the July query finish sooner by spreading its scan over all four threads? Select every change that does.
+
+- [x] Rewrite the file with many row groups
+    &gt; Row groups are the pieces a reader can split a scan into and read in parallel. With one row group the scan is a single piece, so one thread does it; DuckDB's own default write makes row groups of about 123,000 rows.
+- [x] Rewrite it as folder partitions by month, one file per month
+    &gt; Two gains at once. The July query opens only July's file instead of all twelve months, and that file has many row groups, because any rewrite splits the rows into row groups, so the four threads share its scan.
+- [ ] Rewrite it as folder partitions by hotel, one file per hotel
+    &gt; The threads do share the scan, one file each, but the July filter names no hotel, so every file is opened and all 1.2 GB is read for one month's rows. The key must match the filter.
+- [ ] Set DuckDB to 32 threads
+    &gt; Extra threads cannot divide one row group: they have no piece to read, and the instance has only 4 vCPU to run them.
+- [ ] Move to an m6a.2xlarge (8 vCPU, 32 GiB)
+    &gt; Three vCPUs are already idle, so neither memory nor vCPUs are short. The file would still be one piece, read by one thread.
+</div>
+<p>Slide: 16–19</p>
+</section>
+</section>
+<section id="part-scaling-out" class="level2">
+<h2 class="anchored" data-anchor-id="part-scaling-out">Scaling out: more nodes, and a network between them</h2>
+<section id="q-which-first-change-cuts-the-daily-querys-time-most" class="level3">
+<h3 class="anchored" data-anchor-id="q-which-first-change-cuts-the-daily-querys-time-most">Which first change cuts the daily query’s time most?</h3>
+<p>A parcel company keeps three years of parcel scans as CSV in S3:</p>
+<pre><code>s3://parcel-co/scans/
+├── part-0.csv
+│   …
+└── part-N.csv            450 GB in all, 25 columns, 2023 to 2025</code></pre>
+<p>A daily query counts late parcels per depot for one month and uses 3 of the columns. On one m6a.xlarge it takes 50 minutes, and for most of that time the instance’s network is at its limit reading from S3: the m6a.xlarge’s baseline is 1.56 Gbps, about 195 MB/s, so 450 GB alone takes about 38 minutes to arrive.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## Which first change is likely to cut the daily query's time most?
+
+- [x] Convert the CSV once to Parquet
+    &gt; The query then fetches 3 of the 25 columns, compressed and stored as typed values, so most of the 450 GB never crosses the network. L1's taxi query went from 14 min to 5.5 s this way on one instance.
+- [ ] Run it on EMR with three core nodes
+    &gt; Three nodes bring about three times the network, so at best about a third of the time, and together they still read every byte of the CSV.
+- [ ] Split the CSV into many smaller files
+    &gt; Smaller files cut the same 450 GB into more pieces, and every piece still crosses the same network.
+</div>
+<p>Slide: 3, 24, 30</p>
+</section>
+<section id="q-which-node-type-should-they-add" class="level3">
+<h3 class="anchored" data-anchor-id="q-which-node-type-should-they-add">Which node type should they add?</h3>
+<p>An EMR cluster with one primary node and two core nodes runs a long Spark job that reads its input from S3 and writes its results back to S3. To finish sooner, the team wants to add nodes for this job and remove them afterwards without losing any data the cluster stores.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## Which node type should they add?
+
+- [x] Task nodes
+    &gt; Task nodes do work and store none of the cluster's distributed data, so removing them later loses nothing; the input and the results stay in S3.
+- [ ] Core nodes
+    &gt; Core nodes also do work, but they store the cluster's distributed data on their disks, so removing one later takes its share of that data with it.
+- [ ] A larger primary node
+    &gt; The primary node manages the cluster and coordinates its services. The job runs on the core and task nodes, so enlarging the primary does not add processing capacity to those nodes.
+</div>
+<p>Slide: 29</p>
+</section>
+<section id="q-after-how-many-queries-has-the-rewrite-paid-back" class="level3">
+<h3 class="anchored" data-anchor-id="q-after-how-many-queries-has-the-rewrite-paid-back">After how many queries has the rewrite paid back?</h3>
+<p>The City of Vancouver publishes its 3-1-1 non-emergency service requests as open data. A team keeps five years of them as CSV in S3, and a weekly query reads them:</p>
+<pre><code>s3://van-311/requests/
+├── 2021.csv
+│   …
+└── 2025.csv               five years of service requests</code></pre>
+<p>Rewriting them once as sorted, partitioned Parquet uses 1,200 CPU-seconds. The weekly query uses 50 CPU-seconds on the CSV and 10 CPU-seconds on the rewritten files.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## After how many weekly queries has the rewrite paid back its CPU-seconds?
+
+- [x] 30 queries
+    &gt; Each query saves 50 − 10 = 40 CPU-seconds, and 1,200 / 40 = 30: about seven months of weekly runs.
+- [ ] 24 queries
+    &gt; 1,200 / 50 divides by what the old query cost. The rewrite is paid back by what each query saves, 40 CPU-seconds.
+- [ ] 120 queries
+    &gt; 1,200 / 10 divides by what the new query costs. The rewrite is paid back by what each query saves, 40 CPU-seconds.
+</div>
+<p>Slide: 32</p>
+</section>
+</section>
+<section id="part-the-case" class="level2">
+<h2 class="anchored" data-anchor-id="part-the-case">The case (A2): Best model search for the taxi data</h2>
+<section id="q-scale-up-scale-out-or-neither" class="level3">
+<h3 class="anchored" data-anchor-id="q-scale-up-scale-out-or-neither">Scale up, scale out, or neither?</h3>
+<p>Each workload below runs today on one EC2 instance, an m6a.large (2 vCPU, 8 GB of RAM), unless the row says otherwise. The three moves from the lecture:</p>
+<pre><code>scale up    replace the instance with a larger one (more vCPUs, RAM and network on one instance)
+scale out   run the work on a cluster of several nodes
+neither     keep the one instance as it is</code></pre>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## Which scaling move does each workload need? Each option may be used once, more than once, or not at all.
+
+- A team of 3 shares a Jupyter environment on the m6a.large and now needs 64 GB of RAM for a 24 GB dataset :: Scale up
+    &gt; One larger EC2 instance gives the team the RAM, and the data fits on one instance.
+- Training 100 random forest models with different hyperparameters on a 6 GB dataset takes 12 hours on the largest instance you can get, and the results are needed in 3 hours :: Scale out
+    &gt; The models are independent, so they can run on several nodes at once. Because no larger instance is available, four equivalent nodes with ideal scaling reduce the 12-hour run to about 3 hours.
+- A dashboard queries a 500 MB SQLite database on the m6a.large :: Neither
+    &gt; 500 MB fits in memory on a small instance, and nothing else in the task asks for more.
+- A weekly report on an m6a.xlarge (16 GB of RAM) reads 2 of 40 columns from a 7 GB Parquet file and finishes in 20 seconds :: Neither
+    &gt; The reader fetches only the 2 columns it needs, and the report already finishes in seconds, so there is nothing for a larger instance or a cluster to fix.
+- Processing 2 PB of genomic sequencing data from 200 research institutions, which the m6a.large would read through one network link :: Scale out
+    &gt; One instance reads all 2 PB through one network and works on it with one instance's vCPUs, and even the largest instance is a ceiling. A cluster reads and works on parts of the data on every node at once.
+- The m6a.large's 8 GB of RAM cannot hold a 15 GB Parquet file that a training step needs in memory all at once :: Scale up
+    &gt; One larger instance holds the data in memory, and no cluster is needed. The file is compressed, so the loaded data takes more than 15 GB: pick an instance with well over 15 GB of RAM.
+- :: Larger EBS volume
+    &gt; None of these workloads is short of disk space. A volume stores files; it adds no RAM, vCPUs or network.
+</div>
+<p>Slide: 38 (and 8, 10, 13, 36–37)</p>
+</section>
+</section>
+<section id="part-mixed" class="level2">
+<h2 class="anchored" data-anchor-id="part-mixed">Mixed: from L1–L3</h2>
+<section id="q-which-shape-of-demand-is-this" class="level3">
+<h3 class="anchored" data-anchor-id="q-which-shape-of-demand-is-this">Which shape of demand is this?</h3>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## A university's course-registration site gets almost no traffic for weeks. When registration opens at 8:00 one morning, about 20,000 students load its pages within ten minutes, and the traffic is back to almost nothing by noon. Which time shape of demand is this?
+
+- [x] A burst
+    &gt; Nothing for weeks, then nearly all the load within minutes: what must be bought is capacity for those ten minutes.
+- [ ] A daily rhythm
+    &gt; A daily rhythm repeats every day, busy at midday and near zero overnight. This peak comes on one morning, with weeks of near silence around it.
+- [ ] A scheduled job
+    &gt; A clock sets when the students arrive, but the load is thousands of separate requests from people. A scheduled job is one run started by a clock, with nothing between runs.
+</div>
+<p>Slide: L2 23, L3 38–39</p>
+<hr>
+</section>
+</section>
+<section id="part-terms" class="level2">
+<h2 class="anchored" data-anchor-id="part-terms">Terms used on this page</h2>
+<p>From the <a href="https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/quiz">course flashcards</a>, grouped by topic. Practise them in <a href="https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/quiz">quiz mode</a>, or try the <a href="https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/match">match game</a>.</p>
+<section id="parquet" class="level3">
+<h3 class="anchored" data-anchor-id="parquet">Parquet</h3>
+<p><strong>Parquet.</strong> A columnar file format. Rows are grouped into blocks that each store every column separately, and metadata at the end of the file says where each part is.</p>
+<p><strong>Row group.</strong> A horizontal block inside one Parquet file, holding one column chunk per column. Its size is set when the file is written, and a file can hold one or many.</p>
+<p><strong>Column chunk.</strong> The values of one field within one row group of a Parquet file. The writer can store their min and max, which lets a reader skip the whole row group.</p>
+<p><strong>Footer.</strong> The metadata at the end of a Parquet file: the schema, where each column chunk starts and, if the writer stored them, each chunk’s min and max. A reader fetches it before any data.</p>
+<p><strong>Projection pushdown.</strong> Handing the reader the list of columns a query uses, so it reads only those columns from a Parquet file.</p>
+<p><strong>Predicate pushdown.</strong> Handing the reader the query’s filter, so it can skip row groups whose stored min and max show that no row can match.</p>
+</section>
+<section id="layout-and-files-on-s3" class="level3">
+<h3 class="anchored" data-anchor-id="layout-and-files-on-s3">Layout and files on S3</h3>
+<p><strong>Folder partition.</strong> A dataset layout with one named location per value of a column, such as <code>day=2012-06-14/</code> (on S3, a prefix). A filter on that column skips the other locations without opening them.</p>
+<p><strong>Compaction.</strong> Rewriting many small files into fewer, larger ones, so a query opens fewer files. Too few files, or too few row groups, can leave cores idle.</p>
+<p><strong>Prefix.</strong> The leading part of an object’s name, such as <code>day=2012-06-14/</code>. S3 lists objects by it, and the console’s folders are built from it; the general-purpose buckets we use have no real folders.</p>
+<p><strong>S3.</strong> AWS’s object store. You reach each object over the network by its name inside a bucket, and the data stays with no server running.</p>
+<p><strong>Byte-range read.</strong> Asking S3 for one stated part of an object instead of the whole object. Parquet libraries fetch the footer this way, then only the column chunks a query needs.</p>
+</section>
+<section id="memory-and-resources" class="level3">
+<h3 class="anchored" data-anchor-id="memory-and-resources">Memory and resources</h3>
+<p><strong>Eager load.</strong> Reading the whole dataset into memory before the work starts. If data and working space exceed memory, the operating system swaps to disk or stops the program.</p>
+<p><strong>Storage, memory, compute and network.</strong> The four things every data task uses, each with a capacity and a rate. Looking at a job from each in turn helps find its bottleneck, and cloud architecture often trades one for another.</p>
+<p><strong>EBS volume.</strong> A disk an EC2 instance reaches over the network, as its main disk or an extra one. Its data survives a stop, and it bills per GB-month while it exists, even when the instance is stopped.</p>
+</section>
+<section id="also-used-on-this-page" class="level3">
+<h3 class="anchored" data-anchor-id="also-used-on-this-page">Also used on this page</h3>
+<p><strong>Instance type.</strong> The size you pick when you launch an EC2 server: how many vCPUs and how much memory it has, how fast its network is, and whether it has its own local disk.</p>
+<p><strong>Time shape of demand.</strong> When a workload asks for its resources across a day or a week: a steady rate, a daily rhythm, a burst, or a scheduled job. With the peak rate, it decides whether provisioned or usage-based billing is cheaper.</p>
+<p><strong>Amazon EMR.</strong> AWS’s managed service that launches a cluster of EC2 instances with Spark installed. You pay for the nodes from launch until you terminate the cluster.</p>
+<p><strong>Primary node (EMR).</strong> The one EMR instance that runs the cluster manager and the HDFS name service. It runs no executors.</p>
+<p><strong>Core node (EMR).</strong> An EMR instance that runs executors and stores HDFS data. A role an instance plays in the cluster, not a Spark slot.</p>
+<p><strong>Task node (EMR).</strong> An optional EMR instance that runs executors and stores no HDFS data, so it can be removed or bought as spot capacity without losing data.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

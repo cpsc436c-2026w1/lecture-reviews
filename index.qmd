@@ -5,5 +5,5 @@ toc: false
 
 Each page follows one lecture part by part, with the quizzes from the slides. The 📝 on a quiz slide links to the same quiz here.
 
+- [L4: scaling up, scaling out, and where the data lives](l4.qmd)
 - [L6: how Spark runs a query, and why it might be slow](w2-l6.qmd)
-- [Midterm review: practice questions on lectures 1 to 7](midterm-review.qmd)

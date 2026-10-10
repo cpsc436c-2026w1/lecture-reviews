@@ -1,0 +1,253 @@
+---
+title: "L4 review: scaling up, scaling out, and where the data lives"
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-title: "Parts"
+filters:
+  - quizdown
+---
+
+Practice questions for lecture 4, part by part, with feedback on every option. The slide numbers refer to the lecture PDF on Canvas. Numbers in the scenarios are made up for practice unless a price or an instance size is named.
+
+## The storage side of scaling up {#part-storage-side}
+
+### What does each filter condition make Spark read? {#q-what-does-each-filter-condition-make-spark-read}
+
+A city library keeps its loan records for September to December 2025 in S3 as Parquet, one folder partition per month of `loan_date`:
+
+    s3://city-library/loans/
+    ├── month=2025-09/
+    │   └── part-0.parquet        about 150 MB
+    ├── month=2025-10/
+    │   └── part-0.parquet
+    ├── month=2025-11/
+    │   └── part-0.parquet
+    └── month=2025-12/
+        └── part-0.parquet
+
+Each file, about 150 MB, holds only its month's loans, in many row groups (the blocks of rows inside a Parquet file). Inside a file the rows are sorted by `branch_id`; the other columns (`loan_date`, a DATE column, `loan_days` and `patron_id`) are in no particular order. Spark on an EMR cluster runs queries that each have one filter condition.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## For each condition, what does Spark open and read? Each option may be used once, more than once, or not at all.
+
+- `month = '2025-11'` :: 1 or 2 files opened, every row group read
+    > The condition names the folder key, so Spark keeps the November folder and rules out the other 3 by their names, without opening their files. Every row in the November file is a November loan, so every row matches and every row group is read.
+- `month IN ('2025-11', '2025-12')` :: 1 or 2 files opened, every row group read
+    > Two values of the key work the same way as one: Spark opens two folders and rules out 2 by name, then reads every row group of both files.
+- `branch_id = 17` :: all 4 files opened, some row groups may be skipped
+    > All 4 files are opened, because the condition does not name `month`. Inside each file the rows are sorted by branch, so each row group holds a narrow range of `branch_id`; where the writer stored each group's min and max in the footer, the reader rules out the groups whose range cannot hold 17 without fetching them.
+- `loan_date = DATE '2025-11-14'` :: all 4 files opened, some row groups may be skipped
+    > The `month` folders were made from the loan date, but this condition names `loan_date`, so no folder is ruled out by name and Spark opens all 4 files. Each file holds one month's loans, so every row group's min and max of `loan_date` fall inside that month: in the September, October and December files no group's range can hold 14 November 2025, so where the footer holds each group's min and max the reader skips them all. In the November file the days are in no order, so every group's range covers the day and every row group is read.
+- `loan_days > 21` :: all 4 files opened, every row group read
+    > The rows are not ordered by loan length, so every row group holds short and long loans and its min and max rule nothing out. Spark reads every row group of every file.
+- `patron_id = 40213` :: all 4 files opened, every row group read
+    > The condition matches few rows, but patron ids are spread over every row group, so each group's min and max cover 40213 and none can be ruled out.
+- :: footers read, no row group read
+    > A footer says where the row groups are and their min and max; it holds no rows. Spark has to read row groups to return a result.
+```
+
+Slide: 15, 20, 21, 23, 31
+
+### Which folder key best supports these queries? {#q-which-folder-key-best-supports-these-queries}
+
+A news site keeps its page views from January 2024 to December 2025 as one Parquet file in S3. There is no folder key yet:
+
+    s3://news-site/page-views/
+    └── page-views.parquet    4 GB, rows sorted by view time, many row groups
+
+The analysts' common queries filter on the view time, one day or one month, and count views per article category; they will write every time filter to name the folder key you choose. The rewrite keeps the rows sorted by view time, with many row groups in each file. DuckDB recommends at least 100 MB per folder partition.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## Which folder key best supports these queries?
+
+- [x] `month`: 24 folders of about 170 MB
+    > Each query names one month, so it opens one folder. Inside that folder, the footer's minimum and maximum view times let a daily query skip other days' row groups, and each folder partition is over 100 MB.
+- [ ] `day`: 731 folders of about 5.5 MB
+    > The `day` key matches the daily filter, and day folders helped the lecture's one-day query on the June file, but each 5.5 MB folder partition here is below the 100 MB guidance. A monthly query opens about 30 small folder partitions, while sorting by view time already lets a daily query skip row groups within a monthly folder partition.
+- [ ] `category`: 12 folders of about 330 MB
+    > The queries group by category and filter on dates. Every query needs all 12 categories, so it opens all 12 folders and the key rules nothing out.
+```
+
+Slide: 22–23
+
+### Which changes spread the scan over all four threads? {#q-which-changes-spread-the-scan-over-all-four-threads}
+
+A hotel chain exports its 2025 bookings as one Parquet file:
+
+    bookings-2025.parquet     1.2 GB, one row group
+
+DuckDB with four threads on an m6a.xlarge (4 vCPU, 16 GiB) computes the average nightly price per hotel for July 2025 in 3 s. During the query one vCPU is busy and three stay idle.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## Which of these changes let the July query finish sooner by spreading its scan over all four threads? Select every change that does.
+
+- [x] Rewrite the file with many row groups
+    > Row groups are the pieces a reader can split a scan into and read in parallel. With one row group the scan is a single piece, so one thread does it; DuckDB's own default write makes row groups of about 123,000 rows.
+- [x] Rewrite it as folder partitions by month, one file per month
+    > Two gains at once. The July query opens only July's file instead of all twelve months, and that file has many row groups, because any rewrite splits the rows into row groups, so the four threads share its scan.
+- [ ] Rewrite it as folder partitions by hotel, one file per hotel
+    > The threads do share the scan, one file each, but the July filter names no hotel, so every file is opened and all 1.2 GB is read for one month's rows. The key must match the filter.
+- [ ] Set DuckDB to 32 threads
+    > Extra threads cannot divide one row group: they have no piece to read, and the instance has only 4 vCPU to run them.
+- [ ] Move to an m6a.2xlarge (8 vCPU, 32 GiB)
+    > Three vCPUs are already idle, so neither memory nor vCPUs are short. The file would still be one piece, read by one thread.
+```
+
+Slide: 16–19
+
+## Scaling out: more nodes, and a network between them {#part-scaling-out}
+
+### Which first change cuts the daily query's time most? {#q-which-first-change-cuts-the-daily-querys-time-most}
+
+A parcel company keeps three years of parcel scans as CSV in S3:
+
+    s3://parcel-co/scans/
+    ├── part-0.csv
+    │   …
+    └── part-N.csv            450 GB in all, 25 columns, 2023 to 2025
+
+A daily query counts late parcels per depot for one month and uses 3 of the columns. On one m6a.xlarge it takes 50 minutes, and for most of that time the instance's network is at its limit reading from S3: the m6a.xlarge's baseline is 1.56 Gbps, about 195 MB/s, so 450 GB alone takes about 38 minutes to arrive.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## Which first change is likely to cut the daily query's time most?
+
+- [x] Convert the CSV once to Parquet
+    > The query then fetches 3 of the 25 columns, compressed and stored as typed values, so most of the 450 GB never crosses the network. L1's taxi query went from 14 min to 5.5 s this way on one instance.
+- [ ] Run it on EMR with three core nodes
+    > Three nodes bring about three times the network, so at best about a third of the time, and together they still read every byte of the CSV.
+- [ ] Split the CSV into many smaller files
+    > Smaller files cut the same 450 GB into more pieces, and every piece still crosses the same network.
+```
+
+Slide: 3, 24, 30
+
+### Which node type should they add? {#q-which-node-type-should-they-add}
+
+An EMR cluster with one primary node and two core nodes runs a long Spark job that reads its input from S3 and writes its results back to S3. To finish sooner, the team wants to add nodes for this job and remove them afterwards without losing any data the cluster stores.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## Which node type should they add?
+
+- [x] Task nodes
+    > Task nodes do work and store none of the cluster's distributed data, so removing them later loses nothing; the input and the results stay in S3.
+- [ ] Core nodes
+    > Core nodes also do work, but they store the cluster's distributed data on their disks, so removing one later takes its share of that data with it.
+- [ ] A larger primary node
+    > The primary node manages the cluster and coordinates its services. The job runs on the core and task nodes, so enlarging the primary does not add processing capacity to those nodes.
+```
+
+Slide: 29
+
+### After how many queries has the rewrite paid back? {#q-after-how-many-queries-has-the-rewrite-paid-back}
+
+The City of Vancouver publishes its 3-1-1 non-emergency service requests as open data. A team keeps five years of them as CSV in S3, and a weekly query reads them:
+
+    s3://van-311/requests/
+    ├── 2021.csv
+    │   …
+    └── 2025.csv               five years of service requests
+
+Rewriting them once as sorted, partitioned Parquet uses 1,200 CPU-seconds. The weekly query uses 50 CPU-seconds on the CSV and 10 CPU-seconds on the rewritten files.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## After how many weekly queries has the rewrite paid back its CPU-seconds?
+
+- [x] 30 queries
+    > Each query saves 50 − 10 = 40 CPU-seconds, and 1,200 / 40 = 30: about seven months of weekly runs.
+- [ ] 24 queries
+    > 1,200 / 50 divides by what the old query cost. The rewrite is paid back by what each query saves, 40 CPU-seconds.
+- [ ] 120 queries
+    > 1,200 / 10 divides by what the new query costs. The rewrite is paid back by what each query saves, 40 CPU-seconds.
+```
+
+Slide: 32
+
+## The case (A2): Best model search for the taxi data {#part-the-case}
+
+### Scale up, scale out, or neither? {#q-scale-up-scale-out-or-neither}
+
+Each workload below runs today on one EC2 instance, an m6a.large (2 vCPU, 8 GB of RAM), unless the row says otherwise. The three moves from the lecture:
+
+    scale up    replace the instance with a larger one (more vCPUs, RAM and network on one instance)
+    scale out   run the work on a cluster of several nodes
+    neither     keep the one instance as it is
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## Which scaling move does each workload need? Each option may be used once, more than once, or not at all.
+
+- A team of 3 shares a Jupyter environment on the m6a.large and now needs 64 GB of RAM for a 24 GB dataset :: Scale up
+    > One larger EC2 instance gives the team the RAM, and the data fits on one instance.
+- Training 100 random forest models with different hyperparameters on a 6 GB dataset takes 12 hours on the largest instance you can get, and the results are needed in 3 hours :: Scale out
+    > The models are independent, so they can run on several nodes at once. Because no larger instance is available, four equivalent nodes with ideal scaling reduce the 12-hour run to about 3 hours.
+- A dashboard queries a 500 MB SQLite database on the m6a.large :: Neither
+    > 500 MB fits in memory on a small instance, and nothing else in the task asks for more.
+- A weekly report on an m6a.xlarge (16 GB of RAM) reads 2 of 40 columns from a 7 GB Parquet file and finishes in 20 seconds :: Neither
+    > The reader fetches only the 2 columns it needs, and the report already finishes in seconds, so there is nothing for a larger instance or a cluster to fix.
+- Processing 2 PB of genomic sequencing data from 200 research institutions, which the m6a.large would read through one network link :: Scale out
+    > One instance reads all 2 PB through one network and works on it with one instance's vCPUs, and even the largest instance is a ceiling. A cluster reads and works on parts of the data on every node at once.
+- The m6a.large's 8 GB of RAM cannot hold a 15 GB Parquet file that a training step needs in memory all at once :: Scale up
+    > One larger instance holds the data in memory, and no cluster is needed. The file is compressed, so the loaded data takes more than 15 GB: pick an instance with well over 15 GB of RAM.
+- :: Larger EBS volume
+    > None of these workloads is short of disk space. A volume stores files; it adds no RAM, vCPUs or network.
+```
+
+Slide: 38 (and 8, 10, 13, 36–37)
+
+## Mixed: from L1–L3 {#part-mixed}
+
+### Which shape of demand is this? {#q-which-shape-of-demand-is-this}
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## A university's course-registration site gets almost no traffic for weeks. When registration opens at 8:00 one morning, about 20,000 students load its pages within ten minutes, and the traffic is back to almost nothing by noon. Which time shape of demand is this?
+
+- [x] A burst
+    > Nothing for weeks, then nearly all the load within minutes: what must be bought is capacity for those ten minutes.
+- [ ] A daily rhythm
+    > A daily rhythm repeats every day, busy at midday and near zero overnight. This peak comes on one morning, with weeks of near silence around it.
+- [ ] A scheduled job
+    > A clock sets when the students arrive, but the load is thousands of separate requests from people. A scheduled job is one run started by a clock, with nothing between runs.
+```
+
+Slide: L2 23, L3 38–39
+
+---
+
+## Terms used on this page {#part-terms}
+
+From the [course flashcards](https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/quiz), grouped by topic. Practise them in [quiz mode](https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/quiz), or try the [match game](https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/match).
+
+{{< include _terms/page-l4.md >}}
