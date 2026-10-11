@@ -24,12 +24,8 @@ shuffle_answers: true
 
 ## What starts each job? Each option may be used once, more than once, or not at all.
 
-- converts each new file in `checkins/incoming/` to Parquet in `checkins/parquet/` :: event, matched by an EventBridge rule's event pattern
-    > Something happened (a file landed), and the function reacts to it with nobody waiting for an answer. The rule's event pattern matches object-created events under that prefix.
 - recomputes a pantry's month each time the pantry uploads a corrected file to `checkins/corrections/` :: event, matched by an EventBridge rule's event pattern
     > A corrected file landing is something that happened; the rule's pattern matches new objects under `checkins/corrections/`, and nobody waits on the result.
-- on the first day of each month at 04:30, deletes check-in files older than two years :: schedule, from an EventBridge rule's schedule expression
-    > A clock starts it, at 04:30 on the first day of each month, and no new file and no caller is involved. The rule's schedule expression says when.
 - every 30 minutes, fetches a public food-price list from a provincial web service and appends it to a CSV in S3 :: schedule, from an EventBridge rule's schedule expression
     > A clock starts it, every 30 minutes, and no new file and no caller is involved; the web request is what the job does once it runs. The rule's schedule expression, such as `rate(30 minutes)`, says when.
 - answers a volunteer's phone form, which sends a household's postal code and waits for the nearest open pantry :: request, through API Gateway's HTTP API
