@@ -346,27 +346,6 @@ shuffle_answers: true
 - :: Lambda layer
     &gt; A layer packages libraries for a Lambda function. An instance gets its software from its image or from a script it runs at first boot.
 </div>
-<p>An EC2 instance runs a notebook for a vineyard’s analysts. The instance’s role has a policy that allows one action, <code>s3:ListBucket</code>, on the bucket <code>vineyard-harvest</code>. In the notebook, listing works and reading does not:</p>
-<pre><code>!aws s3 ls s3://vineyard-harvest/2025/                       lists 12 objects
-pd.read_parquet("s3://vineyard-harvest/2025/blocks.parquet")  AccessDenied</code></pre>
-<div class="quizdown">
----
-shuffle_answers: true
----
-
-## What is true of this instance and the failed read? Select every true statement.
-
-- [x] The instance can already reach S3 over the network
-    &gt; The listing came back from S3, so the network path between the instance and S3 works.
-- [x] The read fails because of what the instance's role is allowed to do
-    &gt; AccessDenied is S3's answer about the identity making the request. Code on the instance acts as the instance's role, and its policy allows only listing.
-- [ ] AccessDenied means the security group blocks the instance's traffic to S3
-    &gt; A blocked network path gives no answer at all: the request times out. The listing came back from S3, so the network path to S3 already works, and AccessDenied is S3 refusing the read.
-- [ ] Opening port 443 to inbound traffic in the instance's security group fixes the read
-    &gt; Inbound rules decide which addresses can reach the instance's ports, and this read is an outbound call from the instance to S3. The listing came back from S3, so the network path to S3 already works, and AccessDenied is S3 refusing the read.
-- [ ] Adding `s3:GetObject` on the bucket's Amazon Resource Name (ARN), the one the policy already names, fixes the read
-    &gt; The bucket's ARN names the bucket itself, which is what listing acts on. Reading acts on the objects in it, so `s3:GetObject` has to be allowed on the objects' ARN, the bucket's ARN followed by `/*`.
-</div>
 <p>Slide: 25, 29, 30 (also 18, 27, 38)</p>
 </section>
 <section id="q-who-handles-each-task" class="level3">
