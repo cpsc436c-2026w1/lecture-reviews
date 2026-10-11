@@ -174,10 +174,6 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#q-cold-starts-warm-calls-and-memory" id="toc-q-cold-starts-warm-calls-and-memory" class="nav-link" data-scroll-target="#q-cold-starts-warm-calls-and-memory">Cold starts, warm calls and the memory setting</a></li>
   </ul></li>
-  <li><a href="#part-what-bills-while-nothing-runs" id="toc-part-what-bills-while-nothing-runs" class="nav-link" data-scroll-target="#part-what-bills-while-nothing-runs">What bills while no workload runs</a>
-  <ul class="collapse">
-  <li><a href="#q-what-does-the-setup-cost-overnight" id="toc-q-what-does-the-setup-cost-overnight" class="nav-link" data-scroll-target="#q-what-does-the-setup-cost-overnight">What does the setup cost overnight, while no workload runs?</a></li>
-  </ul></li>
   <li><a href="#part-terms" id="toc-part-terms" class="nav-link" data-scroll-target="#part-terms">Terms used on this page</a>
   <ul class="collapse">
   <li><a href="#ec2-instances" id="toc-ec2-instances" class="nav-link" data-scroll-target="#ec2-instances">EC2 instances</a></li>
@@ -426,76 +422,6 @@ shuffle_answers: true
     &gt; The timeout is the longest a call may run before Lambda stops it. The calls finish in 8 s, well inside 30 s, and a higher limit does not make them faster.
 </div>
 <p>Slide: 36, 33 (also 35)</p>
-</section>
-</section>
-<section id="part-what-bills-while-nothing-runs" class="level2">
-<h2 class="anchored" data-anchor-id="part-what-bills-while-nothing-runs">What bills while no workload runs</h2>
-<section id="q-what-does-the-setup-cost-overnight" class="level3">
-<h3 class="anchored" data-anchor-id="q-what-does-the-setup-cost-overnight">What does the setup cost overnight, while no workload runs?</h3>
-<p>A seed bank’s data team runs its inventory analysis in ca-central-1. From 20:00 to 08:00 no one works, no request arrives and no job runs. Their setup at 20:00, with its prices; count only the items the table lists:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">item</th>
-<th style="text-align: left;">state overnight</th>
-<th style="text-align: right;">price</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">service instance, m6a.xlarge</td>
-<td style="text-align: left;">running, a FastAPI service that gets no requests</td>
-<td style="text-align: right;">$0.1926 an hour</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">old instance, t3a.large</td>
-<td style="text-align: left;">stopped at 18:00</td>
-<td style="text-align: right;">$0.0835 an hour while running</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Elastic IP on the old instance</td>
-<td style="text-align: left;">attached, instance stopped</td>
-<td style="text-align: right;">$0.005 an hour</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">EBS volume, 75 GB, the old instance’s disk</td>
-<td style="text-align: left;">attached, instance stopped</td>
-<td style="text-align: right;">$0.11 a night ($0.088 per GB-month)</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">archive, 300 GB in S3 Standard-Infrequent Access</td>
-<td style="text-align: left;">not read</td>
-<td style="text-align: right;">$0.07 a night to store, $0.01 per GB read</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Lambda function, 2,048 MB</td>
-<td style="text-align: left;">no calls; its execution environment from the 19:55 call is still up</td>
-<td style="text-align: right;">$0.0000166667 per GB-second of run time</td>
-</tr>
-</tbody>
-</table>
-<div class="quizdown">
----
-shuffle_answers: true
----
-
-## What does the setup cost between 20:00 and 08:00, to the nearest cent?
-
-1. [ ] \$3.55
-    &gt; This bills the stopped t3a.large for its 12 hours, \$1.00 more. EC2 bills an instance per second while it runs; a stopped instance bills no compute, though its Elastic IP and its disk still bill.
-1. [x] \$2.55
-    &gt; The running m6a.xlarge costs 12 × \$0.1926 = \$2.31, and the Elastic IP costs 12 × \$0.005 = \$0.06. The volume and archive add \$0.11 and \$0.07; the stopped instance and idle Lambda execution environment add no compute charge.
-1. [ ] \$2.37
-    &gt; This counts only the running instance and the address, as if kept data billed only when read. The volume and the archive bill per GB-month while they exist, read or not: \$0.18 more.
-1. [ ] \$3.99
-    &gt; This bills the function's idle execution environment for 12 hours: 2 GB × 43,200 s = 86,400 GB-seconds, \$1.44. Lambda bills GB-seconds only while code runs, and with no calls nothing runs.
-</div>
-<p>Slide: 25, 9, 35 (also 16, 19, 39)</p>
 </section>
 </section>
 <section id="part-terms" class="level2">
