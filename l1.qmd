@@ -44,9 +44,9 @@ Slide: 4, 6, 8 (also 3, 22)
 
 A podcast platform keeps its episode downloads for January 2024 to December 2025 as one Parquet file in S3:
 
-    downloads.parquet    8 GB, 40 columns, each column about 200 MB of the file
+    downloads.parquet    4.8 GB, 40 columns, each column about 120 MB of the file
                          rows sorted by download time
-                         48 row groups of about equal size, each holding half a month of downloads
+                         24 row groups of about equal size, one per month, 200 MB each
 
 A query counts downloads per episode for May 2025 and uses 6 of the 40 columns. The footer at the end of the file holds each row group's min and max download time.
 
@@ -57,17 +57,17 @@ shuffle_answers: true
 
 ## DuckDB on a laptop reads downloads.parquet directly from S3 using `httpfs`, its extension for reading remote files. About how many MB does it fetch for the May 2025 query, not counting the footer?
 
-1. [x] 50 MB
-    > The footer's min and max show that only 2 of the 48 row groups hold May 2025, and in those the reader takes only the 6 columns' chunks: 6 × 200 MB × 2/48 = 50 MB.
-1. [ ] 1,200 MB
-    > This takes the 6 columns from all 48 row groups. The rows are sorted by download time, so the footer's min and max rule out the 46 row groups that hold no May 2025 downloads.
-1. [ ] 333 MB
-    > This takes every column of the 2 May row groups, as if a row group had to be read whole. Each column has its own chunk inside the row group, so the other 34 columns are left behind.
-1. [ ] 8,000 MB
-    > This is the whole file, with neither saving applied. The rows are sorted by download time, so the footer's min and max rule out the 46 row groups that hold no May 2025 downloads, and each column has its own chunk, so the other 34 columns are left behind.
+1. [x] 30 MB
+    > The footer's min and max show that only 1 of the 24 row groups holds May 2025, and in it the reader takes only the 6 columns' chunks: 6 × 120 MB / 24 = 30 MB.
+1. [ ] 720 MB
+    > This takes the 6 columns from all 24 row groups. The rows are sorted by download time, so the footer's min and max rule out the 23 row groups that hold no May 2025 downloads.
+1. [ ] 200 MB
+    > This takes every column of the May row group, as if a row group had to be read whole. Each column has its own chunk inside the row group, so the other 34 columns are left behind.
+1. [ ] 4,800 MB
+    > This is the whole file, with neither saving applied. The rows are sorted by download time, so the footer's min and max rule out the 23 row groups that hold no May 2025 downloads, and each column has its own chunk, so the other 34 columns are left behind.
 ```
 
-The platform then rewrites the same downloads into a new file of the same size, with the rows not ordered by time: each of the 48 row groups now holds downloads from all 24 months. The columns, their sizes and the query stay the same.
+The platform then rewrites the same downloads into a new file of the same size, with the rows not ordered by time: each of the 24 row groups now holds downloads from all 24 months. The columns, their sizes and the query stay the same.
 
 ```quizdown
 ---
@@ -76,13 +76,13 @@ shuffle_answers: true
 
 ## About how many MB does DuckDB fetch from the rewritten file for the May 2025 query, not counting the footer?
 
-1. [x] 1,200 MB
-    > Every row group's min and max now span all 24 months, so none can be ruled out. The column chunks still let the reader take only the 6 columns: 6 × 200 MB = 1,200 MB.
-1. [ ] 50 MB
-    > 50 MB assumes that only 2 row groups hold May 2025, as in the sorted file. In the rewritten file every row group's min and max span all 24 months, so none can be ruled out and DuckDB fetches the 6 columns' chunks from all 48 row groups.
-1. [ ] 333 MB
-    > 333 MB assumes that 2 row groups still hold all of May and must be read in full. In the rewritten file every row group's min and max span all 24 months, so none can be ruled out, and DuckDB fetches only the 6 columns' chunks, from all 48 row groups.
-1. [ ] 8,000 MB
+1. [x] 720 MB
+    > Every row group's min and max now span all 24 months, so none can be ruled out. The column chunks still let the reader take only the 6 columns: 6 × 120 MB = 720 MB.
+1. [ ] 30 MB
+    > 30 MB assumes that one row group holds all of May 2025, as in the sorted file. In the rewritten file every row group's min and max span all 24 months, so none can be ruled out and DuckDB fetches the 6 columns' chunks from all 24 row groups.
+1. [ ] 200 MB
+    > 200 MB assumes that one row group still holds all of May and must be read in full. In the rewritten file every row group's min and max span all 24 months, so none can be ruled out, and DuckDB fetches only the 6 columns' chunks, from all 24 row groups.
+1. [ ] 4,800 MB
     > Losing the row-group saving does not lose the column saving: each column still has its own chunk in every row group, so the other 34 columns are left behind.
 ```
 
