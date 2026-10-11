@@ -191,7 +191,7 @@ shuffle_answers: true
 - the call at 07:30 the next morning :: new execution environment
     > This call has a cold start because Lambda has removed the environments that remained idle overnight. Lambda creates a new environment and loads the 60 MB table into it before the handler runs, so the call takes about 3 s.
 - :: new EC2 instance
-    > Lambda does not start an instance for you. It creates execution environments on servers AWS runs, and you never see or pick an instance.
+    > Lambda does not start an instance for you. In its standard mode it creates execution environments on hardware AWS runs, and you never see or pick an instance.
 - :: same environment, soil table loaded again
     > An existing execution environment retains the soil table in memory, so a warm call does not repeat the start-up load. This reuse explains why the call takes about 80 ms instead of 3 s.
 ```
