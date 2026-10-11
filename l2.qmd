@@ -1,0 +1,280 @@
+---
+title: "L2 review: EC2, S3 and Lambda by example"
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-title: "Parts"
+filters:
+  - quizdown
+---
+
+Numbers in the scenarios are made up for practice unless a price or an instance size is named. If you need to look up a term, the [relevant vocabulary is below](#part-terms).
+
+## Object storage: S3 {#part-object-storage-s3}
+
+### Buoy readings in S3: names and storage classes {#q-buoy-readings-in-s3}
+
+An ocean-research lab keeps a year of buoy readings in the S3 bucket `buoy-lab`, one Parquet object per buoy per day, 200 GB in all. The object keys look like this:
+
+    readings/2025-01-01/buoy-04.parquet
+    readings/2025-01-01/buoy-17.parquet
+    …
+    readings/2025-03-01/buoy-04.parquet
+    readings/2025-03-02/buoy-04.parquet
+    …
+    readings/2025-12-31/buoy-17.parquet
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## Which prefix lists the March 2025 readings and nothing else?
+
+1. [x] `readings/2025-03-`
+    > A prefix is the leading part of an object's key, and it does not have to end at a `/`. Every March 2025 key begins with `readings/2025-03-`, and no other key does.
+1. [ ] `readings/2025/03/`
+    > This reads the keys as folders by year and then by month. A general-purpose bucket has no real folders and the keys say `2025-03-01`, so no key begins with `readings/2025/03/` and the listing comes back empty.
+1. [ ] `2025-03-`
+    > This treats a prefix as any part of the name. A prefix is where the key starts and every key here starts with `readings/`, so no key begins with `2025-03-` and the listing comes back empty.
+```
+
+The lab's model retraining job runs in ca-central-1 and reads all 200 GB of `buoy-lab` every night, 30 nights a month. S3 prices in ca-central-1 for storing and reading back data; per-request charges are small here and left out:
+
+| storage class | to store | to read back |
+|:--|--:|--:|
+| Standard | \$0.025 per GB-month | none |
+| Standard-Infrequent Access | \$0.0138 per GB-month | \$0.01 per GB, and each object is billed for at least 30 days |
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## Which storage class choice keeps the monthly bill for the buoy readings lowest?
+
+1. [x] Keep the readings in Standard
+    > Standard costs 200 × \$0.025 = \$5 a month, and the nightly reads add no charge for reading back. The job touches every object every night, which is the use Standard is priced for.
+1. [ ] Move the readings to Standard-Infrequent Access
+    > This compares the storage prices only: \$2.76 a month instead of \$5. Infrequent Access charges to read the data back, and the job reads 200 GB on each of 30 nights: 6,000 GB × \$0.01 = \$60 more, about \$62.76 in all.
+1. [ ] Move the readings older than six months to Standard-Infrequent Access
+    > This assumes older readings are read less. Here the retraining job reads the whole year every night, so the older 100 GB would cost \$1.38 to store and \$30 a month to read back, against \$2.50 in Standard.
+```
+
+Slide: 9, 38 (also 8, 10)
+
+## Time shape of demand {#part-the-time-shape-of-demand}
+
+### What is the time shape of each workload's demand? {#q-what-is-the-time-shape-of-each-workloads-demand}
+
+Each line below says when one workload asks for compute.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## For each workload, what is the time shape of its demand? Each option may be used once, more than once, or not at all.
+
+- A ship-tracking service receives each vessel's position every 10 seconds, about 300 positions a minute, day and night. :: steady rate (all day)
+    > The positions keep arriving at about the same pace around the clock, with no quiet hours.
+- A factory's 400 sensors each send a reading every second, around the clock. :: steady rate (all day)
+    > The sensors send readings at the same rate during both day and night, so demand stays steady throughout the day.
+- A recipe site's search box is busy at lunch and at dinner and near zero between 01:00 and 06:00. :: daily rhythm
+    > Demand follows the same daily pattern: it is high around meals and near zero overnight.
+- An office's room-booking app is busy from 9 to 5 and almost unused at night. :: daily rhythm
+    > Demand is high during office hours and low at night, and this pattern repeats each day.
+- A flood-warning model runs only when a river gauge crosses its alarm level: nothing for weeks, then 2,000 runs in a few minutes. :: burst
+    > Demand is absent for weeks and then surges for a few minutes after an unpredictable alarm. That pattern is a burst.
+- A product-recall lookup gets no queries for days, then 50,000 in 10 minutes after a recall notice goes out. :: burst
+    > Demand is near zero for days and then surges for a short period after an unscheduled recall notice. That pattern is a burst.
+- :: scheduled job
+    > A scheduled job starts at a fixed clock time, such as a 2-hour run every Sunday at 23:00. None of these workloads starts on a fixed schedule; each responds to incoming data or an outside event.
+- :: usage-based billing
+    > Usage-based billing means charges are based on measured resource use. It describes how charges are calculated, whereas the rows ask when each workload demands compute.
+```
+
+Slide: 15, 23 (also 16, 39)
+
+## EC2: renting an instance {#part-ec2-renting-an-instance}
+
+### Setting up an instance for the harvest records {#q-setting-up-an-instance-for-the-harvest-records}
+
+A vineyard's analysts keep their 2025 harvest records as Parquet files in the S3 bucket `vineyard-harvest`. They launch one EC2 instance to run a FastAPI service that answers questions about the harvest, with these requirements.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## Which launch setting meets each requirement? Not all options will be used.
+
+- The service needs 8 vCPUs and 32 GiB of memory. :: instance type
+    > The type fixes vCPUs, memory and network performance: an m6a.2xlarge has 8 vCPUs and 32 GiB. You pick it from a menu; you cannot assemble your own mix.
+- The instance starts with Amazon Linux and the analysts' Python packages already installed, as they set it up last season. :: image (AMI)
+    > An image (AMI) holds the operating system and the software an instance starts from, and you can make your own.
+- The service's code is downloaded and started on the first boot, without anyone logging in. :: user data
+    > User data is a script passed at launch that runs once, on the instance's first start.
+- Anyone on the internet can reach the service on port 8000, and no other port is open. :: security group
+    > A security group opens a port to the addresses you name; every other port stays closed.
+- 60 GB of downloaded weather files must still be there after the instance is stopped and started again. :: EBS volume
+    > An EBS volume is a disk the instance reaches over the network, as its main disk or an extra one, and its data survives a stop and start.
+- :: Elastic IP
+    > An Elastic IP is an address held for you that stays the same across a stop and start. It decides where the instance can be reached, not which ports are open, and it does not hold files.
+- :: IAM role
+    > A role is the instance's identity when it calls AWS, such as reading the bucket. It decides what the instance may do, not who can reach its ports.
+- :: Lambda layer
+    > A layer packages libraries for a Lambda function. An instance gets its software from its image or from a script it runs at first boot.
+```
+
+An EC2 instance runs a notebook for a vineyard's analysts. The instance's role has a policy that allows one action, `s3:ListBucket`, on the bucket `vineyard-harvest`. In the notebook, listing works and reading does not:
+
+    !aws s3 ls s3://vineyard-harvest/2025/                       lists 12 objects
+    pd.read_parquet("s3://vineyard-harvest/2025/blocks.parquet")  AccessDenied
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## What is true of this instance and the failed read? Select every true statement.
+
+- [x] The instance can already reach S3 over the network
+    > The listing came back from S3, so the network path between the instance and S3 works.
+- [x] The read fails because of what the instance's role is allowed to do
+    > AccessDenied is S3's answer about the identity making the request. Code on the instance acts as the instance's role, and its policy allows only listing.
+- [ ] AccessDenied means the security group blocks the instance's traffic to S3
+    > A blocked network path gives no answer at all: the request times out. The listing came back from S3, so the network path to S3 already works, and AccessDenied is S3 refusing the read.
+- [ ] Opening port 443 to inbound traffic in the instance's security group fixes the read
+    > Inbound rules decide which addresses can reach the instance's ports, and this read is an outbound call from the instance to S3. The listing came back from S3, so the network path to S3 already works, and AccessDenied is S3 refusing the read.
+- [ ] Adding `s3:GetObject` on the bucket's Amazon Resource Name (ARN), the one the policy already names, fixes the read
+    > The bucket's ARN names the bucket itself, which is what listing acts on. Reading acts on the objects in it, so `s3:GetObject` has to be allowed on the objects' ARN, the bucket's ARN followed by `/*`.
+```
+
+Slide: 25, 29, 30 (also 18, 27, 38)
+
+### Who handles each task, on an instance and on a function? {#q-who-handles-each-task}
+
+A team runs the same daily harvest report two ways: on an EC2 instance, a t3a.large running a FastAPI service, and as a Lambda function with a pandas layer and an execution role that can read the bucket `vineyard-harvest`. These tasks come up over one month.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## For each task, who handles it on the instance and on the function? Each option may be used once, more than once, or not at all.
+
+- Choosing how much memory the report runs with. :: you on both
+    > On the instance you pick the instance type, which fixes its memory; on the function you pick the memory setting.
+- Restarting the service after it crashes. :: you on the instance, AWS on the function
+    > On the instance the service is a program you run, so bringing it back after a crash is your job. On Lambda the platform manages the execution environment, and the next call runs the function again.
+- Picking the storage class of the objects in `vineyard-harvest`. :: you on both
+    > The bucket is the same S3 bucket whichever way the report runs, and the storage class of its objects is your choice.
+- Starting Python and the program that answers requests. :: you on the instance, AWS on the function
+    > On the instance the runtime and the web server (uvicorn for FastAPI) are yours to install and start. On Lambda you supply only the function, and the platform starts the runtime for it.
+- Shutting the compute down when the day's reports are done. :: you on the instance, AWS on the function
+    > The instance runs, and bills, until you stop it. A function runs only while it is called, and the platform manages what happens between calls.
+- Adding capacity when 200 analysts ask for the report in the same minute. :: you on the instance, AWS on the function
+    > The instance has the capacity of the type you picked, and adding more is your job. On Lambda, scaling to many calls at once is the platform's job.
+- :: AWS on both
+    > AWS manages the hardware and the hypervisor beneath an EC2 instance. The tasks listed here remain your responsibility on the instance.
+- :: AWS on the instance, you on the function
+    > This swaps the two sides. The instance is the one you administer from the operating system up; on the function the platform starts the runtime and scales it.
+```
+
+Slide: 20 (also 25, 33, 37)
+
+## Lambda: a function that runs only when called {#part-lambda}
+
+### Cold starts, warm calls and the memory setting {#q-cold-starts-warm-calls-and-memory}
+
+A Lambda function returns a crop-yield estimate for one field. An execution environment is the isolated space Lambda sets up to run a function, with its memory and a temporary disk; it handles one call at a time and may be reused for later calls. Before its handler runs, the function loads a 60 MB table of soil data from S3 and keeps it in memory. A new version was deployed at 08:55. A call that lands on an execution environment that is already up takes about 80 ms; a call that needs a new one takes about 3 s, most of it the table load. For this question, assume no execution environment exists for the new version before the 09:00 call, that Lambda reuses an idle execution environment when one is available, and that it removes environments that remain idle overnight. These calls arrive:
+
+    09:00:00            the first call of the day
+    09:00:20            after the 09:00:00 call finished, nothing else running
+    09:00:20 + 50 ms    while the 09:00:20 call is still running
+    09:00:40            both execution environments idle
+    07:30 next morning  the first call after no calls all night
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## For each call, which execution environment does Lambda run it in? Each option may be used once, more than once, or not at all.
+
+- the call at 09:00:00 :: new execution environment
+    > This call has a cold start because no execution environment exists yet for the version deployed at 08:55. Lambda creates a new environment and loads the 60 MB table into it before the handler runs, so the call takes about 3 s.
+- the call at 09:00:20 :: existing execution environment
+    > This is a warm call, which means Lambda reuses an existing execution environment. The environment from 09:00:00 is idle, with its soil table still in memory.
+- the call 50 ms after 09:00:20 :: new execution environment
+    > This call has a cold start because the environment handling the 09:00:20 call is still busy. Lambda creates a new environment and loads the 60 MB table into it before the handler runs, so the call takes about 3 s.
+- the call at 09:00:40 :: existing execution environment
+    > This is a warm call because both execution environments are idle at 09:00:40. Lambda uses one of them and reuses its loaded table.
+- the call at 07:30 the next morning :: new execution environment
+    > This call has a cold start because Lambda has removed the environments that remained idle overnight. Lambda creates a new environment and loads the 60 MB table into it before the handler runs, so the call takes about 3 s.
+- :: new EC2 instance
+    > Lambda does not start an instance for you. It creates execution environments on servers AWS runs, and you never see or pick an instance.
+- :: same environment, soil table loaded again
+    > An existing execution environment retains the soil table in memory, so a warm call does not repeat the start-up load. This reuse explains why the call takes about 80 ms instead of 3 s.
+```
+
+A Lambda function set to 512 MB of memory reads a 40 MB CSV file of field readings and groups it with pandas, which comes from a layer. Each call uses about 300 MB of memory and takes 8 s, with its CPU busy the whole time. The timeout is 30 s.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## Which change is likely to make each call finish sooner?
+
+1. [x] Raise the memory setting to 1,769 MB
+    > Lambda's CPU follows the memory setting: 1,769 MB buys one full vCPU, and 512 MB gets under a third of one. The call is CPU-bound, so more memory brings it more CPU, even though 300 MB would be enough to hold the data.
+1. [ ] Choose a compute-optimised instance type for the function
+    > This carries EC2 over to Lambda. In Lambda's standard, on-demand mode, the one this course uses, there is no instance type to choose: CPU follows the memory setting. AWS also offers [Lambda Managed Instances](https://docs.aws.amazon.com/lambda/latest/dg/lambda-managed-instances.html), where you do pick EC2 instance types for a function's capacity; the course does not use them.
+1. [ ] Raise the timeout from 30 s to 60 s
+    > The timeout is the longest a call may run before Lambda stops it. The calls finish in 8 s, well inside 30 s, and a higher limit does not make them faster.
+```
+
+Slide: 36, 33 (also 35)
+
+## What bills while no workload runs {#part-what-bills-while-nothing-runs}
+
+### What does the setup cost overnight, while no workload runs? {#q-what-does-the-setup-cost-overnight}
+
+A seed bank's data team runs its inventory analysis in ca-central-1. From 20:00 to 08:00 no one works, no request arrives and no job runs. Their setup at 20:00, with its prices; count only the items the table lists:
+
+| item | state overnight | price |
+|:--|:--|--:|
+| service instance, m6a.xlarge | running, a FastAPI service that gets no requests | \$0.1926 an hour |
+| old instance, t3a.large | stopped at 18:00 | \$0.0835 an hour while running |
+| Elastic IP on the old instance | attached, instance stopped | \$0.005 an hour |
+| EBS volume, 75 GB, the old instance's disk | attached, instance stopped | \$0.11 a night (\$0.088 per GB-month) |
+| archive, 300 GB in S3 Standard-Infrequent Access | not read | \$0.07 a night to store, \$0.01 per GB read |
+| Lambda function, 2,048 MB | no calls; its execution environment from the 19:55 call is still up | \$0.0000166667 per GB-second of run time |
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## What does the setup cost between 20:00 and 08:00, to the nearest cent?
+
+1. [ ] \$3.55
+    > This bills the stopped t3a.large for its 12 hours, \$1.00 more. EC2 bills an instance per second while it runs; a stopped instance bills no compute, though its Elastic IP and its disk still bill.
+1. [x] \$2.55
+    > The running m6a.xlarge costs 12 × \$0.1926 = \$2.31, and the Elastic IP costs 12 × \$0.005 = \$0.06. The volume and archive add \$0.11 and \$0.07; the stopped instance and idle Lambda execution environment add no compute charge.
+1. [ ] \$2.37
+    > This counts only the running instance and the address, as if kept data billed only when read. The volume and the archive bill per GB-month while they exist, read or not: \$0.18 more.
+1. [ ] \$3.99
+    > This bills the function's idle execution environment for 12 hours: 2 GB × 43,200 s = 86,400 GB-seconds, \$1.44. Lambda bills GB-seconds only while code runs, and with no calls nothing runs.
+```
+
+Slide: 25, 9, 35 (also 16, 19, 39)
+
+## Terms used on this page {#part-terms}
+
+From the [course flashcards](https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/quiz), grouped by topic. Practise them in [quiz mode](https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/quiz), or try the [match game](https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/match).
+
+{{< include _terms/page-l2.md >}}

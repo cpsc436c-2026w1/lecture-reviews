@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>L3 review: cost models, capacity and what starts a function – CPSC 436C lecture reviews</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-fc5028672c55bc042a1fdef173a2e080.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/quizdown-0.6.0/quizdown.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-0.6.0/quizdownKatex.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-0.6.0/quizdownHighlight.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-0.6.0/quizdown-init.js"></script>
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">CPSC 436C lecture reviews</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Lecture reviews</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://cpsc436c-2026w1.github.io/a1-starter/"> 
+<span class="menu-text">A1 starter</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://cpsc436c-2026w1.github.io/a2-starter/"> 
+<span class="menu-text">A2 starter</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Parts</h2>
+   
+  <ul>
+  <li><a href="#part-what-starts-a-function" id="toc-part-what-starts-a-function" class="nav-link active" data-scroll-target="#part-what-starts-a-function">What starts a function</a>
+  <ul class="collapse">
+  <li><a href="#q-requests-events-and-schedules" id="toc-q-requests-events-and-schedules" class="nav-link" data-scroll-target="#q-requests-events-and-schedules">Requests, events and schedules</a></li>
+  <li><a href="#q-a-partners-file-with-no-event" id="toc-q-a-partners-file-with-no-event" class="nav-link" data-scroll-target="#q-a-partners-file-with-no-event">Pulling a partner’s nightly file</a></li>
+  <li><a href="#q-which-day-did-the-loop-start" id="toc-q-which-day-did-the-loop-start" class="nav-link" data-scroll-target="#q-which-day-did-the-loop-start">From which day do the calls show the change?</a></li>
+  </ul></li>
+  <li><a href="#part-inside-a-function" id="toc-part-inside-a-function" class="nav-link" data-scroll-target="#part-inside-a-function">Inside a function: the handler and its environment</a>
+  <ul class="collapse">
+  <li><a href="#q-how-many-times-does-each-line-run" id="toc-q-how-many-times-does-each-line-run" class="nav-link" data-scroll-target="#q-how-many-times-does-each-line-run">How many times does each line run?</a></li>
+  </ul></li>
+  <li><a href="#part-bigger-data" id="toc-part-bigger-data" class="nav-link" data-scroll-target="#part-bigger-data">Same pipeline on bigger data</a>
+  <ul class="collapse">
+  <li><a href="#q-which-change-keeps-the-compactions-memory-from-growing" id="toc-q-which-change-keeps-the-compactions-memory-from-growing" class="nav-link" data-scroll-target="#q-which-change-keeps-the-compactions-memory-from-growing">Which change keeps the compaction’s memory from growing?</a></li>
+  </ul></li>
+  <li><a href="#part-shape-of-demand" id="toc-part-shape-of-demand" class="nav-link" data-scroll-target="#part-shape-of-demand">Time shape of demand and the bill</a>
+  <ul class="collapse">
+  <li><a href="#q-function-or-instance-for-a-map-tile-service" id="toc-q-function-or-instance-for-a-map-tile-service" class="nav-link" data-scroll-target="#q-function-or-instance-for-a-map-tile-service">Function or instance for a map-tile service</a></li>
+  <li><a href="#q-function-split-calls-or-an-instance-for-each-workload" id="toc-q-function-split-calls-or-an-instance-for-each-workload" class="nav-link" data-scroll-target="#q-function-split-calls-or-an-instance-for-each-workload">Function or an instance for each workload</a></li>
+  <li><a href="#q-what-does-an-idle-week-cost" id="toc-q-what-does-an-idle-week-cost" class="nav-link" data-scroll-target="#q-what-does-an-idle-week-cost">What does an idle week cost?</a></li>
+  </ul></li>
+  <li><a href="#part-terms" id="toc-part-terms" class="nav-link" data-scroll-target="#part-terms">Terms used on this page</a>
+  <ul class="collapse">
+  <li><a href="#triggers-what-starts-a-function" id="toc-triggers-what-starts-a-function" class="nav-link" data-scroll-target="#triggers-what-starts-a-function">Triggers: what starts a function</a></li>
+  <li><a href="#inside-a-lambda-function" id="toc-inside-a-lambda-function" class="nav-link" data-scroll-target="#inside-a-lambda-function">Inside a Lambda function</a></li>
+  <li><a href="#cost-models" id="toc-cost-models" class="nav-link" data-scroll-target="#cost-models">Cost models</a></li>
+  <li><a href="#also-used-on-this-page" id="toc-also-used-on-this-page" class="nav-link" data-scroll-target="#also-used-on-this-page">Also used on this page</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">L3 review: cost models, capacity and what starts a function</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Numbers in the scenarios are made up for practice unless a price or an instance size is named. If you need to look up a term, the <a href="#part-terms">relevant vocabulary is below</a>.</p>
+<section id="part-what-starts-a-function" class="level2">
+<h2 class="anchored" data-anchor-id="part-what-starts-a-function">What starts a function</h2>
+<section id="q-requests-events-and-schedules" class="level3">
+<h3 class="anchored" data-anchor-id="q-requests-events-and-schedules">Requests, events and schedules</h3>
+<p>A regional food bank keeps its pantry records in an S3 bucket and runs each job below on AWS. Pantries upload each day’s check-ins as a CSV file to <code>checkins/incoming/</code>. S3 sends its object-created events to EventBridge, Amazon’s service whose rules match events or fire on a clock and start a target such as a function.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## What starts each job? Each option may be used once, more than once, or not at all.
+
+- converts each new file in `checkins/incoming/` to Parquet in `checkins/parquet/` :: event, matched by an EventBridge rule's event pattern
+    &gt; Something happened (a file landed), and the function reacts to it with nobody waiting for an answer. The rule's event pattern matches object-created events under that prefix.
+- recomputes a pantry's month each time the pantry uploads a corrected file to `checkins/corrections/` :: event, matched by an EventBridge rule's event pattern
+    &gt; A corrected file landing is something that happened; the rule's pattern matches new objects under `checkins/corrections/`, and nobody waits on the result.
+- on the first day of each month at 04:30, deletes check-in files older than two years :: schedule, from an EventBridge rule's schedule expression
+    &gt; A clock starts it, at 04:30 on the first day of each month, and no new file and no caller is involved. The rule's schedule expression says when.
+- every 30 minutes, fetches a public food-price list from a provincial web service and appends it to a CSV in S3 :: schedule, from an EventBridge rule's schedule expression
+    &gt; A clock starts it, every 30 minutes, and no new file and no caller is involved; the web request is what the job does once it runs. The rule's schedule expression, such as `rate(30 minutes)`, says when.
+- answers a volunteer's phone form, which sends a household's postal code and waits for the nearest open pantry :: request, through API Gateway's HTTP API
+    &gt; Someone sends a request and waits for the answer, here from a phone form. API Gateway gives the function a web address, and each request to it becomes one call of the function.
+- answers a coordinator's Python script, which calls the function's web address with a start and an end date and waits :: request, through API Gateway's HTTP API
+    &gt; Someone sends a request and waits for the answer, here from a Python script rather than a browser. API Gateway gives the function a web address, and each request to it becomes one call of the function.
+- :: a direct call from a volunteer's laptop
+    &gt; A call from a person's laptop is still a request, but no job in this scenario calls the function directly. The form and the script reach the function through the HTTP API's web address, while the other jobs start from EventBridge event or schedule rules.
+</div>
+<p>A parks department keeps its inventory of 150,000 street trees as Parquet in S3. Staff open a web page that asks a Lambda function, through API Gateway’s HTTP API, for a yearly report on one neighbourhood’s trees, and the page waits for the answer. The function’s timeout is set to 5 minutes. Each report takes the function about 50 seconds to build. The function’s logs show every report finished, yet the page shows an error every time.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## Which change gets the staff their reports?
+
+1. [x] Start the build from an S3 event; the page fetches the result
+    &gt; API Gateway's HTTP API must answer a request within 30 seconds, and that limit cannot be raised. The page can instead upload a small request file under `requests/`; its object-created event starts the function, which writes the report under `results/` for the page to fetch after the 50-second build.
+1. [ ] Raise the function's timeout from 5 minutes to 15 minutes
+    &gt; The function already finishes in 50 seconds, before its 5-minute timeout, so raising that timeout does not help. API Gateway's HTTP API has stopped waiting at 30 seconds.
+1. [ ] Buy provisioned concurrency so that no call has to wait for a cold start
+    &gt; A cold start is the setup delay when AWS creates a new execution environment, but avoiding it does not remove the 50 seconds needed to build the report. Provisioned concurrency keeps execution environments initialised before calls and can save one to a few seconds of setup time.
+</div>
+<p>Slide: 5, 9, 13 (also 8, 10, 41)</p>
+</section>
+<section id="q-a-partners-file-with-no-event" class="level3">
+<h3 class="anchored" data-anchor-id="q-a-partners-file-with-no-event">Pulling a partner’s nightly file</h3>
+<p>A community science group collects bird counts from a partner society. The partner publishes a new CSV of the previous day’s counts on its own website by 06:30 each morning, and sends no notice when it does. Each pull finishes within five minutes. The group wants each file in its S3 bucket by 08:00, and wants no instance to look after.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## Which way of starting the pull function meets the group's needs?
+
+1. [x] Schedule: an EventBridge rule starts it once an hour
+    &gt; The partner's website sends no event, so the group needs a clock-based trigger. With the file available by 06:30, an hourly schedule polls again by about 07:30, and the five-minute pull leaves time before 08:00. An EventBridge schedule expression such as `rate(1 hour)` supplies that trigger.
+1. [ ] Event: an EventBridge rule starts it when the partner's file appears
+    &gt; This reads the partner's website as if it were the group's bucket. An event needs something that reports the change; S3 reports new objects in the group's own bucket, and the partner's site reports nothing.
+1. [ ] Request: the partner's website calls the function's web address
+    &gt; This needs the partner to change their website to call the group's function. Nothing in the setup says they will, and the group does not run their site.
+</div>
+<p>Slide: 5, 9</p>
+</section>
+<section id="q-which-day-did-the-loop-start" class="level3">
+<h3 class="anchored" data-anchor-id="q-which-day-did-the-loop-start">From which day do the calls show the change?</h3>
+<p>A community science group’s pull function writes each day’s file of bird counts to <code>counts/incoming/</code> in the group’s S3 bucket. An S3 event notification on the bucket starts a second function, <code>clean</code>, for every new object under <code>counts/</code>; <code>clean</code> drops the rows with no species and writes a cleaned copy. At some point in early May 2026 a teammate changed where <code>clean</code> writes its copy, from <code>cleaned/</code> to <code>counts/clean/</code>. The Monitor tabs of the two functions show:</p>
+<pre><code>day (May 2026)    files pulled    calls of clean    errors    median duration
+Mon 4             1               1                 0         0.6 s
+Tue 5             1               1                 0         1.4 s
+Wed 6             3               3                 1         0.6 s
+Thu 7             1               16                0         0.6 s
+Fri 8             1               16                0         0.6 s</code></pre>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## From which day do the calls of `clean` show the change to `counts/clean/`?
+
+1. [x] Thursday 7 May 2026
+    &gt; `counts/clean/` sits under `counts/`, so each cleaned copy matches the notification and starts `clean` again; Thursday first shows this loop because one pulled file leads to 16 calls with no errors and the usual duration. For a chain started by an S3 event notification, Lambda stops the next call after about 16 calls and notifies the account, while a loop through an EventBridge rule on the default bus continues until someone changes the setup.
+1. [ ] Wednesday 6 May 2026
+    &gt; This reads more calls and an error as the loop. Three files were pulled that day and `clean` ran 3 times, once per file; one bad file failing is an error, not a chain of new calls.
+1. [ ] Tuesday 5 May 2026
+    &gt; This option treats the slower run as evidence of a loop, but one file was pulled and `clean` ran once; a larger file can take longer. A loop increases the call count while each call keeps its usual duration.
+</div>
+<p>Slide: 8, 9 (also 14, 15)</p>
+</section>
+</section>
+<section id="part-inside-a-function" class="level2">
+<h2 class="anchored" data-anchor-id="part-inside-a-function">Inside a function: the handler and its environment</h2>
+<section id="q-how-many-times-does-each-line-run" class="level3">
+<h3 class="anchored" data-anchor-id="q-how-many-times-does-each-line-run">How many times does each line run?</h3>
+<p>A bakery chain answers “how much did this store sell yesterday?” with a Lambda function behind API Gateway’s HTTP API. Its file is:</p>
+<pre><code>import json, duckdb
+con = duckdb.connect()
+con.execute("LOAD httpfs;")                 # extension from the function's layer
+
+def lambda_handler(event, context):
+    store = event["queryStringParameters"]["store"]
+    total = con.execute(
+        "SELECT sum(amount) FROM read_parquet('s3://bakery-sales/yesterday.parquet') WHERE store = ?",
+        [store]).fetchone()[0]
+    return {"statusCode": 200, "body": json.dumps({"store": store, "total": total})}</code></pre>
+<p>On Friday 16 October 2026 the function answers 1,200 calls, and its logs show that AWS set up 3 execution environments for them that day.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## On that Friday, how many times does each line run? Each option may be used once, more than once, or not at all.
+
+- `con = duckdb.connect()` :: 3 times
+    &gt; The line runs once in each of the 3 execution environments because it is module-level code outside `lambda_handler`, and module-level code runs once when an environment is set up.
+- `con.execute("LOAD httpfs;")` :: 3 times
+    &gt; The line runs once in each of the 3 execution environments because it is module-level code outside `lambda_handler`, and module-level code runs once when an environment is set up.
+- `store = event["queryStringParameters"]["store"]` :: 1,200 times
+    &gt; The line runs once for each of the 1,200 calls because it is inside `lambda_handler`, which AWS runs for every call; each call's `event` carries its own store.
+- the `SELECT sum(amount)` query :: 1,200 times
+    &gt; The query runs once for each of the 1,200 calls because it is inside `lambda_handler`, which AWS runs for every call; it uses that call's store.
+- `return {...}` :: 1,200 times
+    &gt; The return line runs once for each of the 1,200 calls because it is inside `lambda_handler`, which AWS runs for every call; each call returns an answer for API Gateway to send to the caller.
+- :: 1,197 times
+    &gt; This counts only the warm calls, as if the first call in a new environment did not run the handler. A call with a cold start runs the module-level code and then the handler, so the handler lines run 1,200 times.
+</div>
+<p>Slide: 16 (also 24, 41)</p>
+</section>
+</section>
+<section id="part-bigger-data" class="level2">
+<h2 class="anchored" data-anchor-id="part-bigger-data">Same pipeline on bigger data</h2>
+<section id="q-which-change-keeps-the-compactions-memory-from-growing" class="level3">
+<h3 class="anchored" data-anchor-id="q-which-change-keeps-the-compactions-memory-from-growing">Which change keeps the compaction’s memory from growing?</h3>
+<p>A farmers’ market co-op collects its vendors’ card sales. Every 15 minutes the payment provider drops a CSV of the new sales, about 2,000 rows, into S3, and the upload’s event starts a Lambda function with a 1,024 MB memory setting. The function reads the co-op’s single Parquet file of all sales since June 2026 into pandas, adds the new rows, and writes the whole file back. In August 2026 the function starts to fail: it runs out of memory.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## Which change keeps the compaction's memory from growing as the months go by?
+
+1. [x] Write each day's rows to one file per `day=` folder
+    &gt; With one file per day, such as `sales-daily/day=2026-08-14/part.parquet`, each run reads and rewrites at most one day's rows, so its memory stays about the same in December 2026 as in June 2026. DuckDB can still read the day folders back as one table, as the chart on slide 28 does.
+1. [ ] Raise the memory setting to 10,240 MB, the most Lambda allows
+    &gt; A larger memory setting delays the failure, but the single file continues to grow until it reaches the new limit. Memory is also Lambda's price setting: each second of a call would bill ten times as many GB-seconds.
+1. [ ] Do the same merge with DuckDB instead of with pandas
+    &gt; DuckDB needs less memory than pandas for the same rows, and it can apply a filter in streaming mode; but asking for the full history means holding, merging and rewriting every row of a file that grows every month, so the memory a run needs still grows with the file.
+</div>
+<p>Slide: 29, 30 (also 31, 33, 42)</p>
+</section>
+</section>
+<section id="part-shape-of-demand" class="level2">
+<h2 class="anchored" data-anchor-id="part-shape-of-demand">Time shape of demand and the bill</h2>
+<section id="q-function-or-instance-for-a-map-tile-service" class="level3">
+<h3 class="anchored" data-anchor-id="q-function-or-instance-for-a-map-tile-service">Function or instance for a map-tile service</h3>
+<p>A city’s open-data team runs a street-map tile service that about a hundred apps call. Calls in one hour, on a Tuesday in October 2026, Pacific time:</p>
+<pre><code>hour     calls in that hour
+02:00    118,000
+06:00    121,000
+10:00    124,000
+14:00    126,000
+18:00    123,000
+22:00    119,000</code></pre>
+<p>The demand is a steady rate (a sustained load): the quietest hour, 02:00, is within 7% of the busiest, 14:00.</p>
+<p>The team can serve the tiles in either of two ways:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">what it costs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">a Lambda function behind API Gateway’s HTTP API, 512 MB memory setting, 0.1 s per call</td>
+<td style="text-align: left;">Lambda $0.20 per million requests and $0.0000166667 per GB-second, billed to the millisecond; HTTP API $1.11 per million calls</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">one m6a.xlarge instance that can answer all the calls</td>
+<td style="text-align: left;">$0.1926 an hour</td>
+</tr>
+</tbody>
+</table>
+<p>Leave out any free tier.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## Above about how many calls an hour does the instance cost less than the function? Round to the nearest thousand.
+
+1. [x] 90,000
+    &gt; For one million calls, Lambda requests cost \$0.20, HTTP API calls cost \$1.11, and duration costs about \$0.83 because 0.5 GB × 0.1 s × 1,000,000 is 50,000 GB-seconds billed at \$0.0000166667; the total is \$2.14. Dividing the instance's \$0.1926 hourly price by \$2.14 per million calls gives the crossover of about 90,000 calls an hour, above which the instance costs less.
+1. [ ] 186,000
+    &gt; This leaves out API Gateway: \$0.1926 / \$1.033 per million. Each call through the HTTP API is billed by API Gateway too, \$1.11 per million, which is the largest part of the per-call price here.
+1. [ ] 963,000
+    &gt; This counts only Lambda's request price: \$0.1926 / \$0.20 per million. A call also bills its GB-seconds and its HTTP API call.
+1. [ ] 20,000
+    &gt; This bills each call as a whole second, 0.5 GB-seconds instead of 0.05. Lambda bills duration to the millisecond, so a 0.1 s call bills 0.1 s.
+</div>
+<p>Slide: 38, 39, 40 (also 13, 42)</p>
+</section>
+<section id="q-function-split-calls-or-an-instance-for-each-workload" class="level3">
+<h3 class="anchored" data-anchor-id="q-function-split-calls-or-an-instance-for-each-workload">Function or an instance for each workload</h3>
+<p>A city’s data team runs the workloads below. For any workload that answers requests, one instance that can answer all its calls costs the same as a Lambda function at about 50,000 calls an hour; below that, the function costs less. A Lambda call stops at 15 minutes, and a function’s memory setting goes up to 10,240 MB.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## For each workload, what should run it? Each option may be used once, more than once, or not at all.
+
+- a summer-camp sign-up page: almost nothing for months, then 30,000 requests in the 3 minutes after sign-up opens on 2 March 2026; an answer may take up to 3 seconds :: Lambda function, one call per request
+    &gt; During the idle months, Lambda's invocation charges stop, while AWS can start many execution environments for the burst; the allowed 3-second response time leaves room for cold starts. The busiest hour has 30,000 calls, below the 50,000-an-hour crossover, so Lambda costs less than an instance that would also bill during idle months.
+- a staff lookup page: about 3,000 calls an hour at midday, near zero overnight :: Lambda function, one call per request
+    &gt; Its busiest hour has 3,000 calls, below the 50,000-an-hour crossover, so the function costs less than the instance at the peak and its cost drops close to zero overnight with the call rate.
+- a monthly 20-minute job that needs 40 GB of memory at once and cannot be split :: instance for the run only
+    &gt; 40 GB is past a function's 10,240 MB limit, and 20 minutes is past a call's 15-minute limit. Ephemeral infrastructure means creating the instance for the job and deleting it afterward, so it bills only for the monthly run.
+- a weekly 10-minute join that needs 24 GB of memory at once :: instance for the run only
+    &gt; 24 GB is past a function's 10,240 MB limit, though 10 minutes fits in one call. Ephemeral infrastructure means creating the instance for the join and deleting it afterward, so it bills only for the weekly run, about 10 minutes a week.
+- :: always-on instance
+    &gt; An instance kept up bills every hour. The request workloads here stay below the 50,000-an-hour crossover, and the scheduled jobs run for minutes or hours a week or a month, so an always-on instance would bill mostly idle hours.
+</div>
+<p>Slide: 39 (also 5, 13, 29)</p>
+</section>
+<section id="q-what-does-an-idle-week-cost" class="level3">
+<h3 class="anchored" data-anchor-id="q-what-does-an-idle-week-cost">What does an idle week cost?</h3>
+<p>A community radio station runs its listener statistics on AWS: a pull function started by an EventBridge schedule rule, a chart function behind API Gateway’s HTTP API, Parquet files in S3, and an m6a.xlarge instance running a JupyterHub server. The chart function has provisioned concurrency: 2 execution environments of 512 MB kept initialised all the time. In a busy week the bill is:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">line</th>
+<th style="text-align: right;">busy week</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Lambda requests and GB-seconds (both functions)</td>
+<td style="text-align: right;">$4.00</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">HTTP API calls</td>
+<td style="text-align: right;">$3.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">S3 storage of the Parquet files (billed per GB stored per month)</td>
+<td style="text-align: right;">$1.20</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">CloudWatch Logs storage (billed per GB stored per month)</td>
+<td style="text-align: right;">$0.30</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">the m6a.xlarge instance, running all week ($0.1926 an hour)</td>
+<td style="text-align: right;">$32.36</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">provisioned concurrency (2 × 0.5 GB × 604,800 s at $0.000004646 per GB-second)</td>
+<td style="text-align: right;">$2.81</td>
+</tr>
+</tbody>
+</table>
+<p>For the week of 21 to 27 December 2026 the team turns off the schedule rule and nobody calls the chart function or logs in to JupyterHub; the instance stays running and nothing is deleted.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## What is the bill for the idle week, to the cent?
+
+1. [x] \$36.67
+    &gt; Nothing calls either function, so the two lines that bill per call, the Lambda line and the HTTP API line, drop to zero. The instance bills each hour it runs, provisioned concurrency bills for the 2 environments kept initialised whether or not they are called, and the files and logs are still stored: \$1.20 + \$0.30 + \$32.36 + \$2.81 = \$36.67.
+1. [ ] \$35.17
+    &gt; This total leaves out the two storage lines, \$1.20 + \$0.30 = \$1.50. Storage bills for what is stored, and nothing was deleted.
+1. [ ] \$33.86
+    &gt; This total leaves out the provisioned concurrency line, \$2.81, as if it billed per call like the rest of Lambda. Provisioned concurrency bills for the 2 environments kept initialised, called or not.
+1. [ ] \$32.36
+    &gt; This total leaves out the two storage lines and the provisioned concurrency line, \$4.31 in all. Storage bills for what is stored, and nothing was deleted; provisioned concurrency bills for the 2 environments kept initialised, called or not.
+</div>
+<p>Slide: 42 (also 2, 10, 13, 39)</p>
+</section>
+</section>
+<section id="part-terms" class="level2">
+<h2 class="anchored" data-anchor-id="part-terms">Terms used on this page</h2>
+<p>From the <a href="https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/quiz">course flashcards</a>, grouped by topic. Practise them in <a href="https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/quiz">quiz mode</a>, or try the <a href="https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/match">match game</a>.</p>
+<section id="triggers-what-starts-a-function" class="level3">
+<h3 class="anchored" data-anchor-id="triggers-what-starts-a-function">Triggers: what starts a function</h3>
+<p><strong>Request (trigger).</strong> A call that asks a Lambda function for an answer while the caller waits for it, such as a browser going through API Gateway.</p>
+<p><strong>Event (trigger).</strong> A report that something happened, such as a new object landing in a bucket. A Lambda function processes it with no caller waiting for an answer.</p>
+<p><strong>EventBridge.</strong> The AWS service whose rules match things that happen, such as a new object in a bucket, or fire on a clock, and send each match to a target such as a Lambda function.</p>
+<p><strong>API Gateway.</strong> The AWS service that gives a function a web address, so a browser or a program can call it over HTTP. Its simplest kind waits at most 30 seconds for an answer.</p>
+</section>
+<section id="inside-a-lambda-function" class="level3">
+<h3 class="anchored" data-anchor-id="inside-a-lambda-function">Inside a Lambda function</h3>
+<p><strong>Lambda function.</strong> The unit you deploy to AWS Lambda: your code and its settings, run each time a trigger fires. One setting, memory, also sets its CPU and its price per millisecond.</p>
+<p><strong>Handler.</strong> The function in your code that Lambda calls on each invocation, taking <code>event</code> and <code>context</code>. Code outside it runs once per environment, so a client built there is reused.</p>
+<p><strong>Execution environment.</strong> The isolated space AWS sets up to run a Lambda function, with its memory and a temporary disk. AWS may reuse it for later calls and pauses it between them.</p>
+<p><strong>Cold start.</strong> The set-up before the first call in a new Lambda environment: AWS loads the code, then your code’s initialisation runs, such as opening connections and importing libraries.</p>
+<p><strong>Execution role.</strong> The identity AWS takes on when it runs a Lambda function. It decides which resources the code may read or change.</p>
+</section>
+<section id="cost-models" class="level3">
+<h3 class="anchored" data-anchor-id="cost-models">Cost models</h3>
+<p><strong>Provisioned capacity.</strong> Compute you pay for while it is allocated to you, used or not. Unlike pay-per-use compute, its charge continues when nothing runs.</p>
+<p><strong>Usage-based billing.</strong> Charges for measured work, such as each request or each millisecond a function runs. They stop when nothing runs; stored data and logs still cost money.</p>
+<p><strong>Idle test.</strong> The question to ask of each compute charge: does it bill while nothing runs? If yes, it is provisioned capacity. Storage and logs are counted separately.</p>
+<p><strong>Time shape of demand.</strong> When a workload asks for its resources across a day or a week: a steady rate, a daily rhythm, a burst, or a scheduled job. With the peak rate, it decides whether provisioned or usage-based billing is cheaper.</p>
+<p><strong>Ephemeral infrastructure.</strong> A server or cluster created for one piece of work and deleted after it, so it bills only around that work. Our EMR clusters were launched for a run and terminated after.</p>
+<p><strong>Instance (EC2).</strong> A virtual machine you rent from AWS, billed per second for the time it runs. Stopping it ends the compute charge, but its EBS disk still bills.</p>
+</section>
+<section id="also-used-on-this-page" class="level3">
+<h3 class="anchored" data-anchor-id="also-used-on-this-page">Also used on this page</h3>
+<p><strong>Serverless.</strong> A service model where the platform runs and scales your code and you never pick or patch the computers under it. It usually bills per request and running time; stored data still costs money.</p>
+<p><strong>Compaction.</strong> Rewriting many small files into fewer, larger ones, so a query opens fewer files. Too few files, or too few row groups, can leave cores idle.</p>
+<p><strong>Folder partition.</strong> A dataset layout with one named location per value of a column, such as <code>day=2012-06-14/</code> (on S3, a prefix). A filter on that column skips the other locations without opening them.</p>
+<p><strong>Prefix (S3).</strong> The leading part of an object’s name, such as <code>day=2012-06-14/</code>. S3 lists objects by it, and the console’s folders are built from it; the general-purpose buckets we use have no real folders.</p>
+<p><strong>Parquet.</strong> A columnar file format. Rows are grouped into blocks that each store every column separately, and metadata at the end of the file says where each part is.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -27,7 +27,7 @@ A city library keeps its loan records for September to December 2025 in S3 as Pa
     └── month=2025-12/
         └── part-0.parquet
 
-Each file holds only its month's loans, in many row groups (the blocks of rows inside a Parquet file). Inside a file the rows are sorted by `branch_id`; the other columns, `loan_date` (a DATE), `loan_days` and `patron_id`, are in no particular order. Spark on an EMR cluster runs queries that each have one filter condition.
+Each file holds only its month's loans, in many row groups (the blocks of rows inside a Parquet file). Inside a file the rows are sorted by `branch_id`; the other columns, `loan_date` (a DATE), `loan_days` and `patron_id`, are in no particular order. Spark on an EMR cluster runs queries that each have one filter condition. Assume the reader rules out row groups only by their min and max.
 
 ```quizdown
 ---
@@ -37,17 +37,17 @@ shuffle_answers: true
 ## For each filter condition on the loans folder, what does Spark open and read? Each option may be used once, more than once, or not at all.
 
 - `month = '2025-11'` :: 1 or 2 files opened, every row group read
-    > The condition names the folder key, so Spark keeps the November folder and rules out the other 3 by their names, without opening their files. Every row in the November file is a November loan, so every row matches and every row group is read.
+    > The condition names the folder key, so Spark opens the November folder and rules out the other 3 by their names, without reading their row groups. Every row in the November file is a November loan, so every row group is read.
 - `month IN ('2025-11', '2025-12')` :: 1 or 2 files opened, every row group read
-    > Two values of the key work the same way as one: Spark opens two folders and rules out 2 by name, then reads every row group of both files.
+    > The condition names the folder key, so Spark opens the November and December folders and rules out the other 2 by their names, without reading their row groups. Every row in those two files is a November or December loan, so every row group of both is read.
 - `branch_id = 17` :: all 4 files opened, some row groups may be skipped
     > All 4 files are opened, because the condition does not name `month`. Inside each file the rows are sorted by branch, so each row group holds a narrow range of `branch_id`; where the writer stored each group's min and max in the footer, the reader rules out the groups whose range cannot hold 17 without fetching them.
 - `loan_date = DATE '2025-11-14'` :: all 4 files opened, some row groups may be skipped
     > The `month` folders were made from the loan date, but this condition names `loan_date`, so no folder is ruled out by name and Spark opens all 4 files. Each file holds one month's loans, so every row group's min and max of `loan_date` fall inside that month: in the September, October and December files no group's range can hold 14 November 2025, so where the footer holds each group's min and max the reader skips them all. In the November file the days are in no order, so every group's range covers the day and every row group is read.
 - `loan_days > 21` :: all 4 files opened, every row group read
-    > The rows are not ordered by loan length, so every row group holds short and long loans and its min and max rule nothing out. Spark reads every row group of every file.
+    > The condition does not name `month`, so Spark opens all 4 files. The rows are in no order of `loan_days`, so every row group holds short and long loans, its min and max rule nothing out, and every row group is read.
 - `patron_id = 40213` :: all 4 files opened, every row group read
-    > The condition matches few rows, but patron ids are spread over every row group, so each group's min and max cover 40213 and none can be ruled out.
+    > The condition does not name `month`, so Spark opens all 4 files. The rows are in no order of `patron_id`, so every row group's min and max cover 40213, none can be ruled out, and every row group is read, though few rows match.
 - :: footers read, no row group read
     > A footer says where the row groups are and their min and max; it holds no rows. Spark has to read row groups to return a result.
 ```
@@ -96,15 +96,15 @@ shuffle_answers: true
 ## Which of these changes let the July query finish sooner by spreading its scan over all four threads? Select every change that does.
 
 - [x] Rewrite the file with many row groups
-    > Row groups are the pieces a reader can split a scan into and read in parallel. With one row group the scan is a single piece, so one thread does it; DuckDB's own default write makes row groups of about 123,000 rows.
+    > Row groups are the pieces a reader splits a scan into, one thread per piece. A rewrite with DuckDB's default settings makes row groups of about 123,000 rows, so the file has many and the four threads share its scan.
 - [x] Rewrite it as folder partitions by month, one file per month
-    > Two gains at once. The July query opens only July's file instead of all twelve months, and that file has many row groups, because any rewrite splits the rows into row groups, so the four threads share its scan.
-- [ ] Rewrite it as folder partitions by hotel, one file per hotel
-    > The threads do share the scan, one file each, but the July filter names no hotel, so every file is opened and all 1.2 GB is read for one month's rows. The key must match the filter.
+    > Row groups are the pieces a reader splits a scan into, one thread per piece. A rewrite with DuckDB's default settings makes row groups of about 123,000 rows, so July's file has many and the four threads share its scan, and the July query opens only July's file instead of all twelve months.
+- [ ] Rewrite it as one Parquet file sorted by hotel
+    > The file is still one row group, one piece, so one thread reads it and the other three have nothing to read. Sorting changes which rows sit next to each other, not how many pieces the reader can split the scan into.
 - [ ] Set DuckDB to 32 threads
-    > Extra threads cannot divide one row group: they have no piece to read, and the instance has only 4 vCPU to run them.
+    > The file is still one row group, one piece, so one thread reads it and the extra threads have nothing to read. The instance has only 4 vCPU to run them.
 - [ ] Move to an m6a.2xlarge (8 vCPU, 32 GiB)
-    > Three vCPUs are already idle, so neither memory nor vCPUs are short. The file would still be one piece, read by one thread.
+    > The file is still one row group, one piece, so one thread reads it and the extra vCPUs have nothing to read. More RAM does not split the file's single row group into parallel scan tasks.
 ```
 
 Slide: 16–19
@@ -141,7 +141,7 @@ Slide: 3, 24, 30
 
 ### Which node type should the team add for this job? {#q-which-node-type-should-they-add}
 
-An EMR cluster with one primary node and two core nodes runs a long Spark job that reads its input from S3 and writes its results back to S3. To make the job finish sooner, the team that runs it wants to add nodes for this job and remove them afterwards without losing any data the cluster stores.
+An EMR cluster with one primary node and two core nodes runs a long Spark job that reads its input from S3 and writes its results back to S3. To make the job finish sooner, the team that runs it wants to add nodes for this job and remove them quickly afterwards, without losing any data the cluster stores.
 
 ```quizdown
 ---
@@ -151,11 +151,11 @@ shuffle_answers: true
 ## Which node type should the team add for this job?
 
 1. [x] Task nodes
-    > Task nodes do work and store none of the cluster's distributed data, so removing them later loses nothing; the input and the results stay in S3.
+    > Task nodes run executors and store no HDFS blocks, so they can be dropped the moment the job ends; the input and the results stay in S3.
 1. [ ] Core nodes
-    > Core nodes also do work, but they store the cluster's distributed data on their disks, so removing one later takes its share of that data with it.
+    > Core nodes run executors and store HDFS blocks; one can be removed only after HDFS has copied its blocks to the remaining nodes, so they are not the nodes to add and drop for one job.
 1. [ ] Larger primary node
-    > The primary node manages the cluster and coordinates its services. The job runs on the core and task nodes, so enlarging the primary does not add processing capacity to those nodes.
+    > The primary node manages the cluster and coordinates its services. The job's parallel work runs in executors on the core and task nodes, so enlarging the primary adds no capacity for that work.
 ```
 
 Slide: 29
@@ -208,17 +208,17 @@ shuffle_answers: true
 ## Which scaling move does each workload need? Each option may be used once, more than once, or not at all.
 
 - A team of 3 shares a Jupyter environment on the m6a.large and now needs 64 GiB of RAM for a 24 GB dataset :: Scale up
-    > One larger EC2 instance gives the team the RAM, and the data fits on one instance.
+    > One larger instance gives the team the 64 GiB of RAM, so the 24 GB dataset fits on one instance and no cluster is needed.
 - Training 100 random forest models with different hyperparameters on a 6 GB dataset takes 12 hours on the largest instance you can get, and the results are needed in 3 hours :: Scale out
     > The models are independent, so they can run on several nodes at once. Because no larger instance is available, four equivalent nodes (12 hours / 3 hours) with ideal scaling reduce the 12-hour run to about 3 hours.
 - A dashboard queries a 500 MB SQLite database on the m6a.large :: Neither
-    > 500 MB fits in memory on a small instance, and nothing else in the task asks for more.
+    > 500 MB fits in memory on the m6a.large and nothing else in the task asks for more, so there is nothing for a larger instance or a cluster to fix.
 - A weekly report on an m6a.xlarge (16 GiB of RAM) reads 2 of 40 columns from a 7 GB Parquet file and finishes in 20 seconds :: Neither
     > The reader fetches only the 2 columns it needs, and the report already finishes in seconds, so there is nothing for a larger instance or a cluster to fix.
 - Processing 2 PB of genomic sequencing data from 200 research institutions, which the m6a.large would read through one network link :: Scale out
     > One instance reads all 2 PB through one network and works on it with one instance's vCPUs, and even the largest instance is a ceiling. A cluster reads and works on parts of the data on every node at once.
 - The m6a.large's 8 GiB of RAM cannot hold a 15 GB Parquet file that a training step needs in memory all at once :: Scale up
-    > One larger instance holds the data in memory, and no cluster is needed. The file is compressed, so the loaded data takes more than 15 GB: pick an instance with well over 15 GB of RAM.
+    > One larger instance holds the data in memory, and no cluster is needed. Parquet files are usually compressed and encoded, so the loaded data takes more than 15 GB: pick an instance with well over 15 GB of RAM.
 - :: Larger EBS volume
     > None of these workloads is short of disk space. A volume stores files; it adds no RAM, vCPUs or network.
 ```

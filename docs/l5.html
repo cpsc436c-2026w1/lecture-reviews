@@ -183,7 +183,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="part-how-spark-divides-and-coordinates-the-work">How Spark divides and coordinates the work</h2>
 <section id="q-what-does-spark-run-again-when-a-core-node-is-lost" class="level3">
 <h3 class="anchored" data-anchor-id="q-what-does-spark-run-again-when-a-core-node-is-lost">What does Spark run again when a core node is lost?</h3>
-<p>A Spark query over a year of lift-gate scans in S3 runs on an EMR cluster of 1 primary and 2 core nodes, all m7g.xlarge. Each core node has an executor, a process that runs 4 tasks at a time (8 slots in total). The query’s scan stage has 36 tasks, each reading one piece of the input. This is the snapshot of what the cluster had run before the failure:</p>
+<p>A Spark query over a year of lift-gate scans in S3 counts the scans per gate, so its scan stage is followed by an exchange. It runs on an EMR cluster of 1 primary and 2 core nodes, all m7g.xlarge, with the driver on core node 1. Each core node has an executor, a process that runs 4 tasks at a time (8 slots in total). The query’s scan stage has 36 tasks, each reading one piece of the input. This is the snapshot of what the cluster had run before the failure:</p>
 <pre><code>scan stage, 36 tasks      finished   running   not started
 core node 1                  10         4
 core node 2                  10         4
@@ -227,7 +227,7 @@ shuffle_answers: true
 1. [x] 28
     &gt; The 4 core nodes and 3 task nodes run executors, so 7 × 4 = 28 tasks run at once. The primary node manages the cluster and runs no executor. You pay for 8 nodes, about \$1.78 an hour at \$0.2227 each, and 7 of them run tasks.
 1. [ ] 32
-    &gt; This counts the primary node as a worker. It manages the cluster and runs no executor.
+    &gt; This counts the primary node as a node that runs tasks. It manages the cluster and runs no executor.
 1. [ ] 56
     &gt; This gives each node 8 slots, two per vCPU. On our m7g nodes one vCPU is one core, and an executor gets one slot per vCPU: 4 per node.
 1. [ ] 12
@@ -250,20 +250,20 @@ shuffle_answers: true
 
 ## For each line, what happens when its cell runs? Each option may be used once, more than once, or not at all.
 
-- `rides = spark.read.parquet("s3://…/bikeshare/rides/")` :: Spark records a step on the driver; no rows are read yet
-    &gt; Reading is a transformation. The driver lists the files and records the read as the first step of the plan; Spark learns the columns from one file's footer, a one-task job that reads no ride rows. The rows are scanned only when an action asks for them.
-- `per_city.explain()` :: Spark records a step on the driver; no rows are read yet
-    &gt; `.explain()` makes the driver print the plan it has recorded so far, without running it: no task, no rows.
-- `top = per_city.toPandas()` :: Spark sends tasks to the executors; they run now
-    &gt; `toPandas()` needs the rows of `per_city`, so the driver turns the plan into tasks and the executors read and count the rides.
-- `rows = per_city.collect()` :: Spark sends tasks to the executors; they run now
-    &gt; `.collect()` asks for the rows of `per_city`, so the plan runs as tasks on the executors.
+- `rides = spark.read.parquet("s3://…/bikeshare/rides/")` :: Spark builds the plan on the driver; no ride rows are read
+    &gt; The driver lists the files and puts the read into the plan; a one-task job reads one file's footer to learn the columns, and no ride rows are read until an action asks for them.
+- `per_city.explain()` :: Spark builds the plan on the driver; no ride rows are read
+    &gt; This stays on the driver and reads no ride rows; the rows are scanned only when an action asks for them. `.explain()` prints the plan recorded so far without running it, so no task starts.
+- `top = per_city.toPandas()` :: Spark sends tasks that read the ride rows; they run now
+    &gt; `toPandas()` is an action: it needs the rows of `per_city`, so the driver turns the plan into tasks and the executors read and count the rides now.
+- `rows = per_city.collect()` :: Spark sends tasks that read the ride rows; they run now
+    &gt; `.collect()` is an action: it needs the rows of `per_city`, so the driver turns the plan into tasks and the executors read and count the rides now.
 - `stations.groupby("city")["docks"].sum()` :: pandas computes on the driver; no task runs
-    &gt; `stations` is a pandas DataFrame, and pandas has no Spark plan: the sum is computed where the cell runs, and no executor gets a task.
+    &gt; `stations` is a pandas DataFrame, and pandas has no Spark plan: the sum is computed in the driver's Python process, and no executor gets a task.
 - `top.to_csv("per_city.csv")` :: pandas computes on the driver; no task runs
-    &gt; `top` is already a pandas DataFrame, so this pandas call writes the file from the driver's Python process without starting a Spark task.
+    &gt; `top` is already a pandas DataFrame, and pandas has no Spark plan: the file is written from the driver's Python process, and no executor gets a task.
 - :: pandas computes on the executors, split across them
-    &gt; A cluster does not split a pandas operation across executors. pandas runs in the driver's Python process; only a Spark action sends tasks to executors.
+    &gt; A cluster does not split a pandas operation across executors. pandas runs in the driver's Python process and creates no Spark task.
 </div>
 <p>A delivery company keeps its fees in one 1 GB Parquet file on S3. You have a JupyterHub notebook open in your laptop’s browser; it runs on an EMR cluster of 1 primary and 2 core nodes, all m7g.xlarge with 4 vCPUs and 16 GiB of memory each. A cell reads the file with pandas:</p>
 <pre><code>fees = pd.read_parquet("s3://…/delivery/fees.parquet")</code></pre>
@@ -381,17 +381,17 @@ shuffle_answers: true
 ## Where is each of these kept? Each option may be used once, more than once, or not at all.
 
 - rows a task cannot fit in memory while it works :: the node's disk
-    &gt; When a task spills rows that do not fit in memory, it writes them to its node's disk and reads them back later.
+    &gt; Working data on a node's own disk is gone when the cluster ends. A task that cannot fit its rows in memory spills them there and reads them back later.
 - Spark's cache of a DataFrame once executor memory is full :: the node's disk
-    &gt; By default the cache goes into executor memory first, then onto the node's local disk; it is gone when the cluster ends.
+    &gt; Working data on a node's own disk is gone when the cluster ends. By default, the cache goes into executor memory first and then onto the node's disk once memory is full.
 - the rows `.collect()` returns :: driver memory
-    &gt; `.collect()` brings every row of the result into the driver's process.
+    &gt; The result ends up in the driver's process: the executors run the plan, and `.collect()` brings every row of the result to the driver.
 - the number `late.count()` returns to the notebook :: driver memory
-    &gt; The executors count their parts; the total comes back to the driver as one Python number.
+    &gt; The result ends up in the driver's process: the executors run the plan and count their parts, and the total comes back to the driver as one Python number.
 - :: S3
     &gt; Nothing in this list is written to S3 by the cluster: these are working data that live and die with the cluster or the notebook. The inputs on S3 are not in the list.
-- :: HDFS
-    &gt; HDFS pools the core nodes' disks for data that a job writes there deliberately, such as a result it will reread while the cluster runs, and it is deleted with the cluster. Shuffle files and spills use each node's local disk.
+- :: the cluster's HDFS
+    &gt; HDFS pools the core nodes' disks into one shared file system. A job writes there only on purpose, such as a result it will reread while the cluster runs, and HDFS is deleted with the cluster. Everything in this list sits on a node's own disk or in driver memory, not in HDFS.
 </div>
 <p>Slide: 32, 33 (also 17, 18, 24)</p>
 </section>
@@ -425,7 +425,7 @@ shuffle_answers: true
 <p><strong>Amazon EMR.</strong> AWS’s managed service that launches a cluster of EC2 instances with Spark installed. You pay for the nodes from launch until you terminate the cluster.</p>
 <p><strong>Primary node.</strong> The one EMR instance that runs the cluster manager and the HDFS name service. It runs no executors.</p>
 <p><strong>Core node.</strong> An EMR instance that runs executors and stores HDFS data. A role an instance plays in the cluster, not a Spark slot.</p>
-<p><strong>Task node.</strong> An optional EMR instance that runs executors and stores no HDFS data, so it can be removed or bought as spot capacity without losing data.</p>
+<p><strong>Task node.</strong> An optional EMR instance that runs executors and stores no HDFS data, so it can be removed or bought as spot capacity without losing HDFS data.</p>
 <p><strong>HDFS.</strong> A file system that splits files into blocks across a cluster’s core nodes’ disks. Its data is lost when the cluster terminates, so our inputs and outputs stay on S3.</p>
 </section>
 <section id="also-used-on-this-page" class="level3">

@@ -33,13 +33,13 @@ shuffle_answers: true
 ## For each step of the June 2012 query, where does it run? Each option may be used once, more than once, or not at all.
 
 - read the trip rows from the files: `spark.read.parquet` / `FROM` :: a task, on its own partition
-    > Each task fetches the byte ranges of its own Spark partition.
+    > Each task does this on its own Spark partition, without rows from any other partition: it fetches the byte ranges of its partition.
 - keep only the trips for June 2012: `filter` / `WHERE` :: a task, on its own partition
-    > The filter keeps or drops each row without looking at any other partition.
+    > Each task does this on its own Spark partition, without rows from any other partition: it keeps or drops each row it holds.
 - drop the columns no longer needed (Spark adds this step itself) :: a task, on its own partition
-    > The driver adds this step to the plan; each task does it, reading only the columns needed.
-- finish the count and average per payment type: `groupBy().agg()` / `GROUP BY` :: a task, after the Exchange
-    > A task can total its own rows, but a payment type's rows sit in several partitions, so the partial totals cross an Exchange first. "The driver" is wrong here: it never adds up trip rows.
+    > Each task does this on its own Spark partition, without rows from any other partition: it reads only the columns needed.
+- finish the count and average per payment type: `groupBy().agg()` / `GROUP BY` :: a task, after the `Exchange`
+    > A task can total its own rows, but a payment type's rows sit in several partitions, so the partial totals cross an `Exchange` first. "The driver" is wrong here: it never adds up trip rows.
 - return the answer to your program: `collect()` :: the driver
     > `collect()` hands the 5 final rows to the driver, the process that runs your program.
 - :: YARN, on the primary node
@@ -131,7 +131,7 @@ Slide: 22 (also 19)
 
 ### What sets the time of stage 1? {#q-can-we-speed-up-stage-1-with-more-cores}
 
-Stage 1 of the June 2012 query reads the 36 monthly files of taxi trips, keeps the June 2012 trips and computes partial totals. It runs on 2 core nodes, each with one executor of 4 cores; one executor core, a slot, runs one task at a time. Spark cut the files into 52 input partitions, one task each:
+Stage 1 of the June 2012 query reads the 36 monthly files of taxi trips, keeps the June 2012 trips and computes partial totals. It runs on 2 core nodes, each with one executor of 4 cores; one executor core, a slot, runs one task at a time. Spark cut the files into 52 Spark partitions, one task each:
 
     tasks that read rows     36, about 1.65 s each (9 in 10 at 1.75 s or less)
     tasks that read nothing  16, a few milliseconds each
@@ -176,17 +176,17 @@ shuffle_answers: true
 ## For each step on the June 2012 trips, what goes into an `Exchange` (shuffle)? Each option may be used once, more than once, or not at all.
 
 - count and average per payment type: `groupBy().agg()` :: partial totals
-    > Each of the 8 reading tasks sends one row containing a count and a sum for each payment type it saw. That produces 40 rows for the 15.1 M trips.
+    > Each task totals its own rows first and sends one row per payment type it saw, a count and a sum, for the final stage to add up. The 8 reading tasks send 40 rows for the 15.1 M trips.
 - number of trips per pickup day: `groupBy().count()` :: partial totals
-    > A count is a sum of ones: each task counts its own rows per day and sends one count per day it saw. The final stage adds those counts, so only a few rows per task cross the `Exchange`.
+    > Each task totals its own rows first and sends one row per pickup day it saw, a count (a sum of ones), for the final stage to add up. Only a few rows per task cross the `Exchange`.
 - each trip gets its payment type's average next to it: a window query :: every row
-    > The average goes onto every trip of that payment type, so no task can add its rows up first: all 15,096,468 trips, 86.5 MB, went into the `Exchange`.
+    > Every row goes into the `Exchange`, because no task can total its rows first: the average goes onto every trip of that payment type. All 15,096,468 trips, 86.5 MB, went in.
 - join the trips to another large table, over 10 MiB :: every row
-    > Neither table is small enough for Spark to copy, so both tables send their rows into an `Exchange` by the join key. The trips joined to the zone table with broadcast turned off sent all 15.1 M trips, 88 MB.
+    > Every row goes into the `Exchange`: neither table is small enough for Spark to copy, so both send their rows by the join key. With broadcast turned off, the trips joined to the zone table sent all 15.1 M trips, 88 MB.
 - join the trips to the 265-row zone table: `F.broadcast(zones)` :: no shuffle `Exchange`
-    > The plan uses a `BroadcastExchange` to copy the 265-row table to every executor, while the shuffle `Exchange` named in the answer would repartition the trips by key. The trips remain in their Spark partitions, where each task matches its rows against the copied table.
+    > The trips stay in their Spark partitions, and no trip rows move between partitions: each task matches its own rows against the copied 265-row table. The plan's `BroadcastExchange` copies that table to every executor, while a shuffle `Exchange` would repartition the trips by key.
 - keep only the trips for the first week of June 2012 and calculate two new columns from values in each row :: no shuffle `Exchange`
-    > This is a narrow step because each task keeps its rows and computes the columns within its own Spark partition, without moving data between Spark partitions.
+    > The trips stay in their Spark partitions, and no trip rows move between partitions: each task keeps its own rows and computes the two columns within its own partition.
 - :: one average per task
     > With one average per payment type from each task, the final stage could only average the averages, which is wrong when the tasks hold different numbers of trips (L5). A task sends a count and a sum instead, which the final stage adds up and divides.
 ```
@@ -219,7 +219,7 @@ shuffle_answers: true
     > This layout lets more tasks share the scan, while the join still routes every cash row to one task by payment type. The salt can split the join only when both sides include it in the join key (case P2.2).
 ```
 
-Another query sorts the June 2012 trips by pickup time, on the same cluster but with each executor given 1 GiB of memory. A spill occurs when a task runs short of memory and writes intermediate data to disk. The stage after the `Exchange` shows this:
+Another query sorts the June 2012 trips by pickup time, on the same cluster but with each executor given 1 GiB of memory. A spill occurs when a task runs short of its share of executor memory and writes intermediate data to the node's disk. The stage after the `Exchange` shows this:
 
     shuffle partitions  8, set with spark.sql.shuffle.partitions
     tasks             8

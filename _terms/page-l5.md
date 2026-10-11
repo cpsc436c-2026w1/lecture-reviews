@@ -40,7 +40,7 @@
 
 **Core node.** An EMR instance that runs executors and stores HDFS data. A role an instance plays in the cluster, not a Spark slot.
 
-**Task node.** An optional EMR instance that runs executors and stores no HDFS data, so it can be removed or bought as spot capacity without losing data.
+**Task node.** An optional EMR instance that runs executors and stores no HDFS data, so it can be removed or bought as spot capacity without losing HDFS data.
 
 **HDFS.** A file system that splits files into blocks across a cluster's core nodes' disks. Its data is lost when the cluster terminates, so our inputs and outputs stay on S3.
 

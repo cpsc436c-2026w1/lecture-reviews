@@ -44,4 +44,4 @@
 
 **Core node (EMR).** An EMR instance that runs executors and stores HDFS data. A role an instance plays in the cluster, not a Spark slot.
 
-**Task node (EMR).** An optional EMR instance that runs executors and stores no HDFS data, so it can be removed or bought as spot capacity without losing data.
+**Task node (EMR).** An optional EMR instance that runs executors and stores no HDFS data, so it can be removed or bought as spot capacity without losing HDFS data.
