@@ -1,0 +1,3 @@
+/* lecture-reviews house additions (cosmo is the base theme) */
+pre { font-size: 0.85em; line-height: 1.4; white-space: pre-wrap; overflow-x: auto; }
+.quizdown pre, .quizdown code { font-size: 0.9em; }

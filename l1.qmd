@@ -130,8 +130,11 @@ Slide: 2, 19, 21 (also 9, 16, 18)
 
 A pharmacy chain runs a weekly report over 40 GB of prescription records. Both instances below bill per second while they run, and the instance is terminated when the report is written:
 
-    m6a.xlarge     4 vCPU, 16 GiB    $0.1926 an hour    6 hours: the data does not fit in memory and is read from disk on every pass
-    m6a.4xlarge   16 vCPU, 64 GiB    $0.7704 an hour    1 hour: the data fits in memory
+    m6a.xlarge     4 vCPU, 16 GiB    $0.1926 an hour
+                   6 hours: the data does not fit in memory,
+                   so it is read from disk on every pass
+    m6a.4xlarge   16 vCPU, 64 GiB    $0.7704 an hour
+                   1 hour: the data fits in memory
 
 ```quizdown
 ---
@@ -173,8 +176,6 @@ shuffle_answers: true
     > You are responsible for the table design and the SQL queries. AWS operates the database service without deciding how you organize or query the data.
 - Which survey responses are loaded, and keeping them correct :: You operate it
     > You are responsible for choosing which survey responses to load and for keeping them complete and correct. AWS stores the responses and runs queries over them.
-- :: Its authors operate it
-    > The engine's authors write its software, while AWS operates that software for this managed service.
 ```
 
 Slide: 24 (also 22)

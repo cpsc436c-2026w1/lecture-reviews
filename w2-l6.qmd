@@ -54,10 +54,12 @@ Slide: 10 (also 7, 9, 11)
 
 In the measured run of the June 2012 query on the 2 core nodes, stage 1 reads the 36 monthly files and computes partial totals, and stage 2 finishes the count and average per payment type. Between them is an `Exchange` (shuffle). This is what happened around it:
 
-    stage 1, scan       52 tasks on core nodes 1 and 2; 1 task, on node 1, had June 2012 trips
+    stage 1, scan       52 tasks on core nodes 1 and 2;
+                        1 task, on node 1, had June 2012 trips
     partial rows        5 from that task, one per payment type, 367 B in all
     stage 2, planned    1000 shuffle partitions (EMR's default)
-    stage 2, ran        1 task, on core node 2: adaptive execution merged the 1000 into 1
+    stage 2, ran        1 task, on core node 2:
+                        adaptive execution merged the 1000 into 1
     result              5 rows, to the driver
 
 ```quizdown
@@ -163,10 +165,11 @@ Slide: 23 (also 24)
 
 From here on the lecture uses only the June 2012 trips, 15,096,468 of them (15.1 M), and steps run on 2 core nodes (8 slots):
 
-    trips       the June 2012 trips: 1 Parquet file, 8 row groups, read by 8 tasks; not bucketed
+    trips       the June 2012 trips: 1 Parquet file, 8 row groups,
+                read by 8 tasks; not bucketed
     zones       the 265-row taxi zone table, a CSV file
-    broadcast   Spark automatically copies a table to every executor when it estimates
-                the table at 10 MiB or less
+    broadcast   Spark automatically copies a table to every executor
+                when it estimates the table at 10 MiB or less
 
 ```quizdown
 ---
@@ -199,8 +202,10 @@ Slide: 45 (also 38, 39, 42, 43)
 
 A later query joins the June 2012 trips to the 5-row payment-type names table, a CSV file, with Spark's automatic broadcast turned off. It runs on 2 core nodes (8 slots) and takes 1.65 s. The Spark UI's stage page shows this for the stage after the `Exchange` (shuffle):
 
-    tasks             3; adaptive execution merged payment types 4 and 5 into the other two
-    records           7.8 million in one task, the trips paid by cash; 7.2 million in one, paid by card;
+    tasks             3; adaptive execution merged payment types 4 and 5
+                      into the other two
+    records           7.8 million in one task, the trips paid by cash;
+                      7.2 million in one, paid by card;
                       about 36,000 in the third, payment type 3
     other slots       idle while the two large tasks run
 

@@ -116,7 +116,7 @@ A bakery chain answers "how much did this store sell yesterday?" with a Lambda f
 
     import json, duckdb
     con = duckdb.connect()
-    con.execute("LOAD httpfs;")                 # extension from the function's layer
+    con.execute("LOAD httpfs;")                 # from the function's layer
 
     def lambda_handler(event, context):
         store = event["queryStringParameters"]["store"]

@@ -79,6 +79,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
+<link rel="stylesheet" href="styles.css">
 </head>
 
 <body class="floating nav-fixed quarto-light">
@@ -98,10 +99,41 @@ ul.task-list li input[type="checkbox"] {
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
-<span class="menu-text">Lecture reviews</span></a>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lecture-reviews" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Lecture reviews</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-lecture-reviews">    
+        <li>
+    <a class="dropdown-item" href="./index.html">
+ <span class="dropdown-text">All reviews</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./l1.html">
+ <span class="dropdown-text">L1: the four resources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l2.html">
+ <span class="dropdown-text">L2: EC2, S3 and Lambda</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l3.html">
+ <span class="dropdown-text">L3: cost models and what starts a function</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l4.html">
+ <span class="dropdown-text">L4: scaling up and out</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l5.html">
+ <span class="dropdown-text">L5: Spark on a cluster</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./w2-l6.html">
+ <span class="dropdown-text">L6: how Spark runs a query</span></a>
+  </li>  
+    </ul>
+  </li>
   <li class="nav-item">
     <a class="nav-link" href="https://cpsc436c-2026w1.github.io/a1-starter/"> 
 <span class="menu-text">A1 starter</span></a>
@@ -223,10 +255,12 @@ shuffle_answers: true
 <section id="q-self-check-what-does-an-exchange-do" class="level3">
 <h3 class="anchored" data-anchor-id="q-self-check-what-does-an-exchange-do">Self-check: what does an <code>Exchange</code> do?</h3>
 <p>In the measured run of the June 2012 query on the 2 core nodes, stage 1 reads the 36 monthly files and computes partial totals, and stage 2 finishes the count and average per payment type. Between them is an <code>Exchange</code> (shuffle). This is what happened around it:</p>
-<pre><code>stage 1, scan       52 tasks on core nodes 1 and 2; 1 task, on node 1, had June 2012 trips
+<pre><code>stage 1, scan       52 tasks on core nodes 1 and 2;
+                    1 task, on node 1, had June 2012 trips
 partial rows        5 from that task, one per payment type, 367 B in all
 stage 2, planned    1000 shuffle partitions (EMR's default)
-stage 2, ran        1 task, on core node 2: adaptive execution merged the 1000 into 1
+stage 2, ran        1 task, on core node 2:
+                    adaptive execution merged the 1000 into 1
 result              5 rows, to the driver</code></pre>
 <div class="quizdown">
 ---
@@ -351,10 +385,11 @@ shuffle_answers: true
 <section id="q-rows-or-totals-into-the-exchange" class="level3">
 <h3 class="anchored" data-anchor-id="q-rows-or-totals-into-the-exchange">Rows or totals into the <code>Exchange</code>?</h3>
 <p>From here on the lecture uses only the June 2012 trips, 15,096,468 of them (15.1 M), and steps run on 2 core nodes (8 slots):</p>
-<pre><code>trips       the June 2012 trips: 1 Parquet file, 8 row groups, read by 8 tasks; not bucketed
+<pre><code>trips       the June 2012 trips: 1 Parquet file, 8 row groups,
+            read by 8 tasks; not bucketed
 zones       the 265-row taxi zone table, a CSV file
-broadcast   Spark automatically copies a table to every executor when it estimates
-            the table at 10 MiB or less</code></pre>
+broadcast   Spark automatically copies a table to every executor
+            when it estimates the table at 10 MiB or less</code></pre>
 <div class="quizdown">
 ---
 shuffle_answers: true
@@ -385,8 +420,10 @@ shuffle_answers: true
 <section id="q-diagnostics-questions" class="level3">
 <h3 class="anchored" data-anchor-id="q-diagnostics-questions">Which change fixes a hot key, and which a spill?</h3>
 <p>A later query joins the June 2012 trips to the 5-row payment-type names table, a CSV file, with Spark’s automatic broadcast turned off. It runs on 2 core nodes (8 slots) and takes 1.65 s. The Spark UI’s stage page shows this for the stage after the <code>Exchange</code> (shuffle):</p>
-<pre><code>tasks             3; adaptive execution merged payment types 4 and 5 into the other two
-records           7.8 million in one task, the trips paid by cash; 7.2 million in one, paid by card;
+<pre><code>tasks             3; adaptive execution merged payment types 4 and 5
+                  into the other two
+records           7.8 million in one task, the trips paid by cash;
+                  7.2 million in one, paid by card;
                   about 36,000 in the third, payment type 3
 other slots       idle while the two large tasks run</code></pre>
 <div class="quizdown">

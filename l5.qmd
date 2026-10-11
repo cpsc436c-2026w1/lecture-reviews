@@ -80,7 +80,8 @@ Slide: 18 (also 16)
 
 A notebook on an EMR cluster works with a bike-share company's rides, stored as Parquet files on S3. Earlier cells left two DataFrames in the notebook:
 
-    per_city   Spark DataFrame    ride counts per city, built earlier from the rides files
+    per_city   Spark DataFrame    ride counts per city, built earlier
+                                  from the rides files
     stations   pandas DataFrame   docks per station, with each station's city
 
 ```quizdown

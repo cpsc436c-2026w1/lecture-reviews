@@ -196,7 +196,8 @@ Slide: 32
 
 Each workload below runs today on one EC2 instance, an m6a.large (2 vCPU, 8 GiB of RAM), unless the row says otherwise. The lecture named these moves for a workload on one instance:
 
-    scale up    replace the instance with a larger one (more vCPUs, RAM and network on one instance)
+    scale up    replace the instance with a larger one
+                (more vCPUs, RAM and network on one instance)
     scale out   run the work on a cluster of several nodes
     neither     keep the one instance as it is
 

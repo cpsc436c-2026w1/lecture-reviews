@@ -7,8 +7,22 @@ website:
   page-navigation: false
   navbar:
     left:
-      - href: index.qmd
-        text: Lecture reviews
+      - text: Lecture reviews
+        menu:
+          - href: index.qmd
+            text: All reviews
+          - href: l1.qmd
+            text: "L1: the four resources"
+          - href: l2.qmd
+            text: "L2: EC2, S3 and Lambda"
+          - href: l3.qmd
+            text: "L3: cost models and what starts a function"
+          - href: l4.qmd
+            text: "L4: scaling up and out"
+          - href: l5.qmd
+            text: "L5: Spark on a cluster"
+          - href: w2-l6.qmd
+            text: "L6: how Spark runs a query"
       - href: https://cpsc436c-2026w1.github.io/a1-starter/
         text: A1 starter
       - href: https://cpsc436c-2026w1.github.io/a2-starter/
@@ -17,5 +31,6 @@ website:
 format:
   html:
     theme: cosmo
+    css: styles.css
     toc: true
     toc-location: left
