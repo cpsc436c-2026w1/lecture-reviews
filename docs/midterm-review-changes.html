@@ -266,7 +266,7 @@ shuffle_answers: true
 - :: EC2
     &gt; Everything AWS is responsible for on an instance, it is also responsible for on a function. AWS is responsible for the bottom two bands on EC2, and for those two plus three more on Lambda. Where to look: L2 slide 20 and L3 slide 23; practise [Who is responsible for each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).
 </div>
-<p class="rtnote"><span class="rtnew">new item</span> Stem: In which service is **AWS** responsible for each of these? Each option may be used once, more than once, or not at all.</p>
+<p class="rtnote">Stem: In which service is <mark>**AWS** responsible for</mark> each of <del>these **AWS's** responsibility, not yours?</del> <mark>these?</mark> Each option may be used once, more than once, or not at all.</p>
 
 <table class="rt caption-top table">
 <tbody>
@@ -278,37 +278,37 @@ shuffle_answers: true
 <tr class="even">
 <td>→ Both</td>
 <td>The hardware: the racks and the power</td>
-<td>AWS is responsible for the hardware under both: the racks and the power under an instance and under a function. Where to look: L2 slide 20 and L3 slide 23; practise [Who is responsible for each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).</td>
+<td>AWS <del>runs this on an instance and on a function:</del> <mark>is responsible for the hardware under both:</mark> the racks and the power <del>are the provider's floor no matter what you rent above it.</del> <mark>under an instance and under a function.</mark> Where to look: L2 slide 20 and L3 slide 23; practise [Who <del>handles</del> <mark>is responsible for</mark> each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).</td>
 </tr>
 <tr class="odd">
 <td>→ Both</td>
 <td>The virtual machine layer the code runs on</td>
-<td>AWS is responsible for the virtual machine layer under both. An instance is a virtual machine on AWS's hardware; for a function, AWS starts a small virtual machine to hold its execution environment. Where to look: L2 slide 20; practise [Who is responsible for each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).</td>
+<td>AWS <del>runs this on an instance and on a function: an</del> <mark>is responsible for the virtual machine layer under both. An</mark> instance is a virtual machine on AWS's <del>hardware, and</del> <mark>hardware; for</mark> a <del>function runs in</del> <mark>function, AWS starts</mark> a small virtual machine <del>AWS starts for it.</del> <mark>to hold its execution environment.</mark> Where to look: L2 slide 20; practise [Who <del>handles</del> <mark>is responsible for</mark> each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).</td>
 </tr>
 <tr class="even">
 <td>→ Lambda</td>
 <td>Patching the operating system</td>
-<td>On a function, AWS is responsible for the operating system, as it is for the runtime and the capacity. On an instance, the operating system is your responsibility. Where to look: L2 slide 20 and L3 slide 23; practise [Who is responsible for each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).</td>
+<td>On a <del>function</del> <mark>function, AWS is responsible for</mark> the operating <del>system moved to AWS's side with</del> <mark>system, as it is for</mark> the runtime and the capacity. On an <del>instance it</del> <mark>instance, the operating system</mark> is <del>yours from the first boot.</del> <mark>your responsibility.</mark> Where to look: L2 slide 20 and L3 slide 23; practise [Who <del>handles</del> <mark>is responsible for</mark> each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).</td>
 </tr>
 <tr class="odd">
 <td>→ Lambda</td>
 <td>Patching the language runtime the code uses</td>
-<td>On a function, you pick a runtime version from AWS's list, and AWS is responsible for patching it. On an instance, you install the runtime, so patching it is your responsibility. Where to look: L2 slide 20 and L3 slide 23; practise [Who is responsible for each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).</td>
+<td><del>You</del> <mark>On a function, you</mark> pick a runtime version from AWS's <del>list</del> <mark>list,</mark> and AWS <del>patches</del> <mark>is responsible for patching</mark> it. On an <del>instance</del> <mark>instance,</mark> you install the runtime, so patching it is <del>yours.</del> <mark>your responsibility.</mark> Where to look: L2 slide 20 and L3 slide 23; practise [Who <del>handles</del> <mark>is responsible for</mark> each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).</td>
 </tr>
 <tr class="even">
 <td>→ Neither</td>
 <td>The code that does the work</td>
-<td>You write the code, both on an instance and on a function. AWS is not responsible for it on either. Where to look: L2 slide 20 and L3 slide 23; practise [Who is responsible for each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).</td>
+<td>You write <del>this</del> <mark>the code, both</mark> on an instance and on a <del>function;</del> <mark>function.</mark> AWS <del>never writes it, whichever way you run it.</del> <mark>is not responsible for it on either.</mark> Where to look: L2 slide 20 and L3 slide 23; practise [Who <del>handles</del> <mark>is responsible for</mark> each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).</td>
 </tr>
 <tr class="odd">
 <td>→ Neither</td>
 <td>The policy that says what your code may touch</td>
-<td>You write the policy, both on an instance and on a function: a role on an instance, an execution role on a function. AWS enforces the policy on both, but is not responsible for writing it. Where to look: L2 slide 30; practise [Who is responsible for each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).</td>
+<td>You write <del>this</del> <mark>the policy, both</mark> on an instance and on a <del>function; AWS never writes it, whichever way you run it. It is</del> <mark>function:</mark> a role on an <del>instance and</del> <mark>instance,</mark> an execution role on a <del>function, and</del> <mark>function.</mark> AWS enforces <del>it</del> <mark>the policy</mark> on <del>both.</del> <mark>both, but is not responsible for writing it.</mark> Where to look: L2 slide 30; practise [Who <del>handles</del> <mark>is responsible for</mark> each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).</td>
 </tr>
 <tr class="even">
 <td>→</td>
 <td>:: EC2</td>
-<td>Everything AWS is responsible for on an instance, it is also responsible for on a function. AWS is responsible for the bottom two bands on EC2, and for those two plus three more on Lambda. Where to look: L2 slide 20 and L3 slide 23; practise [Who is responsible for each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).</td>
+<td><del>Nothing</del> <mark>Everything</mark> AWS <del>runs</del> <mark>is responsible</mark> for <del>you</del> on an <del>instance</del> <mark>instance, it</mark> is <del>missing</del> <mark>also responsible for</mark> on a function. <del>On EC2 it runs</del> <mark>AWS is responsible for</mark> the bottom two <del>bands;</del> <mark>bands</mark> on <del>Lambda</del> <mark>EC2, and for</mark> those two <del>and</del> <mark>plus</mark> three <del>more.</del> <mark>more on Lambda.</mark> Where to look: L2 slide 20 and L3 slide 23; practise [Who <del>handles</del> <mark>is responsible for</mark> each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).</td>
 </tr>
 </tbody>
 </table>
