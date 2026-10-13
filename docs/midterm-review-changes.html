@@ -705,7 +705,7 @@ shuffle_answers: true
 - A full backup started by a timer at 04:00 every Sunday :: Scheduled job
     &gt; A clock starts the run at a known recurring time. Where to look: L2 slide 22 and L3 slides 37–38; practise [What is the time shape of each workload's demand?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-what-is-the-time-shape-of-each-workloads-demand).
 </div>
-<p class="rtnote">Stem: A <del>smart-home company</del> <mark>university</mark> runs several <del>functions. What starts</del> <mark>cloud-backed services. Which shape does each part of</mark> the <del>function in each situation below?</del> <mark>demand have?</mark> Each option may be used once, more than once, or not at all.</p>
+<p class="rtnote">Stem: <del>In which service is</del> <mark>A university runs several cloud-backed services. Which shape does</mark> each <mark>part</mark> of <del>these **AWS's** responsibility, not yours?</del> <mark>the demand have?</mark> Each option may be used once, more than once, or not at all.</p>
 
 <table class="rt caption-top table">
 <tbody>
@@ -715,14 +715,14 @@ shuffle_answers: true
 <th data-quarto-table-cell-role="th">feedback</th>
 </tr>
 <tr class="even">
-<td>→ Scheduled job</td>
-<td><mark>A cache-rebuild run started by a timer at 01:15 every night</mark></td>
-<td><mark>A clock starts one run at a known time each night. Where to look: L2 slide 22 and L3 slides 37–38; practise [What is the time shape of each workload's demand?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-what-is-the-time-shape-of-each-workloads-demand).</mark></td>
+<td><del>→ Neither</del> → Scheduled job</td>
+<td><del>The code that does the work</del> <mark>A cache-rebuild run started by a timer at 01:15 every night</mark></td>
+<td><del>You write this on an instance and on</del> <mark>A clock starts one run at</mark> a <del>function; AWS never writes it, whichever way you run it.</del> <mark>known time each night.</mark> Where to look: L2 slide <del>20</del> <mark>22</mark> and L3 <del>slide 23;</del> <mark>slides 37–38;</mark> practise <del>[Who handles</del> <mark>[What is the time shape of</mark> each <del>task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).</del> <mark>workload's demand?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-what-is-the-time-shape-of-each-workloads-demand).</mark></td>
 </tr>
 <tr class="odd">
-<td>→ Daily rhythm</td>
-<td><mark>Accepted meal orders: busiest at lunch and dinner, near zero overnight, with the same pattern every day</mark></td>
-<td><mark>The rate rises and falls in a pattern that repeats each day. Where to look: L2 slide 22 and L3 slides 37–38; practise [What is the time shape of each workload's demand?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-what-is-the-time-shape-of-each-workloads-demand).</mark></td>
+<td><del>→</del> → Daily rhythm</td>
+<td><del>:: EC2</del> <mark>Accepted meal orders: busiest at lunch and dinner, near zero overnight, with the same pattern every day</mark></td>
+<td><del>Nothing AWS runs for you on an instance is missing on</del> <mark>The rate rises and falls in</mark> a <del>function. On EC2 it runs the bottom two bands; on Lambda those two and three more.</del> <mark>pattern that repeats each day.</mark> Where to look: L2 slide <del>20</del> <mark>22</mark> and L3 <del>slide 23;</del> <mark>slides 37–38;</mark> practise <del>[Who handles</del> <mark>[What is the time shape of</mark> each <del>task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).</del> <mark>workload's demand?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-what-is-the-time-shape-of-each-workloads-demand).</mark></td>
 </tr>
 <tr class="even">
 <td>→ Daily rhythm</td>
@@ -740,44 +740,29 @@ shuffle_answers: true
 <td><mark>Many requests arrive in a short interval and then the rate returns to normal. Where to look: L3 slides 37–38; practise [What is the time shape of each workload's demand?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-what-is-the-time-shape-of-each-workloads-demand).</mark></td>
 </tr>
 <tr class="odd">
-<td>→ Scheduled job</td>
-<td><mark>A full backup started by a timer at 04:00 every Sunday</mark></td>
-<td><mark>A clock starts the run at a known recurring time. Where to look: L2 slide 22 and L3 slides 37–38; practise [What is the time shape of each workload's demand?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-what-is-the-time-shape-of-each-workloads-demand).</mark></td>
+<td><del>→ Lambda</del> → Scheduled job</td>
+<td><del>Patching the operating system</del> <mark>A full backup started by a timer at 04:00 every Sunday</mark></td>
+<td><del>On</del> <mark>A clock starts the run at</mark> a <del>function the operating system moved to AWS's side with the runtime and the capacity. On an instance it is yours from the first boot.</del> <mark>known recurring time.</mark> Where to look: L2 slide <del>20</del> <mark>22</mark> and L3 <del>slide 23;</del> <mark>slides 37–38;</mark> practise <del>[Who handles</del> <mark>[What is the time shape of</mark> each <del>task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).</del> <mark>workload's demand?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-what-is-the-time-shape-of-each-workloads-demand).</mark></td>
 </tr>
 <tr class="even">
-<td><del>→ Request</del></td>
-<td><del>Someone asks the voice assistant "what is the temperature?" and it answers a second later</del></td>
-<td><del>Someone is waiting for the reply: a request starts the function and gets the answer back. Where to look: L3 slides 5 and 8–9; practise [Requests, events and schedules](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-requests-events-and-schedules).</del></td>
+<td><del>→ Both</del></td>
+<td><del>The hardware: the racks and the power</del></td>
+<td><del>AWS runs this on an instance and on a function: the racks and the power are the provider's floor no matter what you rent above it. Where to look: L2 slide 20 and L3 slide 23; practise [Who handles each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).</del></td>
 </tr>
 <tr class="odd">
-<td><del>→ Event</del></td>
-<td><del>A thermostat writes a new reading file to a bucket, and a function checks whether it is outside the safe range</del></td>
-<td><del>The new file's arrival is the event; a rule sends it to the function. Nobody waits for the check. Where to look: L3 slides 5 and 8–9; practise [Requests, events and schedules](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-requests-events-and-schedules).</del></td>
+<td><del>→ Both</del></td>
+<td><del>The virtual machine layer the code runs on</del></td>
+<td><del>AWS runs this on an instance and on a function: an instance is a virtual machine on AWS's hardware, and a function runs in a small virtual machine AWS starts for it. Where to look: L2 slide 20; practise [Who handles each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).</del></td>
 </tr>
 <tr class="even">
-<td><del>→ Event</del></td>
-<td><del>A new firmware file is uploaded to a bucket, and a function checks its signature</del></td>
-<td><del>The upload is the event; a rule sends it to the function. Nobody waits for the result. Where to look: L3 slides 5 and 8–9; practise [Requests, events and schedules](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-requests-events-and-schedules).</del></td>
+<td><del>→ Lambda</del></td>
+<td><del>Patching the language runtime the code uses</del></td>
+<td><del>You pick a runtime version from AWS's list and AWS patches it. On an instance you install the runtime, so patching it is yours. Where to look: L2 slide 20 and L3 slide 23; practise [Who handles each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).</del></td>
 </tr>
 <tr class="odd">
-<td><del>→ Event</del></td>
-<td><del>A new recording from a door camera lands in a bucket, and a function blurs the faces in it</del></td>
-<td><del>The recording's arrival is the event; a rule sends it to the function. Nobody waits for the result. Where to look: L3 slides 5 and 8–9; practise [Requests, events and schedules](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-requests-events-and-schedules).</del></td>
-</tr>
-<tr class="even">
-<td><del>→ Schedule</del></td>
-<td><del>Every night at 03:00 a function deletes test devices' logs older than a week</del></td>
-<td><del>A schedule starts it: a clock time, 03:00 every night. Where to look: L3 slides 5 and 8–9; practise [Requests, events and schedules](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-requests-events-and-schedules).</del></td>
-</tr>
-<tr class="odd">
-<td><del>→ Schedule</del></td>
-<td><del>On the first day of each month a function totals each household's energy use</del></td>
-<td><del>A schedule starts it: a calendar date, the first day of each month. Where to look: L3 slides 5 and 8–9; practise [Requests, events and schedules](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-requests-events-and-schedules).</del></td>
-</tr>
-<tr class="even">
-<td><del>→</del></td>
-<td><del>:: Deployment</del></td>
-<td><del>Deploying a new version puts the code in place. It calls nothing: the handler runs only when a request, an event or a schedule starts it. Where to look: L2 slide 36 and L3 slides 5, 8–9; practise [Requests, events and schedules](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-requests-events-and-schedules).</del></td>
+<td><del>→ Neither</del></td>
+<td><del>The policy that says what your code may touch</del></td>
+<td><del>You write this on an instance and on a function; AWS never writes it, whichever way you run it. It is a role on an instance and an execution role on a function, and AWS enforces it on both. Where to look: L2 slide 30; practise [Who handles each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).</del></td>
 </tr>
 </tbody>
 </table>
