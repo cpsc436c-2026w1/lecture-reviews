@@ -165,7 +165,6 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#q-requests-events-and-schedules" id="toc-q-requests-events-and-schedules" class="nav-link" data-scroll-target="#q-requests-events-and-schedules">Requests, events and schedules</a></li>
   <li><a href="#q-a-partners-file-with-no-event" id="toc-q-a-partners-file-with-no-event" class="nav-link" data-scroll-target="#q-a-partners-file-with-no-event">Pulling a partner’s nightly file</a></li>
-  <li><a href="#q-which-day-did-the-loop-start" id="toc-q-which-day-did-the-loop-start" class="nav-link" data-scroll-target="#q-which-day-did-the-loop-start">From which day do the calls show the change?</a></li>
   </ul></li>
   <li><a href="#part-inside-a-function" id="toc-part-inside-a-function" class="nav-link" data-scroll-target="#part-inside-a-function">Inside a function: the handler and its environment</a>
   <ul class="collapse">
@@ -388,60 +387,6 @@ shuffle_answers: true
 </tbody>
 </table>
 <p>Slide: 5, 9</p>
-</section>
-<section id="q-which-day-did-the-loop-start" class="level3">
-<h3 class="anchored" data-anchor-id="q-which-day-did-the-loop-start">From which day do the calls show the change?</h3>
-<p>A community science group’s pull function writes each day’s file of bird counts to <code>counts/incoming/</code> in the group’s S3 bucket. An S3 trigger on a second function, <code>clean</code>, starts <code>clean</code> for every new object under the <code>counts/</code> prefix; <code>clean</code> drops the rows with no species and writes a cleaned copy. At some point in early May 2026 a teammate changed where <code>clean</code> writes its copy, from <code>cleaned/</code> to <code>counts/clean/</code>. The Monitor tabs of the two functions show:</p>
-<div class="rtprose">changed: A community science group's pull function writes each day's file of bird counts to `counts/incoming/` in the group's S3 bucket. An S3 <del>event notification</del> <mark>trigger</mark> on <del>the bucket starts</del> a second function, `clean`, <mark>starts `clean`</mark> for every new object under <del>`counts/`;</del> <mark>the `counts/` prefix;</mark> `clean` drops the rows with no species and writes a cleaned copy. At some point in early May 2026 a teammate changed where `clean` writes its copy, from `cleaned/` to `counts/clean/`. The Monitor tabs of the two functions show:</div>
-<pre><code>day (May 2026)    files pulled    calls of clean    errors    median duration
-Mon 4             1               1                 0         0.6 s
-Tue 5             1               1                 0         1.4 s
-Wed 6             3               5                 3         0.6 s
-Thu 7             1               16                0         0.6 s
-Fri 8             1               16                0         0.6 s</code></pre>
-<div class="rtprose">changed: day (May 2026) files pulled calls of clean errors median duration Mon 4 1 1 0 0.6 s Tue 5 1 1 0 1.4 s Wed 6 3 <mark>5</mark> 3 <del>1</del> 0.6 s Thu 7 1 16 0 0.6 s Fri 8 1 16 0 0.6 s</div>
-<div class="quizdown">
----
-shuffle_answers: true
----
-
-## From which day do the calls of `clean` show the change to `counts/clean/`?
-
-1. [x] Thursday 7 May 2026
-    &gt; `counts/clean/` sits under `counts/`, so each cleaned copy matches the trigger and starts `clean` again; Thursday first shows this loop because one pulled file leads to 16 calls with no errors and the usual duration. For a chain started by an S3 trigger, Lambda stops the next call after about 16 calls and notifies the account.
-1. [ ] Wednesday 6 May 2026
-    &gt; This option treats the extra calls and errors as evidence of the loop. Three files were pulled that day, and one file made `clean` fail. By default, Lambda calls the function again twice for an S3 event whose call failed: 3 files + 2 retries = 5 calls, and all 3 errors come from that one bad file. Lambda stops retrying after the second retry, while a loop keeps going with no errors until Lambda stops the chain.
-1. [ ] Tuesday 5 May 2026
-    &gt; This option treats the slower run as evidence of a loop, but one file was pulled and `clean` ran once; a larger file can take longer. A loop increases the call count while each call keeps its usual duration.
-</div>
-<p class="rtnote">Stem: From which day do the calls of `clean` show the change to `counts/clean/`?</p>
-
-<table class="rt caption-top table">
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th" style="width: 17%">key or chip</th>
-<th data-quarto-table-cell-role="th" style="width: 30%">row or option</th>
-<th data-quarto-table-cell-role="th">feedback</th>
-</tr>
-<tr class="even">
-<td>✓ key</td>
-<td>Thursday 7 May 2026</td>
-<td>`counts/clean/` sits under `counts/`, so each cleaned copy matches the <del>notification</del> <mark>trigger</mark> and starts `clean` again; Thursday first shows this loop because one pulled file leads to 16 calls with no errors and the usual duration. For a chain started by an S3 <del>event notification,</del> <mark>trigger,</mark> Lambda stops the next call after about 16 calls and notifies the <del>account, while a loop through an EventBridge rule on the default bus continues until someone changes the setup.</del> <mark>account.</mark></td>
-</tr>
-<tr class="odd">
-<td>✗</td>
-<td>Wednesday 6 May 2026</td>
-<td>This <del>reads more</del> <mark>option treats the extra</mark> calls and <del>an error</del> <mark>errors</mark> as <mark>evidence of</mark> the loop. Three files were pulled that <del>day</del> <mark>day,</mark> and <mark>one file made</mark> `clean` <del>ran</del> <mark>fail. By default, Lambda calls the function again twice for an S3 event whose call failed:</mark> 3 <del>times, once per file;</del> <mark>files + 2 retries = 5 calls, and all 3 errors come from that</mark> one bad <del>file failing is an error, not</del> <mark>file. Lambda stops retrying after the second retry, while</mark> a <del>chain of new calls.</del> <mark>loop keeps going with no errors until Lambda stops the chain.</mark></td>
-</tr>
-<tr class="even">
-<td>✗</td>
-<td>Tuesday 5 May 2026</td>
-<td>This option treats the slower run as evidence of a loop, but one file was pulled and `clean` ran once; a larger file can take longer. A loop increases the call count while each call keeps its usual duration.</td>
-</tr>
-</tbody>
-</table>
-<p>Slide: L2 slide 37; 8, 9 (also 14, 15)</p>
-<div class="rtprose">changed: Slide: <mark>L2 slide 37;</mark> 8, 9 (also 14, 15)</div>
 </section>
 </section>
 <section id="part-inside-a-function" class="level2">

@@ -163,7 +163,7 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#part-object-storage-s3" id="toc-part-object-storage-s3" class="nav-link active" data-scroll-target="#part-object-storage-s3">Object storage: S3</a>
   <ul class="collapse">
-  <li><a href="#q-buoy-readings-in-s3" id="toc-q-buoy-readings-in-s3" class="nav-link" data-scroll-target="#q-buoy-readings-in-s3">Buoy readings in S3: names and storage classes</a></li>
+  <li><a href="#q-buoy-readings-in-s3" id="toc-q-buoy-readings-in-s3" class="nav-link" data-scroll-target="#q-buoy-readings-in-s3">Buoy readings in S3: object names</a></li>
   </ul></li>
   <li><a href="#part-the-time-shape-of-demand" id="toc-part-the-time-shape-of-demand" class="nav-link" data-scroll-target="#part-the-time-shape-of-demand">Time shape of demand</a>
   <ul class="collapse">
@@ -235,7 +235,7 @@ Note
 <section id="part-object-storage-s3" class="level2">
 <h2 class="anchored" data-anchor-id="part-object-storage-s3">Object storage: S3</h2>
 <section id="q-buoy-readings-in-s3" class="level3">
-<h3 class="anchored" data-anchor-id="q-buoy-readings-in-s3">Buoy readings in S3: names and storage classes</h3>
+<h3 class="anchored" data-anchor-id="q-buoy-readings-in-s3">Buoy readings in S3: object names</h3>
 <p>An ocean-research lab keeps a year of buoy readings in the S3 bucket <code>buoy-lab</code>, one Parquet object per buoy per day, 200 GB in all. The object keys have the form shown below:</p>
 <div class="rtprose">changed: An ocean-research lab keeps a year of buoy readings in the S3 bucket `buoy-lab`, one Parquet object per buoy per day, 200 GB in all. The object keys <del>look like this:</del> <mark>have the form shown below:</mark></div>
 <pre><code>readings/2025-01-01/buoy-04.parquet
@@ -282,73 +282,6 @@ shuffle_answers: true
 <td>✗</td>
 <td>`2025-03-`</td>
 <td>This <mark>option</mark> treats a prefix as any part of the <del>name.</del> <mark>key.</mark> A prefix is <del>where</del> the <del>key starts and every</del> <mark>start of a key. Every</mark> key here <del>starts</del> <mark>begins</mark> with `readings/`, so no key begins with `2025-03-` and the listing <del>comes back</del> <mark>is</mark> empty.</td>
-</tr>
-</tbody>
-</table>
-<p>The lab’s model retraining job runs in ca-central-1 and reads all 200 GB of <code>buoy-lab</code> every night, 30 nights a month. S3 prices in ca-central-1 for storing and reading back data; per-request charges are small here and left out:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 33%">
-<col style="width: 33%">
-<col style="width: 33%">
-</colgroup>
-<thead>
-<tr class="header">
-<th style="text-align: left;">storage class</th>
-<th style="text-align: right;">to store</th>
-<th style="text-align: right;">to read back</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Standard</td>
-<td style="text-align: right;">$0.025 per GB-month</td>
-<td style="text-align: right;">none</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Standard-Infrequent Access</td>
-<td style="text-align: right;">$0.0138 per GB-month</td>
-<td style="text-align: right;">$0.01 per GB, and each object is billed for at least 30 days</td>
-</tr>
-</tbody>
-</table>
-<div class="quizdown">
----
-shuffle_answers: true
----
-
-## Which storage class choice keeps the monthly bill for the buoy readings lowest?
-
-1. [x] Keep the readings in Standard
-    &gt; Standard costs 200 × \$0.025 = \$5 a month, and the nightly reads add no charge for reading back. The job reads every object every night, and Standard is priced for data that is read often.
-1. [ ] Move the readings to Standard-Infrequent Access
-    &gt; This option compares the storage prices only: \$2.76 a month instead of \$5. Infrequent Access charges to read the data back, and the job reads 200 GB on each of 30 nights: 6,000 GB × \$0.01 = \$60 more, about \$62.76 in all.
-1. [ ] Move the readings older than six months to Standard-Infrequent Access
-    &gt; This option assumes older readings are read less. Here the retraining job reads the whole year every night, so the older 100 GB would cost \$1.38 to store and \$30 a month to read back, against \$2.50 in Standard.
-</div>
-<p class="rtnote">Stem: Which storage class choice keeps the monthly bill for the buoy readings lowest?</p>
-
-<table class="rt caption-top table">
-<tbody>
-<tr class="odd">
-<th data-quarto-table-cell-role="th" style="width: 17%">key or chip</th>
-<th data-quarto-table-cell-role="th" style="width: 30%">row or option</th>
-<th data-quarto-table-cell-role="th">feedback</th>
-</tr>
-<tr class="even">
-<td>✓ key</td>
-<td>Keep the readings in Standard</td>
-<td>Standard costs 200 × \$0.025 = \$5 a month, and the nightly reads add no charge for reading back. The job <del>touches</del> <mark>reads</mark> every object every night, <del>which is the use</del> <mark>and</mark> Standard is priced <del>for.</del> <mark>for data that is read often.</mark></td>
-</tr>
-<tr class="odd">
-<td>✗</td>
-<td>Move the readings to Standard-Infrequent Access</td>
-<td>This <mark>option</mark> compares the storage prices only: \$2.76 a month instead of \$5. Infrequent Access charges to read the data back, and the job reads 200 GB on each of 30 nights: 6,000 GB × \$0.01 = \$60 more, about \$62.76 in all.</td>
-</tr>
-<tr class="even">
-<td>✗</td>
-<td>Move the readings older than six months to Standard-Infrequent Access</td>
-<td>This <mark>option</mark> assumes older readings are read less. Here the retraining job reads the whole year every night, so the older 100 GB would cost \$1.38 to store and \$30 a month to read back, against \$2.50 in Standard.</td>
 </tr>
 </tbody>
 </table>
@@ -633,7 +566,7 @@ shuffle_answers: true
 - the call at 07:30 the next morning :: new execution environment
     &gt; The 07:30 call the next morning has a cold start because Lambda has removed the environments that remained idle overnight. Lambda creates a new environment and loads the 60 MB table into it before the handler runs, so the call takes about 3 s.
 - :: new EC2 instance
-    &gt; Lambda does not start an instance for you. Lambda creates execution environments on hardware AWS operates, and you never see or pick an instance.
+    &gt; Lambda does not start an instance for you. In its standard mode, Lambda creates execution environments on hardware AWS operates, and you never see or pick an instance.
 - :: same environment, soil table loaded again
     &gt; An existing execution environment retains the soil table in memory, so a warm call does not repeat the start-up load. Reusing the execution environment explains why the call takes about 80 ms instead of 3 s.
 </div>
@@ -674,7 +607,7 @@ shuffle_answers: true
 <tr class="odd">
 <td>→</td>
 <td>:: new EC2 instance</td>
-<td>Lambda does not start an instance for you. <del>In its standard mode it</del> <mark>Lambda</mark> creates execution environments on hardware AWS <del>runs,</del> <mark>operates,</mark> and you never see or pick an instance.</td>
+<td>Lambda does not start an instance for you. In its standard <del>mode it</del> <mark>mode, Lambda</mark> creates execution environments on hardware AWS <del>runs,</del> <mark>operates,</mark> and you never see or pick an instance.</td>
 </tr>
 <tr class="even">
 <td>→</td>
