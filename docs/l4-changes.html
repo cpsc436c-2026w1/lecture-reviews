@@ -540,8 +540,7 @@ shuffle_answers: true
 </section>
 <section id="q-after-how-many-queries-has-the-rewrite-paid-back" class="level3">
 <h3 class="anchored" data-anchor-id="q-after-how-many-queries-has-the-rewrite-paid-back">After how many queries has the rewrite paid back?</h3>
-<p>The City of Vancouver publishes its 3-1-1 service requests as open data. A team keeps five years of the service requests in S3 as one CSV file per year, and a weekly query reads all five files:</p>
-<div class="rtprose">changed: <mark>The City of</mark> Vancouver publishes its <del>Van311 non-emergency</del> <mark>3-1-1</mark> service requests as open data. A team keeps five years of <del>them</del> <mark>the service requests</mark> in S3 as one CSV file per year, and a weekly query reads <del>them all:</del> <mark>all five files:</mark></div>
+<p>Vancouver publishes its Van311 non-emergency service requests as open data. A team keeps five years of them in S3 as one CSV file per year, and a weekly query reads them all:</p>
 <pre><code>s3://van-311/requests/
 ├── 2021.csv
 │   …
@@ -557,11 +556,11 @@ shuffle_answers: true
 1. [x] 30 queries
     &gt; Each query saves 50 − 10 = 40 CPU-seconds, and 1,200 / 40 = 30 weekly runs.
 1. [ ] 24 queries
-    &gt; 1,200 / 50 divides by what the old query cost. Divide 1,200 by what each query saves, 40 CPU-seconds.
+    &gt; 1,200 / 50 divides by what the old query cost. The rewrite is paid back by what each query saves, 40 CPU-seconds.
 1. [ ] 120 queries
-    &gt; 1,200 / 10 divides by what the new query costs. Divide 1,200 by what each query saves, 40 CPU-seconds.
+    &gt; 1,200 / 10 divides by what the new query costs. The rewrite is paid back by what each query saves, 40 CPU-seconds.
 1. [ ] 20 queries
-    &gt; 1,200 / (50 + 10) adds the two costs together. Divide 1,200 by what each query saves, 50 − 10 = 40 CPU-seconds.
+    &gt; 1,200 / (50 + 10) adds the two costs together. The rewrite is paid back by what each query saves, 50 − 10 = 40 CPU-seconds.
 </div>
 <p class="rtnote">Stem: After how many weekly queries has the rewrite paid back its CPU-seconds?</p>
 
@@ -580,17 +579,17 @@ shuffle_answers: true
 <tr class="odd">
 <td>✗</td>
 <td>24 queries</td>
-<td>1,200 / 50 divides by what the old query cost. <del>The rewrite is paid back</del> <mark>Divide 1,200</mark> by what each query saves, 40 CPU-seconds.</td>
+<td>1,200 / 50 divides by what the old query cost. The rewrite is paid back by what each query saves, 40 CPU-seconds.</td>
 </tr>
 <tr class="even">
 <td>✗</td>
 <td>120 queries</td>
-<td>1,200 / 10 divides by what the new query costs. <del>The rewrite is paid back</del> <mark>Divide 1,200</mark> by what each query saves, 40 CPU-seconds.</td>
+<td>1,200 / 10 divides by what the new query costs. The rewrite is paid back by what each query saves, 40 CPU-seconds.</td>
 </tr>
 <tr class="odd">
 <td>✗</td>
 <td>20 queries</td>
-<td>1,200 / (50 + 10) adds the two costs together. <del>The rewrite is paid back</del> <mark>Divide 1,200</mark> by what each query saves, 50 − 10 = 40 CPU-seconds.</td>
+<td>1,200 / (50 + 10) adds the two costs together. The rewrite is paid back by what each query saves, 50 − 10 = 40 CPU-seconds.</td>
 </tr>
 </tbody>
 </table>
