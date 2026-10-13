@@ -9,13 +9,15 @@ filters:
   - quizdown
 ---
 
-The scenarios follow the lecture's worked example and its measured runs; the numbers in the last part are made up for practice. If you need to look up a term, the [relevant vocabulary is below](#part-terms).
+The scenarios follow the lecture's worked example and its measured runs, except the spill scenario in the last part, whose numbers are made up for practice. If you need to look up a term, the [relevant vocabulary is below](#part-terms).
+
+\* Not asked on the midterm; good practice for the course.
 
 ## How Spark runs our query {#part-how-spark-runs-our-query}
 
 ### Where does each step of the query run? {#q-which-steps-can-a-task-do-on-its-own-partition}
 
-The lecture's example data are the New York City yellow taxi trips from 2011 to 2013, about 520 million trips in 36 monthly Parquet files on S3. An EMR cluster of 1 primary and 2 core nodes, all m7g.xlarge, runs the query from L5: the rides and the average total per payment type for June 2012. Each core node runs one executor with 4 cores, so the cluster has 8 slots.
+The lecture's example data are the New York City yellow taxi trips from 2011 to 2013, about 520 million trips in 36 monthly Parquet files on S3. An EMR cluster of 1 primary and 2 core nodes, all m7g.xlarge, runs the query from L5: the rides and the average total per payment type for June 2012. Each core node has one executor with 4 cores, so the cluster has 8 slots.
 
     by_pay = (spark.read.parquet("s3://…/taxi/parquet/")
       .filter((F.col("tpep_pickup_datetime") >= "2012-06-01")
@@ -32,27 +34,27 @@ shuffle_answers: true
 
 ## For each step of the June 2012 query, where does it run? Each option may be used once, more than once, or not at all.
 
-- read the trip rows from the files: `spark.read.parquet` / `FROM` :: a task, on its own partition
-    > Each task does this on its own Spark partition, without rows from any other partition: it fetches the byte ranges of its partition.
-- keep only the trips for June 2012: `filter` / `WHERE` :: a task, on its own partition
-    > Each task does this on its own Spark partition, without rows from any other partition: it keeps or drops each row it holds.
-- drop the columns no longer needed (Spark adds this step itself) :: a task, on its own partition
-    > Each task does this on its own Spark partition, without rows from any other partition: it reads only the columns needed.
-- finish the count and average per payment type: `groupBy().agg()` / `GROUP BY` :: a task, after the `Exchange`
-    > A task can total its own rows, but a payment type's rows sit in several partitions, so the partial totals cross an `Exchange` first. "The driver" is wrong here: it never adds up trip rows.
-- return the answer to your program: `collect()` :: the driver
-    > `collect()` hands the 5 final rows to the driver, the process that runs your program.
+- read the trip rows from the files: `spark.read.parquet` / `FROM` :: task, on its own Spark partition
+    > Each task reads its own Spark partition, without rows from any other Spark partition. The Spark partition is a set of byte ranges of the files. The task reads every row of each row group whose middle falls in one of its ranges, and only the needed columns. A task whose ranges hold no row group's middle reads no rows: 16 of the 52 tasks here.
+- keep only the trips for June 2012: `filter` / `WHERE` :: task, on its own Spark partition
+    > Each task filters its own Spark partition, without rows from any other Spark partition: it keeps or drops each row it holds.
+- drop the columns no longer needed (Spark adds this step itself) :: task, on its own Spark partition
+    > Each task drops the columns on its own Spark partition, without rows from any other Spark partition: it keeps only `payment_type` and `total_amount` on the rows it already holds. Reading only the needed columns happened earlier, in the scan.
+- finish the count and average per payment type: `groupBy().agg()` / `GROUP BY` :: task, after the `Exchange`
+    > A task can total its own rows, but Spark plans the step before it knows where the rows are, and a payment type's rows can be in any Spark partition. So the partial totals go into an `Exchange` first, even in the measured run, where one task held every June 2012 trip. "Driver" is wrong here: the driver never adds up trip rows.
+- return the answer to your program: `collect()` :: driver
+    > `collect()` returns the 5 final rows to the driver, the process that runs your program.
 - :: YARN, on the primary node
-    > This reads the cluster manager as doing the work. YARN only hands each executor its memory and cores on a core node; the query's steps run in those executors, and the driver plans them.
+    > Picking YARN confuses the cluster manager with the process that runs the query steps. YARN starts each executor on a core node with enough free memory and runs no step of the query; the cores per executor are a Spark setting. The query's steps run in the executors, and the driver plans them.
 ```
 
-Slide: 10 (also 7, 9, 11)
+Slide: 10 (also 5, 6, 7, 9, 11)
 
 ## From code to a physical plan {#part-from-code-to-a-physical-plan}
 
 ### Self-check: what does an `Exchange` do? {#q-self-check-what-does-an-exchange-do}
 
-In the measured run of the June 2012 query on the 2 core nodes, stage 1 reads the 36 monthly files and computes partial totals, and stage 2 finishes the count and average per payment type. Between them is an `Exchange` (shuffle). This is what happened around it:
+In the measured run of the June 2012 query on the 2 core nodes, stage 1 reads the 36 monthly files and computes partial totals, and stage 2 finishes the count and average per payment type. An `Exchange` (shuffle) separates the two stages. These are the measurements around the `Exchange`:
 
     stage 1, scan       52 tasks on core nodes 1 and 2;
                         1 task, on node 1, had June 2012 trips
@@ -70,32 +72,41 @@ shuffle_answers: true
 ## In the June 2012 run, what moves over the network in the `Exchange` (shuffle)?
 
 1. [ ] Input files, read again from S3
-    > This treats the `Exchange` as a second scan. Stage 2 reads what stage 1 wrote, here 5 partial rows; the input files are read once, by stage 1.
+    > Picking the input files treats the `Exchange` as a second scan. Stage 2 reads what stage 1 wrote, here 5 partial rows; the input files are read once, by stage 1.
 1. [ ] Every June 2012 trip the scan kept
-    > This skips the partial totals. Stage 1 already added up its June 2012 trips into one row per payment type, so only those 5 rows go into the `Exchange`.
+    > Picking every trip skips the partial totals. Stage 1 already added up its June 2012 trips into one row per payment type, so only those 5 rows go into the `Exchange`.
 1. [x] Rows for a task on another node
-    > The task on node 1 wrote 5 rows for the stage-2 task on node 2, so those 367 B went over the network. Had the stage-2 task run on node 1, those rows would not have crossed the network.
+    > The task on node 1 wrote 5 rows for the stage-2 task on node 2, so those 367 B went over the network. If the stage-2 task had run on node 1, those rows would not have crossed the network.
 
-## In the June 2012 run, when could the stage-2 task start?
+## In the June 2012 run, when could the stage-2 task start? \*
 
 1. [ ] As soon as the task with the June 2012 trips had written its 5 rows
-    > This starts stage 2 on the only rows that exist. Spark cannot know that the other 51 tasks will add nothing until they finish, so every task of stage 1 must end first.
+    > Starting stage 2 after the one task with June 2012 trips assumes Spark knows where the rows are. Spark cannot know that the other 51 tasks will add nothing until they finish, so every task of stage 1 must end first.
 1. [x] Once the last of the 52 stage-1 tasks had finished
-    > Stage 2 needs the partial rows from all of stage 1, which is what makes the `Exchange` a stage boundary: the one stage-2 task started once the last scan task had finished, although only one of the 52 had rows for it.
+    > Stage 2 needs the partial rows from all of stage 1, so the `Exchange` is a stage boundary: the one stage-2 task started after the last scan task finished, although only one of the 52 tasks had rows for it.
 1. [ ] As soon as the driver had built the plan
-    > This option confuses building the plan with producing data. The driver builds the plan before tasks run, but stage 2 must wait until the stage-1 tasks produce their rows.
+    > Starting stage 2 when the driver builds the plan confuses building the plan with producing data. The driver builds the plan before tasks run, but stage 2 must wait until the stage-1 tasks produce their rows.
 
 ## Spark planned 1000 shuffle partitions for stage 2 of the June 2012 query. What decides which of them gets a row?
 
 1. [ ] Node that wrote the row
-    > This expects rows to stay where they were written. A row can go to a task on any node; here the rows from node 1 went to a task on node 2.
+    > Picking the node expects rows to stay where they were written. A row can go to a task on any node; here the rows from node 1 went to a task on node 2.
 1. [x] Row's key, its payment type
     > All rows with the same payment type go to the same shuffle partition. The plan's `hashpartitioning(payment_type, …)` hashes the key to choose that partition, so one task can finish the payment type's totals.
 1. [ ] Order in which rows were read
-    > This option assigns rows by read order, which would split one payment type across several tasks. Rows with the same key must go to the same shuffle partition regardless of read order.
+    > Assigning rows by read order would split one payment type across several tasks. Rows with the same key must go to the same shuffle partition regardless of read order.
+
+## In the June 2012 run, where were the 5 partial rows stored between stage 1 and stage 2?
+
+1. [x] On node 1's disk
+    > The stage-1 task on node 1 wrote its 5 rows to a shuffle file on node 1's disk, and the stage-2 task on node 2 fetched them from there over the network.
+1. [ ] In S3, next to the input files
+    > Picking S3 treats the `Exchange` as a write to storage outside the cluster. S3 holds the query's input files, which stage 1 reads once; rows between stages stay on the nodes' disks.
+1. [ ] In the driver's memory
+    > Picking the driver assumes the driver receives and passes on the partial rows. The driver plans the stages and receives only the 5 result rows from `collect()`; the stage-2 task fetched the partial rows from node 1 directly.
 ```
 
-Slide: 17 (also 16, 18)
+Slide: 17 (also 16, 18, 21)
 
 ## Running the plan: stages, tasks and waves {#part-running-the-plan-stages-tasks-and-waves}
 
@@ -122,25 +133,25 @@ shuffle_answers: true
 ## A teammate wants to shorten the June 2012 query and starts with the group-by, because it is the one step that needs rows from other nodes. Which part of the run should a change target first?
 
 1. [ ] Stage 2: group totals
-    > This expects the group-by to be the heavy step. Stage 2 ran one task for 0.011 s, because it added up only 5 partial rows.
+    > Picking stage 2 assumes the group-by takes most of the time. Stage 2 ran one task for 0.011 s, because it added up only 5 partial rows.
 1. [ ] `Exchange` between the stages
-    > This expects moving data between nodes to cost most. 5 rows, 367 B, went into it, and stage 2 waited 0 ms to fetch them.
+    > Picking the `Exchange` expects moving data between nodes to cost most. The `Exchange` received 5 rows, 367 B, and stage 2 waited 0 ms to fetch them.
 1. [x] Stage 1: scan
-    > 8.58 s of the 8.90 s query, against 0.011 s for stage 2: reading the 36 files is the cost. The field that shows it is the stage's *Duration*.
+    > Stage 1 took 8.58 s of the 8.90 s query, and stage 2 took 0.011 s: reading the 36 files took most of the time. The stage's *Duration* field shows the 8.58 s.
 ```
 
 Slide: 22 (also 19)
 
 ### What sets the time of stage 1? {#q-can-we-speed-up-stage-1-with-more-cores}
 
-Stage 1 of the June 2012 query reads the 36 monthly files of taxi trips, keeps the June 2012 trips and computes partial totals. It runs on 2 core nodes, each with one executor of 4 cores; one executor core, a slot, runs one task at a time. Spark cut the files into 52 Spark partitions, one task each:
+Stage 1 of the June 2012 query reads the 36 monthly files of taxi trips, keeps the June 2012 trips and computes partial totals. Stage 1 uses 2 core nodes, each with one executor of 4 cores; each executor core is a slot, which runs one task at a time. Spark cut the files into 52 Spark partitions, one task each:
 
     tasks that read rows     36, about 1.65 s each (9 in 10 at 1.75 s or less)
-    tasks that read nothing  16, a few milliseconds each
+    tasks that read nothing  16, under 0.1 s each
     slots                    2 executors × 4 cores = 8
     stage time               8.58 s
 
-The tasks that run at the same time, one per slot, form a *wave* (a term from Hadoop). The Spark UI does not name it, but its event timeline shows each wave as a column of task bars.
+The tasks that run at the same time, one per slot, form a *wave* (a term from Hadoop). The Spark UI's event timeline shows each wave as a column of task bars; the UI does not use the term *wave*.
 
 ```quizdown
 ---
@@ -150,11 +161,11 @@ shuffle_answers: true
 ## Each slot runs one task at a time. What sets how long stage 1 takes on the 8 slots?
 
 1. [ ] Total work split evenly over 8 slots
-    > This calculation assumes the work can be divided evenly: 36 × 1.65 s ÷ 8 is about 7.4 s. Each task runs as a whole in one slot, so the 36 tasks cannot be spread evenly over 8 slots.
+    > Dividing the total work by 8 assumes the work can be split evenly: 36 × 1.65 s ÷ 8 is about 7.4 s. Each task runs as a whole in one slot, so the 36 tasks cannot be spread evenly over 8 slots.
 1. [ ] Slowest single task
-    > This applies when one task is much slower than the rest. Here the reading tasks take about the same time, 1.65 s, and the stage takes 8.58 s, about five of them back to back.
+    > The slowest task sets the stage time only when one task is much slower than the rest. Here each reading task takes about 1.65 s, and the 8.58 s stage time is about five task times one after another.
 1. [x] Number of waves of tasks
-    > The 36 tasks that read rows fill 4 waves of 8 and a fifth wave of 4, while the other 4 slots run the 16 empty tasks and then wait: 5 waves of about 1.65 s is about 8.25 s, close to the 8.58 s measured. The 16 tasks that read nothing add only milliseconds.
+    > The 36 tasks that read rows run in 4 waves of 8 and a fifth wave of 4, while the 16 empty tasks run in the other 4 slots, which are then idle: 5 waves of about 1.65 s is about 8.25 s, close to the 8.58 s measured. The 16 tasks that read nothing add only milliseconds.
 ```
 
 Slide: 23 (also 24)
@@ -167,7 +178,7 @@ From here on the lecture uses only the June 2012 trips, 15,096,468 of them (15.1
 
     trips       the June 2012 trips: 1 Parquet file, 8 row groups,
                 read by 8 tasks; not bucketed
-    zones       the 265-row taxi zone table, a CSV file
+    zones       the 265-row taxi zone table
     broadcast   Spark automatically copies a table to every executor
                 when it estimates the table at 10 MiB or less
 
@@ -181,15 +192,15 @@ shuffle_answers: true
 - count and average per payment type: `groupBy().agg()` :: partial totals
     > Each task totals its own rows first and sends one row per payment type it saw, a count and a sum, for the final stage to add up. The 8 reading tasks send 40 rows for the 15.1 M trips.
 - number of trips per pickup day: `groupBy().count()` :: partial totals
-    > Each task totals its own rows first and sends one row per pickup day it saw, a count (a sum of ones), for the final stage to add up. Only a few rows per task cross the `Exchange`.
+    > Each task totals its own rows first and sends one row per pickup day it saw, a count (a sum of ones), for the final stage to add up: at most 30 rows per task, one for each day of June.
 - each trip gets its payment type's average next to it: a window query :: every row
-    > Every row goes into the `Exchange`, because no task can total its rows first: the average goes onto every trip of that payment type. All 15,096,468 trips, 86.5 MB, went in.
+    > Every row goes into the `Exchange`, because no task can compute partial totals first: Spark puts the payment type's average next to every trip. All 15,096,468 trips, 86.5 MB, went into the `Exchange`.
 - join the trips to another large table, over 10 MiB :: every row
     > Every row goes into the `Exchange`: neither table is small enough for Spark to copy, so both send their rows by the join key. With broadcast turned off, the trips joined to the zone table sent all 15.1 M trips, 88 MB.
 - join the trips to the 265-row zone table: `F.broadcast(zones)` :: no shuffle `Exchange`
-    > The trips stay in their Spark partitions, and no trip rows move between partitions: each task matches its own rows against the copied 265-row table. The plan's `BroadcastExchange` copies that table to every executor, while a shuffle `Exchange` would repartition the trips by key.
+    > No trip rows move between Spark partitions: each task matches the rows in its own Spark partition against the copied 265-row table. The plan's `BroadcastExchange` copies the 265-row zone table to every executor, while a shuffle `Exchange` would repartition the trips by key.
 - keep only the trips for the first week of June 2012 and calculate two new columns from values in each row :: no shuffle `Exchange`
-    > The trips stay in their Spark partitions, and no trip rows move between partitions: each task keeps its own rows and computes the two columns within its own partition.
+    > No trip rows move between Spark partitions: each task filters its own rows and computes the two columns within its own Spark partition.
 - :: one average per task
     > With one average per payment type from each task, the final stage could only average the averages, which is wrong when the tasks hold different numbers of trips (L5). A task sends a count and a sum instead, which the final stage adds up and divides.
 ```
@@ -200,7 +211,7 @@ Slide: 45 (also 38, 39, 42, 43)
 
 ### Which change fixes a hot key, and which a spill? {#q-diagnostics-questions}
 
-A later query joins the June 2012 trips to the 5-row payment-type names table, a CSV file, with Spark's automatic broadcast turned off. It runs on 2 core nodes (8 slots) and takes 1.65 s. The Spark UI's stage page shows this for the stage after the `Exchange` (shuffle):
+A later query joins the June 2012 trips to the 5-row payment-type names table, a CSV file, with Spark's automatic broadcast turned off. The query runs on 2 core nodes (8 slots) and takes 1.65 s. The Spark UI's stage page shows these measurements for the stage after the `Exchange` (shuffle):
 
     tasks             3; adaptive execution merged payment types 4 and 5
                       into the other two
@@ -214,17 +225,17 @@ A later query joins the June 2012 trips to the 5-row payment-type names table, a
 shuffle_answers: true
 ---
 
-## Cash and card are hot keys because each key sends millions of rows to one task. Which change shortens this stage the most?
+## Cash and card are hot keys because millions of rows with each key go to one task. Which change shortens the query the most?
 
 1. [x] Broadcast the names table
-    > Copying the names table to every executor keeps the trips out of the `Exchange` and in their Spark partitions, so each task joins its own rows. On the same cluster, this reduced the measured time from 1.65 s to 0.71 s; case P2.2 recommends broadcast before adaptive execution and reserves salting for last.
+    > Copying the names table to every executor keeps the trips out of the `Exchange` and in their Spark partitions, so each task joins its own rows. With automatic broadcast off, `F.broadcast(names)` tells Spark to copy the names table. On the same cluster the query took 0.71 s with the broadcast and 1.65 s without; case P2.2 lists broadcast first, adaptive execution second and a salt third.
 1. [ ] Give each task more memory
-    > This treats the long tasks as spills. More memory moves no rows: the cash trips still land in one task, and that task still processes all 7.8 million of them.
-1. [ ] Run the join on the salted copy of the trips (a copy with an extra value that splits each payment type among several files in its folder partition)
-    > This layout lets more tasks share the scan, while the join still routes every cash row to one task by payment type. The salt can split the join only when both sides include it in the join key (case P2.2).
+    > Picking more memory assumes the two long tasks spilled. Adding memory does not move rows: all cash trips still go to one task, which still processes all 7.8 million of them.
+1. [ ] Run the join on the salted copy of the trips (the June 2012 trips written as several files in each payment-type folder partition)
+    > Several files per payment type let more tasks share the scan, but the salted copy has no salt column: the salt was dropped before the write. The join still sends every cash row to one task by payment type, however many shuffle partitions or nodes there are. To split a hot key in a join, a salt is added to both tables when the join runs (case P2.2).
 ```
 
-Another query sorts the June 2012 trips by pickup time, on the same cluster but with each executor given 1 GiB of memory. A spill occurs when a task runs short of its share of executor memory and writes intermediate data to the node's disk. The stage after the `Exchange` shows this:
+Another query sorts the June 2012 trips by pickup time, on the same cluster but with each executor given 1 GiB of memory. A spill occurs when a task's share of executor memory is too small, so the task writes intermediate data to the node's disk. The stage after the `Exchange` shows these measurements:
 
     shuffle partitions  8, set with spark.sql.shuffle.partitions
     tasks             8
@@ -241,14 +252,14 @@ shuffle_answers: true
 ## Every task spilled, and the tasks are of even size, so the cause is memory per task. Which change helps?
 
 1. [ ] Fewer shuffle partitions, so fewer tasks compete for memory
-    > Fewer shuffle partitions put more rows in each task, which increases the memory needed by each task.
+    > Fewer shuffle partitions put more rows in each task. With 4 instead of 8, each task holds twice the rows and gets at most twice the memory, so each task still has too little memory, and 4 of the 8 slots are idle.
 1. [ ] Write the input with more row groups
-    > This applies the scan fix to the wrong stage. Row groups divide the reading tasks; the rows per task after the `Exchange` are set by the number of shuffle partitions.
+    > Row groups change the scan, not the stage after the `Exchange`. File sizes and slots set the number of scan tasks, and row groups decide how many scan tasks find rows. The number of shuffle partitions sets the rows per task after the `Exchange`.
 1. [x] More shuffle partitions, so each task holds fewer rows
-    > More shuffle partitions reduce the rows per task after the `Exchange`. With 16 shuffle partitions, the stage runs 16 tasks of about 0.95 million rows, each needing half as much memory; giving each task more memory also works (Problem 4).
+    > More shuffle partitions reduce the rows per task after the `Exchange`. With 16 shuffle partitions, the stage runs 16 tasks of about 0.95 million rows, each needing half as much memory; giving each task more memory also works (Problem 4). More shuffle partitions help here because the tasks are of even size; rows with one key still go to one task, so more shuffle partitions do not split a hot key.
 ```
 
-Slide: 49 (also 36, 46, 48, 50)
+Slide: 49 (also 35, 36, 37, 46, 48, 50)
 
 ## Terms used on this page {#part-terms}
 

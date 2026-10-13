@@ -11,11 +11,13 @@ filters:
 
 Numbers in the scenarios are made up for practice unless a price or an instance size is named. If you need to look up a term, the [relevant vocabulary is below](#part-terms).
 
+\* Not asked on the midterm; good practice for the course.
+
 ## Data larger than memory {#part-data-larger-than-memory}
 
-### Which ways of reading the file stay within 32 GB of memory? {#q-which-ways-of-reading-the-file-stay-within-memory}
+### Which ways of reading the file stay within 32 GB of memory? \* {#q-which-ways-of-reading-the-file-stay-within-memory}
 
-An online bookshop exports its orders for January 2020 to December 2025 as one CSV file of 24 GB, with 30 columns. An analyst wants the number of orders and the average order value per country for March 2024. The analyst's laptop has 32 GB of memory, 8 cores and an SSD with 500 GB free.
+An online bookshop exports its orders for January 2020 to December 2025 as one CSV file of 24 GB, with 30 columns. An analyst wants the number of orders and the average order value per country for March 2024. The analyst's laptop has 32 GB of memory, 8 cores and an SSD with 500 GB free. The analyst works in pandas 2, the version before 3.0.
 
 ```quizdown
 ---
@@ -25,20 +27,20 @@ shuffle_answers: true
 ## Which of these keep the work within 32 GB of memory while they run? Select every one that does.
 
 - [ ] pandas reads the whole file with `read_csv`, then groups by country
-    > An eager load puts the whole file into memory before any grouping. The load needs about 48 GB for the 24 GB file, more than the laptop's 32 GB, so the process is killed before it completes.
+    > An eager load puts the whole file into memory before any grouping. pandas before 3.0 needs about twice the file size in memory because of how pandas stores strings: about 48 GB for the 24 GB file, more than the laptop's 32 GB. The operating system stops the process before the load completes.
 - [x] pandas reads 1 million rows at a time, adding each to totals
-    > Only one chunk and the running counts and sums per country are in memory at any moment, far below 32 GB. All 24 GB still pass through, one chunk at a time, and you write the loop yourself.
+    > Only one chunk and the running counts and sums per country are in memory at any moment, far below 32 GB. pandas reads all 24 GB, one chunk at a time, and you write the loop yourself.
 - [x] DuckDB runs the March 2024 query as SQL on the CSV file
-    > Only one chunk and the running counts and sums per country are in memory at any moment, far below 32 GB. All 24 GB still pass through, one chunk at a time on every core, but DuckDB organizes the loop for you.
+    > One chunk per core and the running counts and sums per country are in memory at any moment, far below 32 GB. DuckDB reads all 24 GB, one chunk at a time on each core, and organizes the loop for you.
 - [ ] pandas reads the whole file with `read_csv` from a faster SSD
-    > An eager load: the whole file goes into memory before any grouping, about 48 GB for the 24 GB file. A faster SSD delivers the file sooner and changes nothing about memory, so the process is killed before the load completes.
+    > An eager load puts the whole file into memory before any grouping: about 48 GB for the 24 GB file with pandas before 3.0. A faster SSD reads the file sooner, but the load still needs about 48 GB of memory, so the operating system stops the process before the load completes.
 - [ ] pandas reads the whole file on an m6a.2xlarge (8 vCPU, 32 GiB)
-    > An eager load: the whole file goes into memory before any grouping, about 48 GB for the 24 GB file. The instance has 32 GiB, about what the laptop has, so the process is killed there too.
+    > An eager load puts the whole file into memory before any grouping: about 48 GB for the 24 GB file with pandas before 3.0. The instance has 32 GiB, about what the laptop has, so the operating system stops the process there too.
 ```
 
 Slide: 4, 6, 8 (also 3, 22)
 
-## Parquet on S3: asking for less {#part-parquet-on-s3}
+## Parquet on S3: reading only what you need {#part-parquet-on-s3}
 
 ### May 2025 downloads: reading the file over the network {#q-how-much-data-does-the-may-2025-query-fetch}
 
@@ -58,13 +60,13 @@ shuffle_answers: true
 ## DuckDB on a laptop reads downloads.parquet directly from S3 using `httpfs`, its extension for reading remote files. About how many MB does it fetch for the May 2025 query, not counting the footer?
 
 1. [x] 30 MB
-    > The footer's min and max show that only 1 of the 24 row groups holds May 2025, and in it the reader takes only the 6 columns' chunks: 6 × 120 MB / 24 = 30 MB.
+    > The footer's min and max show that only 1 of the 24 row groups holds May 2025, and from it DuckDB fetches only the 6 columns' chunks: 6 × 120 MB / 24 = 30 MB. DuckDB reads the footer first and works out which byte ranges hold those chunks. S3 returns only the byte ranges DuckDB asks for, and S3 itself does not choose columns or rows.
 1. [ ] 720 MB
-    > This takes the 6 columns from all 24 row groups. The rows are sorted by download time, so the footer's min and max rule out the 23 row groups that hold no May 2025 downloads.
+    > 720 MB is the 6 columns from all 24 row groups. The rows are sorted by download time, so the footer's min and max rule out the 23 row groups that hold no May 2025 downloads.
 1. [ ] 200 MB
-    > This takes every column of the May row group, as if a row group had to be read whole. Each column has its own chunk inside the row group, so the other 34 columns are left behind.
+    > 200 MB is every column of the May row group, as if a row group had to be read in full. Each column has its own chunk inside the row group, so DuckDB does not fetch the other 34 columns.
 1. [ ] 4,800 MB
-    > 4,800 MB is the whole file, with neither saving applied. The rows are sorted by download time, so the footer's min and max rule out the 23 row groups that hold no May 2025 downloads, and each column has its own chunk, so the other 34 columns are left behind.
+    > Fetching 4,800 MB means reading every row group and every column. The rows are sorted by download time, so the footer's min and max rule out the 23 row groups that hold no May 2025 downloads. Each column has its own chunk, so DuckDB does not fetch the other 34 columns.
 ```
 
 The platform then rewrites the same downloads into a new file of the same size, with the rows not ordered by time: each of the 24 row groups now holds downloads from all 24 months. The columns, their sizes and the query stay the same.
@@ -77,20 +79,20 @@ shuffle_answers: true
 ## About how many MB does DuckDB fetch from the rewritten file for the May 2025 query, not counting the footer?
 
 1. [x] 720 MB
-    > Every row group's min and max now span all 24 months, so none can be ruled out. The column chunks still let the reader take only the 6 columns: 6 × 120 MB = 720 MB.
+    > Every row group's min and max now span all 24 months, so none can be ruled out. DuckDB still fetches only the 6 columns' chunks: 6 × 120 MB = 720 MB.
 1. [ ] 30 MB
-    > 30 MB assumes that one row group holds all of May 2025, as in the sorted file. In the rewritten file every row group's min and max span all 24 months, so none can be ruled out and DuckDB fetches the 6 columns' chunks from all 24 row groups.
+    > Choosing 30 MB assumes that one row group holds all of May 2025, as in the sorted file. In the rewritten file every row group's min and max span all 24 months, so none can be ruled out and DuckDB fetches the 6 columns' chunks from all 24 row groups.
 1. [ ] 200 MB
-    > 200 MB assumes that one row group still holds all of May and must be read in full. In the rewritten file every row group's min and max span all 24 months, so none can be ruled out, and DuckDB fetches only the 6 columns' chunks, from all 24 row groups.
+    > Choosing 200 MB assumes that one row group still holds all of May and must be read in full. In the rewritten file every row group's min and max span all 24 months, so none can be ruled out, and DuckDB fetches only the 6 columns' chunks, from all 24 row groups.
 1. [ ] 4,800 MB
-    > Losing the row-group saving does not lose the column saving: each column still has its own chunk in every row group, so the other 34 columns are left behind.
+    > Every row group must now be read, and each column still has its own chunk in every row group, so DuckDB fetches only the 6 columns' chunks and not the whole file.
 ```
 
-Slide: 12, 13, 14 (also 9, 10)
+Slide: 12, 13, 14 (also 9, 10; L4 slide 20 for sorting)
 
 ## Pattern of use {#part-pattern-of-use}
 
-### Which resource is the bottleneck of each job? {#q-which-resource-is-the-bottleneck-of-each-job}
+### Which resource is the bottleneck of each job? \* {#q-which-resource-is-the-bottleneck-of-each-job}
 
 Each job below runs on a laptop with this setup:
 
@@ -107,28 +109,28 @@ shuffle_answers: true
 ## Which resource is the bottleneck of each job? Each option may be used once, more than once, or not at all.
 
 - Gradient boosting with 2,000 trees on a 4 GB table in memory; one core is at 100% for 5 hours :: compute
-    > One core stays at 100% the whole time, because each tree depends on the previous one and the trees are fitted one after another. The 4 GB table fits in memory and storage and network do not limit the job, so the job waits on that core.
+    > The trees are built one after another, because each tree depends on the last. The work inside each tree can be split across cores; this run uses one core, which stays at 100% the whole time. The 4 GB table fits in memory, and storage and network do not limit the job, so that core is the bottleneck.
 - Turning 500 hours of recorded interviews into text with a speech model on the laptop's GPU, which stays at 100% for the whole run :: compute
-    > The GPU stays at 100% the whole time. The recordings come off the SSD far faster than the model can work through them, so the job waits on the GPU.
+    > The GPU stays at 100% the whole time. The SSD reads the recordings much faster than the model processes them, so the GPU is the bottleneck.
 - A dashboard downloads a whole 6 GB Parquet file from S3 on every refresh, and each refresh takes about 8 minutes :: network
     > At 12 MB/s, transferring 6 GB takes about 8 minutes, so the network connection is the bottleneck. Reading only the needed columns and row groups would reduce the amount of data transferred over the network.
 - Copying 350 GB of satellite images from S3 to the SSD; the copy takes about 8 hours :: network
     > At 12 MB/s, transferring 350 GB takes about 8 hours, so the network connection is the bottleneck. The SSD has enough space and can write much faster than the network can deliver data.
-- A pandas pivot turns a 5 GB sales table into a wide table of about 22 GB; the SSD light stays on as the laptop moves memory to disk, and then the process running the pivot is killed :: memory
-    > The wide table alone is larger than the 16 GB of memory, so the operating system stops the program before the pivot completes.
+- A pandas pivot turns a 5 GB sales table into a wide table of about 22 GB; the SSD stays busy as the operating system moves data from memory to the SSD, and then the operating system stops the process running the pivot :: memory
+    > The wide table alone is larger than the 16 GB of memory, so the operating system stops the process before the pivot completes.
 - Fitting a model that must hold every row of its 24 GB feature table at once :: memory
     > Every row is needed at the same time, so there is nothing to skip: 24 GB does not fit in 16 GB of memory.
 - :: storage
-    > The SSD holds every file here with room to spare and reads about 2 GB/s, faster than any of these jobs needs. No job here waits on it.
+    > The SSD has space for every file here and reads about 2 GB/s, faster than any of these jobs needs. In the pivot, the SSD is busy only because memory is full and the operating system moves data from memory to the SSD; memory is the bottleneck.
 ```
 
 Slide: 2, 19, 21 (also 9, 16, 18)
 
-## Time is money: cost granularity {#part-cost-granularity}
+## Cost granularity {#part-cost-granularity}
 
-### How does the cost of one weekly run compare? {#q-which-is-true-of-running-the-weekly-job-on-the-larger-instance}
+### How does the cost of one weekly run compare? \* {#q-which-is-true-of-running-the-weekly-job-on-the-larger-instance}
 
-A pharmacy chain runs a weekly report over 40 GB of prescription records. Both instances below bill per second while they run, and the instance is terminated when the report is written:
+A pharmacy chain runs a weekly report over 40 GB of prescription records. Both instances below are in ca-central-1 and are billed per second, and each instance is terminated when the report is written:
 
     m6a.xlarge     4 vCPU, 16 GiB    $0.1926 an hour
                    6 hours: the data does not fit in memory,
@@ -144,18 +146,18 @@ shuffle_answers: true
 ## How does the cost of one run on the m6a.4xlarge compare with one run on the m6a.xlarge?
 
 1. [x] Less per run on the m6a.4xlarge
-    > 1 hour × \$0.7704 is about \$0.77 a run, against 6 hours × \$0.1926, about \$1.16. You pay for the time you use, so the instance that costs four times as much per hour is cheaper per task when it finishes six times sooner.
+    > 1 hour × \$0.7704 is about \$0.77 a run, against 6 hours × \$0.1926, about \$1.16. You pay for the time you use, so the instance that costs four times as much per hour is cheaper per run when the report finishes six times sooner.
 1. [ ] More per run on the m6a.4xlarge
-    > This compares the price per hour, \$0.7704 against \$0.1926. Billed per second, a run costs the hourly price times its hours: about \$0.77 against about \$1.16.
+    > The m6a.4xlarge costs more per hour, \$0.7704 against \$0.1926, and the hourly price is not the price of a run. Billed per second, a run costs the hourly price times its hours: about \$0.77 against about \$1.16.
 1. [ ] Same per run on both
-    > The cost would be the same if four times the vCPUs made the job exactly four times faster, 1.5 hours. Here the data also fits in its 64 GiB, so the job runs six times faster.
+    > The cost would be the same if four times the vCPUs made the job exactly four times faster, 1.5 hours. The data also fits in the m6a.4xlarge's 64 GiB, so the job runs six times faster.
 ```
 
 Slide: 20, 22
 
-## Who runs what {#part-who-runs-what}
+## Who is responsible for what {#part-who-runs-what}
 
-### On a managed database service, who operates each layer? {#q-on-a-managed-database-service-who-operates-each-layer}
+### On a managed database service, who is responsible for what? {#q-on-a-managed-database-service-who-operates-each-layer}
 
 Your research team stores its survey responses in a managed database service on AWS, a platform as a service (PaaS): you create tables, load the data and write SQL queries, and pay for the service by the hour.
 
@@ -164,21 +166,21 @@ Your research team stores its survey responses in a managed database service on 
 shuffle_answers: true
 ---
 
-## On the managed database service, who operates each layer? Each option may be used once, more than once, or not at all.
+## On the managed database service, who is responsible for each of these? Each option may be used once, more than once, or not at all.
 
-- The disks the tables are stored on, and replacing them when they fail :: AWS operates it
-    > A managed database service runs everything from the hardware up to the database engine for you. The disks are part of that, so AWS replaces them when they fail.
-- The operating system under the database engine, and its patches :: AWS operates it
-    > A managed database service runs everything from the hardware up to the database engine for you. The operating system under the engine is part of that, so AWS applies its patches.
-- Keeping the database engine running, and restarting it after a failure :: AWS operates it
-    > A managed database service runs everything from the hardware up to the database engine for you. The database engine is part of that service, so AWS operates it.
-- The design of the tables and the SQL queries run against them :: You operate it
-    > You are responsible for the table design and the SQL queries. AWS operates the database service without deciding how you organize or query the data.
-- Which survey responses are loaded, and keeping them correct :: You operate it
-    > You are responsible for choosing which survey responses to load and for keeping them complete and correct. AWS stores the responses and runs queries over them.
+- The disks the tables are stored on, and replacing them when they fail :: AWS
+    > On a managed database service, AWS is responsible for everything from the hardware up to the database engine. The disks are part of the hardware, so replacing a failed disk is not your responsibility.
+- The operating system under the database engine, and its patches :: AWS
+    > On a managed database service, AWS is responsible for everything from the hardware up to the database engine. Patching the operating system is not your responsibility.
+- Keeping the database engine running, and restarting it after a failure :: AWS
+    > On a managed database service, AWS is responsible for everything from the hardware up to the database engine. Restarting the engine after a failure is not your responsibility.
+- The design of the tables and the SQL queries run against them :: you
+    > The table design and the SQL queries are your responsibility. AWS is responsible for keeping the database engine running; how you organize and query the data is your responsibility.
+- Which survey responses are loaded, and keeping them correct :: you
+    > Choosing which survey responses to load, and keeping them complete and correct, is your responsibility. AWS is responsible for storing the responses and running your queries over them; checking that the responses are correct is your responsibility.
 ```
 
-Slide: 24 (also 22)
+Slide: 24, L2 slide 20 (also 25)
 
 ## Terms used on this page {#part-terms}
 

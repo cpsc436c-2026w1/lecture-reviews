@@ -165,7 +165,6 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#q-requests-events-and-schedules" id="toc-q-requests-events-and-schedules" class="nav-link" data-scroll-target="#q-requests-events-and-schedules">Requests, events and schedules</a></li>
   <li><a href="#q-a-partners-file-with-no-event" id="toc-q-a-partners-file-with-no-event" class="nav-link" data-scroll-target="#q-a-partners-file-with-no-event">Pulling a partner’s nightly file</a></li>
-  <li><a href="#q-which-day-did-the-loop-start" id="toc-q-which-day-did-the-loop-start" class="nav-link" data-scroll-target="#q-which-day-did-the-loop-start">From which day do the calls show the change?</a></li>
   </ul></li>
   <li><a href="#part-inside-a-function" id="toc-part-inside-a-function" class="nav-link" data-scroll-target="#part-inside-a-function">Inside a function: the handler and its environment</a>
   <ul class="collapse">
@@ -177,7 +176,7 @@ ul.task-list li input[type="checkbox"] {
   </ul></li>
   <li><a href="#part-shape-of-demand" id="toc-part-shape-of-demand" class="nav-link" data-scroll-target="#part-shape-of-demand">Time shape of demand and the bill</a>
   <ul class="collapse">
-  <li><a href="#q-function-or-instance-for-a-map-tile-service" id="toc-q-function-or-instance-for-a-map-tile-service" class="nav-link" data-scroll-target="#q-function-or-instance-for-a-map-tile-service">Function or instance for a map-tile service</a></li>
+  <li><a href="#q-function-or-instance-for-a-map-tile-service" id="toc-q-function-or-instance-for-a-map-tile-service" class="nav-link" data-scroll-target="#q-function-or-instance-for-a-map-tile-service">Function or instance for a map-tile service *</a></li>
   <li><a href="#q-function-split-calls-or-an-instance-for-each-workload" id="toc-q-function-split-calls-or-an-instance-for-each-workload" class="nav-link" data-scroll-target="#q-function-split-calls-or-an-instance-for-each-workload">Function or an instance for each workload</a></li>
   <li><a href="#q-what-does-an-idle-week-cost" id="toc-q-what-does-an-idle-week-cost" class="nav-link" data-scroll-target="#q-what-does-an-idle-week-cost">What does an idle week cost?</a></li>
   </ul></li>
@@ -218,11 +217,12 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>Numbers in the scenarios are made up for practice unless a price or an instance size is named. If you need to look up a term, the <a href="#part-terms">relevant vocabulary is below</a>.</p>
+<p>* Not asked on the midterm; good practice for the course.</p>
 <section id="part-what-starts-a-function" class="level2">
 <h2 class="anchored" data-anchor-id="part-what-starts-a-function">What starts a function</h2>
 <section id="q-requests-events-and-schedules" class="level3">
 <h3 class="anchored" data-anchor-id="q-requests-events-and-schedules">Requests, events and schedules</h3>
-<p>A regional food bank keeps its pantry records in an S3 bucket and runs each job below on AWS. Pantries upload each day’s check-ins as a CSV file to <code>checkins/incoming/</code>. S3 sends its object-created events to EventBridge, Amazon’s service whose rules match events or fire on a clock and start a target such as a function.</p>
+<p>A regional food bank keeps its pantry records in an S3 bucket and runs each job below on AWS. Pantries upload each day’s check-ins as a CSV file to <code>checkins/incoming/</code>. S3 sends its object-created events to EventBridge, Amazon’s service whose rules use an event pattern or a schedule to start a target such as a function.</p>
 <div class="quizdown">
 ---
 shuffle_answers: true
@@ -231,13 +231,13 @@ shuffle_answers: true
 ## What starts each job? Each option may be used once, more than once, or not at all.
 
 - recomputes a pantry's month each time the pantry uploads a corrected file to `checkins/corrections/` :: event, matched by an EventBridge rule's event pattern
-    &gt; A corrected file landing is something that happened; the rule's pattern matches new objects under `checkins/corrections/`, and nobody waits on the result.
+    &gt; A new corrected file is an event; the rule's pattern matches new objects under `checkins/corrections/`, and nobody waits for the result.
 - every 30 minutes, fetches a public food-price list from a provincial web service and appends it to a CSV in S3 :: schedule, from an EventBridge rule's schedule expression
-    &gt; A clock starts it, every 30 minutes, and no new file and no caller is involved; the web request is what the job does once it runs. The rule's schedule expression, such as `rate(30 minutes)`, says when.
-- answers a volunteer's phone form, which sends a household's postal code and waits for the nearest open pantry :: request, through API Gateway's HTTP API
-    &gt; Someone sends a request and waits for the answer, here from a phone form. API Gateway gives the function a web address, and each request to it becomes one call of the function.
-- answers a coordinator's Python script, which calls the function's web address with a start and an end date and waits :: request, through API Gateway's HTTP API
-    &gt; Someone sends a request and waits for the answer, here from a Python script rather than a browser. API Gateway gives the function a web address, and each request to it becomes one call of the function.
+    &gt; The schedule starts the function every 30 minutes, and no new file or caller is involved; the function then makes the web request. The rule's schedule expression, such as `rate(30 minutes)`, says when.
+- answers a volunteer's phone form, which sends a household's postal code to the web address the HTTP API gives the function and waits for the nearest open pantry :: request, through API Gateway's HTTP API
+    &gt; A volunteer's phone form sends a request and waits for the answer. API Gateway gives the function a web address, and each request to that address becomes one call of the function.
+- answers a coordinator's Python script, which calls the web address the HTTP API gives the function with a start and an end date and waits :: request, through API Gateway's HTTP API
+    &gt; The request comes from a coordinator's Python script rather than a browser, and the script waits for the answer. API Gateway gives the function a web address, and each request to that address becomes one call of the function.
 - :: a direct call from a volunteer's laptop
     &gt; A call from a person's laptop is still a request, but no job in this scenario calls the function directly. The form and the script reach the function through the HTTP API's web address, while the other jobs start from EventBridge event or schedule rules.
 </div>
@@ -260,7 +260,7 @@ shuffle_answers: true
 </section>
 <section id="q-a-partners-file-with-no-event" class="level3">
 <h3 class="anchored" data-anchor-id="q-a-partners-file-with-no-event">Pulling a partner’s nightly file</h3>
-<p>A community science group collects bird counts from a partner society. The partner publishes a new CSV of the previous day’s counts on its own website by 06:30 each morning, and sends no notice when it does. Each pull finishes within five minutes. The group wants each file in its S3 bucket by 08:00, and wants no instance to look after.</p>
+<p>A community science group collects bird counts from a partner society. The partner publishes a new CSV of the previous day’s counts on its own website by 06:30 each morning, and sends no notice when it does. Each pull finishes within five minutes. The group wants each file in its S3 bucket by 08:00 and does not want responsibility for an instance.</p>
 <div class="quizdown">
 ---
 shuffle_answers: true
@@ -269,45 +269,20 @@ shuffle_answers: true
 ## Which way of starting the pull function meets the group's needs?
 
 1. [x] Schedule: an EventBridge rule starts it once an hour
-    &gt; The partner's website sends no event, so the group needs a clock-based trigger. With the file available by 06:30, an hourly schedule polls again by about 07:30, and the five-minute pull leaves time before 08:00. An EventBridge schedule expression such as `rate(1 hour)` supplies that trigger.
+    &gt; The partner's website sends no event, so the group needs a clock-based trigger. With the file available by 06:30, an hourly schedule starts the pull function again by about 07:30, and the five-minute pull leaves time before 08:00. An EventBridge schedule expression such as `rate(1 hour)` supplies that trigger.
 1. [ ] Event: an EventBridge rule starts it when the partner's file appears
-    &gt; This reads the partner's website as if it were the group's bucket. An event needs something that reports the change; S3 reports new objects in the group's own bucket, and the partner's site reports nothing.
+    &gt; This option treats the partner's website as if it were the group's bucket. An event needs something that reports the change; S3 reports new objects in the group's own bucket, and the partner's site reports nothing.
 1. [ ] Request: the partner's website calls the function's web address
-    &gt; This needs the partner to change their website to call the group's function. Nothing in the setup says they will, and the group does not run their site.
+    &gt; This option needs the partner to change its website to call the group's function. Nothing in the setup says the partner will make that change, and the group does not control the partner's site.
 </div>
 <p>Slide: 5, 9</p>
-</section>
-<section id="q-which-day-did-the-loop-start" class="level3">
-<h3 class="anchored" data-anchor-id="q-which-day-did-the-loop-start">From which day do the calls show the change?</h3>
-<p>A community science group’s pull function writes each day’s file of bird counts to <code>counts/incoming/</code> in the group’s S3 bucket. An S3 event notification on the bucket starts a second function, <code>clean</code>, for every new object under <code>counts/</code>; <code>clean</code> drops the rows with no species and writes a cleaned copy. At some point in early May 2026 a teammate changed where <code>clean</code> writes its copy, from <code>cleaned/</code> to <code>counts/clean/</code>. The Monitor tabs of the two functions show:</p>
-<pre><code>day (May 2026)    files pulled    calls of clean    errors    median duration
-Mon 4             1               1                 0         0.6 s
-Tue 5             1               1                 0         1.4 s
-Wed 6             3               3                 1         0.6 s
-Thu 7             1               16                0         0.6 s
-Fri 8             1               16                0         0.6 s</code></pre>
-<div class="quizdown">
----
-shuffle_answers: true
----
-
-## From which day do the calls of `clean` show the change to `counts/clean/`?
-
-1. [x] Thursday 7 May 2026
-    &gt; `counts/clean/` sits under `counts/`, so each cleaned copy matches the notification and starts `clean` again; Thursday first shows this loop because one pulled file leads to 16 calls with no errors and the usual duration. For a chain started by an S3 event notification, Lambda stops the next call after about 16 calls and notifies the account, while a loop through an EventBridge rule on the default bus continues until someone changes the setup.
-1. [ ] Wednesday 6 May 2026
-    &gt; This reads more calls and an error as the loop. Three files were pulled that day and `clean` ran 3 times, once per file; one bad file failing is an error, not a chain of new calls.
-1. [ ] Tuesday 5 May 2026
-    &gt; This option treats the slower run as evidence of a loop, but one file was pulled and `clean` ran once; a larger file can take longer. A loop increases the call count while each call keeps its usual duration.
-</div>
-<p>Slide: 8, 9 (also 14, 15)</p>
 </section>
 </section>
 <section id="part-inside-a-function" class="level2">
 <h2 class="anchored" data-anchor-id="part-inside-a-function">Inside a function: the handler and its environment</h2>
 <section id="q-how-many-times-does-each-line-run" class="level3">
 <h3 class="anchored" data-anchor-id="q-how-many-times-does-each-line-run">How many times does each line run?</h3>
-<p>A bakery chain answers “how much did this store sell yesterday?” with a Lambda function behind API Gateway’s HTTP API. Its file is:</p>
+<p>A bakery chain answers “how much did this store sell yesterday?” with a Lambda function behind API Gateway’s HTTP API. The function’s file is:</p>
 <pre><code>import json, duckdb
 con = duckdb.connect()
 con.execute("LOAD httpfs;")                 # from the function's layer
@@ -318,6 +293,7 @@ def lambda_handler(event, context):
         "SELECT sum(amount) FROM read_parquet('s3://bakery-sales/yesterday.parquet') WHERE store = ?",
         [store]).fetchone()[0]
     return {"statusCode": 200, "body": json.dumps({"store": store, "total": total})}</code></pre>
+<p>The file leaves out the line that gives DuckDB the function’s credentials for S3.</p>
 <p>On Friday 16 October 2026 the function answers 1,200 calls, and its logs show that AWS set up 3 execution environments for them that day.</p>
 <div class="quizdown">
 ---
@@ -327,17 +303,17 @@ shuffle_answers: true
 ## On that Friday, how many times does each line run? Each option may be used once, more than once, or not at all.
 
 - `con = duckdb.connect()` :: 3 times
-    &gt; The line runs once in each of the 3 execution environments because it is module-level code outside `lambda_handler`, and module-level code runs once when an environment is set up.
+    &gt; The line runs once in each of the 3 execution environments because it is module-level code outside `lambda_handler`, and module-level code runs once when an environment is set up. Later calls in that environment can reuse the connection until AWS removes the environment.
 - `con.execute("LOAD httpfs;")` :: 3 times
-    &gt; The line runs once in each of the 3 execution environments because it is module-level code outside `lambda_handler`, and module-level code runs once when an environment is set up.
+    &gt; The line runs once in each of the 3 execution environments because it is module-level code outside `lambda_handler`, and module-level code runs once when an environment is set up. Later calls in that environment can use the loaded extension until AWS removes the environment.
 - `store = event["queryStringParameters"]["store"]` :: 1,200 times
-    &gt; The line runs once for each of the 1,200 calls because it is inside `lambda_handler`, which AWS runs for every call; each call's `event` carries its own store.
+    &gt; The line runs once for each of the 1,200 calls because it is inside `lambda_handler`, and each call starts `lambda_handler` once; each call's `event` carries its own store.
 - the `SELECT sum(amount)` query :: 1,200 times
-    &gt; The query runs once for each of the 1,200 calls because it is inside `lambda_handler`, which AWS runs for every call; it uses that call's store.
+    &gt; The query runs once for each of the 1,200 calls because it is inside `lambda_handler`, and each call starts `lambda_handler` once; the query uses that call's store.
 - `return {...}` :: 1,200 times
-    &gt; The return line runs once for each of the 1,200 calls because it is inside `lambda_handler`, which AWS runs for every call; each call returns an answer for API Gateway to send to the caller.
+    &gt; The return line runs once for each of the 1,200 calls because it is inside `lambda_handler`, and each call starts `lambda_handler` once; each call returns an answer for API Gateway to send to the caller.
 - :: 1,197 times
-    &gt; This counts only the warm calls, as if the first call in a new environment did not run the handler. A call with a cold start runs the module-level code and then the handler, so the handler lines run 1,200 times.
+    &gt; This option counts only the warm calls, as if the first call in a new environment did not run the handler. A call with a cold start runs the module-level code and then the handler, so the handler lines run 1,200 times.
 </div>
 <p>Slide: 16 (also 24, 41)</p>
 </section>
@@ -346,7 +322,7 @@ shuffle_answers: true
 <h2 class="anchored" data-anchor-id="part-bigger-data">Same pipeline on bigger data</h2>
 <section id="q-which-change-keeps-the-compactions-memory-from-growing" class="level3">
 <h3 class="anchored" data-anchor-id="q-which-change-keeps-the-compactions-memory-from-growing">Which change keeps the compaction’s memory from growing?</h3>
-<p>A farmers’ market co-op collects its vendors’ card sales. Every 15 minutes the payment provider drops a CSV of the new sales, about 2,000 rows, into S3, and the upload’s event starts a Lambda function with a 1,024 MB memory setting. The function reads the co-op’s single Parquet file of all sales since June 2026 into pandas, adds the new rows, and writes the whole file back. In August 2026 the function starts to fail: it runs out of memory.</p>
+<p>A farmers’ market co-op collects its vendors’ card sales. Every 15 minutes the payment provider uploads a CSV of the new sales, about 2,000 rows, to S3, and the upload’s event starts a Lambda function with a 1,024 MB memory setting. The function reads the co-op’s single Parquet file of all sales since June 2026 into pandas, adds the new rows, and writes the whole file back. In August 2026 the function starts to fail: it runs out of memory.</p>
 <div class="quizdown">
 ---
 shuffle_answers: true
@@ -355,19 +331,19 @@ shuffle_answers: true
 ## Which change keeps the compaction's memory from growing as the months go by?
 
 1. [x] Write each day's rows to one file per `day=` folder
-    &gt; With one file per day, such as `sales-daily/day=2026-08-14/part.parquet`, each run reads and rewrites at most one day's rows, so its memory stays about the same in December 2026 as in June 2026. DuckDB can still read the day folders back as one table, as the chart on slide 28 does.
+    &gt; With one file per day, such as `sales-daily/day=2026-08-14/part.parquet`, each run reads and rewrites at most one day's rows, so the function uses about the same memory in December 2026 as in June 2026. DuckDB can still read the day folders back as one table (slide 30).
 1. [ ] Raise the memory setting to 10,240 MB, the most Lambda allows
-    &gt; A larger memory setting delays the failure, but the single file continues to grow until it reaches the new limit. Memory is also Lambda's price setting: each second of a call would bill ten times as many GB-seconds.
+    &gt; A larger memory setting delays the failure, but the single file continues to grow until it reaches the new limit. Lambda's price also depends on the memory setting: each second of a call would be charged as ten times as many GB-seconds.
 1. [ ] Do the same merge with DuckDB instead of with pandas
-    &gt; DuckDB needs less memory than pandas for the same rows, and it can apply a filter in streaming mode; but asking for the full history means holding, merging and rewriting every row of a file that grows every month, so the memory a run needs still grows with the file.
+    &gt; DuckDB uses less memory than pandas for the same rows and can spill to `/tmp`, but a run that reads and rewrites the whole history still needs more memory each month, because the file grows every month.
 </div>
-<p>Slide: 29, 30 (also 31, 33, 42)</p>
+<p>Slide: 29, 30 (also 28, 31, 33, 42)</p>
 </section>
 </section>
 <section id="part-shape-of-demand" class="level2">
 <h2 class="anchored" data-anchor-id="part-shape-of-demand">Time shape of demand and the bill</h2>
 <section id="q-function-or-instance-for-a-map-tile-service" class="level3">
-<h3 class="anchored" data-anchor-id="q-function-or-instance-for-a-map-tile-service">Function or instance for a map-tile service</h3>
+<h3 class="anchored" data-anchor-id="q-function-or-instance-for-a-map-tile-service">Function or instance for a map-tile service *</h3>
 <p>A city’s open-data team runs a street-map tile service that about a hundred apps call. Calls in one hour, on a Tuesday in October 2026, Pacific time:</p>
 <pre><code>hour     calls in that hour
 02:00    118,000
@@ -376,7 +352,7 @@ shuffle_answers: true
 14:00    126,000
 18:00    123,000
 22:00    119,000</code></pre>
-<p>The demand is a steady rate (a sustained load): the quietest hour, 02:00, is within 7% of the busiest, 14:00.</p>
+<p>The demand is a steady rate: the quietest hour, 02:00, is within 7% of the busiest, 14:00.</p>
 <p>The team can serve the tiles in either of two ways:</p>
 <table class="caption-top table">
 <colgroup>
@@ -400,7 +376,7 @@ shuffle_answers: true
 </tr>
 </tbody>
 </table>
-<p>Leave out any free tier.</p>
+<p>Leave out any free tier. Data transfer out is left out too, because it costs the same both ways. The crossover (slide 42) is the call rate at which the instance’s hourly price equals the function’s price for that hour of calls. To find the crossover, work out the three per-call prices in the function’s row, add them, and divide the instance’s hourly price by the sum.</p>
 <div class="quizdown">
 ---
 shuffle_answers: true
@@ -411,13 +387,13 @@ shuffle_answers: true
 1. [x] 90,000
     &gt; For one million calls, Lambda requests cost \$0.20, HTTP API calls cost \$1.11, and duration costs about \$0.83 because 0.5 GB × 0.1 s × 1,000,000 is 50,000 GB-seconds billed at \$0.0000166667; the total is \$2.14. Dividing the instance's \$0.1926 hourly price by \$2.14 per million calls gives the crossover of about 90,000 calls an hour, above which the instance costs less.
 1. [ ] 186,000
-    &gt; This leaves out API Gateway: \$0.1926 / \$1.033 per million. Each call through the HTTP API is billed by API Gateway too, \$1.11 per million, which is the largest part of the per-call price here.
+    &gt; This option leaves out API Gateway: \$0.1926 / \$1.033 per million. Each call through the HTTP API is billed by API Gateway too, \$1.11 per million, which is the largest part of the per-call price here.
 1. [ ] 963,000
-    &gt; This counts only Lambda's request price: \$0.1926 / \$0.20 per million. A call also bills its GB-seconds and its HTTP API call.
+    &gt; This option counts only Lambda's request price: \$0.1926 / \$0.20 per million. AWS also charges for each call's GB-seconds and for its HTTP API call.
 1. [ ] 20,000
-    &gt; This bills each call as a whole second, 0.5 GB-seconds instead of 0.05. Lambda bills duration to the millisecond, so a 0.1 s call bills 0.1 s.
+    &gt; This option counts each call as a whole second, 0.5 GB-seconds instead of 0.05. Lambda charges for duration to the millisecond, so a 0.1 s call is charged for 0.1 s.
 </div>
-<p>Slide: 38, 39, 40 (also 13, 42)</p>
+<p>Slide: 13, 42 (also 10, 38, 39, 40)</p>
 </section>
 <section id="q-function-split-calls-or-an-instance-for-each-workload" class="level3">
 <h3 class="anchored" data-anchor-id="q-function-split-calls-or-an-instance-for-each-workload">Function or an instance for each workload</h3>
@@ -430,17 +406,17 @@ shuffle_answers: true
 ## For each workload, what should run it? Each option may be used once, more than once, or not at all.
 
 - a summer-camp sign-up page: almost nothing for months, then 30,000 requests in the 3 minutes after sign-up opens on 2 March 2026; an answer may take up to 3 seconds :: Lambda function, one call per request
-    &gt; During the idle months, Lambda's invocation charges stop, while AWS can start many execution environments for the burst; the allowed 3-second response time leaves room for cold starts. The busiest hour has 30,000 calls, below the 50,000-an-hour crossover, so Lambda costs less than an instance that would also bill during idle months.
+    &gt; During the idle months, Lambda's request and GB-second charges stop, while AWS can start many execution environments for the burst; the allowed 3-second response time leaves room for cold starts. The busiest hour has 30,000 calls, below the 50,000-an-hour crossover, so Lambda costs less than an instance, which AWS would also charge for during the idle months.
 - a staff lookup page: about 3,000 calls an hour at midday, near zero overnight :: Lambda function, one call per request
-    &gt; Its busiest hour has 3,000 calls, below the 50,000-an-hour crossover, so the function costs less than the instance at the peak and its cost drops close to zero overnight with the call rate.
+    &gt; The page's busiest hour has 3,000 calls, below the 50,000-an-hour crossover, so the function costs less than the instance at the peak, and the function's cost drops close to zero overnight as the call rate falls.
 - a monthly 20-minute job that needs 40 GB of memory at once and cannot be split :: instance for the run only
-    &gt; 40 GB is past a function's 10,240 MB limit, and 20 minutes is past a call's 15-minute limit. Ephemeral infrastructure means creating the instance for the job and deleting it afterward, so it bills only for the monthly run.
+    &gt; 40 GB is past a function's 10,240 MB limit, and 20 minutes is past a call's 15-minute limit. Ephemeral infrastructure means creating the instance for the job and deleting it afterward, so AWS charges only for the monthly run.
 - a weekly 10-minute join that needs 24 GB of memory at once :: instance for the run only
-    &gt; 24 GB is past a function's 10,240 MB limit, though 10 minutes fits in one call. Ephemeral infrastructure means creating the instance for the join and deleting it afterward, so it bills only for the weekly run, about 10 minutes a week.
+    &gt; 24 GB is past a function's 10,240 MB limit, though 10 minutes fits in one call. Ephemeral infrastructure means creating the instance for the join and deleting it afterward, so AWS charges only for the weekly run, about 10 minutes a week.
 - :: always-on instance
-    &gt; An instance kept up bills every hour. The request workloads here stay below the 50,000-an-hour crossover, and the scheduled jobs run for minutes or hours a week or a month, so an always-on instance would bill mostly idle hours.
+    &gt; AWS charges for every hour an instance runs. The request workloads here stay below the 50,000-an-hour crossover, and the scheduled jobs run for minutes a week or a month, so AWS would charge for an always-on instance during mostly idle hours. An always-on instance suits a service that must stay up and keep data in memory between requests, such as the JupyterHub instance on slide 39. No workload here needs either.
 </div>
-<p>Slide: 39 (also 5, 13, 29)</p>
+<p>Slide: 39, L2 slide 23 (also 5, 13, 29)</p>
 </section>
 <section id="q-what-does-an-idle-week-cost" class="level3">
 <h3 class="anchored" data-anchor-id="q-what-does-an-idle-week-cost">What does an idle week cost?</h3>
@@ -474,7 +450,7 @@ shuffle_answers: true
 <td style="text-align: right;">$0.30</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">the m6a.xlarge instance, running all week ($0.1926 an hour)</td>
+<td style="text-align: left;">the m6a.xlarge instance, running all week ($0.1926 an hour; its EBS disk is left out of this bill)</td>
 <td style="text-align: right;">$32.36</td>
 </tr>
 <tr class="even">
@@ -492,15 +468,15 @@ shuffle_answers: true
 ## What is the bill for the idle week, to the cent?
 
 1. [x] \$36.67
-    &gt; Nothing calls either function, so the two lines that bill per call, the Lambda line and the HTTP API line, drop to zero. The instance bills each hour it runs, provisioned concurrency bills for the 2 environments kept initialised whether or not they are called, and the files and logs are still stored: \$1.20 + \$0.30 + \$32.36 + \$2.81 = \$36.67.
+    &gt; Nothing calls either function, so the two lines charged per call, the Lambda line and the HTTP API line, drop to zero. AWS charges for each hour the instance runs, for the 2 provisioned concurrency environments kept initialised whether or not they are called, and for the files and logs still stored: \$1.20 + \$0.30 + \$32.36 + \$2.81 = \$36.67. Provisioned concurrency is a setting the team turned on for the chart function; without that setting, AWS would charge nothing for the chart function in the idle week, as for the pull function.
 1. [ ] \$35.17
-    &gt; This total leaves out the two storage lines, \$1.20 + \$0.30 = \$1.50. Storage bills for what is stored, and nothing was deleted.
+    &gt; This total leaves out the two storage lines, \$1.20 + \$0.30 = \$1.50. AWS charges for stored data, and nothing was deleted.
 1. [ ] \$33.86
-    &gt; This total leaves out the provisioned concurrency line, \$2.81, as if it billed per call like the rest of Lambda. Provisioned concurrency bills for the 2 environments kept initialised, called or not.
+    &gt; This total leaves out the provisioned concurrency line, \$2.81, as if provisioned concurrency were charged per call like the rest of Lambda. AWS charges for the 2 environments kept initialised, whether or not they are called.
 1. [ ] \$32.36
-    &gt; This total leaves out the two storage lines and the provisioned concurrency line, \$4.31 in all. Storage bills for what is stored, and nothing was deleted; provisioned concurrency bills for the 2 environments kept initialised, called or not.
+    &gt; This total leaves out the two storage lines and the provisioned concurrency line, \$4.31 in all. AWS charges for stored data and for the 2 environments kept initialised, whether or not they are called; nothing was deleted.
 </div>
-<p>Slide: 42 (also 2, 10, 13, 39)</p>
+<p>Slide: 42 (also 2, 10, 13, 39 row 1)</p>
 </section>
 </section>
 <section id="part-terms" class="level2">
