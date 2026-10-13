@@ -359,7 +359,7 @@ shuffle_answers: true
 1. [ ] 10,800
     > 10,800 is the work in vCPU-minutes. 10,800 divided by 60 is 180 vCPU-hours. Where to look: L4 slide 35; practise [Scale up, scale out, or neither?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-scale-up-scale-out-or-neither).
 1. [x] 180
-    > 1,800 tiles × 6 minutes is 10,800 vCPU-minutes, which is 180 vCPU-hours. L4's slides count the same kind of work in core-hours; here each vCPU renders one tile at a time, so a core-hour on those slides is a vCPU-hour here. Where to look: L4 slides 35–37; practise [Scale up, scale out, or neither?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-scale-up-scale-out-or-neither), [How many tasks can the cluster run at once (how many slots does it have)?](https://cpsc436c-2026w1.github.io/lecture-reviews/l5.html#q-how-many-tasks-can-this-cluster-run-at-once).
+    > 1,800 tiles × 6 minutes is 10,800 vCPU-minutes, which is 180 vCPU-hours. L4 also says core-hours, the same count in allocated CPU cores. Where to look: L4 slides 35–37; practise [Scale up, scale out, or neither?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-scale-up-scale-out-or-neither), [How many tasks can the cluster run at once (how many slots does it have)?](https://cpsc436c-2026w1.github.io/lecture-reviews/l5.html#q-how-many-tasks-can-this-cluster-run-at-once).
 1. [ ] 1,800
     > 1,800 is the number of tiles. Each tile takes 6 minutes of one vCPU's work. Where to look: L4 slide 35; practise [Scale up, scale out, or neither?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-scale-up-scale-out-or-neither).
 1. [ ] 45
