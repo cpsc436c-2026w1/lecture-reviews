@@ -11,3 +11,5 @@ Each page follows one lecture part by part, with the quizzes from the slides. Th
 - [L4: scaling up, scaling out, and where the data lives](l4.qmd)
 - [L5: Spark on a cluster](l5.qmd)
 - [L6: how Spark runs a query, and why it might be slow](w2-l6.qmd)
+
+Before the midterm: [Midterm review](midterm-review.qmd), practice questions on L1 to L7 with feedback on every option.

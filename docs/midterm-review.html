@@ -132,6 +132,10 @@ ul.task-list li input[type="checkbox"] {
     <a class="dropdown-item" href="./w2-l6.html">
  <span class="dropdown-text">L6: how Spark runs a query</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./midterm-review.html">
+ <span class="dropdown-text">Midterm review</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item">
@@ -159,26 +163,38 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#block-1-lectures-1-to-3" id="toc-block-1-lectures-1-to-3" class="nav-link active" data-scroll-target="#block-1-lectures-1-to-3">Block 1: lectures 1 to 3</a>
   <ul class="collapse">
-  <li><a href="#whose-job-is-it-from-awss-side" id="toc-whose-job-is-it-from-awss-side" class="nav-link" data-scroll-target="#whose-job-is-it-from-awss-side">1. Whose job is it, from AWS’s side</a></li>
+  <li><a href="#who-is-responsible-aws-or-you" id="toc-who-is-responsible-aws-or-you" class="nav-link" data-scroll-target="#who-is-responsible-aws-or-you">1. Who is responsible: AWS or you</a></li>
   <li><a href="#stop-or-terminate" id="toc-stop-or-terminate" class="nav-link" data-scroll-target="#stop-or-terminate">2. Stop or terminate</a></li>
   <li><a href="#launch-settings-for-a-notebook-instance" id="toc-launch-settings-for-a-notebook-instance" class="nav-link" data-scroll-target="#launch-settings-for-a-notebook-instance">3. Launch settings for a notebook instance</a></li>
   <li><a href="#a-function-or-an-instance" id="toc-a-function-or-an-instance" class="nav-link" data-scroll-target="#a-function-or-an-instance">4. A function or an instance</a></li>
   <li><a href="#what-starts-the-function" id="toc-what-starts-the-function" class="nav-link" data-scroll-target="#what-starts-the-function">5. What starts the function</a></li>
   <li><a href="#why-the-parquet-read-is-small" id="toc-why-the-parquet-read-is-small" class="nav-link" data-scroll-target="#why-the-parquet-read-is-small">6. Why the Parquet read is small</a></li>
   <li><a href="#where-the-s3-client-is-made" id="toc-where-the-s3-client-is-made" class="nav-link" data-scroll-target="#where-the-s3-client-is-made">7. Where the S3 client is made</a></li>
+  <li><a href="#time-shape-of-the-demand" id="toc-time-shape-of-the-demand" class="nav-link" data-scroll-target="#time-shape-of-the-demand">8. Time shape of the demand</a></li>
   </ul></li>
   <li><a href="#block-2-lectures-4-to-7" id="toc-block-2-lectures-4-to-7" class="nav-link" data-scroll-target="#block-2-lectures-4-to-7">Block 2: lectures 4 to 7</a>
   <ul class="collapse">
-  <li><a href="#function-instance-or-cluster" id="toc-function-instance-or-cluster" class="nav-link" data-scroll-target="#function-instance-or-cluster">8. Function, instance or cluster</a></li>
-  <li><a href="#what-spark-can-skip" id="toc-what-spark-can-skip" class="nav-link" data-scroll-target="#what-spark-can-skip">9. What Spark can skip</a></li>
-  <li><a href="#what-happens-when-each-line-runs" id="toc-what-happens-when-each-line-runs" class="nav-link" data-scroll-target="#what-happens-when-each-line-runs">10. What happens when each line runs</a></li>
-  <li><a href="#where-each-thing-is-kept" id="toc-where-each-thing-is-kept" class="nav-link" data-scroll-target="#where-each-thing-is-kept">11. Where each thing is kept</a></li>
-  <li><a href="#fewer-slots" id="toc-fewer-slots" class="nav-link" data-scroll-target="#fewer-slots">12. Fewer slots</a></li>
-  <li><a href="#row-groups-and-tasks" id="toc-row-groups-and-tasks" class="nav-link" data-scroll-target="#row-groups-and-tasks">13. Row groups and tasks</a></li>
-  <li><a href="#nodes-for-a-deadline" id="toc-nodes-for-a-deadline" class="nav-link" data-scroll-target="#nodes-for-a-deadline">14. Nodes for a deadline</a></li>
-  <li><a href="#choosing-the-folder-key" id="toc-choosing-the-folder-key" class="nav-link" data-scroll-target="#choosing-the-folder-key">15. Choosing the folder key</a></li>
-  <li><a href="#why-the-stage-is-slow" id="toc-why-the-stage-is-slow" class="nav-link" data-scroll-target="#why-the-stage-is-slow">16. Why the stage is slow</a></li>
-  <li><a href="#what-the-team-chooses-on-emr" id="toc-what-the-team-chooses-on-emr" class="nav-link" data-scroll-target="#what-the-team-chooses-on-emr">17. What the team chooses on EMR</a></li>
+  <li><a href="#function-instance-or-cluster" id="toc-function-instance-or-cluster" class="nav-link" data-scroll-target="#function-instance-or-cluster">9. Function, instance or cluster</a></li>
+  <li><a href="#what-spark-can-skip" id="toc-what-spark-can-skip" class="nav-link" data-scroll-target="#what-spark-can-skip">10. What Spark can skip</a></li>
+  <li><a href="#what-happens-when-each-line-runs" id="toc-what-happens-when-each-line-runs" class="nav-link" data-scroll-target="#what-happens-when-each-line-runs">11. What happens when each line runs</a></li>
+  <li><a href="#where-each-thing-is-kept" id="toc-where-each-thing-is-kept" class="nav-link" data-scroll-target="#where-each-thing-is-kept">12. Where each thing is kept</a></li>
+  <li><a href="#fewer-slots" id="toc-fewer-slots" class="nav-link" data-scroll-target="#fewer-slots">13. Fewer slots</a></li>
+  <li><a href="#row-groups-and-tasks" id="toc-row-groups-and-tasks" class="nav-link" data-scroll-target="#row-groups-and-tasks">14. Row groups and tasks</a></li>
+  <li><a href="#nodes-for-a-deadline" id="toc-nodes-for-a-deadline" class="nav-link" data-scroll-target="#nodes-for-a-deadline">15. Nodes for a deadline</a></li>
+  <li><a href="#choosing-the-folder-key" id="toc-choosing-the-folder-key" class="nav-link" data-scroll-target="#choosing-the-folder-key">16. Choosing the folder key</a></li>
+  <li><a href="#why-the-stage-is-slow" id="toc-why-the-stage-is-slow" class="nav-link" data-scroll-target="#why-the-stage-is-slow">17. Why the stage is slow</a></li>
+  <li><a href="#what-the-team-chooses-on-emr" id="toc-what-the-team-chooses-on-emr" class="nav-link" data-scroll-target="#what-the-team-chooses-on-emr">18. What the team chooses on EMR</a></li>
+  <li><a href="#a-slow-window-query" id="toc-a-slow-window-query" class="nav-link" data-scroll-target="#a-slow-window-query">19. A slow window query</a></li>
+  </ul></li>
+  <li><a href="#part-terms" id="toc-part-terms" class="nav-link" data-scroll-target="#part-terms">Terms used on this page</a>
+  <ul class="collapse">
+  <li><a href="#compute-and-billing" id="toc-compute-and-billing" class="nav-link" data-scroll-target="#compute-and-billing">Compute and billing</a></li>
+  <li><a href="#storage-and-access" id="toc-storage-and-access" class="nav-link" data-scroll-target="#storage-and-access">Storage and access</a></li>
+  <li><a href="#serverless-functions" id="toc-serverless-functions" class="nav-link" data-scroll-target="#serverless-functions">Serverless functions</a></li>
+  <li><a href="#files-memory-and-layout" id="toc-files-memory-and-layout" class="nav-link" data-scroll-target="#files-memory-and-layout">Files, memory and layout</a></li>
+  <li><a href="#spark-how-a-job-runs" id="toc-spark-how-a-job-runs" class="nav-link" data-scroll-target="#spark-how-a-job-runs">Spark: how a job runs</a></li>
+  <li><a href="#spark-shuffles-and-slow-stages" id="toc-spark-shuffles-and-slow-stages" class="nav-link" data-scroll-target="#spark-shuffles-and-slow-stages">Spark: shuffles and slow stages</a></li>
+  <li><a href="#clusters-and-managed-spark" id="toc-clusters-and-managed-spark" class="nav-link" data-scroll-target="#clusters-and-managed-spark">Clusters and managed Spark</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -210,31 +226,32 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>Practice questions of the kinds the midterm asks, on lectures 1 to 7, with feedback on every option. The midterm’s questions are different ones.</p>
+<p>Numbers in the scenarios are made up for practice unless a price or an instance size is named. If you need to look up a term, the <a href="#part-terms">relevant vocabulary is below</a>.</p>
 <section id="block-1-lectures-1-to-3" class="level2">
 <h2 class="anchored" data-anchor-id="block-1-lectures-1-to-3">Block 1: lectures 1 to 3</h2>
-<section id="whose-job-is-it-from-awss-side" class="level3">
-<h3 class="anchored" data-anchor-id="whose-job-is-it-from-awss-side">1. Whose job is it, from AWS’s side</h3>
+<section id="who-is-responsible-aws-or-you" class="level3">
+<h3 class="anchored" data-anchor-id="who-is-responsible-aws-or-you">1. Who is responsible: AWS or you</h3>
 <div class="quizdown">
 ---
 shuffle_answers: true
 ---
 
-## In which service is each of these **AWS's** responsibility, not yours? Each option may be used once, more than once, or not at all.
+## In which service is **AWS** responsible for each of these? Each option may be used once, more than once, or not at all.
 
 - The hardware: the racks and the power :: Both
-    &gt; The provider's floor is the same whatever you rent above it.
+    &gt; AWS is responsible for the hardware under both: the racks and the power under an instance and under a function. Where to look: L2 slide 20 and L3 slide 23; practise [Who is responsible for each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).
 - The virtual machine layer the code runs on :: Both
-    &gt; An instance is a virtual machine on AWS's hardware, and a function runs in a small virtual machine AWS starts for it. Either way AWS operates that layer.
+    &gt; AWS is responsible for the virtual machine layer under both. An instance is a virtual machine on AWS's hardware; for a function, AWS starts a small virtual machine to hold its execution environment. Where to look: L2 slide 20; practise [Who is responsible for each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).
 - Patching the operating system :: Lambda
-    &gt; On a function the operating system moved to AWS's side with the runtime and the capacity. On an instance it is yours from the first boot.
+    &gt; On a function, AWS is responsible for the operating system, as it is for the runtime and the capacity. On an instance, the operating system is your responsibility. Where to look: L2 slide 20 and L3 slide 23; practise [Who is responsible for each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).
 - Patching the language runtime the code uses :: Lambda
-    &gt; You pick a runtime version from AWS's list and AWS patches it. On an instance you install the runtime, so patching it is yours.
+    &gt; On a function, you pick a runtime version from AWS's list, and AWS is responsible for patching it. On an instance, you install the runtime, so patching it is your responsibility. Where to look: L2 slide 20 and L3 slide 23; practise [Who is responsible for each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).
 - The code that does the work :: Neither
-    &gt; The provider never writes it, whichever way you run it.
+    &gt; You write the code, both on an instance and on a function. AWS is not responsible for it on either. Where to look: L2 slide 20 and L3 slide 23; practise [Who is responsible for each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).
 - The policy that says what your code may touch :: Neither
-    &gt; A role on an instance, an execution role on a function. AWS enforces the policy on both and writes it on neither.
+    &gt; You write the policy, both on an instance and on a function: a role on an instance, an execution role on a function. AWS enforces the policy on both, but is not responsible for writing it. Where to look: L2 slide 30; practise [Who is responsible for each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).
 - :: EC2
-    &gt; Nothing AWS runs for you on an instance is missing on a function. On EC2 it runs the bottom two bands; on Lambda those two and three more.
+    &gt; Everything AWS is responsible for on an instance, it is also responsible for on a function. AWS is responsible for the bottom two bands on EC2, and for those two plus three more on Lambda. Where to look: L2 slide 20 and L3 slide 23; practise [Who is responsible for each task, on an instance and on a function?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-who-handles-each-task).
 </div>
 </section>
 <section id="stop-or-terminate" class="level3">
@@ -247,19 +264,19 @@ shuffle_answers: true
 ## An EC2 instance was launched with its own volume, left on the default of being deleted when the instance is terminated. A second volume was attached later to hold the data, and that one was set to be kept when the instance is terminated. Each volume is billed for the space it takes while it exists. Which condition does each description below fit? Each option may be used once, more than once, or not at all.
 
 - Both volumes are there, and the per-second compute charge is being paid :: Running instance
-    &gt; Nothing has been switched off, so the machine bills and both volumes bill.
+    &gt; A running instance bills compute by the second, and both volumes bill for their space: nothing has been switched off. Where to look: L2 slides 25 and 38; practise [Setting up an instance for the harvest records](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-setting-up-an-instance-for-the-harvest-records).
 - Both volumes are there and billing, and no compute charge is being paid :: Stopped instance
-    &gt; Stopping pauses the machine and leaves the storage alone. The storage is what carries on costing.
+    &gt; Stopping ends the compute charge and keeps both volumes, which carry on billing for their space. Where to look: L2 slides 25 and 38; practise [Setting up an instance for the harvest records](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-setting-up-an-instance-for-the-harvest-records).
 - The launch volume and everything installed on it are kept for the next start, and the compute bill has stopped :: Stopped instance
-    &gt; You pay for the storage over the weekend so that Monday starts where Friday ended.
+    &gt; Stopping ends the compute charge and keeps both volumes, which keep billing for their storage, so the instance keeps its data and software for Monday. Where to look: L2 slides 25 and 38; practise [Setting up an instance for the harvest records](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-setting-up-an-instance-for-the-harvest-records).
 - The launch volume is gone, and the volume attached later is billing on its own :: Terminated instance
-    &gt; The launch volume was set to delete. The attached volume was set to be kept, so it outlives the instance and bills with nothing to show for it.
+    &gt; Terminating deleted the launch volume because it was set to be deleted. The attached volume was set to be kept, so it remains after termination and keeps billing for its storage. Where to look: L2 slides 25 and 38; practise [Setting up an instance for the harvest records](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-setting-up-an-instance-for-the-harvest-records).
 - The launch volume no longer exists, and neither does what was installed on it :: Terminated instance
-    &gt; The launch volume was left on its default, so terminating the instance deleted it along with everything on it.
+    &gt; Terminating deleted the launch volume, which was left on its default of being deleted, along with everything installed on it. Where to look: L2 slides 25 and 38; practise [Setting up an instance for the harvest records](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-setting-up-an-instance-for-the-harvest-records).
 - Somebody is logged in right now, and the compute bill is growing by the second :: Running instance
-    &gt; Billing by the second happens while it runs, whether or not anyone is using it.
+    &gt; A running instance bills compute by the second, and both volumes bill for their storage, whether or not anyone is using the instance. Where to look: L2 slides 25 and 38; practise [Setting up an instance for the harvest records](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-setting-up-an-instance-for-the-harvest-records).
 - :: Instance never launched
-    &gt; Every description here is of a machine that exists and has volumes attached to it.
+    &gt; Every description here is of an instance that was launched with these volumes and is now running, stopped or terminated. Where to look: L2 slides 25 and 38; practise [Setting up an instance for the harvest records](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-setting-up-an-instance-for-the-harvest-records).
 </div>
 </section>
 <section id="launch-settings-for-a-notebook-instance" class="level3">
@@ -271,18 +288,18 @@ shuffle_answers: true
 
 ## You launch one EC2 instance to explore a dataset in a Jupyter notebook. The data is 10 GB in a compressed Parquet file in S3. Which launch setting settles each requirement below? Not all options will be used.
 
-- Python 3.12 and the AWS CLI must already be in place the first time the machine boots: no install commands may run at all, not even at first boot :: Image
-    &gt; The image is what the machine starts from: its operating system and the software already on it. A user data script could install Python at first boot, but the requirement rules out running any install commands.
+- Python 3.12 and the AWS CLI must already be in place the first time the instance boots: no install commands may run at all, not even at first boot :: Image
+    &gt; The image is what the instance starts from: its operating system and the software already on it. A user data script could install Python at first boot, but the requirement rules out running any install commands. Where to look: L2 slides 25 and 29–30; practise [Setting up an instance for the harvest records](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-setting-up-an-instance-for-the-harvest-records).
 - Loaded into pandas, the file takes about 30 GB of memory, and the whole DataFrame must fit in memory at once :: Instance type
-    &gt; The type fixes memory, cores and network. Disk space doesn't help: a DataFrame is held in memory, and the file itself stays in S3.
-- AWS lets connections reach the machine only on port 8888, and only from your own IP address :: Security group
-    &gt; It decides which ports are reachable from which addresses. It does not check who you are, or decide what the machine may read in S3.
-- The notebook reads the file from S3 without anyone putting access keys in a file on the machine :: Role
-    &gt; An EC2 instance can be given a role. Its policy says what the instance may read, so no one has to paste access keys into a file on the machine.
+    &gt; The type fixes memory, cores and network. Disk space doesn't help: a DataFrame is held in memory, and the file itself stays in S3. Where to look: L2 slides 25 and 29–30; practise [Setting up an instance for the harvest records](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-setting-up-an-instance-for-the-harvest-records).
+- AWS lets connections reach the instance only on port 8888, and only from your own IP address :: Security group
+    &gt; A security group decides which ports are reachable from which addresses. A security group does not check who you are or decide what the instance may read in S3. Where to look: L2 slides 29–30; practise [Setting up an instance for the harvest records](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-setting-up-an-instance-for-the-harvest-records).
+- The notebook reads the file from S3 without anyone putting access keys in a file on the instance :: Role
+    &gt; An EC2 instance can be given a role. Its policy says what the instance may read, so no one has to paste access keys into a file on the instance. Where to look: L2 slides 25 and 29–30; practise [Setting up an instance for the harvest records](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-setting-up-an-instance-for-the-harvest-records).
 - :: User data script
-    &gt; Commands the machine runs at first boot. Here everything needed is either in the image or set by another setting.
+    &gt; Commands the instance runs at first boot. Here everything needed is either in the image or set by another setting. Where to look: L2 slide 25; practise [Setting up an instance for the harvest records](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-setting-up-an-instance-for-the-harvest-records).
 - :: Volume size
-    &gt; It sets disk space, not memory, and the file is read from S3, not stored on the disk.
+    &gt; It sets disk space, not memory, and the file is read from S3, not stored on the disk. Where to look: L2 slide 27; practise [Setting up an instance for the harvest records](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-setting-up-an-instance-for-the-harvest-records).
 </div>
 </section>
 <section id="a-function-or-an-instance" class="level3">
@@ -294,18 +311,18 @@ shuffle_answers: true
 
 ## Which fits each piece of work best? Each option may be used once, more than once, or not at all.
 
-- A file of a few MB lands in an S3 bucket a few times an hour and needs a few seconds of work to convert :: A function
-    &gt; Short, started by an event, and idle most of the hour. No compute runs or is paid for between arrivals.
-- A model fit on a 2 GB table that takes forty minutes, cannot be broken into shorter steps, and runs once a night :: An EC2 instance
-    &gt; One call of a function stops at fifteen minutes, and this job cannot be split into calls that fit. A machine started for the job and stopped after it is the shape left, and the table fits in its memory.
-- Someone working in a notebook all afternoon on a 5 GB table, changing code and re-running it :: An EC2 instance
-    &gt; The session has to stay up between keystrokes, and the data in memory has to survive from one cell to the next. Saving files between calls moves the files, not the session.
-- A web endpoint answering a few short requests a minute, at all hours, where a second's delay now and then is fine :: A function
-    &gt; Almost always idle, and each request is short. The bill follows the requests, not the hours.
-- A daily summary of yesterday's 200 MB that takes two minutes and writes one file :: A function
-    &gt; Short, scheduled and rare. A machine kept for it would sit idle for the rest of the day.
-- :: A cluster of several machines
-    &gt; Every workload here fits on one machine, in its memory and in its time. Spreading work over several machines pays only when one cannot do it.
+- A file of a few MB lands in an S3 bucket a few times an hour and needs a few seconds of work to convert :: Function
+    &gt; Short work started by an event, the file's arrival, and idle between arrivals. No compute runs or is paid for between calls. Where to look: L3 slides 5, 13 and 39; practise [Function, split calls or an instance for each workload](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-function-split-calls-or-an-instance-for-each-workload).
+- A model fit on a 2 GB table that takes forty minutes, cannot be broken into shorter steps, and runs once a night :: EC2 instance
+    &gt; A function call stops after fifteen minutes, and the model fit cannot be split into shorter calls. An instance can run the model fit and then stop, and its memory can hold the table. Where to look: L3 slide 13; practise [Function, split calls or an instance for each workload](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-function-split-calls-or-an-instance-for-each-workload).
+- Someone working in a notebook all afternoon on a 5 GB table, changing code and re-running it :: EC2 instance
+    &gt; The session has to stay up between keystrokes, and the data in memory has to survive from one cell to the next. Saving files between calls moves the files, not the session. Where to look: L3 slide 5 and L2 slide 19; practise [Function, split calls or an instance for each workload](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-function-split-calls-or-an-instance-for-each-workload).
+- A web endpoint answering a few short requests a minute, at all hours, where a second's delay now and then is fine :: Function
+    &gt; Short work started by a request, and idle between requests. No compute runs or is paid for between calls. Where to look: L3 slides 5, 13 and 39; practise [Function, split calls or an instance for each workload](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-function-split-calls-or-an-instance-for-each-workload).
+- A daily summary of yesterday's 200 MB that takes two minutes and writes one file :: Function
+    &gt; Short work started by a schedule, once a day, and idle between runs. No compute runs or is paid for between calls. Where to look: L3 slides 5, 13 and 39; practise [Function, split calls or an instance for each workload](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-function-split-calls-or-an-instance-for-each-workload).
+- :: Cluster of several nodes
+    &gt; Every workload here fits on one instance, in its memory and in its time. Several nodes help only when one instance cannot handle the work. Where to look: L4 slides 9–10; practise [Scale up, scale out, or neither?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-scale-up-scale-out-or-neither).
 </div>
 </section>
 <section id="what-starts-the-function" class="level3">
@@ -318,19 +335,19 @@ shuffle_answers: true
 ## A smart-home company runs several functions. What starts the function in each situation below? Each option may be used once, more than once, or not at all.
 
 - Someone asks the voice assistant "what is the temperature?" and it answers a second later :: Request
-    &gt; Someone is waiting for the reply: a request starts the function and gets the answer back.
+    &gt; Someone is waiting for the reply: a request starts the function and gets the answer back. Where to look: L3 slides 5 and 8–9; practise [Requests, events and schedules](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-requests-events-and-schedules).
 - A thermostat writes a new reading file to a bucket, and a function checks whether it is outside the safe range :: Event
-    &gt; The new file is the event; its arrival starts the function. Nobody waits for the check.
+    &gt; The new file's arrival is the event; a rule sends that event to the function. Nobody waits for the check. Where to look: L3 slides 5 and 8–9; practise [Requests, events and schedules](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-requests-events-and-schedules).
 - A new firmware file is uploaded to a bucket, and a function checks its signature :: Event
-    &gt; The upload is the event; a rule sends it to the function. Nobody waits for the result.
+    &gt; The upload is the event; a rule sends that event to the function. Nobody waits for the result. Where to look: L3 slides 5 and 8–9; practise [Requests, events and schedules](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-requests-events-and-schedules).
 - A new recording from a door camera lands in a bucket, and a function blurs the faces in it :: Event
-    &gt; The recording's arrival is the event; a rule sends it to the function. Nobody waits for the result.
+    &gt; The recording's arrival is the event; a rule sends that event to the function. Nobody waits for the result. Where to look: L3 slides 5 and 8–9; practise [Requests, events and schedules](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-requests-events-and-schedules).
 - Every night at 03:00 a function deletes test devices' logs older than a week :: Schedule
-    &gt; A clock starts it.
+    &gt; A schedule starts the function at a clock time: 03:00 every night. Where to look: L3 slides 5 and 8–9; practise [Requests, events and schedules](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-requests-events-and-schedules).
 - On the first day of each month a function totals each household's energy use :: Schedule
-    &gt; A fixed date on the calendar: a schedule.
+    &gt; A schedule starts the function on a calendar date: the first day of each month. Where to look: L3 slides 5 and 8–9; practise [Requests, events and schedules](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-requests-events-and-schedules).
 - :: Deployment
-    &gt; Deploying a new version puts the code in place. It does not run until a request, an event or a schedule starts it.
+    &gt; Deploying a new version puts the code in place. Deploying does not call the handler; the handler runs only when a request, an event or a schedule starts it. Where to look: L2 slide 36 and L3 slides 5, 8–9; practise [Requests, events and schedules](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-requests-events-and-schedules).
 </div>
 </section>
 <section id="why-the-parquet-read-is-small" class="level3">
@@ -340,16 +357,16 @@ shuffle_answers: true
 shuffle_answers: true
 ---
 
-## A city keeps three years of bike-share rides in S3 as Parquet, already compressed, 4.2 GB, sorted by start time, in 60 row groups. A query asks for the average ride duration per station in March 2025, which needs one month and 3 of the file's 14 columns. Run with DuckDB against the Parquet copy, it reads 35 MB from S3. What explains the reduction from 4.2 GB to 35 MB?
+## A weather service keeps five years of hourly station readings in S3 as one Parquet file: 9.6 GB, 22 columns of about the same size, sorted by reading time, in 120 row groups of about the same size. A query asks for the average wind speed per station in the first week of July 2024, which needs that week and 3 of the 22 columns. Run with DuckDB, it reads about 20 MB from S3. Which reading explains 20 MB?
 
-1. [x] The 11 unneeded columns are never fetched, and the footer's statistics rule out row groups that cannot match
-    &gt; Two savings at once. Each column's bytes are stored apart, so the 11 unneeded columns are never read, and the minimum and maximum start time per row group rule out every group outside March 2025.
-1. [ ] S3 applies the filter inside the bucket and returns only the rows that match
-    &gt; In this DuckDB run, S3 returns the requested byte ranges; it does not run the query. The reader reads the footer, decides which byte ranges it needs, and asks for those.
-1. [ ] The data is compressed on the way across the network, so far fewer bytes have to travel
-    &gt; The 4.2 GB is already the compressed size. The reduction comes from not reading most of the file at all.
-1. [ ] The whole file is fetched and the unwanted parts are dropped once it arrives
-    &gt; That would move all 4.2 GB. The reader fetches the footer first, which says where each column and row group sits and the minimum and maximum in each, then asks only for the byte ranges it needs.
+1. [x] Needed columns only, from row groups that can contain the week
+    &gt; Both savings at once. One week sits in 1 or 2 of the 120 row groups (each about 80 MB with all columns), and only 3 of 22 columns are read from them: about 11 to 22 MB. The footer's minimum and maximum reading time per row group say which row groups can hold that week. Where to look: L1 slides 13–14 and L4 slide 15; practise [May 2025 downloads: reading the file over the network](https://cpsc436c-2026w1.github.io/lecture-reviews/l1.html#q-how-much-data-does-the-may-2025-query-fetch).
+1. [ ] Only 3 of the 22 columns are read, but from every row group in the file
+    &gt; Skipping columns alone would read 3/22 of 9.6 GB, about 1.3 GB. The row groups outside that week are skipped too, from the footer's minimum and maximum. Where to look: L1 slides 13–14; practise [May 2025 downloads: reading the file over the network](https://cpsc436c-2026w1.github.io/lecture-reviews/l1.html#q-how-much-data-does-the-may-2025-query-fetch).
+1. [ ] Only the row groups that can hold that week are read, but with all 22 columns
+    &gt; Skipping row groups alone would read 1 or 2 row groups with every column, about 80 to 160 MB. Each column's bytes are stored apart, so the 19 unneeded columns are skipped too. Where to look: L1 slide 13 and L4 slide 15; practise [May 2025 downloads: reading the file over the network](https://cpsc436c-2026w1.github.io/lecture-reviews/l1.html#q-how-much-data-does-the-may-2025-query-fetch).
+1. [ ] Footer stores a copy of the needed rows, so no data pages are read
+    &gt; The footer holds metadata: where each column chunk of each row group sits, and their minimum and maximum. The rows themselves are read from the data pages the footer points to. Where to look: L4 slide 15; practise [May 2025 downloads: reading the file over the network](https://cpsc436c-2026w1.github.io/lecture-reviews/l1.html#q-how-much-data-does-the-may-2025-query-fetch).
 </div>
 </section>
 <section id="where-the-s3-client-is-made" class="level3">
@@ -361,21 +378,44 @@ shuffle_answers: true
 
 ## A Lambda function, with default settings, has the line `s3 = boto3.client("s3")` as the first line of its handler, then uses the client to write one small file. A hundred calls arrive in a minute, one after another, and one execution environment serves them all. Which statement is true?
 
-1. [x] The client is created on every call
-    &gt; Everything inside the handler runs on every call. Code at module level runs once, when the environment starts, and the calls after that reuse what it made.
-1. [ ] The client is created once, because Lambda keeps objects made inside the handler between calls
-    &gt; A local made in the handler is gone when the call returns; only what module level made is there for the next call.
-1. [ ] The client is created once, when the code is deployed
-    &gt; Deploying puts the code in place. None of it runs until an environment starts to serve a call.
-1. [ ] The client is created once, when the environment starts, as if the line were at module level
-    &gt; The line is inside the handler, so it runs when the handler runs: on every call. Only code outside the handler runs when the environment starts.
+1. [x] Client is created on every call
+    &gt; Everything inside the handler runs on every call. Code at module level runs once, when the environment starts, and the calls after that reuse what it made. Where to look: L3 slide 16 and L2 slide 36; practise [How many times does each line run?](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-how-many-times-does-each-line-run).
+1. [ ] Client is created once, because Lambda keeps objects made inside the handler between calls
+    &gt; The line is inside the handler, so it runs on every call, and the client it makes is gone when the call returns. Only code at module level runs once when the environment starts, so a client made inside the handler is not kept between calls. Where to look: L3 slide 16; practise [How many times does each line run?](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-how-many-times-does-each-line-run).
+1. [ ] Client is created once, when the code is deployed
+    &gt; Deploying puts the code in place. The code does not run until an environment starts to serve a call. Where to look: L2 slide 36; practise [Cold starts, warm calls and memory](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-cold-starts-warm-calls-and-memory).
+1. [ ] Client is created once, when the environment starts, as if the line were at module level
+    &gt; The line is inside the handler, so it runs on every call, and the client it makes is gone when the call returns. Only code at module level runs once when the environment starts, so this line does not run as if it were at module level. Where to look: L3 slide 16; practise [How many times does each line run?](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-how-many-times-does-each-line-run).
+</div>
+</section>
+<section id="time-shape-of-the-demand" class="level3">
+<h3 class="anchored" data-anchor-id="time-shape-of-the-demand">8. Time shape of the demand</h3>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## A university runs several cloud-backed services. Which shape does each part of the demand have? Each option may be used once, more than once, or not at all.
+
+- A cache-rebuild run started by a timer at 01:15 every night :: Scheduled job
+    &gt; A clock starts one run at a known time each night. Where to look: L2 slide 22 and L3 slides 37–38; practise [What is the time shape of each workload's demand?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-what-is-the-time-shape-of-each-workloads-demand).
+- Accepted meal orders: busiest at lunch and dinner, near zero overnight, with the same pattern every day :: Daily rhythm
+    &gt; The rate rises and falls in a pattern that repeats each day. Where to look: L2 slide 22 and L3 slides 37–38; practise [What is the time shape of each workload's demand?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-what-is-the-time-shape-of-each-workloads-demand).
+- Receipt-rendering runs: one per accepted meal order, with the same lunch-and-dinner pattern :: Daily rhythm
+    &gt; Each order starts one receipt run, so the runs have the same daily pattern as the orders. Where to look: L3 slides 37–38; practise [What is the time shape of each workload's demand?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-what-is-the-time-shape-of-each-workloads-demand).
+- Room-sensor heartbeats, around the clock: 900 sensors, one every three minutes each, staggered across the three minutes :: Steady rate
+    &gt; The staggered sensors produce about the same number of heartbeats every minute. Where to look: L2 slide 22 and L3 slides 37–38; practise [What is the time shape of each workload's demand?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-what-is-the-time-shape-of-each-workloads-demand).
+- App opens after an unexpected emergency alert: 4,000 in two minutes, then back to the usual rate :: Burst
+    &gt; Many requests arrive in a short interval and then the rate returns to normal. Where to look: L3 slides 37–38; practise [What is the time shape of each workload's demand?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-what-is-the-time-shape-of-each-workloads-demand).
+- A full backup started by a timer at 04:00 every Sunday :: Scheduled job
+    &gt; A clock starts the run at a known recurring time. Where to look: L2 slide 22 and L3 slides 37–38; practise [What is the time shape of each workload's demand?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-what-is-the-time-shape-of-each-workloads-demand).
 </div>
 </section>
 </section>
 <section id="block-2-lectures-4-to-7" class="level2">
 <h2 class="anchored" data-anchor-id="block-2-lectures-4-to-7">Block 2: lectures 4 to 7</h2>
 <section id="function-instance-or-cluster" class="level3">
-<h3 class="anchored" data-anchor-id="function-instance-or-cluster">8. Function, instance or cluster</h3>
+<h3 class="anchored" data-anchor-id="function-instance-or-cluster">9. Function, instance or cluster</h3>
 <div class="quizdown">
 ---
 shuffle_answers: true
@@ -383,49 +423,51 @@ shuffle_answers: true
 
 ## Which way of running it fits each piece of work best? Each option may be used once, more than once, or not at all.
 
-- A mobile app asks, a few times a minute, for the nearest open store; each answer takes 200 ms to compute :: A Lambda function
-    &gt; A short answer to a request, with nothing to keep running between requests.
-- Every hour an EventBridge schedule starts a check that a website answers, which takes a second :: A Lambda function
-    &gt; A short task on a schedule, with nothing to keep running between checks.
-- A model is trained on a 3 GB table for two hours in one Python process, after which the machine is not needed :: One EC2 instance
-    &gt; One process on one machine, far longer than a function may run, and nothing to stop afterwards but the instance.
+- A mobile app asks, a few times a minute, for the nearest open store; each answer takes 200 ms to compute :: Lambda function
+    &gt; A short answer to a request, with nothing to keep running between requests. Where to look: L7 slide 4, L3 slide 39 and L2 slide 19; practise [Function, split calls or an instance for each workload](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-function-split-calls-or-an-instance-for-each-workload).
+- Every hour an EventBridge schedule starts a check that a website answers, which takes a second :: Lambda function
+    &gt; A short task on a schedule, with nothing to keep running between checks. Where to look: L7 slide 4, L3 slide 39 and L2 slide 19; practise [Function, split calls or an instance for each workload](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-function-split-calls-or-an-instance-for-each-workload).
+- A model is trained on a 3 GB table for two hours in one Python process, after which the instance is not needed :: One EC2 instance
+    &gt; The training uses one process on one instance that holds the 3 GB table. The training takes longer than a function's maximum duration, and only the instance must be stopped afterwards. Where to look: L3 slide 13 and L2 slide 19; practise [Function, split calls or an instance for each workload](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-function-split-calls-or-an-instance-for-each-workload).
 - A FastAPI app on port 8000 loads a 2 GB table when it starts and answers `/summary` requests all day :: One EC2 instance
-    &gt; A process that stays up and holds state; one machine holds 2 GB.
-- A Spark job on 3 TB needs a node type with a lot of memory that the team picks itself :: An EMR cluster you start and stop
-    &gt; Too big for one machine, and the team wants to choose the nodes' instance type, which an EMR cluster lets it do.
-- Ten analysts share Spark notebooks on one cluster all week, with node types the team chose :: An EMR cluster you start and stop
-    &gt; A cluster kept up for many notebooks, on nodes the team picked: EMR on EC2.
-- :: An AWS Glue job
-    &gt; On Glue the workers last for one job and nobody picks machines. Every Spark row here needs chosen node types or a cluster that stays up all week.
+    &gt; The app uses one process on one instance that holds the 2 GB table. It stays up all day, far longer than a function may run, and holds state. Where to look: L3 slide 13 and L2 slide 19; practise [Function, split calls or an instance for each workload](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-function-split-calls-or-an-instance-for-each-workload).
+- A Spark job on 3 TB must run on an EC2 instance type that the team picks itself for every node :: EMR cluster you start and stop
+    &gt; An EMR cluster lets the team choose the nodes' EC2 instance type; Glue offers worker types instead. 3 TB is too large for one instance. Where to look: L4 slides 9–10; practise [Scale up, scale out, or neither?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-scale-up-scale-out-or-neither).
+- Ten analysts share Spark notebooks on one cluster all week, with node types the team chose :: EMR cluster you start and stop
+    &gt; The team picks the nodes' instance type itself, which an EMR cluster lets it do; the cluster stays up all week for many notebooks. Where to look: L4 slides 9–10; practise [Scale up, scale out, or neither?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-scale-up-scale-out-or-neither).
+- :: AWS Glue job
+    &gt; On Glue the workers last for one job and nobody picks instances. Every Spark workload here needs chosen node types or a cluster that stays up all week. Where to look: L7 slides 4 and 9.
 </div>
 </section>
 <section id="what-spark-can-skip" class="level3">
-<h3 class="anchored" data-anchor-id="what-spark-can-skip">9. What Spark can skip</h3>
+<h3 class="anchored" data-anchor-id="what-spark-can-skip">10. What Spark can skip</h3>
 <div class="quizdown">
 ---
 shuffle_answers: true
 ---
 
-## A scooter-share company keeps its trips as Parquet in S3, in one folder for each trip date: `trip_date=2025-07-01/`, `trip_date=2025-07-02/`, and so on. Each folder holds one file, sorted by scooter id, with about 10 row groups. Each row group's footer records the minimum and maximum of each column, and Spark can use them. Which data can Spark skip for each condition? Each option may be used once, more than once, or not at all.
+## A scooter-share company keeps its trips as Parquet in S3, in one folder for each trip date: `trip_date=2025-07-01/`, `trip_date=2025-07-02/`, and so on. Each folder holds one file, sorted by scooter id, with about 10 row groups. Each file's footer records the minimum and maximum of each column in each row group, and Spark can use them. Which data can Spark skip for each condition? Each option may be used once, more than once, or not at all.
 
 - `WHERE trip_date = '2025-07-14' AND scooter_id = 'SC-0417'` :: Whole folders and row groups
-    &gt; The date names one folder, so the others are skipped. Inside that day's file, sorted by scooter id, the footers rule out the row groups that cannot hold SC-0417.
+    &gt; The date names one folder, so the others are skipped. Inside that day's file, sorted by scooter id, the footers rule out the row groups that cannot hold SC-0417. Where to look: L4 slides 20–21 and 23; practise [What does each filter condition make Spark read?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-what-does-each-filter-condition-make-spark-read).
 - `WHERE trip_date IN ('2025-07-14', '2025-07-15')` :: Whole folders
-    &gt; Two folders match by name, and all the others are skipped. Inside them every row is needed.
+    &gt; Two folders match by name, and all the others are skipped. Every row in the two matching folders is needed. Where to look: L4 slides 21 and 23; practise [What does each filter condition make Spark read?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-what-does-each-filter-condition-make-spark-read).
 - `WHERE scooter_id BETWEEN 'SC-0400' AND 'SC-0499'` :: Only row groups inside the files
-    &gt; The condition does not name the folder column, so every day's folder is opened. Each file is sorted by scooter id, so the footers rule out the row groups outside that range.
+    &gt; The condition does not name the folder column, so every day's folder is opened. Each file is sorted by scooter id, so the footers rule out the row groups outside that range. Where to look: L4 slides 21 and 23; practise [What does each filter condition make Spark read?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-what-does-each-filter-condition-make-spark-read).
 - `WHERE scooter_id = 'SC-0417' AND battery_end &lt; 10`. Every row group has some trips that ended below 10% battery :: Only row groups inside the files
-    &gt; The scooter id rules out row groups in every file. The battery condition rules out nothing.
+    &gt; The condition does not name the folder column, so every day's folder is opened. Each file is sorted by scooter id, so the footers rule out the row groups that cannot hold SC-0417; the battery condition rules out nothing. Where to look: L4 slide 20; practise [What does each filter condition make Spark read?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-what-does-each-filter-condition-make-spark-read).
 - `WHERE trip_date = '2025-07-14' AND battery_end &lt; 10`. Every row group has some trips that ended below 10% battery :: Whole folders
-    &gt; The date skips the other folders. Inside that day's file the battery condition rules out no row group.
-- `WHERE battery_end &lt; 10 AND city = 'Vancouver'`. Every row group has trips from every city, some below 10% battery :: Neither folders nor row groups
-    &gt; Neither column names the folders, and every row group holds both kinds of trip.
+    &gt; The date skips the other folders. Inside that day's file the battery condition rules out no row group. Where to look: L4 slides 20–21 and 23; practise [What does each filter condition make Spark read?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-what-does-each-filter-condition-make-spark-read).
+- `WHERE trip_date = '2025-07-20' AND scooter_id BETWEEN 'SC-0100' AND 'SC-0199'` :: Whole folders and row groups
+    &gt; The date names one folder, so the others are skipped. Inside that day's file, sorted by scooter id, the footers rule out the row groups outside that range. Where to look: L4 slides 20–21 and 23; practise [What does each filter condition make Spark read?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-what-does-each-filter-condition-make-spark-read).
+- :: Neither folders nor row groups
+    &gt; Spark skips a folder when the condition names the folder column, and a row group when the footer's minimum and maximum rule it out. A condition on the date or on the scooter id always skips something here. Where to look: L4 slides 20–21 and 23; practise [What does each filter condition make Spark read?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-what-does-each-filter-condition-make-spark-read).
 - :: In S3, the rows that do not match
-    &gt; S3 hands back the byte ranges Spark asks for. Spark decides what to skip, from folder names and footers.
+    &gt; S3 hands back the byte ranges Spark asks for. Spark decides what to skip, from folder names and footers. Where to look: L1 slide 14 and L4 slide 15; practise [What does each filter condition make Spark read?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-what-does-each-filter-condition-make-spark-read), [May 2025 downloads: reading the file over the network](https://cpsc436c-2026w1.github.io/lecture-reviews/l1.html#q-how-much-data-does-the-may-2025-query-fetch).
 </div>
 </section>
 <section id="what-happens-when-each-line-runs" class="level3">
-<h3 class="anchored" data-anchor-id="what-happens-when-each-line-runs">10. What happens when each line runs</h3>
+<h3 class="anchored" data-anchor-id="what-happens-when-each-line-runs">11. What happens when each line runs</h3>
 <div class="quizdown">
 ---
 shuffle_answers: true
@@ -434,23 +476,23 @@ shuffle_answers: true
 ## In a PySpark notebook on an EMR cluster, `recent` is a Spark DataFrame of 2025's ticket sales made from Parquet files in S3, `pd` is pandas, and `F` is `pyspark.sql.functions`. What happens when each line runs? Each option may be used once, more than once, or not at all.
 
 - `venues_pd = pd.read_parquet("s3://tickets-raw/venues.parquet")` :: pandas does the work in the driver only, with no Spark plan
-    &gt; This is pandas: it runs in the driver's process alone.
-- `large_pd = venues_pd[venues_pd["seats"] &gt; 1000]` :: pandas does the work in the driver only, with no Spark plan
-    &gt; This is pandas filtering in the driver: no Spark plan, no tasks.
+    &gt; pandas reads the file in the driver's process alone, with no Spark plan and no tasks. Where to look: L5 slides 24–25; practise [What runs where: the plan, an action, or pandas on the driver](https://cpsc436c-2026w1.github.io/lecture-reviews/l5.html#q-what-runs-where).
+- `pricey = recent.filter(F.col("price") &gt; 100)` :: Spark adds a step to the plan. No task starts
+    &gt; A filter is a transformation: it goes into the plan and waits for an action. Where to look: L5 slide 22 and L6 slide 7; practise [What runs where: the plan, an action, or pandas on the driver](https://cpsc436c-2026w1.github.io/lecture-reviews/l5.html#q-what-runs-where).
 - `avg_seats = venues_pd["seats"].mean()` :: pandas does the work in the driver only, with no Spark plan
-    &gt; Still pandas on the driver: no plan, no tasks.
+    &gt; pandas computes the mean in the driver's process alone, with no Spark plan and no tasks. Where to look: L5 slides 24–25; practise [What runs where: the plan, an action, or pandas on the driver](https://cpsc436c-2026w1.github.io/lecture-reviews/l5.html#q-what-runs-where).
 - `by_price = recent.orderBy(F.col("price").desc())` :: Spark adds a step to the plan. No task starts
-    &gt; A sort is a transformation too: it goes into the plan and waits for an action.
+    &gt; A sort is a transformation: it goes into the plan and waits for an action. Where to look: L5 slide 22 and L6 slide 7; practise [What runs where: the plan, an action, or pandas on the driver](https://cpsc436c-2026w1.github.io/lecture-reviews/l5.html#q-what-runs-where).
 - `n = recent.count()` :: Tasks start on the executors
-    &gt; Counting is an action: the plan runs and the number comes back to the driver.
+    &gt; Counting is an action: the plan runs as tasks on the executors, then one number is sent to the driver. Where to look: L5 slides 22 and 24–25; practise [What runs where: the plan, an action, or pandas on the driver](https://cpsc436c-2026w1.github.io/lecture-reviews/l5.html#q-what-runs-where).
 - `recent_pd = recent.toPandas()` :: Tasks start on the executors
-    &gt; toPandas is an action: tasks read and filter on the executors, then every row is sent to the driver.
+    &gt; toPandas is an action: the plan runs as tasks on the executors, then every row is sent to the driver. Where to look: L5 slide 24; practise [What runs where: the plan, an action, or pandas on the driver](https://cpsc436c-2026w1.github.io/lecture-reviews/l5.html#q-what-runs-where).
 - :: S3 filters the rows before they come to Spark
-    &gt; S3 returns the bytes it is asked for. Filters run in Spark's tasks, or in pandas on the driver.
+    &gt; S3 returns the bytes it is asked for. Filters run in Spark's tasks, or in pandas on the driver. Where to look: L5 slide 22; practise [What runs where: the plan, an action, or pandas on the driver](https://cpsc436c-2026w1.github.io/lecture-reviews/l5.html#q-what-runs-where).
 </div>
 </section>
 <section id="where-each-thing-is-kept" class="level3">
-<h3 class="anchored" data-anchor-id="where-each-thing-is-kept">11. Where each thing is kept</h3>
+<h3 class="anchored" data-anchor-id="where-each-thing-is-kept">12. Where each thing is kept</h3>
 <div class="quizdown">
 ---
 shuffle_answers: true
@@ -459,23 +501,23 @@ shuffle_answers: true
 ## A PySpark notebook on an EMR cluster reads a month of parcel scans, stored as 30 daily Parquet files, and writes each depot's totals as Parquet. The cluster is terminated at the end of the day. Where is each thing below kept while the notebook runs? Each option may be used once, more than once, or not at all.
 
 - The 300 depot totals, turned into a pandas DataFrame with toPandas() to draw a chart in the notebook :: In the memory of the driver
-    &gt; toPandas() brings the rows back from the executors into one pandas DataFrame, in the driver's process.
+    &gt; A pandas DataFrame lives in the driver's process: toPandas() brings the 300 rows there from the executors. Where to look: L5 slides 24–25; practise [Where is each piece of data kept?](https://cpsc436c-2026w1.github.io/lecture-reviews/l5.html#q-where-is-each-piece-of-data-kept).
 - A small list of depot names read with pd.read_csv in the notebook :: In the memory of the driver
-    &gt; This is pandas, not Spark: it runs in the driver alone and keeps its DataFrame there.
+    &gt; A pandas DataFrame lives in the driver's process: pd.read_csv is pandas, not Spark, and runs in the driver alone. Where to look: L5 slides 24–25; practise [Where is each piece of data kept?](https://cpsc436c-2026w1.github.io/lecture-reviews/l5.html#q-where-is-each-piece-of-data-kept).
 - Files an earlier job saved on the cluster's HDFS for a later job on the same cluster :: On the disk of a node
-    &gt; HDFS keeps its blocks on the core nodes' disks, and they go when the cluster does.
+    &gt; HDFS keeps its blocks on the core nodes' disks, which go when the cluster does. Where to look: L5 slides 18 and 33; practise [Where is each piece of data kept?](https://cpsc436c-2026w1.github.io/lecture-reviews/l5.html#q-where-is-each-piece-of-data-kept).
 - A temporary file a task creates in its node's local folder and deletes before the task ends :: On the disk of a node
-    &gt; A task's own scratch file sits on the node that runs it.
+    &gt; A task's scratch file is on the disk of the node that runs the task. The node's disk goes when the cluster is terminated; the task deletes the file earlier, when the task ends. Where to look: L5 slides 18, 24 and 33; practise [Where is each piece of data kept?](https://cpsc436c-2026w1.github.io/lecture-reviews/l5.html#q-where-is-each-piece-of-data-kept).
 - A public Parquet dataset that several teams' clusters read :: In an S3 bucket
-    &gt; Shared by many clusters and kept after each one ends: S3.
+    &gt; S3 keeps the dataset after any cluster is terminated, while a cluster's disks go with the cluster, so many clusters can share the dataset. Where to look: L5 slides 18, 24 and 33; practise [Where is each piece of data kept?](https://cpsc436c-2026w1.github.io/lecture-reviews/l5.html#q-where-is-each-piece-of-data-kept).
 - A results file a teammate opens next week, after this cluster is terminated :: In an S3 bucket
-    &gt; The cluster's disks go with it, so anything needed later goes to S3.
+    &gt; S3 keeps the results file after the cluster is terminated, while the cluster's disks go with it, so a teammate can open the file next week. Where to look: L5 slides 31 and 33; practise [Where is each piece of data kept?](https://cpsc436c-2026w1.github.io/lecture-reviews/l5.html#q-where-is-each-piece-of-data-kept).
 - :: In the Glue Data Catalog
-    &gt; The catalog keeps table definitions, the metadata, not the rows. None of these is a table definition.
+    &gt; The catalog keeps table definitions, the metadata, not the rows. None of these is a table definition. Where to look: L7 slide 8.
 </div>
 </section>
 <section id="fewer-slots" class="level3">
-<h3 class="anchored" data-anchor-id="fewer-slots">12. Fewer slots</h3>
+<h3 class="anchored" data-anchor-id="fewer-slots">13. Fewer slots</h3>
 <div class="quizdown">
 ---
 shuffle_answers: true
@@ -484,17 +526,17 @@ shuffle_answers: true
 ## To save money, a cluster shrinks from 2 core nodes to 1, so from 8 slots to 4. In one scan stage, 12 tasks read rows, and each takes about the same time. A task starts when a slot is free, and nothing else changes. How does the stage's time change?
 
 1. [x] It grows to about one and a half times the old time
-    &gt; On 8 slots, 12 tasks run in two waves: 8, then 4. On 4 slots they run in three waves of 4.
+    &gt; On 8 slots, 12 tasks run in two waves: 8, then 4. On 4 slots they run in three waves of 4. Where to look: L6 slides 23–24; practise [What sets the time of stage 1?](https://cpsc436c-2026w1.github.io/lecture-reviews/w2-l6.html#q-can-we-speed-up-stage-1-with-more-cores).
 1. [ ] It grows to about twice the old time
-    &gt; Half the slots does not mean twice the waves. Count them: two before, three after.
+    &gt; Half the slots does not mean twice the waves. Count them: two before, three after. Where to look: L6 slide 24; practise [What sets the time of stage 1?](https://cpsc436c-2026w1.github.io/lecture-reviews/w2-l6.html#q-can-we-speed-up-stage-1-with-more-cores).
 1. [ ] It grows to about three times the old time
-    &gt; Three is the number of waves on 4 slots, not how much longer the stage takes. Before, it took two.
+    &gt; Three waves on 4 slots take about one and a half times as long as two waves on 8 slots. Where to look: L6 slide 23; practise [What sets the time of stage 1?](https://cpsc436c-2026w1.github.io/lecture-reviews/w2-l6.html#q-can-we-speed-up-stage-1-with-more-cores).
 1. [ ] It stays about the same
-    &gt; With 4 slots, 4 of the 12 tasks now wait for a free slot, so a third wave is added.
+    &gt; With 4 slots, 4 of the 12 tasks now wait for a free slot, so a third wave is added. Where to look: L6 slide 23; practise [What sets the time of stage 1?](https://cpsc436c-2026w1.github.io/lecture-reviews/w2-l6.html#q-can-we-speed-up-stage-1-with-more-cores).
 </div>
 </section>
 <section id="row-groups-and-tasks" class="level3">
-<h3 class="anchored" data-anchor-id="row-groups-and-tasks">13. Row groups and tasks</h3>
+<h3 class="anchored" data-anchor-id="row-groups-and-tasks">14. Row groups and tasks</h3>
 <div class="quizdown">
 ---
 shuffle_answers: true
@@ -502,48 +544,48 @@ shuffle_answers: true
 
 ## A 230 MB Parquet file holds 6 row groups of about the same size. The cluster grows from 8 slots to 16, and Spark's scan of the file now makes 16 tasks. How many of those tasks read rows?
 
-1. [x] 6: only the ranges that hold a row group's middle read rows
-    &gt; Spark cuts the file into about 16 byte ranges. Spark never divides a row group between ranges; one range reads each of the 6 row groups.
-1. [ ] 16: each task reads half of a row group
-    &gt; A row group is never split between tasks. The task whose range holds its middle reads all of it.
-1. [ ] 1: only the first task reads rows
-    &gt; That is what a file with one row group does. Here there are 6 middles, spread across the file.
-1. [ ] 16: each range reads every row group it overlaps
-    &gt; A row group goes to one range only, the one that holds its middle, so nothing is read twice.
+1. [x] 6
+    &gt; Spark cuts the file into about 16 byte ranges, and each row group is read whole by the one range that holds its middle. The 6 middles fall in 6 different ranges, so 6 tasks read rows and 10 read none. Where to look: L6 slides 28–29 and 20.
+1. [ ] 16
+    &gt; Every task gets a byte range, but a range that holds no row group's middle reads no rows. A row group is never split between tasks and never read twice. Where to look: L6 slide 28.
+1. [ ] 12
+    &gt; A row group is never split between tasks: the one task whose range holds its middle reads all of it. Each of the 6 row groups is read by one task, not by two. Where to look: L6 slide 28.
+1. [ ] 1
+    &gt; A file with a single row group gives one task that reads rows. Here the 6 row groups have 6 middles, spread across the file. Where to look: L6 slides 20 and 29.
 </div>
 </section>
 <section id="nodes-for-a-deadline" class="level3">
-<h3 class="anchored" data-anchor-id="nodes-for-a-deadline">14. Nodes for a deadline</h3>
+<h3 class="anchored" data-anchor-id="nodes-for-a-deadline">15. Nodes for a deadline</h3>
 <div class="quizdown">
 ---
 shuffle_answers: true
 ---
 
-## A mapping company must render 2,400 satellite image tiles on an EMR cluster before the morning. The tiles are independent of each other, and each takes 5 minutes on one vCPU. They can be spread over any number of vCPUs with no overhead. The cluster has one primary node, which renders nothing, plus core nodes of type m6a.xlarge, each with 4 vCPUs for rendering. Launch takes 10 minutes before the first tile can start, and everything must finish 4 hours after the cluster starts, launch included. Step 1: how much work is it, in vCPU-hours?
+## A mapping company must render 1,800 satellite image tiles on an EMR cluster before the morning. The tiles are independent of each other, and each takes 6 minutes on one vCPU. They can be spread over any number of vCPUs with no overhead. The cluster has one primary node, which renders nothing, plus core nodes of type m6a.xlarge, each with 4 vCPUs for rendering. Launch takes 15 minutes before the first tile can start, and everything must finish 3 hours after the cluster starts, launch included. Step 1: how much work is it, in vCPU-hours?
 
-1. [x] 200
-    &gt; 2,400 tiles × 5 minutes is 12,000 vCPU-minutes, which is 200 vCPU-hours.
-1. [ ] 12,000
-    &gt; That is the work in vCPU-minutes. Divided by 60 it is 200 vCPU-hours.
-1. [ ] 2,400
-    &gt; That is the number of tiles. Each one is 5 minutes of one vCPU's work.
-1. [ ] 50
-    &gt; That divides by the 4 vCPUs of a node, which gives node-hours, not the work itself.
+1. [ ] 10,800
+    &gt; That is the work in vCPU-minutes. Divided by 60 it is 180 vCPU-hours. Where to look: L4 slide 35; practise [Scale up, scale out, or neither?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-scale-up-scale-out-or-neither).
+1. [x] 180
+    &gt; 1,800 tiles × 6 minutes is 10,800 vCPU-minutes, which is 180 vCPU-hours. Where to look: L4 slides 35–37; practise [Scale up, scale out, or neither?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-scale-up-scale-out-or-neither), [How many tasks can the cluster run at once (how many slots does it have)?](https://cpsc436c-2026w1.github.io/lecture-reviews/l5.html#q-how-many-tasks-can-this-cluster-run-at-once).
+1. [ ] 1,800
+    &gt; That is the number of tiles. Each one is 6 minutes of one vCPU's work. Where to look: L4 slide 35; practise [Scale up, scale out, or neither?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-scale-up-scale-out-or-neither).
+1. [ ] 45
+    &gt; 45 is node-hours: 180 divided by a node's 4 vCPUs. The work itself is 180 vCPU-hours. Where to look: L4 slide 37; practise [Scale up, scale out, or neither?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-scale-up-scale-out-or-neither).
 
 ## Step 2: what is the smallest number of core nodes that finishes in time?
 
-1. [x] 14
-    &gt; After the 10-minute launch, 3 hours 50 minutes are left. 200 vCPU-hours over about 3.83 hours needs about 52.2 vCPUs at once: 53, which is 13.25 nodes, so 14.
-1. [ ] 13
-    &gt; Thirteen nodes give 52 vCPUs, and 200 vCPU-hours over 52 vCPUs takes about 3 hours 51 minutes: just over the 3 hours 50 minutes left once the 10-minute launch is taken out.
 1. [ ] 15
-    &gt; Fourteen nodes already give 56 vCPUs, more than the 53 needed.
-1. [ ] 50
-    &gt; 200 vCPU-hours divided by 4 vCPUs per node is a number of node-hours, not of nodes. It still has to be spread over the hours left.
+    &gt; 15 nodes ignores the launch: 180 vCPU-hours over the full 3 hours is 60 vCPUs, but only 2 hours 45 minutes are left for rendering. Where to look: L4 slides 36–37; practise [Scale up, scale out, or neither?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-scale-up-scale-out-or-neither).
+1. [ ] 16
+    &gt; Sixteen nodes give 64 vCPUs. 180 vCPU-hours over 64 vCPUs takes about 2 hours 49 minutes: over the 2 hours 45 minutes left once the launch is taken out. Where to look: L4 slides 36–37; practise [Scale up, scale out, or neither?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-scale-up-scale-out-or-neither).
+1. [x] 17
+    &gt; After the 15-minute launch, 2 hours 45 minutes are left. 180 vCPU-hours over 2.75 hours needs about 65.5 vCPUs at once. At 4 vCPUs per node, 65.5 vCPUs need 16.4 nodes, rounded up to 17. Where to look: L4 slides 35–37; practise [Scale up, scale out, or neither?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-scale-up-scale-out-or-neither), [How many tasks can the cluster run at once (how many slots does it have)?](https://cpsc436c-2026w1.github.io/lecture-reviews/l5.html#q-how-many-tasks-can-this-cluster-run-at-once).
+1. [ ] 45
+    &gt; 180 vCPU-hours divided by 4 vCPUs per node is a number of node-hours, not of nodes. It still has to be spread over the hours left. Where to look: L4 slide 37; practise [Scale up, scale out, or neither?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-scale-up-scale-out-or-neither).
 </div>
 </section>
 <section id="choosing-the-folder-key" class="level3">
-<h3 class="anchored" data-anchor-id="choosing-the-folder-key">15. Choosing the folder key</h3>
+<h3 class="anchored" data-anchor-id="choosing-the-folder-key">16. Choosing the folder key</h3>
 <div class="quizdown">
 ---
 shuffle_answers: true
@@ -552,17 +594,17 @@ shuffle_answers: true
 ## A delivery company keeps three years of parcel scans in S3 as Parquet, about 200 GB a year. Each row is one scan: the scan time, the depot (300 depots), the parcel id (80 million parcels) and the status. Each week an audit job reads all three years of scans at one depot, a different depot each week. Which folder key lets that job skip all the other data, while keeping the number of folders small and each folder large?
 
 1. [x] Depot
-    &gt; The job reads one depot's folder and skips the other 299. Three years over 300 depots is about 2 GB a folder.
+    &gt; The job reads one depot's folder and skips the other 299. Three years over 300 depots is about 2 GB a folder. Where to look: L4 slides 22–23; practise [Which folder key best supports the analysts' one-day and one-month queries?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-which-folder-key-best-supports-these-queries).
 1. [ ] Scan date
-    &gt; Every date folder holds scans from every depot, so the job would have to open all of them.
+    &gt; Every date folder holds scans from every depot, so the job would have to open all of them. Where to look: L4 slides 21 and 23; practise [Which folder key best supports the analysts' one-day and one-month queries?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-which-folder-key-best-supports-these-queries).
 1. [ ] Scan hour
-    &gt; The same problem as the date, and about 26,000 small folders on top of it.
+    &gt; Every hour folder holds scans from every depot, so the audit would open them all; three years would also make about 26,000 small folders. Where to look: L4 slides 21 and 23; practise [Which folder key best supports the analysts' one-day and one-month queries?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-which-folder-key-best-supports-these-queries).
 1. [ ] Parcel id
-    &gt; 80 million folders of a few rows each, and nothing in the name says which depot a parcel passed through.
+    &gt; 80 million folders of a few rows each, and nothing in the name says which depot a parcel passed through. Where to look: L4 slide 23; practise [Which folder key best supports the analysts' one-day and one-month queries?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-which-folder-key-best-supports-these-queries).
 </div>
 </section>
 <section id="why-the-stage-is-slow" class="level3">
-<h3 class="anchored" data-anchor-id="why-the-stage-is-slow">16. Why the stage is slow</h3>
+<h3 class="anchored" data-anchor-id="why-the-stage-is-slow">17. Why the stage is slow</h3>
 <div class="quizdown">
 ---
 shuffle_answers: true
@@ -571,17 +613,17 @@ shuffle_answers: true
 ## After an Exchange by store, a stage runs 200 tasks. The median task takes 0.3 seconds on about 50 thousand rows; one task takes 40 seconds on 9 million rows. What is the most likely cause of the slow stage?
 
 1. [x] One key has many more rows than the others
-    &gt; Every row with the same key goes to the same task after the Exchange, so a store with far more rows than the others lands all of them on one task.
-1. [ ] The rows each task holds do not fit in the memory available to that task
-    &gt; Memory per task is the same for all 200 tasks. One task forty times the median points to what that task holds, not to how much memory each task has.
+    &gt; After the Exchange, every row with the same key goes to one task, so one task gets all the rows of a store with far more rows than the others. Where to look: L6 slides 30, 48–49; practise [Which change fixes a hot key, and which a spill?](https://cpsc436c-2026w1.github.io/lecture-reviews/w2-l6.html#q-diagnostics-questions).
+1. [ ] Rows each task holds do not fit in the memory available to that task
+    &gt; The tasks share each executor's memory on equal terms. One task with 180 times the median's rows points to how the rows were divided, not to how much memory each task has. Where to look: L6 slide 46; practise [Which change fixes a hot key, and which a spill?](https://cpsc436c-2026w1.github.io/lecture-reviews/w2-l6.html#q-diagnostics-questions).
 1. [ ] Too few readable parts of the input
-    &gt; That shows up in a scan stage, as tasks that read no rows. This stage comes after an Exchange.
+    &gt; That shows up in a scan stage, as tasks that read no rows. This stage comes after an Exchange. Where to look: L6 slide 28; practise [Which change fixes a hot key, and which a spill?](https://cpsc436c-2026w1.github.io/lecture-reviews/w2-l6.html#q-diagnostics-questions).
 1. [ ] Too many small files and folders
-    &gt; Small files slow down listing and the start of a scan. They do not make one task after an Exchange forty times the others.
+    &gt; Small files slow down listing and the start of a scan. They do not make one task after an Exchange over a hundred times the others. Where to look: L6 slides 47–48; practise [Which change fixes a hot key, and which a spill?](https://cpsc436c-2026w1.github.io/lecture-reviews/w2-l6.html#q-diagnostics-questions).
 </div>
 </section>
 <section id="what-the-team-chooses-on-emr" class="level3">
-<h3 class="anchored" data-anchor-id="what-the-team-chooses-on-emr">17. What the team chooses on EMR</h3>
+<h3 class="anchored" data-anchor-id="what-the-team-chooses-on-emr">18. What the team chooses on EMR</h3>
 <div class="quizdown">
 ---
 shuffle_answers: true
@@ -589,15 +631,121 @@ shuffle_answers: true
 
 ## A team moves a nightly PySpark job from an AWS Glue job to an EMR cluster on EC2. On EMR, what does the team now choose that it did not choose on Glue?
 
-1. [x] The EC2 instance type of each node
-    &gt; On EMR the team rents nodes and picks their instance types. On Glue there were no machines to pick.
-1. [ ] The Spark version the job runs on
-    &gt; Both fix it: the EMR release on EMR, the Glue version on Glue.
-1. [ ] The PySpark code of the job
-    &gt; The team writes the code on both. Only where it runs changes.
-1. [ ] The S3 bucket the job reads from
-    &gt; The team names its input on both. What changes is what the team rents to run the job.
+1. [x] EC2 instance type of each node
+    &gt; On EMR the team rents nodes and picks their instance types. On Glue the team picks a worker type and a count, not EC2 instances. Where to look: L7 slides 4–5.
+1. [ ] Spark version the job runs on
+    &gt; The team chooses this on both: the EMR release on EMR, the Glue version on Glue. Where to look: L7 slide 4.
+1. [ ] PySpark code of the job
+    &gt; The team writes the code on both EMR and Glue; only the service that runs it changes. Where to look: L7 slide 4.
+1. [ ] S3 bucket the job reads from
+    &gt; The team names the S3 input on both EMR and Glue; only the compute the team rents changes. Where to look: L7 slide 4.
 </div>
+</section>
+<section id="a-slow-window-query" class="level3">
+<h3 class="anchored" data-anchor-id="a-slow-window-query">19. A slow window query</h3>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## An online shop's PySpark job on an EMR cluster computes, for each customer, a running total of their orders in date order: a window query over each customer. The shop has 50,000 customers with about 40 orders each, and one reseller account placed 2 million orders. After the `Exchange` by customer, one task takes 25 seconds and the median task 0.2 seconds. Select every statement that is true.
+
+- [ ] For the running-total window, Spark replaces each input task's reseller rows with one partial total before the `Exchange`
+    &gt; False. The window produces a running total for every order, so Spark must keep and move the reseller's individual rows. Partial totals are sufficient for a count or sum per customer, but not for this window. Where to look: L6 slides 35–36; practise [Which change fixes a hot key, and which a spill?](https://cpsc436c-2026w1.github.io/lecture-reviews/w2-l6.html#q-diagnostics-questions).
+- [x] Salted customer files can parallelize the reseller's rows in a later scan
+    &gt; True. The salt can place one customer's rows in several files, allowing a later file scan to assign those files to several tasks. The customer-keyed `Exchange` for this window will still bring the reseller's rows back to one task. Where to look: L6 slide 39; practise [Which change fixes a hot key, and which a spill?](https://cpsc436c-2026w1.github.io/lecture-reviews/w2-l6.html#q-diagnostics-questions).
+- [ ] Sorting all orders by date before the window removes the reseller skew after the `Exchange`
+    &gt; False. The window partitions by customer. After the `Exchange`, all orders for the reseller still meet in one task, regardless of their earlier date order. Where to look: L6 slide 35; practise [Which change fixes a hot key, and which a spill?](https://cpsc436c-2026w1.github.io/lecture-reviews/w2-l6.html#q-diagnostics-questions).
+- [x] A count per customer uses partial totals before the `Exchange` instead of sending every order
+    &gt; True. Each input task first counts its local rows for a customer, so the `Exchange` moves partial counts rather than all 2 million reseller orders. Where to look: L6 slides 35–36; practise [Which change fixes a hot key, and which a spill?](https://cpsc436c-2026w1.github.io/lecture-reviews/w2-l6.html#q-diagnostics-questions).
+- [ ] An `Exchange` by customer spreads the reseller's orders evenly across output tasks
+    &gt; False. Partitioning by customer sends rows with the same customer key to the same output task. Spreading the reseller's orders evenly would break the grouping by customer that the window needs. Where to look: L6 slide 35; practise [Which change fixes a hot key, and which a spill?](https://cpsc436c-2026w1.github.io/lecture-reviews/w2-l6.html#q-diagnostics-questions).
+</div>
+</section>
+</section>
+<section id="part-terms" class="level2">
+<h2 class="anchored" data-anchor-id="part-terms">Terms used on this page</h2>
+<p>The vocabulary of lectures 1 to 7, grouped as on the flashcards: practise the <a href="https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/quiz">flashcards</a> and the <a href="https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/match">matching set</a>.</p>
+<section id="compute-and-billing" class="level3">
+<h3 class="anchored" data-anchor-id="compute-and-billing">Compute and billing</h3>
+<p><strong>Instance (EC2).</strong> A virtual machine you rent from AWS, billed per second for the time it runs. Stopping it ends the compute charge, but its EBS disk still bills.</p>
+<p><strong>Instance type.</strong> The size you pick when you launch an EC2 server: how many vCPUs and how much memory it has, how fast its network is, and whether it has its own local disk.</p>
+<p><strong>Spot instance.</strong> Spare EC2 capacity sold much cheaper than on-demand. AWS can take it back after a two-minute warning, so it suits work that can stop and restart.</p>
+<p><strong>Provisioned capacity.</strong> Compute you pay for while it is allocated to you, used or not. Unlike pay-per-use compute, its charge continues when nothing runs.</p>
+<p><strong>Usage-based billing.</strong> Charges for measured work, such as each request or each millisecond a function runs. They stop when nothing runs; stored data and logs still cost money.</p>
+<p><strong>Idle test.</strong> The question to ask of each compute charge: does it bill while nothing runs? If yes, it is provisioned capacity. Storage and logs are counted separately.</p>
+<p><strong>Time shape of demand.</strong> When a workload asks for its resources across a day or a week: a steady rate, a daily rhythm, a burst, or a scheduled job. With the peak rate, it decides whether provisioned or usage-based billing is cheaper.</p>
+<p><strong>Cost granularity.</strong> The unit a provider bills in, such as one second of instance time or one request. With per-second billing, a faster, pricier instance can come out cheaper per task.</p>
+<p><strong>Ephemeral infrastructure.</strong> A server or cluster created for one piece of work and deleted after it, so it bills only around that work. Our EMR clusters were launched for a run and terminated after.</p>
+</section>
+<section id="storage-and-access" class="level3">
+<h3 class="anchored" data-anchor-id="storage-and-access">Storage and access</h3>
+<p><strong>S3.</strong> AWS’s object store. You reach each object over the network by its name inside a bucket, and the data stays with no server running.</p>
+<p><strong>Bucket.</strong> A named container in S3 that holds objects. Its name is part of every object’s address.</p>
+<p><strong>Object key.</strong> The full name of one stored file inside an S3 bucket. It is only a name, unrelated to the column a group-by or a join uses.</p>
+<p><strong>Prefix (S3).</strong> The leading part of an object’s name, such as <code>day=2012-06-14/</code>. S3 lists objects by it, and the console’s folders are built from it; the general-purpose buckets we use have no real folders.</p>
+<p><strong>EBS volume.</strong> A disk an EC2 instance reaches over the network, as its main disk or an extra one. Its data survives a stop, and it bills per GB-month while it exists, even when the instance is stopped.</p>
+<p><strong>Byte-range read.</strong> Asking S3 for one stated part of an object instead of the whole object. Parquet libraries fetch the footer this way, then only the column chunks a query needs.</p>
+<p><strong>IAM policy.</strong> A JSON document that says which actions are allowed on which AWS resources. Attached to a role, it sets what anything using that role may do.</p>
+<p><strong>Security group.</strong> The rules that say what network traffic may reach an EC2 instance and what it may send out, by protocol, port and address. They do not decide what the instance may do with other AWS resources.</p>
+</section>
+<section id="serverless-functions" class="level3">
+<h3 class="anchored" data-anchor-id="serverless-functions">Serverless functions</h3>
+<p><strong>Serverless.</strong> A service model where the platform runs and scales your code and you never pick or patch the computers under it. It usually bills per request and running time; stored data still costs money.</p>
+<p><strong>Lambda function.</strong> The unit you deploy to AWS Lambda: your code and its settings, run each time a trigger fires. One setting, memory, also sets its CPU and its price per millisecond.</p>
+<p><strong>Execution role.</strong> The identity AWS takes on when it runs a Lambda function. It decides which resources the code may read or change.</p>
+<p><strong>Execution environment.</strong> The isolated space AWS sets up to run a Lambda function, with its memory and a temporary disk. AWS may reuse it for later calls and pauses it between them.</p>
+<p><strong>Cold start.</strong> The set-up before the first call in a new Lambda environment: AWS loads the code, then your code’s initialisation runs, such as opening connections and importing libraries.</p>
+<p><strong>Handler.</strong> The function in your code that Lambda calls on each invocation, taking <code>event</code> and <code>context</code>. Code outside it runs once per environment, so a client built there is reused.</p>
+<p><strong>Request (trigger).</strong> A call that asks a Lambda function for an answer while the caller waits for it, such as a browser going through API Gateway.</p>
+<p><strong>Event (trigger).</strong> A report that something happened, such as a new object landing in a bucket. A Lambda function processes it with no caller waiting for an answer.</p>
+<p><strong>EventBridge.</strong> The AWS service whose rules match things that happen, such as a new object in a bucket, or fire on a clock, and send each match to a target such as a Lambda function.</p>
+<p><strong>API Gateway.</strong> The AWS service that gives a function a web address, so a browser or a program can call it over HTTP. Its simplest kind waits at most 30 seconds for an answer.</p>
+</section>
+<section id="files-memory-and-layout" class="level3">
+<h3 class="anchored" data-anchor-id="files-memory-and-layout">Files, memory and layout</h3>
+<p><strong>Parquet.</strong> A columnar file format. Rows are grouped into blocks that each store every column separately, and metadata at the end of the file says where each part is.</p>
+<p><strong>Row group.</strong> A horizontal block inside one Parquet file, holding one column chunk per column. Its size is set when the file is written, and a file can hold one or many.</p>
+<p><strong>Column chunk.</strong> The values of one field within one row group of a Parquet file. The writer can store their min and max, which lets a reader skip the whole row group.</p>
+<p><strong>Footer (Parquet).</strong> The metadata at the end of a Parquet file: the schema, where each column chunk starts and, if the writer stored them, each chunk’s min and max. A reader fetches it before any data.</p>
+<p><strong>Projection pushdown.</strong> Handing the reader the list of columns a query uses, so it reads only those columns from a Parquet file.</p>
+<p><strong>Predicate pushdown.</strong> Handing the reader the query’s filter, so it can skip row groups whose stored min and max show that no row can match.</p>
+<p><strong>Folder partition.</strong> A dataset layout with one named location per value of a column, such as <code>day=2012-06-14/</code> (on S3, a prefix). A filter on that column skips the other locations without opening them.</p>
+<p><strong>Compaction.</strong> Rewriting many small files into fewer, larger ones, so a query opens fewer files. Too few files, or too few row groups, can leave cores idle.</p>
+<p><strong>Eager load.</strong> Reading the whole dataset into memory before the work starts. If data and working space exceed memory, the operating system swaps to disk or stops the program.</p>
+<p><strong>Storage, memory, compute and network.</strong> The four things every data task uses, each with a capacity and a rate. Looking at a job from each in turn helps find its bottleneck, and cloud architecture often trades one for another.</p>
+</section>
+<section id="spark-how-a-job-runs" class="level3">
+<h3 class="anchored" data-anchor-id="spark-how-a-job-runs">Spark: how a job runs</h3>
+<p><strong>Driver.</strong> The program that coordinates a Spark application: it runs your code, builds the query plan and sends tasks to the executors.</p>
+<p><strong>Executor.</strong> A Spark program running on an EMR core or task node. It runs tasks and keeps their data in its memory or on the node’s disk.</p>
+<p><strong>Partition.</strong> A chunk of rows that one task processes as one unit. When reading files it holds one or more splits, each a byte range of one file, planned from the file sizes and the number of slots.</p>
+<p><strong>Task.</strong> One stage’s work on one chunk of rows, run in one slot: by default, one executor core.</p>
+<p><strong>Slot.</strong> One executor core, as room to run one task on one Spark partition at a time. An executor with 4 cores runs 4 tasks at once; our EMR nodes have one per vCPU.</p>
+<p><strong>Stage.</strong> A set of tasks Spark can run before rows have to move between partitions. Every task in it runs the same steps on a different partition.</p>
+<p><strong>Wave.</strong> The set of a stage’s tasks that run at the same time, one per slot. 36 reading tasks on 8 slots need 5 of them.</p>
+<p><strong>Transformation.</strong> A step such as <code>filter</code> or <code>groupBy(...).count()</code> that is only recorded in the plan. No task runs until an action asks for a result.</p>
+<p><strong>Action.</strong> On a Spark DataFrame, a call such as <code>df.count()</code>, <code>df.collect()</code> or <code>df.write.parquet()</code> that makes Spark run the plan built so far. Unlike pandas, where each step runs as soon as you call it.</p>
+</section>
+<section id="spark-shuffles-and-slow-stages" class="level3">
+<h3 class="anchored" data-anchor-id="spark-shuffles-and-slow-stages">Spark: shuffles and slow stages</h3>
+<p><strong>Narrow transformation.</strong> A step each task does on its own partition, so no rows move between partitions: <code>filter</code>, <code>select</code>, <code>withColumn</code>.</p>
+<p><strong>Wide transformation.</strong> A step that needs rows from other partitions, such as <code>groupBy</code>, <code>orderBy</code>, a window or most joins. Spark adds a shuffle before it.</p>
+<p><strong>Shuffle (Exchange).</strong> Moving rows between partitions for the next stage: each task writes its rows to its node’s disk, and the next stage’s tasks read them, often from other nodes.</p>
+<p><strong>Window query.</strong> A step that computes a value over a group of rows and puts it on each row, such as each trip’s payment-type average next to the trip. Every row goes into an <code>Exchange</code>.</p>
+<p><strong>Hot key.</strong> One join, window or sort value with far more rows than the others. All its rows go to one task, which runs long after the rest of its stage; more nodes do not help.</p>
+<p><strong>Spill.</strong> Writing to the node’s disk when the rows a task sorts, groups or shuffles do not fit in its share of executor memory. The result is correct but slower.</p>
+</section>
+<section id="clusters-and-managed-spark" class="level3">
+<h3 class="anchored" data-anchor-id="clusters-and-managed-spark">Clusters and managed Spark</h3>
+<p><strong>Amazon EMR.</strong> AWS’s managed service that launches a cluster of EC2 instances with Spark installed. You pay for the nodes from launch until you terminate the cluster.</p>
+<p><strong>Primary node (EMR).</strong> The one EMR instance that runs the cluster manager and the HDFS name service. It runs no executors.</p>
+<p><strong>Core node (EMR).</strong> An EMR instance that runs executors and stores HDFS data. A role an instance plays in the cluster, not a Spark slot.</p>
+<p><strong>Task node (EMR).</strong> An optional EMR instance that runs executors and stores no HDFS data, so it can be removed or bought as spot capacity without losing HDFS data.</p>
+<p><strong>HDFS.</strong> A file system that splits files into blocks across a cluster’s core nodes’ disks. Its data is lost when the cluster terminates, so our inputs and outputs stay on S3.</p>
+<p><strong>AWS Glue.</strong> AWS’s managed Spark service with a visual job editor and table definitions: you choose a job’s worker type and number of workers, or let it scale them, and it starts the workers. A notebook session bills until you stop it, and its idle timeout is 48 hours by default.</p>
+<p><strong>Worker type (Glue).</strong> The size of each Glue worker, from G.1X (1 DPU: 4 vCPU, 16 GB) upward, such as G.2X at 2 DPUs. Together with the number of workers it defines a job’s capacity, while the service picks the hardware underneath.</p>
+<p><strong>DPU (Glue).</strong> Glue’s billing unit: 4 vCPU and 16 GB, the size of one G.1X worker, billed per second, with a 1-minute minimum, while a job runs or a session exists.</p>
 
 
 </section>

@@ -132,6 +132,10 @@ ul.task-list li input[type="checkbox"] {
     <a class="dropdown-item" href="./w2-l6.html">
  <span class="dropdown-text">L6: how Spark runs a query</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./midterm-review.html">
+ <span class="dropdown-text">Midterm review</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item">
@@ -168,7 +172,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#part-ec2-renting-an-instance" id="toc-part-ec2-renting-an-instance" class="nav-link" data-scroll-target="#part-ec2-renting-an-instance">EC2: renting an instance</a>
   <ul class="collapse">
   <li><a href="#q-setting-up-an-instance-for-the-harvest-records" id="toc-q-setting-up-an-instance-for-the-harvest-records" class="nav-link" data-scroll-target="#q-setting-up-an-instance-for-the-harvest-records">Setting up an instance for the harvest records</a></li>
-  <li><a href="#q-who-handles-each-task" id="toc-q-who-handles-each-task" class="nav-link" data-scroll-target="#q-who-handles-each-task">Who handles each task, on an instance and on a function?</a></li>
+  <li><a href="#q-who-handles-each-task" id="toc-q-who-handles-each-task" class="nav-link" data-scroll-target="#q-who-handles-each-task">Who is responsible for each task, on an instance and on a function?</a></li>
   </ul></li>
   <li><a href="#part-lambda" id="toc-part-lambda" class="nav-link" data-scroll-target="#part-lambda">Lambda: a function that runs only when called</a>
   <ul class="collapse">
@@ -345,31 +349,31 @@ shuffle_answers: true
 <p>Slide: 25, 29, 30 (also 18, 27, 38)</p>
 </section>
 <section id="q-who-handles-each-task" class="level3">
-<h3 class="anchored" data-anchor-id="q-who-handles-each-task">Who handles each task, on an instance and on a function?</h3>
+<h3 class="anchored" data-anchor-id="q-who-handles-each-task">Who is responsible for each task, on an instance and on a function?</h3>
 <p>A team runs the same daily harvest report two ways: on an EC2 instance, a t3a.large running a FastAPI service, and as a Lambda function with a pandas layer and an execution role that can read the bucket <code>vineyard-harvest</code>. These tasks come up over one month.</p>
 <div class="quizdown">
 ---
 shuffle_answers: true
 ---
 
-## For each task, who handles it on the instance and on the function? Each option may be used once, more than once, or not at all.
+## For each task, who is responsible for it on the instance and on the function? Each option may be used once, more than once, or not at all.
 
 - Choosing how much memory the report runs with. :: you on both
     &gt; On the instance you pick the instance type, which fixes its memory; on the function you pick the memory setting.
 - Restarting the service after it crashes. :: you on the instance, AWS on the function
-    &gt; On the instance the service is a program you run, so bringing it back after a crash is your job. On Lambda the platform manages the execution environment, and the next call runs the function again.
+    &gt; On the instance the service is a program you run, so bringing it back after a crash is your responsibility. On Lambda, AWS is responsible for the execution environment, and the next call runs the function again.
 - Picking the storage class of the objects in `vineyard-harvest`. :: you on both
-    &gt; The bucket is the same S3 bucket whichever way the report runs, and the storage class of its objects is your choice.
+    &gt; The report reads the same S3 bucket on the instance and on the function, and the storage class of its objects is your choice.
 - Starting Python and the program that answers requests. :: you on the instance, AWS on the function
-    &gt; On the instance the runtime and the web server (uvicorn for FastAPI) are yours to install and start. On Lambda you supply only the function, and the platform starts the runtime for it.
+    &gt; On the instance the runtime and the web server (uvicorn for FastAPI) are your responsibility to install and start. On Lambda you supply only the function, and AWS is responsible for starting the runtime.
 - Shutting the compute down when the day's reports are done. :: you on the instance, AWS on the function
-    &gt; The instance runs, and bills, until you stop it. A function runs only while it is called, and the platform manages what happens between calls.
+    &gt; The instance runs, and bills, until you stop it. A function runs only while it is called, and AWS is responsible for what happens between calls.
 - Adding capacity when 200 analysts ask for the report in the same minute. :: you on the instance, AWS on the function
-    &gt; The instance has the capacity of the type you picked, and adding more is your job. On Lambda, scaling to many calls at once is the platform's job.
+    &gt; The instance has the capacity of the type you picked, and adding more is your responsibility. On Lambda, scaling to many calls at once is AWS's responsibility.
 - :: AWS on both
-    &gt; AWS manages the hardware and the hypervisor beneath an EC2 instance. The tasks listed here remain your responsibility on the instance.
+    &gt; AWS is responsible for the hardware and the hypervisor beneath an EC2 instance. The tasks listed here remain your responsibility on the instance.
 - :: AWS on the instance, you on the function
-    &gt; This swaps the two sides. The instance is the one you administer from the operating system up; on the function the platform starts the runtime and scales it.
+    &gt; On the instance you are responsible for everything from the operating system up; on the function, AWS is responsible for starting the runtime and scaling it.
 </div>
 <p>Slide: 20 (also 25, 33, 37)</p>
 </section>
@@ -394,11 +398,11 @@ shuffle_answers: true
 - the call at 09:00:00 :: new execution environment
     &gt; This call has a cold start because no execution environment exists yet for the version deployed at 08:55. Lambda creates a new environment and loads the 60 MB table into it before the handler runs, so the call takes about 3 s.
 - the call at 09:00:20 :: existing execution environment
-    &gt; This is a warm call, which means Lambda reuses an existing execution environment. The environment from 09:00:00 is idle, with its soil table still in memory.
+    &gt; The 09:00:20 call is warm: Lambda reuses an existing execution environment. The environment from 09:00:00 is idle, with its soil table still in memory.
 - the call 50 ms after 09:00:20 :: new execution environment
     &gt; This call has a cold start because the environment handling the 09:00:20 call is still busy. Lambda creates a new environment and loads the 60 MB table into it before the handler runs, so the call takes about 3 s.
 - the call at 09:00:40 :: existing execution environment
-    &gt; This is a warm call because both execution environments are idle at 09:00:40. Lambda uses one of them and reuses its loaded table.
+    &gt; The 09:00:40 call is warm because both execution environments are idle then. Lambda uses one of them and reuses its loaded table.
 - the call at 07:30 the next morning :: new execution environment
     &gt; This call has a cold start because Lambda has removed the environments that remained idle overnight. Lambda creates a new environment and loads the 60 MB table into it before the handler runs, so the call takes about 3 s.
 - :: new EC2 instance

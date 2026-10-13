@@ -23,6 +23,8 @@ website:
             text: "L5: Spark on a cluster"
           - href: w2-l6.qmd
             text: "L6: how Spark runs a query"
+          - href: midterm-review.qmd
+            text: "Midterm review"
       - href: https://cpsc436c-2026w1.github.io/a1-starter/
         text: A1 starter
       - href: https://cpsc436c-2026w1.github.io/a2-starter/

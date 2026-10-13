@@ -132,6 +132,10 @@ ul.task-list li input[type="checkbox"] {
     <a class="dropdown-item" href="./w2-l6.html">
  <span class="dropdown-text">L6: how Spark runs a query</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./midterm-review.html">
+ <span class="dropdown-text">Midterm review</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item">
@@ -263,7 +267,7 @@ shuffle_answers: true
 1. [ ] 200 MB
     &gt; This takes every column of the May row group, as if a row group had to be read whole. Each column has its own chunk inside the row group, so the other 34 columns are left behind.
 1. [ ] 4,800 MB
-    &gt; This is the whole file, with neither saving applied. The rows are sorted by download time, so the footer's min and max rule out the 23 row groups that hold no May 2025 downloads, and each column has its own chunk, so the other 34 columns are left behind.
+    &gt; 4,800 MB is the whole file, with neither saving applied. The rows are sorted by download time, so the footer's min and max rule out the 23 row groups that hold no May 2025 downloads, and each column has its own chunk, so the other 34 columns are left behind.
 </div>
 <p>The platform then rewrites the same downloads into a new file of the same size, with the rows not ordered by time: each of the 24 row groups now holds downloads from all 24 months. The columns, their sizes and the query stay the same.</p>
 <div class="quizdown">
