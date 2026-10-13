@@ -262,7 +262,7 @@ shuffle_answers: true
 shuffle_answers: true
 ---
 
-## In a PySpark notebook on an EMR cluster, `recent` is a Spark DataFrame of 2025's ticket sales made from Parquet files in S3, `pd` is pandas, and `F` is `pyspark.sql.functions`. What happens when each line runs? Each option may be used once, more than once, or not at all.
+## In a PySpark notebook on an EMR cluster, `recent` is a Spark DataFrame of 2025's ticket sales made from Parquet files in S3, `venues_pd` is a pandas DataFrame, `pd` is pandas, and `F` is `pyspark.sql.functions`. What happens when each line runs? Each option may be used once, more than once, or not at all.
 
 - `venues_pd = pd.read_parquet("s3://tickets-raw/venues.parquet")` :: pandas does the work in the driver only, with no Spark plan
     > pandas reads the file in the driver's process alone, with no Spark plan and no tasks. Where to look: L5 slides 24–25; practise [What runs where: the plan, an action, or pandas on the driver](https://cpsc436c-2026w1.github.io/lecture-reviews/l5.html#q-what-runs-where).
