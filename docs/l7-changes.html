@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>L7 review: Spark as a serverless service, EMR Serverless and AWS Glue: review copy – CPSC 436C lecture reviews</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-fc5028672c55bc042a1fdef173a2e080.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/quizdown-0.6.0/quizdown.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-0.6.0/quizdownKatex.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-0.6.0/quizdownHighlight.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-0.6.0/quizdown-init.js"></script>
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">CPSC 436C lecture reviews</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lecture-reviews" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Lecture reviews</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-lecture-reviews">    
+        <li>
+    <a class="dropdown-item" href="./index.html">
+ <span class="dropdown-text">All reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l1.html">
+ <span class="dropdown-text">L1: the four resources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l2.html">
+ <span class="dropdown-text">L2: EC2, S3 and Lambda</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l3.html">
+ <span class="dropdown-text">L3: cost models and what starts a function</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l4.html">
+ <span class="dropdown-text">L4: scaling up and out</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l5.html">
+ <span class="dropdown-text">L5: Spark on a cluster</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./w2-l6.html">
+ <span class="dropdown-text">L6: how Spark runs a query</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./midterm-review.html">
+ <span class="dropdown-text">Midterm review</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="https://cpsc436c-2026w1.github.io/a1-starter/"> 
+<span class="menu-text">A1 starter</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://cpsc436c-2026w1.github.io/a2-starter/"> 
+<span class="menu-text">A2 starter</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Parts</h2>
+   
+  <ul>
+  <li><a href="#part-layers-of-running-spark" id="toc-part-layers-of-running-spark" class="nav-link active" data-scroll-target="#part-layers-of-running-spark">Layers of running Spark, with EMR Serverless</a>
+  <ul class="collapse">
+  <li><a href="#q-who-does-which-part" id="toc-q-who-does-which-part" class="nav-link" data-scroll-target="#q-who-does-which-part">What does the team stop doing on a Glue job?</a></li>
+  <li><a href="#q-who-sizes-an-emr-serverless-job-run" id="toc-q-who-sizes-an-emr-serverless-job-run" class="nav-link" data-scroll-target="#q-who-sizes-an-emr-serverless-job-run">Who sizes an EMR Serverless job run?</a></li>
+  </ul></li>
+  <li><a href="#part-a-glue-session-underneath" id="toc-part-a-glue-session-underneath" class="nav-link" data-scroll-target="#part-a-glue-session-underneath">Glue session underneath</a>
+  <ul class="collapse">
+  <li><a href="#q-how-many-glue-workers" id="toc-q-how-many-glue-workers" class="nav-link" data-scroll-target="#q-how-many-glue-workers">How many Glue workers replace a cluster?</a></li>
+  </ul></li>
+  <li><a href="#part-who-starts-and-stops" id="toc-part-who-starts-and-stops" class="nav-link" data-scroll-target="#part-who-starts-and-stops">Who starts and stops a cluster or a session, and what each costs</a>
+  <ul class="collapse">
+  <li><a href="#q-what-does-a-forgotten-session-cost" id="toc-q-what-does-a-forgotten-session-cost" class="nav-link" data-scroll-target="#q-what-does-a-forgotten-session-cost">What does a forgotten session cost?</a></li>
+  <li><a href="#q-which-way-costs-least-per-day" id="toc-q-which-way-costs-least-per-day" class="nav-link" data-scroll-target="#q-which-way-costs-least-per-day">Which way costs least per day?</a></li>
+  </ul></li>
+  <li><a href="#part-mixed" id="toc-part-mixed" class="nav-link" data-scroll-target="#part-mixed">Mixed: from earlier lectures</a>
+  <ul class="collapse">
+  <li><a href="#q-which-node-type-for-extra-spot-capacity" id="toc-q-which-node-type-for-extra-spot-capacity" class="nav-link" data-scroll-target="#q-which-node-type-for-extra-spot-capacity">Which node type for extra spot capacity?</a></li>
+  </ul></li>
+  <li><a href="#part-terms" id="toc-part-terms" class="nav-link" data-scroll-target="#part-terms">Terms used on this page</a>
+  <ul class="collapse">
+  <li><a href="#managed-spark-on-emr-and-glue" id="toc-managed-spark-on-emr-and-glue" class="nav-link" data-scroll-target="#managed-spark-on-emr-and-glue">Managed Spark on EMR and Glue</a></li>
+  <li><a href="#instances-and-billing" id="toc-instances-and-billing" class="nav-link" data-scroll-target="#instances-and-billing">Instances and billing</a></li>
+  <li><a href="#also-used-on-this-page" id="toc-also-used-on-this-page" class="nav-link" data-scroll-target="#also-used-on-this-page">Also used on this page</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">L7 review: Spark as a serverless service, EMR Serverless and AWS Glue: review copy</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<style>.rt{border-collapse:collapse;width:100%;table-layout:fixed;margin:.3rem 0 2rem;font-size:.92em}
+.rt td,.rt th{border:1px solid #ddd;padding:.3rem .45rem;vertical-align:top}.rt th{background:#f3f3f3;text-align:left}
+mark{background:#fff2a8}del{color:#b33;background:#fde}.rtnew{background:#e8c84a;border-radius:3px;padding:0 .4em;font-size:.8em}
+.rtnote{font-size:.85em;color:#555;margin:.2rem 0}.rtprose{border-left:4px solid #e8c84a;padding:.2rem .6rem;font-size:.9em;background:#fffdf3}</style>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Review copy, not for students. Under each question: every row or option with its key and feedback; <mark>highlighted</mark> words are new against the live page, <del>struck</del> words removed. Changed text outside the questions is repeated, highlighted, right after it.</p>
+</div>
+</div>
+<p>Numbers in the scenarios are made up for practice unless a price or an instance size is named. If you need to look up a term, the <a href="#part-terms">relevant vocabulary is below</a>.</p>
+<section id="part-layers-of-running-spark" class="level2">
+<h2 class="anchored" data-anchor-id="part-layers-of-running-spark">Layers of running Spark, with EMR Serverless</h2>
+<section id="q-who-does-which-part" class="level3">
+<h3 class="anchored" data-anchor-id="q-who-does-which-part">What does the team stop doing on a Glue job?</h3>
+<p>A team converts a city’s library loan records from CSV to Parquet every night. Today each night’s run on EMR on EC2 takes these steps:</p>
+<pre><code>1. create a cluster of 1 primary and 2 core m7g.xlarge nodes
+2. add their Python libraries with a bootstrap action
+3. submit their PySpark script
+4. terminate the cluster after the script finishes</code></pre>
+<div class="rtprose">changed: 1. create a cluster of 1 primary and 2 core m7g.xlarge nodes 2. add their Python libraries with a bootstrap action 3. submit their PySpark script 4. terminate the cluster <del>when it</del> <mark>after the script</mark> finishes</div>
+<p>They move the same script to an AWS Glue job.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## After the move to the Glue job, which of these does the team stop doing?
+
+1. [x] Terminating the cluster after the run
+    &gt; Glue starts the workers for each run and releases them at the end. AWS is responsible for releasing the workers after each run; the team does not terminate a cluster.
+1. [ ] Adding the libraries the script needs
+    &gt; On Glue, the team still supplies the script's libraries through `--additional-python-modules` instead of a bootstrap action.
+1. [ ] Choosing how many workers run the job
+    &gt; On Glue, the team still chooses a worker type and either a fixed count or auto scaling; with auto scaling, Glue adjusts the count up to a maximum the team sets.
+</div>
+<p class="rtnote">Stem: After the move to the Glue job, which of these does the team stop doing?</p>
+
+<table class="rt caption-top table">
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th" style="width: 17%">key or chip</th>
+<th data-quarto-table-cell-role="th" style="width: 30%">row or option</th>
+<th data-quarto-table-cell-role="th">feedback</th>
+</tr>
+<tr class="even">
+<td>✓ key</td>
+<td>Terminating the cluster after the run</td>
+<td>Glue starts the workers for each run and releases them at the <del>end, so</del> <mark>end. AWS is responsible for releasing</mark> the <del>cluster's lifetime is no longer</del> <mark>workers after each run;</mark> the <del>team's to manage.</del> <mark>team does not terminate a cluster.</mark></td>
+</tr>
+<tr class="odd">
+<td>✗</td>
+<td>Adding the libraries the script needs</td>
+<td><del>The</del> <mark>On Glue, the</mark> team still <del>does this on Glue: it</del> supplies the <mark>script's</mark> libraries <del>the script needs,</del> through `--additional-python-modules` instead of a bootstrap action.</td>
+</tr>
+<tr class="even">
+<td>✗</td>
+<td>Choosing how many workers run the job</td>
+<td><del>The</del> <mark>On Glue, the</mark> team still <del>does this on Glue: it</del> chooses a worker <del>type, then</del> <mark>type and either</mark> a fixed count or auto <mark>scaling; with auto</mark> scaling, <del>which lets</del> Glue <del>adjust</del> <mark>adjusts</mark> the count up to a maximum the team sets.</td>
+</tr>
+</tbody>
+</table>
+<p>Slide: 4</p>
+</section>
+<section id="q-who-sizes-an-emr-serverless-job-run" class="level3">
+<h3 class="anchored" data-anchor-id="q-who-sizes-an-emr-serverless-job-run">Who sizes an EMR Serverless job run?</h3>
+<p>A year of a city’s parking-meter payments is stored in 400 Parquet files on S3. A team sends EMR Serverless a PySpark script that summarises the payments, as a job run with default settings:</p>
+<div class="rtprose">changed: A year of a city's parking-meter payments <del>sits</del> <mark>is stored</mark> in 400 Parquet files on S3. A team sends EMR Serverless a PySpark script that summarises <del>them,</del> <mark>the payments,</mark> as a job run with default settings:</div>
+<pre><code>workers    4 vCPU, 16 GB each
+stage 1    reads the 400 files
+stage 2    a single task</code></pre>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## In this job run, who decides how many workers each stage gets?
+
+1. [x] EMR Serverless, stage by stage
+    &gt; With default settings the team sets nothing: each worker is 4 vCPU and 16 GB, and EMR Serverless adds and removes workers as each stage needs them. The team may set a worker size and a maximum count, but does not have to.
+1. [ ] Team, with a worker count in the job
+    &gt; EMR Serverless does not require a fixed worker count for this job. EMR Serverless can allocate more workers to the 400-file scan and fewer to the stage with one task.
+1. [ ] YARN on the primary node
+    &gt; On EMR on EC2, YARN allocates cluster resources from the primary node. EMR Serverless allocates workers as part of the service and does not expose a primary node to the team.
+</div>
+<p class="rtnote">Stem: In this job run, who decides how many workers each stage gets?</p>
+
+<table class="rt caption-top table">
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th" style="width: 17%">key or chip</th>
+<th data-quarto-table-cell-role="th" style="width: 30%">row or option</th>
+<th data-quarto-table-cell-role="th">feedback</th>
+</tr>
+<tr class="even">
+<td>✓ key</td>
+<td>EMR Serverless, stage by stage</td>
+<td><del>On EMR Serverless</del> <mark>With default settings</mark> the team sets <del>only the</del> <mark>nothing: each</mark> worker <del>size (here the default,</del> <mark>is</mark> 4 vCPU and 16 <del>GB),</del> <mark>GB,</mark> and <del>the service</del> <mark>EMR Serverless</mark> adds and removes workers as each stage needs them. <mark>The team may set a worker size and a maximum count, but does not have to.</mark></td>
+</tr>
+<tr class="odd">
+<td>✗</td>
+<td>Team, with a worker count in the job</td>
+<td>EMR Serverless does not require a fixed worker count for this job. <del>It</del> <mark>EMR Serverless</mark> can allocate more workers to the 400-file scan and fewer to the stage with one task.</td>
+</tr>
+<tr class="even">
+<td>✗</td>
+<td>YARN on the primary node</td>
+<td>On EMR on EC2, YARN allocates cluster resources from the primary node. EMR Serverless allocates workers as part of the service and does not expose a primary node to the team.</td>
+</tr>
+</tbody>
+</table>
+<p>Slide: 4</p>
+</section>
+</section>
+<section id="part-a-glue-session-underneath" class="level2">
+<h2 class="anchored" data-anchor-id="part-a-glue-session-underneath">Glue session underneath</h2>
+<section id="q-how-many-glue-workers" class="level3">
+<h3 class="anchored" data-anchor-id="q-how-many-glue-workers">How many Glue workers replace a cluster?</h3>
+<p>A team’s nightly PySpark job, submitted as an EMR step, summarises a year of toll-bridge crossings on an EMR on EC2 cluster, and the team is moving the PySpark job to AWS Glue. The Spark setup on each service:</p>
+<div class="rtprose">changed: A team's nightly PySpark <del>job</del> <mark>job, submitted as an EMR step,</mark> summarises a year of toll-bridge crossings on an EMR on EC2 cluster, and the team is moving <del>it</del> <mark>the PySpark job</mark> to <del>an</del> AWS <del>Glue job. This is how</del> <mark>Glue. The Spark setup on</mark> each <del>runs Spark:</del> <mark>service:</mark></div>
+<pre><code>EMR on EC2   1 primary + 4 core m7g.xlarge nodes
+             each core node hosts one executor, which runs 4 tasks at a time → 16 tasks at once
+AWS Glue     G.1X workers, 4 vCPU and 16 GB each
+             one worker hosts the Spark driver
+             every other worker hosts one executor with 4 cores, so 4 tasks at a time</code></pre>
+<div class="rtprose">changed: EMR on EC2 1 primary + 4 core m7g.xlarge nodes each core node <mark>hosts one executor, which</mark> runs <del>one executor with</del> 4 <del>cores</del> <mark>tasks at a time</mark> → 16 tasks at once AWS Glue G.1X workers, 4 vCPU and 16 GB each one worker <del>runs</del> <mark>hosts</mark> the Spark driver every other worker <del>runs</del> <mark>hosts</mark> one executor with 4 cores, so 4 tasks at a time</div>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## For the same 16 tasks at once, what should the Glue job's worker count (`%number_of_workers` in a notebook) be?
+
+1. [x] 5
+    &gt; One G.1X worker hosts the Spark driver, and each of the other four workers hosts one executor with 4 cores. The four executors can run 16 tasks at once.
+1. [ ] 2
+    &gt; With two workers, one hosts the driver and the other hosts one executor, so 4 tasks run at once, short of the 16 the job needs.
+1. [ ] 4
+    &gt; With four workers, one hosts the driver and the other three host executors, so 12 tasks run at once, short of the 16 the job needs. On EMR on EC2, an EMR step's driver runs on the primary node; Glue has no primary node, so the driver needs a worker of its own.
+1. [ ] 16
+    &gt; One of the 16 G.1X workers hosts the driver, leaving 15 workers that each host an executor with 4 cores. The 15 executors can run 15 × 4 = 60 tasks at once, while the required capacity is 16.
+</div>
+<p class="rtnote">Stem: For the same 16 tasks at once, what should the Glue job's worker count (`%number_of_workers` in a notebook) be?</p>
+
+<table class="rt caption-top table">
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th" style="width: 17%">key or chip</th>
+<th data-quarto-table-cell-role="th" style="width: 30%">row or option</th>
+<th data-quarto-table-cell-role="th">feedback</th>
+</tr>
+<tr class="even">
+<td>✓ key</td>
+<td>5</td>
+<td>One G.1X worker <del>runs</del> <mark>hosts</mark> the Spark driver, and each of the other four workers <del>runs</del> <mark>hosts</mark> one executor with 4 cores. <del>Those</del> <mark>The</mark> four executors can run 16 tasks at once.</td>
+</tr>
+<tr class="odd">
+<td>✗</td>
+<td>2</td>
+<td><del>Two workers give</del> <mark>With two workers,</mark> one <del>to</del> <mark>hosts</mark> the driver and <mark>the other hosts</mark> one executor, so 4 tasks <mark>run</mark> at once, short of the 16 the job needs.</td>
+</tr>
+<tr class="even">
+<td>✗</td>
+<td>4</td>
+<td><del>Four workers give</del> <mark>With four workers,</mark> one <del>to</del> <mark>hosts</mark> the driver and <mark>the other</mark> three <mark>host</mark> executors, so 12 tasks <mark>run</mark> at once, short of the 16 the job needs. <del>The</del> <mark>On EMR on EC2, an EMR step's driver runs on the primary node; Glue has no primary node, so the</mark> driver needs a worker of its <del>own: Glue has no primary node, which is where an EMR step's driver runs.</del> <mark>own.</mark></td>
+</tr>
+<tr class="odd">
+<td>✗</td>
+<td>16</td>
+<td>One of the 16 G.1X workers <del>runs</del> <mark>hosts</mark> the driver, leaving 15 workers that each <del>run</del> <mark>host</mark> an executor with 4 cores. The 15 executors can run 15 × 4 = 60 tasks at once, while the required capacity is 16.</td>
+</tr>
+</tbody>
+</table>
+<p>Slide: 9</p>
+</section>
+</section>
+<section id="part-who-starts-and-stops" class="level2">
+<h2 class="anchored" data-anchor-id="part-who-starts-and-stops">Who starts and stops a cluster or a session, and what each costs</h2>
+<section id="q-what-does-a-forgotten-session-cost" class="level3">
+<h3 class="anchored" data-anchor-id="q-what-does-a-forgotten-session-cost">What does a forgotten session cost?</h3>
+<p>An analyst explores museum visitor counts in an AWS Glue 5.1 notebook session in ca-central-1, billed at $0.44 per data processing unit (DPU) hour; a G.1X worker is 1 DPU. She started the session at 5 pm on Friday with these settings:</p>
+<pre><code>%worker_type G.1X
+%number_of_workers 5
+idle timeout              default (48 hours)
+every other setting       default</code></pre>
+<div class="rtprose">changed: %worker_type G.1X %number_of_workers 5 idle timeout default (48 hours) <del>session timeout default (48 hours)</del> every other setting default</div>
+<p>Her one cell finishes a minute later, and the idle timeout counts from about 5 pm. She does not run <code>%stop_session</code>, leaves the notebook open and comes back at 9 am on Monday.</p>
+<div class="rtprose">changed: Her one cell finishes a minute later, and <del>both timeouts count</del> <mark>the idle timeout counts</mark> from about 5 pm. She does not run `%stop_session`, leaves the notebook open and comes back at 9 am on Monday.</div>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## What does the session bill for compute between 5 pm Friday and 9 am Monday?
+
+1. [x] \$105.60
+    &gt; Glue allocates 5 DPUs (\$2.20 an hour) to the session until the session ends. With no `%stop_session`, the default idle timeout of 48 hours ends the session on Sunday at 5 pm: 48 × \$2.20.
+1. [ ] \$0.00
+    &gt; No cell runs during this period, but the 5 workers stay allocated to the session. Glue bills the session per second until the 48-hour idle timeout ends it on Sunday at 5 pm.
+1. [ ] \$2.20
+    &gt; \$2.20 is one hour at 5 DPUs, as if the bill stopped after an hour. Glue bills the session per second (1-minute minimum, about 4 cents here) until the 48-hour idle timeout ends it on Sunday at 5 pm.
+1. [ ] \$52.80
+    &gt; \$52.80 is 24 hours at 5 DPUs, as if the session ended after one day. Glue bills the session per second until the 48-hour idle timeout ends it on Sunday at 5 pm.
+</div>
+<p class="rtnote">Stem: What does the session bill for compute between 5 pm Friday and 9 am Monday?</p>
+
+<table class="rt caption-top table">
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th" style="width: 17%">key or chip</th>
+<th data-quarto-table-cell-role="th" style="width: 30%">row or option</th>
+<th data-quarto-table-cell-role="th">feedback</th>
+</tr>
+<tr class="even">
+<td>✓ key</td>
+<td>\$105.60</td>
+<td><del>The session keeps its</del> <mark>Glue allocates</mark> 5 DPUs (\$2.20 an hour) <del>while it exists.</del> <mark>to the session until the session ends.</mark> With no `%stop_session`, the default idle timeout of 48 hours ends <del>it</del> <mark>the session</mark> on Sunday at 5 pm: 48 × \$2.20.</td>
+</tr>
+<tr class="odd">
+<td>✗</td>
+<td>\$0.00</td>
+<td>No cell runs during this period, but the <del>session still holds its</del> 5 <del>workers.</del> <mark>workers stay allocated to the session.</mark> Glue bills the session per second until the 48-hour idle timeout ends it on Sunday at 5 pm.</td>
+</tr>
+<tr class="even">
+<td>✗</td>
+<td>\$2.20</td>
+<td><del>The one-minute minimum is the shortest billed session, and</del> \$2.20 is one hour at 5 <del>DPUs.</del> <mark>DPUs, as if the bill stopped after an hour.</mark> Glue bills the session per second <mark>(1-minute minimum, about 4 cents here)</mark> until the 48-hour idle timeout ends it on Sunday at 5 pm.</td>
+</tr>
+<tr class="odd">
+<td>✗</td>
+<td>\$52.80</td>
+<td><del>That</del> <mark>\$52.80</mark> is 24 hours at 5 DPUs, as if the session ended after one day. Glue bills the session per second until the 48-hour idle timeout ends it on Sunday at 5 pm.</td>
+</tr>
+</tbody>
+</table>
+<p>Slide: 9, 11</p>
+</section>
+<section id="q-which-way-costs-least-per-day" class="level3">
+<h3 class="anchored" data-anchor-id="q-which-way-costs-least-per-day">Which way costs least per day?</h3>
+<p>Every four hours, a job summarises the last four hours of wind-farm turbine readings: six runs a day, each with 10 minutes of work. The job can run on either setup below, and the Glue job’s start-up time can be ignored:</p>
+<div class="rtprose">changed: Every four hours, a job summarises the last four hours of wind-farm turbine readings: six runs a day, each with 10 minutes of work. <del>It</del> <mark>The job</mark> can run on either <del>of these,</del> <mark>setup below,</mark> and the Glue job's start-up time can be ignored:</div>
+<pre><code>EMR on EC2 cluster   1 primary + 2 core m7g.xlarge nodes
+                     $0.67 an hour, billed from launch until it is terminated
+                     5 minutes to launch
+AWS Glue 5.1 job     3 G.1X workers: 3 DPU × $0.44 = $1.32 an hour while it runs</code></pre>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## Which way costs least per day?
+
+1. [x] Cluster per run, terminated after
+    &gt; Each run includes 5 billed minutes for launch and 10 billed minutes for work. Across six runs, the billed time is 6 × 15 minutes = 1.5 hours, which costs about \$1.01 a day at \$0.67 an hour.
+1. [ ] One cluster, kept up all day
+    &gt; Keeping the cluster up avoids repeated launch waits, but AWS bills 24 hours × \$0.67 = \$16.08. The six runs use the cluster for only one hour.
+1. [ ] Glue job per run, on 3 G.1X workers
+    &gt; Glue bills only the 6 × 10 minutes = 1 hour of work, but at \$1.32 an hour, about twice the cluster's rate: \$1.32 a day against about \$1.01.
+</div>
+<p class="rtnote">Stem: Which way costs least per day?</p>
+
+<table class="rt caption-top table">
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th" style="width: 17%">key or chip</th>
+<th data-quarto-table-cell-role="th" style="width: 30%">row or option</th>
+<th data-quarto-table-cell-role="th">feedback</th>
+</tr>
+<tr class="even">
+<td>✓ key</td>
+<td>Cluster per run, terminated after</td>
+<td>Each run includes 5 billed minutes for launch and 10 billed minutes for work. Across six runs, <del>that</del> <mark>the billed time</mark> is 6 × 15 minutes = 1.5 hours, which costs about \$1.01 a day at \$0.67 an hour.</td>
+</tr>
+<tr class="odd">
+<td>✗</td>
+<td>One cluster, kept up all day</td>
+<td>Keeping the cluster up avoids repeated launch waits, but AWS bills 24 hours × \$0.67 = \$16.08. The six runs use the cluster for only one hour.</td>
+</tr>
+<tr class="even">
+<td>✗</td>
+<td>Glue job per run, on 3 G.1X workers</td>
+<td><del>It</del> <mark>Glue</mark> bills only the 6 × 10 minutes = 1 hour of work, but at \$1.32 an hour, about twice the cluster's rate: \$1.32 a day against about \$1.01.</td>
+</tr>
+</tbody>
+</table>
+<p>Slide: 10, 11</p>
+</section>
+</section>
+<section id="part-mixed" class="level2">
+<h2 class="anchored" data-anchor-id="part-mixed">Mixed: from earlier lectures</h2>
+<section id="q-which-node-type-for-extra-spot-capacity" class="level3">
+<h3 class="anchored" data-anchor-id="q-which-node-type-for-extra-spot-capacity">Which node type for extra spot capacity?</h3>
+<p>A team runs an EMR on EC2 cluster every day and plans a two-hour backfill of seismograph readings from S3 on the cluster:</p>
+<div class="rtprose">changed: A team runs an EMR on EC2 cluster every day and plans a two-hour backfill of seismograph readings from S3 on <del>it:</del> <mark>the cluster:</mark></div>
+<pre><code>daily cluster   1 primary + 2 core nodes, keeps some intermediate
+                results in HDFS
+extra nodes     4 more nodes, removed when the backfill ends</code></pre>
+<p>The team wants the 4 extra nodes rented as spot capacity; AWS can take the nodes back with two minutes’ notice.</p>
+<div class="rtprose">changed: The team wants the 4 extra nodes rented as spot <del>capacity, which</del> <mark>capacity;</mark> AWS can take <mark>the nodes</mark> back with two minutes' notice.</div>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## Which node type should the 4 extra nodes be?
+
+1. [x] Task nodes
+    &gt; Task nodes run executors but store no HDFS blocks, so AWS can take one back without removing HDFS data. Spark runs the affected Spark tasks again on other nodes to recreate any output that was stored on the reclaimed node's disk.
+1. [ ] Core nodes
+    &gt; Core nodes store HDFS blocks, so when AWS takes back a spot core node, AWS also removes the block copies stored on that node. Before the team can remove core nodes at the end, HDFS must copy their blocks to the remaining nodes. Here, core names the node's role; the number of CPU cores is a separate property.
+1. [ ] Primary nodes
+    &gt; This cluster has one primary node, which runs the services that allocate cluster resources and track HDFS blocks. The primary node runs no executors, so the 4 extra nodes for the backfill cannot be primary nodes.
+</div>
+<p class="rtnote">Stem: Which node type should the 4 extra nodes be?</p>
+
+<table class="rt caption-top table">
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th" style="width: 17%">key or chip</th>
+<th data-quarto-table-cell-role="th" style="width: 30%">row or option</th>
+<th data-quarto-table-cell-role="th">feedback</th>
+</tr>
+<tr class="even">
+<td>✓ key</td>
+<td>Task nodes</td>
+<td>Task nodes run executors but store no HDFS blocks, so AWS can take one back without removing HDFS data. Spark <del>reruns</del> <mark>runs the affected Spark</mark> tasks <mark>again</mark> on other nodes to recreate any <del>task</del> output that was stored on the reclaimed node's disk.</td>
+</tr>
+<tr class="odd">
+<td>✗</td>
+<td>Core nodes</td>
+<td>Core nodes store HDFS blocks, so when AWS takes back a spot core node, <del>it</del> <mark>AWS</mark> also removes the block copies stored on that node. <del>Removing</del> <mark>Before the team can remove</mark> core nodes at the <del>end</del> <mark>end, HDFS</mark> must <del>also wait while HDFS copies</del> <mark>copy</mark> their blocks to the remaining <del>nodes; here,</del> <mark>nodes. Here,</mark> core <del>identifies</del> <mark>names</mark> the node's <del>role, and</del> <mark>role;</mark> the number of CPU cores is a separate property.</td>
+</tr>
+<tr class="even">
+<td>✗</td>
+<td>Primary nodes</td>
+<td>This cluster has one primary node, which runs the services that allocate cluster resources and track HDFS blocks. <del>It does not run</del> <mark>The primary node runs no</mark> executors, so <del>it cannot provide</del> the 4 extra nodes for the <del>backfill.</del> <mark>backfill cannot be primary nodes.</mark></td>
+</tr>
+</tbody>
+</table>
+<p>Slide: L5 slide 18</p>
+<div class="rtprose">changed: Slide: <del>L5,</del> <mark>L5 slide</mark> 18</div>
+</section>
+</section>
+<section id="part-terms" class="level2">
+<h2 class="anchored" data-anchor-id="part-terms">Terms used on this page</h2>
+<p>From the <a href="https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/quiz">course flashcards</a>, grouped by topic. Practise the terms in <a href="https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/quiz">quiz mode</a>, or try the <a href="https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/match">match game</a>.</p>
+<div class="rtprose">changed: From the [course flashcards](https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/quiz), grouped by topic. Practise <del>them</del> <mark>the terms</mark> in [quiz mode](https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/quiz), or try the [match game](https://app.formative.com/practice/sets/6ac7acec7ae7374598123053/match).</div>
+<section id="managed-spark-on-emr-and-glue" class="level3">
+<h3 class="anchored" data-anchor-id="managed-spark-on-emr-and-glue">Managed Spark on EMR and Glue</h3>
+<p><strong>Amazon EMR.</strong> AWS’s managed service that launches a cluster of EC2 instances with Spark installed. You pay for the nodes from launch until you terminate the cluster.</p>
+<p><strong>AWS Glue.</strong> AWS’s managed Spark service with a visual job editor and table definitions: you choose a job’s worker type and number of workers, or let it scale them, and it starts the workers. A notebook session bills until you stop it, and its idle timeout is 48 hours by default.</p>
+<p><strong>Worker type (Glue).</strong> The size of each Glue worker, from G.1X (1 DPU: 4 vCPU, 16 GB) upward, such as G.2X at 2 DPUs. Together with the number of workers it defines a job’s capacity, while the service picks the hardware underneath.</p>
+<p><strong>DPU (Glue).</strong> Glue’s billing unit: 4 vCPU and 16 GB, the size of one G.1X worker, billed per second, with a 1-minute minimum, while a job runs or a session exists.</p>
+<p><strong>Primary node.</strong> The one EMR instance that runs the cluster manager and the HDFS name service. It runs no executors.</p>
+<p><strong>Core node.</strong> An EMR instance that runs executors and stores HDFS data. A role an instance plays in the cluster, not a Spark slot.</p>
+<p><strong>Task node.</strong> An optional EMR instance that runs executors and stores no HDFS data, so it can be removed or bought as spot capacity without losing HDFS data.</p>
+<p><strong>HDFS.</strong> A file system that splits files into blocks across a cluster’s core nodes’ disks. Its data is lost when the cluster terminates, so our inputs and outputs stay on S3.</p>
+</section>
+<section id="instances-and-billing" class="level3">
+<h3 class="anchored" data-anchor-id="instances-and-billing">Instances and billing</h3>
+<p><strong>Instance type.</strong> The size you pick when you launch an EC2 server: how many vCPUs and how much memory it has, how fast its network is, and whether it has its own local disk.</p>
+<p><strong>Spot instance.</strong> Spare EC2 capacity sold much cheaper than on-demand. AWS can take it back after a two-minute warning, so it suits work that can stop and restart.</p>
+<p><strong>Ephemeral infrastructure.</strong> A server or cluster created for one piece of work and deleted after it, so it bills only around that work. Our EMR clusters were launched for a run and terminated after.</p>
+<p><strong>Provisioned capacity.</strong> Compute you pay for while it is allocated to you, used or not. Unlike pay-per-use compute, its charge continues when nothing runs.</p>
+<p><strong>Usage-based billing.</strong> Charges for measured work, such as each request or each millisecond a function runs. They stop when nothing runs; stored data and logs still cost money.</p>
+<p><strong>Idle test.</strong> The question to ask of each compute charge: does it bill while nothing runs? If yes, it is provisioned capacity. Storage and logs are counted separately.</p>
+</section>
+<section id="also-used-on-this-page" class="level3">
+<h3 class="anchored" data-anchor-id="also-used-on-this-page">Also used on this page</h3>
+<p><strong>Driver (Spark).</strong> The program that coordinates a Spark application: it runs your code, builds the query plan and sends tasks to the executors.</p>
+<p><strong>Executor (Spark).</strong> A Spark program running on an EMR core or task node. It runs tasks and keeps their data in its memory or on the node’s disk.</p>
+<p><strong>Slot (Spark).</strong> One executor core, as room to run one task on one Spark partition at a time. An executor with 4 cores runs 4 tasks at once; our EMR nodes have one per vCPU.</p>
+<p><strong>Stage.</strong> A set of tasks Spark can run before rows have to move between partitions. Every task in it runs the same steps on a different partition.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
