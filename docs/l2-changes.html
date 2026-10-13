@@ -163,7 +163,7 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#part-object-storage-s3" id="toc-part-object-storage-s3" class="nav-link active" data-scroll-target="#part-object-storage-s3">Object storage: S3</a>
   <ul class="collapse">
-  <li><a href="#q-buoy-readings-in-s3" id="toc-q-buoy-readings-in-s3" class="nav-link" data-scroll-target="#q-buoy-readings-in-s3">Buoy readings in S3: object names</a></li>
+  <li><a href="#q-buoy-readings-in-s3" id="toc-q-buoy-readings-in-s3" class="nav-link" data-scroll-target="#q-buoy-readings-in-s3">Buoy readings in S3: object names *</a></li>
   </ul></li>
   <li><a href="#part-the-time-shape-of-demand" id="toc-part-the-time-shape-of-demand" class="nav-link" data-scroll-target="#part-the-time-shape-of-demand">Time shape of demand</a>
   <ul class="collapse">
@@ -171,7 +171,7 @@ ul.task-list li input[type="checkbox"] {
   </ul></li>
   <li><a href="#part-ec2-renting-an-instance" id="toc-part-ec2-renting-an-instance" class="nav-link" data-scroll-target="#part-ec2-renting-an-instance">EC2: renting an instance</a>
   <ul class="collapse">
-  <li><a href="#q-setting-up-an-instance-for-the-harvest-records" id="toc-q-setting-up-an-instance-for-the-harvest-records" class="nav-link" data-scroll-target="#q-setting-up-an-instance-for-the-harvest-records">Setting up an instance for the harvest records</a></li>
+  <li><a href="#q-setting-up-an-instance-for-the-harvest-records" id="toc-q-setting-up-an-instance-for-the-harvest-records" class="nav-link" data-scroll-target="#q-setting-up-an-instance-for-the-harvest-records">Setting up an instance for the harvest records *</a></li>
   <li><a href="#q-who-handles-each-task" id="toc-q-who-handles-each-task" class="nav-link" data-scroll-target="#q-who-handles-each-task">Who is responsible for each task, on an instance and on a function?</a></li>
   </ul></li>
   <li><a href="#part-lambda" id="toc-part-lambda" class="nav-link" data-scroll-target="#part-lambda">Lambda: a function that runs only when called</a>
@@ -232,10 +232,12 @@ Note
 </div>
 </div>
 <p>Numbers in the scenarios are made up for practice unless a price or an instance size is named. If you need to look up a term, the <a href="#part-terms">relevant vocabulary is below</a>.</p>
+<p>* Not asked on the midterm; good practice for the course.</p>
+<div class="rtprose"><span class="rtnew">new text</span> \* Not asked on the midterm; good practice for the course.</div>
 <section id="part-object-storage-s3" class="level2">
 <h2 class="anchored" data-anchor-id="part-object-storage-s3">Object storage: S3</h2>
 <section id="q-buoy-readings-in-s3" class="level3">
-<h3 class="anchored" data-anchor-id="q-buoy-readings-in-s3">Buoy readings in S3: object names</h3>
+<h3 class="anchored" data-anchor-id="q-buoy-readings-in-s3">Buoy readings in S3: object names *</h3>
 <p>An ocean-research lab keeps a year of buoy readings in the S3 bucket <code>buoy-lab</code>, one Parquet object per buoy per day, 200 GB in all. The object keys have the form shown below:</p>
 <div class="rtprose">changed: An ocean-research lab keeps a year of buoy readings in the S3 bucket `buoy-lab`, one Parquet object per buoy per day, 200 GB in all. The object keys <del>look like this:</del> <mark>have the form shown below:</mark></div>
 <pre><code>readings/2025-01-01/buoy-04.parquet
@@ -376,7 +378,7 @@ shuffle_answers: true
 <section id="part-ec2-renting-an-instance" class="level2">
 <h2 class="anchored" data-anchor-id="part-ec2-renting-an-instance">EC2: renting an instance</h2>
 <section id="q-setting-up-an-instance-for-the-harvest-records" class="level3">
-<h3 class="anchored" data-anchor-id="q-setting-up-an-instance-for-the-harvest-records">Setting up an instance for the harvest records</h3>
+<h3 class="anchored" data-anchor-id="q-setting-up-an-instance-for-the-harvest-records">Setting up an instance for the harvest records *</h3>
 <p>A vineyard’s analysts keep their 2025 harvest records as Parquet files in the S3 bucket <code>vineyard-harvest</code>. They launch one EC2 instance to run a FastAPI service that answers questions about the harvest, with these requirements.</p>
 <div class="quizdown">
 ---

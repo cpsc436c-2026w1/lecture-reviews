@@ -164,7 +164,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#part-layers-of-running-spark" id="toc-part-layers-of-running-spark" class="nav-link active" data-scroll-target="#part-layers-of-running-spark">Layers of running Spark, with EMR Serverless</a>
   <ul class="collapse">
   <li><a href="#q-who-does-which-part" id="toc-q-who-does-which-part" class="nav-link" data-scroll-target="#q-who-does-which-part">What does the team stop doing on a Glue job?</a></li>
-  <li><a href="#q-who-sizes-an-emr-serverless-job-run" id="toc-q-who-sizes-an-emr-serverless-job-run" class="nav-link" data-scroll-target="#q-who-sizes-an-emr-serverless-job-run">Who sizes an EMR Serverless job run?</a></li>
+  <li><a href="#q-who-sizes-an-emr-serverless-job-run" id="toc-q-who-sizes-an-emr-serverless-job-run" class="nav-link" data-scroll-target="#q-who-sizes-an-emr-serverless-job-run">Who sizes an EMR Serverless job run? *</a></li>
   </ul></li>
   <li><a href="#part-a-glue-session-underneath" id="toc-part-a-glue-session-underneath" class="nav-link" data-scroll-target="#part-a-glue-session-underneath">Glue session underneath</a>
   <ul class="collapse">
@@ -172,12 +172,12 @@ ul.task-list li input[type="checkbox"] {
   </ul></li>
   <li><a href="#part-who-starts-and-stops" id="toc-part-who-starts-and-stops" class="nav-link" data-scroll-target="#part-who-starts-and-stops">Who starts and stops a cluster or a session, and what each costs</a>
   <ul class="collapse">
-  <li><a href="#q-what-does-a-forgotten-session-cost" id="toc-q-what-does-a-forgotten-session-cost" class="nav-link" data-scroll-target="#q-what-does-a-forgotten-session-cost">What does a forgotten session cost?</a></li>
-  <li><a href="#q-which-way-costs-least-per-day" id="toc-q-which-way-costs-least-per-day" class="nav-link" data-scroll-target="#q-which-way-costs-least-per-day">Which way costs least per day?</a></li>
+  <li><a href="#q-what-does-a-forgotten-session-cost" id="toc-q-what-does-a-forgotten-session-cost" class="nav-link" data-scroll-target="#q-what-does-a-forgotten-session-cost">What does a forgotten session cost? *</a></li>
+  <li><a href="#q-which-way-costs-least-per-day" id="toc-q-which-way-costs-least-per-day" class="nav-link" data-scroll-target="#q-which-way-costs-least-per-day">Which way costs least per day? *</a></li>
   </ul></li>
   <li><a href="#part-mixed" id="toc-part-mixed" class="nav-link" data-scroll-target="#part-mixed">Mixed: from earlier lectures</a>
   <ul class="collapse">
-  <li><a href="#q-which-node-type-for-extra-spot-capacity" id="toc-q-which-node-type-for-extra-spot-capacity" class="nav-link" data-scroll-target="#q-which-node-type-for-extra-spot-capacity">Which node type for extra spot capacity?</a></li>
+  <li><a href="#q-which-node-type-for-extra-spot-capacity" id="toc-q-which-node-type-for-extra-spot-capacity" class="nav-link" data-scroll-target="#q-which-node-type-for-extra-spot-capacity">Which node type for extra spot capacity? *</a></li>
   </ul></li>
   <li><a href="#part-terms" id="toc-part-terms" class="nav-link" data-scroll-target="#part-terms">Terms used on this page</a>
   <ul class="collapse">
@@ -232,6 +232,8 @@ Note
 </div>
 </div>
 <p>Numbers in the scenarios are made up for practice unless a price or an instance size is named. If you need to look up a term, the <a href="#part-terms">relevant vocabulary is below</a>.</p>
+<p>* Not asked on the midterm; good practice for the course.</p>
+<div class="rtprose"><span class="rtnew">new text</span> \* Not asked on the midterm; good practice for the course.</div>
 <section id="part-layers-of-running-spark" class="level2">
 <h2 class="anchored" data-anchor-id="part-layers-of-running-spark">Layers of running Spark, with EMR Serverless</h2>
 <section id="q-who-does-which-part" class="level3">
@@ -286,7 +288,7 @@ shuffle_answers: true
 <p>Slide: 4</p>
 </section>
 <section id="q-who-sizes-an-emr-serverless-job-run" class="level3">
-<h3 class="anchored" data-anchor-id="q-who-sizes-an-emr-serverless-job-run">Who sizes an EMR Serverless job run?</h3>
+<h3 class="anchored" data-anchor-id="q-who-sizes-an-emr-serverless-job-run">Who sizes an EMR Serverless job run? *</h3>
 <p>A year of a city’s parking-meter payments is stored in 400 Parquet files on S3. A team sends EMR Serverless a PySpark script that summarises the payments, as a job run with default settings:</p>
 <div class="rtprose">changed: A year of a city's parking-meter payments <del>sits</del> <mark>is stored</mark> in 400 Parquet files on S3. A team sends EMR Serverless a PySpark script that summarises <del>them,</del> <mark>the payments,</mark> as a job run with default settings:</div>
 <pre><code>workers    4 vCPU, 16 GB each
@@ -400,7 +402,7 @@ shuffle_answers: true
 <section id="part-who-starts-and-stops" class="level2">
 <h2 class="anchored" data-anchor-id="part-who-starts-and-stops">Who starts and stops a cluster or a session, and what each costs</h2>
 <section id="q-what-does-a-forgotten-session-cost" class="level3">
-<h3 class="anchored" data-anchor-id="q-what-does-a-forgotten-session-cost">What does a forgotten session cost?</h3>
+<h3 class="anchored" data-anchor-id="q-what-does-a-forgotten-session-cost">What does a forgotten session cost? *</h3>
 <p>An analyst explores museum visitor counts in an AWS Glue 5.1 notebook session in ca-central-1, billed at $0.44 per data processing unit (DPU) hour; a G.1X worker is 1 DPU. She started the session at 5 pm on Friday with these settings:</p>
 <pre><code>%worker_type G.1X
 %number_of_workers 5
@@ -459,7 +461,7 @@ shuffle_answers: true
 <p>Slide: 9, 11</p>
 </section>
 <section id="q-which-way-costs-least-per-day" class="level3">
-<h3 class="anchored" data-anchor-id="q-which-way-costs-least-per-day">Which way costs least per day?</h3>
+<h3 class="anchored" data-anchor-id="q-which-way-costs-least-per-day">Which way costs least per day? *</h3>
 <p>Every four hours, a job summarises the last four hours of wind-farm turbine readings: six runs a day, each with 10 minutes of work. The job can run on either setup below, and the Glue job’s start-up time can be ignored:</p>
 <div class="rtprose">changed: Every four hours, a job summarises the last four hours of wind-farm turbine readings: six runs a day, each with 10 minutes of work. <del>It</del> <mark>The job</mark> can run on either <del>of these,</del> <mark>setup below,</mark> and the Glue job's start-up time can be ignored:</div>
 <pre><code>EMR on EC2 cluster   1 primary + 2 core m7g.xlarge nodes
@@ -512,7 +514,7 @@ shuffle_answers: true
 <section id="part-mixed" class="level2">
 <h2 class="anchored" data-anchor-id="part-mixed">Mixed: from earlier lectures</h2>
 <section id="q-which-node-type-for-extra-spot-capacity" class="level3">
-<h3 class="anchored" data-anchor-id="q-which-node-type-for-extra-spot-capacity">Which node type for extra spot capacity?</h3>
+<h3 class="anchored" data-anchor-id="q-which-node-type-for-extra-spot-capacity">Which node type for extra spot capacity? *</h3>
 <p>A team runs an EMR on EC2 cluster every day and plans a two-hour backfill of seismograph readings from S3 on the cluster:</p>
 <div class="rtprose">changed: A team runs an EMR on EC2 cluster every day and plans a two-hour backfill of seismograph readings from S3 on <del>it:</del> <mark>the cluster:</mark></div>
 <pre><code>daily cluster   1 primary + 2 core nodes, keeps some intermediate

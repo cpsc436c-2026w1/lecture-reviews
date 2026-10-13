@@ -237,6 +237,8 @@ Note
 </div>
 <p>The scenarios follow the lecture’s worked example and its measured runs, except the spill scenario in the last part, whose numbers are made up for practice. If you need to look up a term, the <a href="#part-terms">relevant vocabulary is below</a>.</p>
 <div class="rtprose">changed: The scenarios follow the lecture's worked example and its measured <del>runs;</del> <mark>runs, except</mark> the <del>numbers</del> <mark>spill scenario</mark> in the last <del>part</del> <mark>part, whose numbers</mark> are made up for practice. If you need to look up a term, the [relevant vocabulary is below](#part-terms).</div>
+<p>* Not asked on the midterm; good practice for the course.</p>
+<div class="rtprose"><span class="rtnew">new text</span> \* Not asked on the midterm; good practice for the course.</div>
 <section id="part-how-spark-runs-our-query" class="level2">
 <h2 class="anchored" data-anchor-id="part-how-spark-runs-our-query">How Spark runs our query</h2>
 <section id="q-which-steps-can-a-task-do-on-its-own-partition" class="level3">
@@ -342,7 +344,7 @@ shuffle_answers: true
 1. [x] Rows for a task on another node
     &gt; The task on node 1 wrote 5 rows for the stage-2 task on node 2, so those 367 B went over the network. If the stage-2 task had run on node 1, those rows would not have crossed the network.
 
-## In the June 2012 run, when could the stage-2 task start?
+## In the June 2012 run, when could the stage-2 task start? \*
 
 1. [ ] As soon as the task with the June 2012 trips had written its 5 rows
     &gt; Starting stage 2 after the one task with June 2012 trips assumes Spark knows where the rows are. Spark cannot know that the other 51 tasks will add nothing until they finish, so every task of stage 1 must end first.
@@ -369,7 +371,7 @@ shuffle_answers: true
 1. [ ] In the driver's memory
     &gt; Picking the driver assumes the driver receives and passes on the partial rows. The driver plans the stages and receives only the 5 result rows from `collect()`; the stage-2 task fetched the partial rows from node 1 directly.
 </div>
-<p class="rtnote">Stem: In the June 2012 run, what moves over the network in the `Exchange` (shuffle)? In the June 2012 run, when could the stage-2 task start? Spark planned 1000 shuffle partitions for stage 2 of the June 2012 query. What decides which of them gets a row? <mark>In the June 2012 run, where were the 5 partial rows stored between stage 1 and stage 2?</mark></p>
+<p class="rtnote">Stem: In the June 2012 run, what moves over the network in the `Exchange` (shuffle)? In the June 2012 run, when could the stage-2 task start? <mark>\*</mark> Spark planned 1000 shuffle partitions for stage 2 of the June 2012 query. What decides which of them gets a row? <mark>In the June 2012 run, where were the 5 partial rows stored between stage 1 and stage 2?</mark></p>
 
 <table class="rt caption-top table">
 <tbody>

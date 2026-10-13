@@ -163,7 +163,7 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#part-how-spark-divides-and-coordinates-the-work" id="toc-part-how-spark-divides-and-coordinates-the-work" class="nav-link active" data-scroll-target="#part-how-spark-divides-and-coordinates-the-work">How Spark divides and coordinates the work</a>
   <ul class="collapse">
-  <li><a href="#q-what-does-spark-run-again-when-a-core-node-is-lost" id="toc-q-what-does-spark-run-again-when-a-core-node-is-lost" class="nav-link" data-scroll-target="#q-what-does-spark-run-again-when-a-core-node-is-lost">What does Spark run again when a core node is lost?</a></li>
+  <li><a href="#q-what-does-spark-run-again-when-a-core-node-is-lost" id="toc-q-what-does-spark-run-again-when-a-core-node-is-lost" class="nav-link" data-scroll-target="#q-what-does-spark-run-again-when-a-core-node-is-lost">What does Spark run again when a core node is lost? *</a></li>
   </ul></li>
   <li><a href="#part-amazon-emr" id="toc-part-amazon-emr" class="nav-link" data-scroll-target="#part-amazon-emr">Amazon EMR</a>
   <ul class="collapse">
@@ -232,10 +232,12 @@ Note
 </div>
 </div>
 <p>Numbers in the scenarios are made up for practice unless a price or an instance size is named. If you need to look up a term, the <a href="#part-terms">relevant vocabulary is below</a>.</p>
+<p>* Not asked on the midterm; good practice for the course.</p>
+<div class="rtprose"><span class="rtnew">new text</span> \* Not asked on the midterm; good practice for the course.</div>
 <section id="part-how-spark-divides-and-coordinates-the-work" class="level2">
 <h2 class="anchored" data-anchor-id="part-how-spark-divides-and-coordinates-the-work">How Spark divides and coordinates the work</h2>
 <section id="q-what-does-spark-run-again-when-a-core-node-is-lost" class="level3">
-<h3 class="anchored" data-anchor-id="q-what-does-spark-run-again-when-a-core-node-is-lost">What does Spark run again when a core node is lost?</h3>
+<h3 class="anchored" data-anchor-id="q-what-does-spark-run-again-when-a-core-node-is-lost">What does Spark run again when a core node is lost? *</h3>
 <p>A Spark query over a year of lift-gate scans in S3 counts the scans per gate, so its scan stage is followed by an <code>Exchange</code> (shuffle). The query runs on an EMR cluster of 1 primary and 2 core nodes, all m7g.xlarge, with the driver on core node 1. Each core node has an executor, a process that runs 4 tasks at a time (8 slots in total). The query’s scan stage has 36 tasks, each reading one Spark partition of the input: one or more byte ranges of the files in S3. The task counts just before the failure were:</p>
 <div class="rtprose">changed: A Spark query over a year of lift-gate scans in S3 counts the scans per gate, so its scan stage is followed by an <del>exchange. It</del> <mark>`Exchange` (shuffle). The query</mark> runs on an EMR cluster of 1 primary and 2 core nodes, all m7g.xlarge, with the driver on core node 1. Each core node has an executor, a process that runs 4 tasks at a time (8 slots in total). The query's scan stage has 36 tasks, each reading one <del>piece</del> <mark>Spark partition</mark> of the <del>input. This is</del> <mark>input: one or more byte ranges of</mark> the <del>snapshot of what the cluster had run</del> <mark>files in S3. The task counts just</mark> before the <del>failure:</del> <mark>failure were:</mark></div>
 <pre><code>scan stage, 36 tasks      finished   running   not started

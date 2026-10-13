@@ -163,7 +163,7 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#part-data-larger-than-memory" id="toc-part-data-larger-than-memory" class="nav-link active" data-scroll-target="#part-data-larger-than-memory">Data larger than memory</a>
   <ul class="collapse">
-  <li><a href="#q-which-ways-of-reading-the-file-stay-within-memory" id="toc-q-which-ways-of-reading-the-file-stay-within-memory" class="nav-link" data-scroll-target="#q-which-ways-of-reading-the-file-stay-within-memory">Which ways of reading the file stay within 32 GB of memory?</a></li>
+  <li><a href="#q-which-ways-of-reading-the-file-stay-within-memory" id="toc-q-which-ways-of-reading-the-file-stay-within-memory" class="nav-link" data-scroll-target="#q-which-ways-of-reading-the-file-stay-within-memory">Which ways of reading the file stay within 32 GB of memory? *</a></li>
   </ul></li>
   <li><a href="#part-parquet-on-s3" id="toc-part-parquet-on-s3" class="nav-link" data-scroll-target="#part-parquet-on-s3">Parquet on S3: reading only what you need</a>
   <ul class="collapse">
@@ -171,11 +171,11 @@ ul.task-list li input[type="checkbox"] {
   </ul></li>
   <li><a href="#part-pattern-of-use" id="toc-part-pattern-of-use" class="nav-link" data-scroll-target="#part-pattern-of-use">Pattern of use</a>
   <ul class="collapse">
-  <li><a href="#q-which-resource-is-the-bottleneck-of-each-job" id="toc-q-which-resource-is-the-bottleneck-of-each-job" class="nav-link" data-scroll-target="#q-which-resource-is-the-bottleneck-of-each-job">Which resource is the bottleneck of each job?</a></li>
+  <li><a href="#q-which-resource-is-the-bottleneck-of-each-job" id="toc-q-which-resource-is-the-bottleneck-of-each-job" class="nav-link" data-scroll-target="#q-which-resource-is-the-bottleneck-of-each-job">Which resource is the bottleneck of each job? *</a></li>
   </ul></li>
   <li><a href="#part-cost-granularity" id="toc-part-cost-granularity" class="nav-link" data-scroll-target="#part-cost-granularity">Cost granularity</a>
   <ul class="collapse">
-  <li><a href="#q-which-is-true-of-running-the-weekly-job-on-the-larger-instance" id="toc-q-which-is-true-of-running-the-weekly-job-on-the-larger-instance" class="nav-link" data-scroll-target="#q-which-is-true-of-running-the-weekly-job-on-the-larger-instance">How does the cost of one weekly run compare?</a></li>
+  <li><a href="#q-which-is-true-of-running-the-weekly-job-on-the-larger-instance" id="toc-q-which-is-true-of-running-the-weekly-job-on-the-larger-instance" class="nav-link" data-scroll-target="#q-which-is-true-of-running-the-weekly-job-on-the-larger-instance">How does the cost of one weekly run compare? *</a></li>
   </ul></li>
   <li><a href="#part-who-runs-what" id="toc-part-who-runs-what" class="nav-link" data-scroll-target="#part-who-runs-what">Who is responsible for what</a>
   <ul class="collapse">
@@ -235,10 +235,12 @@ Note
 </div>
 </div>
 <p>Numbers in the scenarios are made up for practice unless a price or an instance size is named. If you need to look up a term, the <a href="#part-terms">relevant vocabulary is below</a>.</p>
+<p>* Not asked on the midterm; good practice for the course.</p>
+<div class="rtprose"><span class="rtnew">new text</span> \* Not asked on the midterm; good practice for the course.</div>
 <section id="part-data-larger-than-memory" class="level2">
 <h2 class="anchored" data-anchor-id="part-data-larger-than-memory">Data larger than memory</h2>
 <section id="q-which-ways-of-reading-the-file-stay-within-memory" class="level3">
-<h3 class="anchored" data-anchor-id="q-which-ways-of-reading-the-file-stay-within-memory">Which ways of reading the file stay within 32 GB of memory?</h3>
+<h3 class="anchored" data-anchor-id="q-which-ways-of-reading-the-file-stay-within-memory">Which ways of reading the file stay within 32 GB of memory? *</h3>
 <p>An online bookshop exports its orders for January 2020 to December 2025 as one CSV file of 24 GB, with 30 columns. An analyst wants the number of orders and the average order value per country for March 2024. The analyst’s laptop has 32 GB of memory, 8 cores and an SSD with 500 GB free. The analyst works in pandas 2, the version before 3.0.</p>
 <div class="rtprose">changed: An online bookshop exports its orders for January 2020 to December 2025 as one CSV file of 24 GB, with 30 columns. An analyst wants the number of orders and the average order value per country for March 2024. The analyst's laptop has 32 GB of memory, 8 cores and an SSD with 500 GB free. <mark>The analyst works in pandas 2, the version before 3.0.</mark></div>
 <div class="quizdown">
@@ -409,7 +411,7 @@ shuffle_answers: true
 <section id="part-pattern-of-use" class="level2">
 <h2 class="anchored" data-anchor-id="part-pattern-of-use">Pattern of use</h2>
 <section id="q-which-resource-is-the-bottleneck-of-each-job" class="level3">
-<h3 class="anchored" data-anchor-id="q-which-resource-is-the-bottleneck-of-each-job">Which resource is the bottleneck of each job?</h3>
+<h3 class="anchored" data-anchor-id="q-which-resource-is-the-bottleneck-of-each-job">Which resource is the bottleneck of each job? *</h3>
 <p>Each job below runs on a laptop with this setup:</p>
 <pre><code>memory     16 GB
 compute    8 cores and a GPU
@@ -489,7 +491,7 @@ shuffle_answers: true
 <section id="part-cost-granularity" class="level2">
 <h2 class="anchored" data-anchor-id="part-cost-granularity">Cost granularity</h2>
 <section id="q-which-is-true-of-running-the-weekly-job-on-the-larger-instance" class="level3">
-<h3 class="anchored" data-anchor-id="q-which-is-true-of-running-the-weekly-job-on-the-larger-instance">How does the cost of one weekly run compare?</h3>
+<h3 class="anchored" data-anchor-id="q-which-is-true-of-running-the-weekly-job-on-the-larger-instance">How does the cost of one weekly run compare? *</h3>
 <p>A pharmacy chain runs a weekly report over 40 GB of prescription records. Both instances below are in ca-central-1 and are billed per second, and each instance is terminated when the report is written:</p>
 <div class="rtprose">changed: A pharmacy chain runs a weekly report over 40 GB of prescription records. Both instances below <del>bill</del> <mark>are in ca-central-1 and are billed</mark> per <del>second while they run,</del> <mark>second,</mark> and <del>the</del> <mark>each</mark> instance is terminated when the report is written:</div>
 <pre><code>m6a.xlarge     4 vCPU, 16 GiB    $0.1926 an hour

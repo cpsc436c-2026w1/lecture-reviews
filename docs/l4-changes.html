@@ -170,12 +170,12 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#part-scaling-out" id="toc-part-scaling-out" class="nav-link" data-scroll-target="#part-scaling-out">Scaling out: more nodes, and a network between them</a>
   <ul class="collapse">
   <li><a href="#q-which-first-change-cuts-the-daily-querys-time-most" id="toc-q-which-first-change-cuts-the-daily-querys-time-most" class="nav-link" data-scroll-target="#q-which-first-change-cuts-the-daily-querys-time-most">Which first change cuts the daily query’s time most?</a></li>
-  <li><a href="#q-which-node-type-should-they-add" id="toc-q-which-node-type-should-they-add" class="nav-link" data-scroll-target="#q-which-node-type-should-they-add">Which node type should the team add for this job?</a></li>
-  <li><a href="#q-after-how-many-queries-has-the-rewrite-paid-back" id="toc-q-after-how-many-queries-has-the-rewrite-paid-back" class="nav-link" data-scroll-target="#q-after-how-many-queries-has-the-rewrite-paid-back">After how many queries has the rewrite paid back?</a></li>
+  <li><a href="#q-which-node-type-should-they-add" id="toc-q-which-node-type-should-they-add" class="nav-link" data-scroll-target="#q-which-node-type-should-they-add">Which node type should the team add for this job? *</a></li>
+  <li><a href="#q-after-how-many-queries-has-the-rewrite-paid-back" id="toc-q-after-how-many-queries-has-the-rewrite-paid-back" class="nav-link" data-scroll-target="#q-after-how-many-queries-has-the-rewrite-paid-back">After how many queries has the rewrite paid back? *</a></li>
   </ul></li>
   <li><a href="#part-the-case" id="toc-part-the-case" class="nav-link" data-scroll-target="#part-the-case">Case (A2): Best model search for the taxi data</a>
   <ul class="collapse">
-  <li><a href="#q-scale-up-scale-out-or-neither" id="toc-q-scale-up-scale-out-or-neither" class="nav-link" data-scroll-target="#q-scale-up-scale-out-or-neither">Scale up, scale out, or neither?</a></li>
+  <li><a href="#q-scale-up-scale-out-or-neither" id="toc-q-scale-up-scale-out-or-neither" class="nav-link" data-scroll-target="#q-scale-up-scale-out-or-neither">Scale up, scale out, or neither? *</a></li>
   </ul></li>
   <li><a href="#part-mixed" id="toc-part-mixed" class="nav-link" data-scroll-target="#part-mixed">Mixed: from L1–L3</a>
   <ul class="collapse">
@@ -235,6 +235,8 @@ Note
 </div>
 </div>
 <p>Numbers in the scenarios are made up for practice unless a price or an instance size is named. If you need to look up a term, the <a href="#part-terms">relevant vocabulary is below</a>.</p>
+<p>* Not asked on the midterm; good practice for the course.</p>
+<div class="rtprose"><span class="rtnew">new text</span> \* Not asked on the midterm; good practice for the course.</div>
 <section id="part-storage-side" class="level2">
 <h2 class="anchored" data-anchor-id="part-storage-side">Storage side of scaling up</h2>
 <section id="q-what-does-each-filter-condition-make-spark-read" class="level3">
@@ -492,7 +494,7 @@ shuffle_answers: true
 <div class="rtprose">changed: Slide: 3, 24, <del>30</del> <mark>30, L2 18</mark></div>
 </section>
 <section id="q-which-node-type-should-they-add" class="level3">
-<h3 class="anchored" data-anchor-id="q-which-node-type-should-they-add">Which node type should the team add for this job?</h3>
+<h3 class="anchored" data-anchor-id="q-which-node-type-should-they-add">Which node type should the team add for this job? *</h3>
 <p>An EMR cluster with one primary node and two core nodes runs a long Spark job that reads its input from S3 and writes its results back to S3. To finish the job sooner, the team wants to add nodes for it and remove them soon afterwards, without losing any data the cluster stores.</p>
 <div class="rtprose">changed: An EMR cluster with one primary node and two core nodes runs a long Spark job that reads its input from S3 and writes its results back to S3. To <del>make</del> <mark>finish</mark> the job <del>finish</del> sooner, the team <del>that runs it</del> wants to add nodes for <del>this job</del> <mark>it</mark> and remove them <del>quickly</del> <mark>soon</mark> afterwards, without losing any data the cluster stores.</div>
 <div class="quizdown">
@@ -539,7 +541,7 @@ shuffle_answers: true
 <div class="rtprose">changed: Slide: <del>29</del> <mark>29, L5 18</mark></div>
 </section>
 <section id="q-after-how-many-queries-has-the-rewrite-paid-back" class="level3">
-<h3 class="anchored" data-anchor-id="q-after-how-many-queries-has-the-rewrite-paid-back">After how many queries has the rewrite paid back?</h3>
+<h3 class="anchored" data-anchor-id="q-after-how-many-queries-has-the-rewrite-paid-back">After how many queries has the rewrite paid back? *</h3>
 <p>Vancouver publishes its Van311 non-emergency service requests as open data. A team keeps five years of them in S3 as one CSV file per year, and a weekly query reads them all:</p>
 <pre><code>s3://van-311/requests/
 ├── 2021.csv
@@ -599,7 +601,7 @@ shuffle_answers: true
 <section id="part-the-case" class="level2">
 <h2 class="anchored" data-anchor-id="part-the-case">Case (A2): Best model search for the taxi data</h2>
 <section id="q-scale-up-scale-out-or-neither" class="level3">
-<h3 class="anchored" data-anchor-id="q-scale-up-scale-out-or-neither">Scale up, scale out, or neither?</h3>
+<h3 class="anchored" data-anchor-id="q-scale-up-scale-out-or-neither">Scale up, scale out, or neither? *</h3>
 <p>Each workload below runs today on one EC2 instance, an m6a.large (2 vCPU, 8 GiB of RAM), unless the row says otherwise. The lecture named these moves for a workload on one instance:</p>
 <pre><code>scale up    replace the instance with a larger one
             (more vCPUs, RAM and network on one instance)
