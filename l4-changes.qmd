@@ -26,6 +26,29 @@ Numbers in the scenarios are made up for practice unless a price or an instance 
 
 ## Storage side of scaling up {#part-storage-side}
 
+::: {.callout-warning}
+## Two open concerns on this question (from Sol's blind solve, 2026-10-14)
+
+Sol solved the updated question without the key and chose our key on all six rows. Two points remain debatable.
+
+**1. `branch_id = 17` and `patron_id = 40213`: is "every row group read" also defensible?** Sol picked "some row groups
+may be skipped" for both, but noted that "every row group read" holds if every row group's range happens to include
+the value, and the text does not give the ranges.
+
+- *Keep as is:* the word "may" in the chip covers the uncertainty; the feedback explains when a group is skipped.
+- *Tighten `branch_id`:* give the number of branches, so sorted groups cannot all contain 17:
+  "Inside a file the rows are sorted by `branch_id` <mark>(the library has 40 branches)</mark>; …"
+- `patron_id` stays "may be skipped" either way: unsorted ids can put 40213 in every range or not.
+
+**2. "One folder partition per month of `loan_date`": does Spark derive the month from a `loan_date` filter?** A
+careful student could read the folder description as letting Spark prune folders for `loan_date = DATE '2025-11-14'`.
+It does not (the condition names `loan_date`, not `month`).
+
+- *Keep as is:* the `loan_date` row's feedback says so ("names `loan_date`, so no folder is ruled out by name").
+- *Say it in the scenario:* "Spark rules out a folder only when the condition names `month`." This also tells the
+  student the answer for the `loan_date` row, so it makes the item easier.
+:::
+
 ### What does each filter condition make Spark read? {#q-what-does-each-filter-condition-make-spark-read}
 
 A city library keeps its loan records for September to December 2025 in S3 as Parquet, one folder partition per month of `loan_date`:
