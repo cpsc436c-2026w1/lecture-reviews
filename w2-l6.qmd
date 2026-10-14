@@ -34,14 +34,14 @@ shuffle_answers: true
 
 ## For each step of the June 2012 query, where does it run? Each option may be used once, more than once, or not at all.
 
-- read the trip rows from the files: `spark.read.parquet` / `FROM` :: task, on its own Spark partition
+- read the trip rows from the files: `spark.read.parquet` / `FROM` :: task, on its own Spark partition, before any Exchange
     > Each task reads its own Spark partition, without rows from any other Spark partition. The Spark partition is a set of byte ranges of the files. The task reads every row of each row group whose middle falls in one of its ranges, and only the needed columns. A task whose ranges hold no row group's middle reads no rows: 16 of the 52 tasks here.
-- keep only the trips for June 2012: `filter` / `WHERE` :: task, on its own Spark partition
+- keep only the trips for June 2012: `filter` / `WHERE` :: task, on its own Spark partition, before any Exchange
     > Each task filters its own Spark partition, without rows from any other Spark partition: it keeps or drops each row it holds.
-- drop the columns no longer needed (Spark adds this step itself) :: task, on its own Spark partition
+- drop the columns no longer needed (Spark adds this step itself) :: task, on its own Spark partition, before any Exchange
     > Each task drops the columns on its own Spark partition, without rows from any other Spark partition: it keeps only `payment_type` and `total_amount` on the rows it already holds. Reading only the needed columns happened earlier, in the scan.
 - finish the count and average per payment type: `groupBy().agg()` / `GROUP BY` :: task, after the `Exchange`
-    > A task can total its own rows, but Spark plans the step before it knows where the rows are, and a payment type's rows can be in any Spark partition. So the partial totals go into an `Exchange` first, even in the measured run, where one task held every June 2012 trip. "Driver" is wrong here: the driver never adds up trip rows.
+    > A task can total its own rows, but Spark plans the step before it knows where the rows are, and a payment type's rows can be in any Spark partition. So the partial totals go into an `Exchange` first, even in the measured run, where one task held every June 2012 trip. "Driver" is wrong here: the driver never adds up trip rows. The stage-2 task also works on one Spark partition, but the `Exchange` fills that partition with partial rows from every stage-1 task, so the step cannot run before an `Exchange`.
 - return the answer to your program: `collect()` :: driver
     > `collect()` returns the 5 final rows to the driver, the process that runs your program.
 - :: YARN, on the primary node
@@ -228,7 +228,7 @@ shuffle_answers: true
 ## Cash and card are hot keys because millions of rows with each key go to one task. Which change shortens the query the most?
 
 1. [x] Broadcast the names table
-    > Copying the names table to every executor keeps the trips out of the `Exchange` and in their Spark partitions, so each task joins its own rows. With automatic broadcast off, `F.broadcast(names)` tells Spark to copy the names table. On the same cluster the query took 0.71 s with the broadcast and 1.65 s without; case P2.2 lists broadcast first, adaptive execution second and a salt third.
+    > Copying the names table to every executor keeps the trips out of the `Exchange` and in their Spark partitions, so each task joins its own rows. With automatic broadcast off, `F.broadcast(names)` tells Spark to copy the names table. On the same cluster the query took 0.71 s with the broadcast and 1.65 s without; case P2.2 lists broadcast first, adaptive execution second and a salt third. The salted copy does not help the join, because its salt column was dropped before the write, so every cash trip still goes to one task.
 1. [ ] Give each task more memory
     > Picking more memory assumes the two long tasks spilled. Adding memory does not move rows: all cash trips still go to one task, which still processes all 7.8 million of them.
 1. [ ] Run the join on the salted copy of the trips (the June 2012 trips written as several files in each payment-type folder partition)
@@ -256,7 +256,7 @@ shuffle_answers: true
 1. [ ] Write the input with more row groups
     > Row groups change the scan, not the stage after the `Exchange`. File sizes and slots set the number of scan tasks, and row groups decide how many scan tasks find rows. The number of shuffle partitions sets the rows per task after the `Exchange`.
 1. [x] More shuffle partitions, so each task holds fewer rows
-    > More shuffle partitions reduce the rows per task after the `Exchange`. With 16 shuffle partitions, the stage runs 16 tasks of about 0.95 million rows, each needing half as much memory; giving each task more memory also works (Problem 4). More shuffle partitions help here because the tasks are of even size; rows with one key still go to one task, so more shuffle partitions do not split a hot key.
+    > More shuffle partitions reduce the rows per task after the `Exchange`. On EMR, setting `spark.sql.shuffle.partitions` explicitly turns off adaptive execution's merging of shuffle partitions, so Spark keeps all 16. With 16 shuffle partitions, the stage runs 16 tasks of about 0.95 million rows, each needing half as much memory; giving each task more memory also works (Problem 4). More shuffle partitions help here because the tasks are of even size; rows with one key still go to one task, so more shuffle partitions do not split a hot key.
 ```
 
 Slide: 49 (also 35, 36, 37, 46, 48, 50)

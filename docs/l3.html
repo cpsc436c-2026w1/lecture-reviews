@@ -406,13 +406,13 @@ shuffle_answers: true
 ## For each workload, what should run it? Each option may be used once, more than once, or not at all.
 
 - a summer-camp sign-up page: almost nothing for months, then 30,000 requests in the 3 minutes after sign-up opens on 2 March 2026; an answer may take up to 3 seconds :: Lambda function, one call per request
-    &gt; During the idle months, Lambda's request and GB-second charges stop, while AWS can start many execution environments for the burst; the allowed 3-second response time leaves room for cold starts. The busiest hour has 30,000 calls, below the 50,000-an-hour crossover, so Lambda costs less than an instance, which AWS would also charge for during the idle months.
+    &gt; During the idle months, Lambda's request and GB-second charges stop, while AWS can start many execution environments for the burst; the allowed 3-second response time leaves room for cold starts. The busiest hour has 30,000 calls, below the 50,000-an-hour crossover, so Lambda costs less than an instance, which AWS would also charge for during the idle months. An instance created only for sign-up day would leave the few requests of the other months with nothing to answer them, and one instance would queue the 30,000 requests that arrive in 3 minutes.
 - a staff lookup page: about 3,000 calls an hour at midday, near zero overnight :: Lambda function, one call per request
     &gt; The page's busiest hour has 3,000 calls, below the 50,000-an-hour crossover, so the function costs less than the instance at the peak, and the function's cost drops close to zero overnight as the call rate falls.
 - a monthly 20-minute job that needs 40 GB of memory at once and cannot be split :: instance for the run only
     &gt; 40 GB is past a function's 10,240 MB limit, and 20 minutes is past a call's 15-minute limit. Ephemeral infrastructure means creating the instance for the job and deleting it afterward, so AWS charges only for the monthly run.
-- a weekly 10-minute join that needs 24 GB of memory at once :: instance for the run only
-    &gt; 24 GB is past a function's 10,240 MB limit, though 10 minutes fits in one call. Ephemeral infrastructure means creating the instance for the join and deleting it afterward, so AWS charges only for the weekly run, about 10 minutes a week.
+- a weekly 10-minute join that needs 24 GB of memory at once and cannot be split into smaller calls :: instance for the run only
+    &gt; 24 GB is past a function's 10,240 MB limit, though 10 minutes fits in one call, and the join cannot be split into calls that each fit. Ephemeral infrastructure means creating the instance for the join and deleting it afterward, so AWS charges only for the weekly run, about 10 minutes a week.
 - :: always-on instance
     &gt; AWS charges for every hour an instance runs. The request workloads here stay below the 50,000-an-hour crossover, and the scheduled jobs run for minutes a week or a month, so AWS would charge for an always-on instance during mostly idle hours. An always-on instance suits a service that must stay up and keep data in memory between requests, such as the JupyterHub instance on slide 39. No workload here needs either.
 </div>

@@ -315,7 +315,7 @@ shuffle_answers: true
 - Copying 350 GB of satellite images from S3 to the SSD; the copy takes about 8 hours :: network
     &gt; At 12 MB/s, transferring 350 GB takes about 8 hours, so the network connection is the bottleneck. The SSD has enough space and can write much faster than the network can deliver data.
 - A pandas pivot turns a 5 GB sales table into a wide table of about 22 GB; the SSD stays busy as the operating system moves data from memory to the SSD, and then the operating system stops the process running the pivot :: memory
-    &gt; The wide table alone is larger than the 16 GB of memory, so the operating system stops the process before the pivot completes.
+    &gt; The wide table alone is larger than the 16 GB of memory, so the operating system stops the process before the pivot completes. The SSD is busy only because memory is full and the operating system moves data from memory to the SSD, so the bottleneck is memory.
 - Fitting a model that must hold every row of its 24 GB feature table at once :: memory
     &gt; Every row is needed at the same time, so there is nothing to skip: 24 GB does not fit in 16 GB of memory.
 - :: storage

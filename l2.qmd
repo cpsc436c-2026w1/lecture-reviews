@@ -92,8 +92,8 @@ shuffle_answers: true
 
 - The service needs 8 vCPUs and 32 GiB of memory. :: instance type
     > The type fixes vCPUs, memory and network performance: an m6a.2xlarge has 8 vCPUs and 32 GiB. You pick the instance type from a menu; you cannot choose the vCPUs, memory and network performance separately.
-- The instance starts with Amazon Linux and the analysts' Python packages already installed, as the analysts had the packages last season. :: image (AMI)
-    > An image (AMI) holds the operating system and the software an instance starts from, and you can make your own.
+- The instance starts from the image the analysts saved last season, with Amazon Linux and their Python packages already installed before the first boot. :: image (AMI)
+    > An image (AMI) holds the operating system and the software an instance starts from, and you can make your own. A user data script could install the same packages, but only on the first boot, after the instance has started; here the packages are already in the saved image when the instance starts.
 - The service's code is downloaded and started on the first boot, without anyone logging in. :: user data
     > User data is a script passed at launch that runs once, on the instance's first start.
 - Anyone on the internet can reach the service on port 8000, and no other port is open. :: security group
@@ -136,7 +136,7 @@ shuffle_answers: true
 - :: AWS on both
     > AWS is responsible for the hardware and the hypervisor beneath an EC2 instance. The tasks listed here remain your responsibility on the instance.
 - :: AWS on the instance, you on the function
-    > This option reverses who is responsible on the instance and on the function. On the instance, AWS is responsible only for the hardware and the virtual machine; you are responsible for the capacity (the type, starting and stopping the instance), the operating system, the runtime, the libraries, the code, the permissions and the security group. On the function, AWS is responsible for the capacity, the operating system and the runtime.
+    > This option reverses who is responsible on the instance and on the function. On the instance, AWS is responsible only for the hardware and the virtual machine; you are responsible for the capacity (the type, starting and stopping the instance), the operating system, the runtime, the libraries, the code, the permissions and the security group. On the function, you choose the memory setting, and AWS is responsible for the number of execution environments, the operating system and the runtime.
 ```
 
 Slide: 20, L3 slide 23 (also 25, 33, 37; L2 continued, slide 6)
@@ -172,7 +172,7 @@ shuffle_answers: true
     > The 07:30 call the next morning has a cold start because Lambda has removed the environments that remained idle overnight. Lambda creates a new environment and loads the 60 MB table into it before the handler runs, so the call takes about 3 s.
 - :: new EC2 instance
     > Lambda does not start an instance for you. In its standard mode, Lambda creates execution environments on hardware AWS operates, and you never see or pick an instance.
-- :: same environment, soil table loaded again
+- :: existing execution environment, soil table loaded again
     > An existing execution environment retains the soil table in memory, so a warm call does not repeat the start-up load. Reusing the execution environment explains why the call takes about 80 ms instead of 3 s.
 ```
 

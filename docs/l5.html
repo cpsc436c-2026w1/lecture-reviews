@@ -301,8 +301,8 @@ shuffle_answers: true
     &gt; `.collect()` is an action: it needs the rows of `per_city`, so the driver creates tasks from the plan and the executors read and count the rides now.
 - `stations.groupby("city")["docks"].sum()` :: pandas computes on the driver; no task runs
     &gt; `stations` is a pandas DataFrame, and pandas has no Spark plan: the sum is computed in the driver's Python process, and no executor gets a task.
-- `top.to_csv("per_city.csv")` :: pandas computes on the driver; no task runs
-    &gt; `top` is already a pandas DataFrame, and pandas has no Spark plan: the file is written from the driver's Python process, and no executor gets a task.
+- `top.to_csv("per_city.csv")`, after `top = per_city.toPandas()` has already run :: pandas computes on the driver; no task runs
+    &gt; `top` holds the rows that `toPandas()` already brought to the driver, so `top` is a pandas DataFrame with no Spark plan. The file is written from the driver's Python process, and no executor gets a task.
 - :: pandas computes on the executors, split across them
     &gt; A cluster does not split a pandas operation across executors. pandas runs in the driver's Python process and creates no Spark task.
 </div>
@@ -434,7 +434,7 @@ shuffle_answers: true
 - the table of `late` requests that next week's report reads :: S3
     &gt; The nodes' disks and HDFS are deleted with the cluster, so a result that next week's report reads is written to S3, which keeps it until someone deletes it.
 - :: the cluster's HDFS
-    &gt; HDFS pools the core nodes' disks into one shared file system. A Spark job writes to HDFS on purpose, such as a result the job rereads while the cluster runs; HDFS is deleted with the cluster. None of the listed data is stored in HDFS.
+    &gt; HDFS pools the core nodes' disks into one shared file system. A Spark job writes to HDFS only on purpose, such as a result the job rereads while the cluster runs, and HDFS is deleted with the cluster. Spills and Spark's cache go to the node's disk outside HDFS, and the table of late requests goes to S3 because next week's report reads it after the cluster is terminated. None of the listed data is stored in HDFS.
 </div>
 <p>Slide: 32, 33 (also 16, 18, 24)</p>
 </section>

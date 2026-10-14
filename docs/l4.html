@@ -272,7 +272,7 @@ shuffle_answers: true
 ## Which folder key best supports the analysts' one-day and one-month queries?
 
 1. [x] `month`: 24 folders of about 170 MB
-    &gt; Each query names one month, so it opens one folder. Inside that folder, the footer's minimum and maximum view times let a daily query skip other days' row groups, and each folder partition is over 100 MB.
+    &gt; Each query names one month, so it opens one folder. Inside that folder, the footer's minimum and maximum view times let a daily query skip other days' row groups, and each folder partition is over 100 MB. A `day` key would also let a daily query open one folder, but each folder would hold only about 5.5 MB, below DuckDB's 100 MB guidance, and a monthly query would open about 30 of them.
 1. [ ] `day`: 731 folders of about 5.5 MB
     &gt; The `day` key matches the daily filter, but each 5.5 MB folder partition is below the 100 MB guidance. A monthly query opens about 30 small folder partitions, one per day of the month, while sorting by view time already lets a daily query skip row groups within a monthly folder partition.
 1. [ ] `category`: 12 folders of about 330 MB
@@ -294,9 +294,9 @@ shuffle_answers: true
 
 - [x] Rewrite the file with row groups of about 100,000 rows
     &gt; At about 100,000 rows each, the 30 million rows make about 300 row groups. DuckDB gives each thread whole row groups to read, so the four threads share the scan.
-- [x] Rewrite it as folder partitions by month, one file per month
+- [x] Rewrite the bookings file as folder partitions by month, one file per month
     &gt; At about 100,000 rows per row group, the 2.5 million July 2025 rows make about 25 row groups in the July 2025 file. DuckDB gives each thread whole row groups to read, so the four threads share the scan. The query opens only the July 2025 file when its filter names the `month` key; with a filter on the booking date alone, DuckDB opens all twelve files, and their footers rule out the other months' row groups.
-- [ ] Rewrite it as one Parquet file sorted by hotel, still one row group
+- [ ] Rewrite the bookings file as one Parquet file sorted by hotel, still one row group
     &gt; The file has one row group, so one thread reads it and the other three have nothing to read. Sorting changes which rows sit next to each other inside the row group; the file still has one row group for DuckDB to give its threads.
 - [ ] Set DuckDB to 32 threads
     &gt; The file has one row group, so one thread reads it and the extra threads have nothing to read. The instance has only 4 vCPUs to run the threads.
@@ -324,7 +324,7 @@ shuffle_answers: true
 ## Which first change is likely to cut the daily query's time most?
 
 1. [x] Convert the CSV once to Parquet
-    &gt; The query then fetches only 3 of the 25 columns, compressed and stored as typed values, so most of the 450 GB is not sent over the network. With its data converted to Parquet, L1's taxi query went from 14 min to 5.5 s on one instance.
+    &gt; The query then fetches only 3 of the 25 columns, compressed and stored as typed values, so most of the 450 GB is not sent over the network. With its data converted to Parquet, L1's taxi query went from 14 min to 5.5 s on one instance. Three nodes cut the time to about a third at best, while reading 3 of 25 columns already cuts the data fetched to about an eighth, before compression, so the Parquet change cuts more.
 1. [ ] Run the query on EMR with three m6a.xlarge core nodes
     &gt; Three m6a.xlarge nodes have about three times the network capacity of one, so the query takes at best about a third of the time, and the three nodes still read every byte of the CSV.
 1. [ ] Split the CSV into many smaller files
@@ -403,9 +403,9 @@ shuffle_answers: true
 - A weekly report on an m6a.xlarge (16 GiB of RAM) reads 2 of 40 columns from a 7 GB Parquet file and finishes in 20 seconds :: Neither
     &gt; The reader fetches only the 2 columns it needs, and the report already finishes in seconds, so a larger instance or a cluster would not help the report.
 - Processing 2 PB of genomic sequencing data from 200 research institutions, which the m6a.large would read through one network link :: Scale out
-    &gt; One instance reads all 2 PB through one network link and processes the data with only its own vCPUs. Scaling up stops at the largest instance available. Each node of a cluster reads and processes part of the data at once.
+    &gt; At the m6a.large's baseline of about 0.78 Gbps, about 97 MB/s, one read of 2 PB takes more than 200 days. A larger instance has a faster network link, but one instance stops at the largest size AWS sells. Each node of a cluster adds its own network link and vCPUs and reads and processes part of the data at the same time.
 - The m6a.large's 8 GiB of RAM cannot hold a 15 GB Parquet file that a training step needs in memory all at once :: Scale up
-    &gt; One larger instance holds the data in memory, and no cluster is needed. Parquet files are usually compressed and encoded, so the loaded data takes more than 15 GB: pick an instance with well over 15 GB of RAM.
+    &gt; The training step needs all of the data in one program's memory at once, and a cluster splits the data across the separate memory of each node, so one larger instance is the move that fits. Parquet files are usually compressed and encoded, so the loaded data takes more than 15 GB: pick an instance with well over 15 GB of RAM.
 - :: Larger EBS volume
     &gt; None of these workloads is short of disk space. A volume stores files; it adds no RAM, vCPUs or network.
 </div>
@@ -424,7 +424,7 @@ shuffle_answers: true
 ## A university's course-registration site gets almost no traffic for weeks. When registration opens at 8:00 one morning, about 20,000 students load its pages within ten minutes, and the traffic is back to almost nothing by noon. Which time shape of demand does the site get?
 
 1. [x] Burst
-    &gt; Traffic is almost zero for weeks and then peaks within ten minutes, so the site needs capacity for those ten minutes.
+    &gt; Traffic is almost zero for weeks and then peaks within ten minutes, so the site needs capacity for those ten minutes. The opening time is set in advance, but the load is thousands of separate student requests arriving at once, not one program run started at a set time.
 1. [ ] Daily rhythm
     &gt; A daily rhythm repeats every day, busy at midday and near zero overnight. The registration peak comes on one morning, with almost no traffic for weeks before and after.
 1. [ ] Scheduled job
