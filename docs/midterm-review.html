@@ -378,7 +378,7 @@ shuffle_answers: true
 shuffle_answers: true
 ---
 
-## A Lambda function, with default settings, has the line `s3 = boto3.client("s3")` as the first line of its handler, then uses the client to write one small file. A hundred calls arrive in a minute, one after another, and one execution environment serves them all. Which statement is true?
+## A Lambda function (without provisioned concurrency) has the line `s3 = boto3.client("s3")` as the first line of its handler, then uses the client to write one small file. A hundred calls arrive in a minute, one after another, and one execution environment serves them all. Which statement is true?
 
 1. [x] Client is created on every call
     &gt; Everything inside the handler runs on every call. Code at module level runs once, when the environment starts, and later calls reuse the objects that code made. Where to look: L3 slide 16 and L2 slide 36; practise [How many times does each line run?](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-how-many-times-does-each-line-run).
