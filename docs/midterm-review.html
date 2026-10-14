@@ -439,8 +439,8 @@ shuffle_answers: true
     &gt; The team picks the EC2 instance type of every node, which an EMR cluster on EC2 allows. On Glue the team picks a worker type and a count, not an instance type, and a Lambda function has no nodes. Where to look: L7 slides 4–5 and 10–11, and L5 slide 19; practise [Scale up, scale out, or neither?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-scale-up-scale-out-or-neither).
 - Ten analysts share Spark notebooks on one cluster all week, with node types the team chose :: EMR cluster you start and terminate
     &gt; An EMR cluster lets the team pick the nodes' instance type, and the cluster stays up all week for many notebooks. Where to look: L7 slides 4–5 and 10–11, and L5 slide 19; practise [Scale up, scale out, or neither?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-scale-up-scale-out-or-neither).
-- :: AWS Glue job
-    &gt; Glue starts workers for one job run or one notebook session and releases them when the run or the session ends. If the training fits on one instance, Glue's workers add overhead. The team picks a worker type and a count, not an EC2 instance type, and a session belongs to one notebook, so Glue does not give ten analysts one shared cluster for the whole week. Where to look: L7 slides 4, 6 and 9.
+- :: AWS Glue Spark job
+    &gt; A Glue Spark job runs a Spark script on workers that Glue starts for the run and releases at the end, and it uses at least 2 workers. A plain Python script uses only one worker, so at least one other worker sits idle. The team picks a worker type and a count, not an EC2 instance type, and a session belongs to one notebook, so Glue does not give ten analysts one shared cluster for the whole week. Where to look: L7 slides 4, 6 and 9.
 </div>
 </section>
 <section id="what-spark-can-skip" class="level3">
