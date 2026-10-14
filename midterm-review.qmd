@@ -11,6 +11,8 @@ filters:
 
 Practice questions of the kinds the midterm asks, on lectures 1 to 7, with feedback on every option. The midterm's questions are different ones.
 
+Note that the calculator is enabled for the midterm.
+
 Numbers in the scenarios are made up for practice unless a price or an instance size is named. If you need to look up a term, the [relevant vocabulary is below](#part-terms).
 
 \* Not asked on the midterm; good practice for the course.
