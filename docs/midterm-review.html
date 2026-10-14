@@ -410,8 +410,8 @@ shuffle_answers: true
     &gt; Many requests arrive in a short interval and then the rate returns to normal. Where to look: L3 slides 38–39; practise [What is the time shape of each workload's demand?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-what-is-the-time-shape-of-each-workloads-demand).
 - A full backup started by a timer at 04:00 every Sunday :: Scheduled job
     &gt; A clock starts the run at a known recurring time. Where to look: L2 slides 15 and 23 and L3 slides 38–39; practise [What is the time shape of each workload's demand?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-what-is-the-time-shape-of-each-workloads-demand).
-- :: Growth trend
-    &gt; A growth trend is how the stored data grows from day to day. The time shape of demand is the rate of requests or runs across a day: steady rate, daily rhythm, burst or scheduled job. Where to look: L2 slides 15 and 23 and L3 slides 38–39; practise [What is the time shape of each workload's demand?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-what-is-the-time-shape-of-each-workloads-demand).
+- :: Usage-based billing
+    &gt; Usage-based billing is how a service charges, per request or per second of work. The time shape of demand is the rate of requests or runs across a day: steady rate, daily rhythm, burst or scheduled job. Where to look: L2 slides 15 and 23 and L3 slides 38–39; practise [What is the time shape of each workload's demand?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-what-is-the-time-shape-of-each-workloads-demand).
 </div>
 </section>
 </section>
@@ -434,9 +434,9 @@ shuffle_answers: true
     &gt; The training can fit into one instance memory (3 GB table) and doesn't need a cluster, which brings extra overhead. Two hours is longer than a Lambda function's 15-minute limit. When the training ends, the team can terminate the instance. Where to look: L3 slide 13 and L2 slide 19; practise [Function, split calls or an instance for each workload](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-function-split-calls-or-an-instance-for-each-workload).
 - A FastAPI app on port 8000 loads a 2 GB table when it starts and answers `/summary` requests all day :: One EC2 instance
     &gt; One process on one instance stays up all day: the app loads the 2 GB table once, when the app starts, and answers every `/summary` request from memory. Where to look: L3 slide 13 and L2 slide 19; practise [Function, split calls or an instance for each workload](https://cpsc436c-2026w1.github.io/lecture-reviews/l3.html#q-function-split-calls-or-an-instance-for-each-workload).
-- A Spark job on 3 TB must run on an EC2 instance type that the team picks itself for every node :: EMR cluster you start and stop
+- A Spark job on 3 TB must run on an EC2 instance type that the team picks itself for every node :: EMR cluster you start and terminate
     &gt; The team picks the EC2 instance type of every node, which an EMR cluster on EC2 allows. On Glue the team picks a worker type and a count, not an instance type, and a Lambda function has no nodes. Where to look: L7 slides 4–5 and 10–11, and L5 slide 19; practise [Scale up, scale out, or neither?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-scale-up-scale-out-or-neither).
-- Ten analysts share Spark notebooks on one cluster all week, with node types the team chose :: EMR cluster you start and stop
+- Ten analysts share Spark notebooks on one cluster all week, with node types the team chose :: EMR cluster you start and terminate
     &gt; An EMR cluster lets the team pick the nodes' instance type, and the cluster stays up all week for many notebooks. Where to look: L7 slides 4–5 and 10–11, and L5 slide 19; practise [Scale up, scale out, or neither?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-scale-up-scale-out-or-neither).
 - :: AWS Glue job
     &gt; Glue starts workers for one job run or one notebook session and releases them when the run or the session ends. If the training fits on one instance, Glue's workers add overhead. The team picks a worker type and a count, not an EC2 instance type, and a session belongs to one notebook, so Glue does not give ten analysts one shared cluster for the whole week. Where to look: L7 slides 4, 6 and 9.
