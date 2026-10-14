@@ -349,12 +349,16 @@ shuffle_answers: true
 
 ### 15. Nodes for a deadline
 
+A mapping company must render 1,800 satellite image tiles on an EMR cluster before the morning. The tiles are independent of each other, and each takes 6 minutes on one vCPU. They can be spread over any number of vCPUs with no overhead. The cluster has one primary node, which renders nothing, plus core nodes of type m6a.xlarge, each with 4 vCPUs for rendering. Launch takes 15 minutes before the first tile can start, and everything must finish 3 hours after the cluster starts, launch included.
+
+This scenario has two questions. After you answer the first, click → to go to the second.
+
 ```quizdown
 ---
 shuffle_answers: true
 ---
 
-## A mapping company must render 1,800 satellite image tiles on an EMR cluster before the morning. The tiles are independent of each other, and each takes 6 minutes on one vCPU. They can be spread over any number of vCPUs with no overhead. The cluster has one primary node, which renders nothing, plus core nodes of type m6a.xlarge, each with 4 vCPUs for rendering. Launch takes 15 minutes before the first tile can start, and everything must finish 3 hours after the cluster starts, launch included. Step 1: how much work is it, in vCPU-hours?
+## Step 1: how much work is it, in vCPU-hours (core-hours)?
 
 1. [ ] 10,800
     > 10,800 is the work in vCPU-minutes. 10,800 divided by 60 is 180 vCPU-hours. Where to look: L4 slide 35; practise [Scale up, scale out, or neither?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-scale-up-scale-out-or-neither).
