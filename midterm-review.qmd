@@ -189,7 +189,7 @@ shuffle_answers: true
     > A clock starts one run at a known time each night. Where to look: L2 slides 15 and 23 and L3 slides 38–39; practise [What is the time shape of each workload's demand?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-what-is-the-time-shape-of-each-workloads-demand).
 - Accepted meal orders: busiest at lunch and dinner, near zero overnight, with the same pattern every day :: Daily rhythm
     > The rate rises and falls in a pattern that repeats each day. Where to look: L2 slides 15 and 23 and L3 slides 38–39; practise [What is the time shape of each workload's demand?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-what-is-the-time-shape-of-each-workloads-demand).
-- Receipt-rendering runs: one per accepted meal order, with the same lunch-and-dinner pattern :: Daily rhythm
+- Receipt-rendering runs: one per accepted meal order, busiest at lunch and dinner and near zero overnight every day :: Daily rhythm
     > Each order starts one receipt run, so the runs have the same daily pattern as the orders. Where to look: L3 slides 38–39; practise [What is the time shape of each workload's demand?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-what-is-the-time-shape-of-each-workloads-demand).
 - Room-sensor heartbeats, around the clock: 900 sensors, one every three minutes each, staggered across the three minutes :: Steady rate
     > The staggered sensors produce about the same number of heartbeats every minute. Where to look: L2 slides 15 and 23 and L3 slides 38–39; practise [What is the time shape of each workload's demand?](https://cpsc436c-2026w1.github.io/lecture-reviews/l2.html#q-what-is-the-time-shape-of-each-workloads-demand).
@@ -235,7 +235,7 @@ shuffle_answers: true
 shuffle_answers: true
 ---
 
-## A scooter-share company keeps its trips as Parquet in S3, in one folder for each trip date: `trip_date=2025-07-01/`, `trip_date=2025-07-02/`, and so on. Each folder holds one file, sorted by scooter id, with about 10 row groups. Each file's footer records the minimum and maximum of each column in each row group, and Spark can use them. Which data can Spark skip for each condition? Each option may be used once, more than once, or not at all.
+## A scooter-share company keeps its trips as Parquet in S3, in one folder for each trip date: `trip_date=2025-07-01/`, `trip_date=2025-07-02/`, and so on. The fleet has scooters SC-0001 to SC-2000. Each folder holds one file, sorted by scooter id, with about 10 row groups. Each file's footer records the minimum and maximum of each column in each row group, and Spark can use them. Which data can Spark skip for each condition? Each option may be used once, more than once, or not at all.
 
 - `WHERE trip_date = '2025-07-14' AND scooter_id = 'SC-0417'` :: Whole folders and row groups
     > The date names one folder, so the others are skipped. Inside that day's file, sorted by scooter id, the footers rule out the row groups that cannot hold SC-0417. Where to look: L4 slides 20–21 and 23; practise [What does each filter condition make Spark read?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-what-does-each-filter-condition-make-spark-read).
