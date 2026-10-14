@@ -238,30 +238,6 @@ Note
 <p>* Not asked on the midterm; good practice for the course.</p>
 <section id="part-storage-side" class="level2">
 <h2 class="anchored" data-anchor-id="part-storage-side">Storage side of scaling up</h2>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>Two open concerns on this question (from Sol’s blind solve, 2026-10-14)
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Sol solved the updated question without the key and chose our key on all six rows. Two points remain debatable.</p>
-<p><strong>1. <code>branch_id = 17</code> and <code>patron_id = 40213</code>: is “every row group read” also defensible?</strong> Sol picked “some row groups may be skipped” for both, but noted that “every row group read” holds if every row group’s range happens to include the value, and the text does not give the ranges.</p>
-<ul>
-<li><em>Keep as is:</em> the word “may” in the chip covers the uncertainty; the feedback explains when a group is skipped.</li>
-<li><em>Tighten <code>branch_id</code>:</em> give the number of branches, so sorted groups cannot all contain 17: “Inside a file the rows are sorted by <code>branch_id</code> <mark>(the library has 40 branches)</mark>; …”</li>
-<li><code>patron_id</code> stays “may be skipped” either way: unsorted ids can put 40213 in every range or not.</li>
-</ul>
-<p><strong>2. “One folder partition per month of <code>loan_date</code>”: does Spark derive the month from a <code>loan_date</code> filter?</strong> A careful student could read the folder description as letting Spark prune folders for <code>loan_date = DATE '2025-11-14'</code>. It does not (the condition names <code>loan_date</code>, not <code>month</code>).</p>
-<ul>
-<li><em>Keep as is:</em> the <code>loan_date</code> row’s feedback says so (“names <code>loan_date</code>, so no folder is ruled out by name”).</li>
-<li><em>Say it in the scenario:</em> “Spark rules out a folder only when the condition names <code>month</code>.” This also tells the student the answer for the <code>loan_date</code> row, so it makes the item easier.</li>
-</ul>
-</div>
-</div>
 <section id="q-what-does-each-filter-condition-make-spark-read" class="level3">
 <h3 class="anchored" data-anchor-id="q-what-does-each-filter-condition-make-spark-read">What does each filter condition make Spark read?</h3>
 <p>A city library keeps its loan records for September to December 2025 in S3 as Parquet, one folder partition per month of <code>loan_date</code>:</p>
@@ -274,8 +250,8 @@ Note
 │   └── part-0.parquet
 └── month=2025-12/
     └── part-0.parquet</code></pre>
-<p>Each file holds only its month’s loans, in many row groups (the blocks of rows inside a Parquet file). Inside a file the rows are sorted by <code>branch_id</code>; the other columns, <code>loan_date</code> (a DATE), <code>loan_days</code> and <code>patron_id</code>, are in no particular order, and every row group has some loans longer than 21 days. Spark on an EMR cluster runs queries that each have one filter condition, and each condition matches some loans. Assume the reader rules out row groups only by their min and max.</p>
-<div class="rtprose">changed: Each file holds only its month's loans, in many row groups (the blocks of rows inside a Parquet file). Inside a file the rows are sorted by `branch_id`; the other columns, `loan_date` (a DATE), `loan_days` and `patron_id`, are in no particular <del>order.</del> <mark>order, and every row group has some loans longer than 21 days.</mark> Spark on an EMR cluster runs queries that each have one filter <del>condition.</del> <mark>condition, and each condition matches some loans.</mark> Assume the reader rules out row groups only by their min and max.</div>
+<p>Each file holds only its month’s loans, in many row groups (the blocks of rows inside a Parquet file). Inside a file the rows are sorted by <code>branch_id</code> (the library has 40 branches); the other columns, <code>loan_date</code> (a DATE) and <code>loan_days</code>, are in no particular order, and every row group has some loans longer than 21 days. Spark on an EMR cluster runs queries that each have one filter condition, and each condition matches some loans. Assume the reader rules out row groups only by their min and max.</p>
+<div class="rtprose">changed: Each file holds only its month's loans, in many row groups (the blocks of rows inside a Parquet file). Inside a file the rows are sorted by <del>`branch_id`;</del> <mark>`branch_id` (the library has 40 branches);</mark> the other columns, `loan_date` (a <del>DATE), `loan_days`</del> <mark>DATE)</mark> and <del>`patron_id`,</del> <mark>`loan_days`,</mark> are in no particular <del>order.</del> <mark>order, and every row group has some loans longer than 21 days.</mark> Spark on an EMR cluster runs queries that each have one filter <del>condition.</del> <mark>condition, and each condition matches some loans.</mark> Assume the reader rules out row groups only by their min and max.</div>
 <div class="quizdown">
 ---
 shuffle_answers: true
@@ -293,8 +269,6 @@ shuffle_answers: true
     &gt; The `month` folders were made from the loan date, but this condition names `loan_date`, so no folder is ruled out by name and Spark opens all 4 files. Each file holds one month's loans, so each row group's `loan_date` min and max fall within that month. In the September 2025, October 2025 and December 2025 files, no row group's range includes 14 November 2025, so where the footer stores each row group's min and max, the reader skips every row group in those files. In the November 2025 file the days are in no order, so most row groups' ranges usually cover the 14th and are read; a row group whose range misses it is skipped.
 - `loan_days &gt; 21` :: all 4 files opened, every row group read
     &gt; The condition does not name `month`, so Spark opens all 4 files. Every row group has some loans longer than 21 days, so each row group's maximum `loan_days` is above 21 and the footer rules none out. Without a sort, values usually spread like this, but not always: a row group whose maximum happened to be 21 or less would be skipped.
-- `patron_id = 40213` :: all 4 files opened, some row groups may be skipped
-    &gt; The condition does not name `month`, so Spark opens all 4 files. The rows are in no order of `patron_id`, so most row groups' min and max usually cover 40213 and are read; only a row group whose range happens to miss 40213 is skipped. Sorting by `branch_id` is what lets the `branch_id = 17` row skip most row groups.
 - :: footers read, no row group read
     &gt; A footer records where the row groups are and each row group's min and max; the footer holds no rows. Footers alone answer a query only when their min and max rule out every row group. Each condition here leaves at least one row group to read: the `month` conditions name folders that hold loans, and each of the other conditions matches some loans, so at least one row group holds a matching row and has to be read.
 </div>
@@ -333,14 +307,14 @@ shuffle_answers: true
 <td>The condition does not name `month`, so Spark opens all 4 files. <del>The rows are in no order of `loan_days`, so every</del> <mark>Every</mark> row group <del>holds short</del> <mark>has some loans longer than 21 days, so each row group's maximum `loan_days` is above 21</mark> and <del>long loans, its min and max rule nothing out, and every</del> <mark>the footer rules none out. Without a sort, values usually spread like this, but not always: a</mark> row group <del>is read.</del> <mark>whose maximum happened to be 21 or less would be skipped.</mark></td>
 </tr>
 <tr class="odd">
-<td><del>→ all 4 files opened, every row group read</del> → all 4 files opened, some row groups may be skipped</td>
-<td>`patron_id = 40213`</td>
-<td>The condition does not name `month`, so Spark opens all 4 files. The rows are in no order of `patron_id`, so <del>every</del> <mark>most</mark> row <del>group's</del> <mark>groups'</mark> min and max <mark>usually</mark> cover 40213 and <del>every</del> <mark>are read; only a</mark> row group <mark>whose range happens to miss 40213</mark> is <del>read, though few rows match.</del> <mark>skipped. Sorting by `branch_id` is what lets the `branch_id = 17` row skip most row groups.</mark></td>
-</tr>
-<tr class="even">
 <td>→</td>
 <td>:: footers read, no row group read</td>
 <td>A footer records where the row groups are and each row group's min and max; the footer holds no rows. Footers alone answer a query only when their min and max rule out every row group. Each condition here leaves at least one row group to read: the `month` conditions name folders that hold loans, <mark>and each of</mark> the <del>November 2025 file's</del> <mark>other conditions matches some loans, so at least one</mark> row <del>groups cover 14 November 2025,</del> <mark>group holds a matching row</mark> and <del>on the unordered columns every row group's min and max cover the value.</del> <mark>has to be read.</mark></td>
+</tr>
+<tr class="even">
+<td><del>→ all 4 files opened, every row group read</del></td>
+<td><del>`patron_id = 40213`</del></td>
+<td><del>The condition does not name `month`, so Spark opens all 4 files. The rows are in no order of `patron_id`, so every row group's min and max cover 40213 and every row group is read, though few rows match.</del></td>
 </tr>
 </tbody>
 </table>
