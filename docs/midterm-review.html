@@ -181,7 +181,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#fewer-slots" id="toc-fewer-slots" class="nav-link" data-scroll-target="#fewer-slots">13. Fewer slots</a></li>
   <li><a href="#row-groups-and-tasks" id="toc-row-groups-and-tasks" class="nav-link" data-scroll-target="#row-groups-and-tasks">14. Row groups and tasks</a></li>
   <li><a href="#nodes-for-a-deadline" id="toc-nodes-for-a-deadline" class="nav-link" data-scroll-target="#nodes-for-a-deadline">15. Nodes for a deadline</a></li>
-  <li><a href="#choosing-the-folder-key" id="toc-choosing-the-folder-key" class="nav-link" data-scroll-target="#choosing-the-folder-key">16. Choosing the folder key</a></li>
+  <li><a href="#choosing-the-folder-partition-key" id="toc-choosing-the-folder-partition-key" class="nav-link" data-scroll-target="#choosing-the-folder-partition-key">16. Choosing the folder partition key</a></li>
   <li><a href="#why-the-stage-is-slow" id="toc-why-the-stage-is-slow" class="nav-link" data-scroll-target="#why-the-stage-is-slow">17. Why the stage is slow</a></li>
   <li><a href="#what-the-team-chooses-on-emr" id="toc-what-the-team-chooses-on-emr" class="nav-link" data-scroll-target="#what-the-team-chooses-on-emr">18. What the team chooses on EMR</a></li>
   <li><a href="#a-slow-window-query" id="toc-a-slow-window-query" class="nav-link" data-scroll-target="#a-slow-window-query">19. A slow window query</a></li>
@@ -591,23 +591,23 @@ shuffle_answers: true
     &gt; 180 vCPU-hours divided by 4 vCPUs per node is a number of node-hours, not of nodes. The 45 node-hours still have to be spread over the hours left. Where to look: L4 slide 37; practise [Scale up, scale out, or neither?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-scale-up-scale-out-or-neither).
 </div>
 </section>
-<section id="choosing-the-folder-key" class="level3">
-<h3 class="anchored" data-anchor-id="choosing-the-folder-key">16. Choosing the folder key</h3>
+<section id="choosing-the-folder-partition-key" class="level3">
+<h3 class="anchored" data-anchor-id="choosing-the-folder-partition-key">16. Choosing the folder partition key</h3>
 <div class="quizdown">
 ---
 shuffle_answers: true
 ---
 
-## A delivery company keeps three years of parcel scans in S3 as Parquet, about 200 GB a year. Each row is one scan: the scan time, the depot (300 depots), the parcel id (80 million parcels) and the status. Each week an audit job reads all three years of scans at one depot, a different depot each week. Which folder key lets that job skip all the other data, while keeping the number of folders small and each folder large?
+## A delivery company keeps three years of parcel scans in S3 as Parquet, about 200 GB a year. Each row is one scan: the scan time, the depot (300 depots), the parcel id (80 million parcels) and the status. Each week an audit job reads all three years of scans at one depot, a different depot each week. Which folder partition key lets that job skip all the other data, while keeping the number of folders small and each folder large?
 
 1. [x] Depot
-    &gt; The job reads one depot's folder and skips the other 299. Three years over 300 depots is about 2 GB a folder. Where to look: L4 slides 22–23; practise [Which folder key best supports the analysts' one-day and one-month queries?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-which-folder-key-best-supports-these-queries).
+    &gt; The job reads one depot's folder and skips the other 299. Three years over 300 depots is about 2 GB a folder. Where to look: L4 slides 22–23; practise [Which folder partition key best supports the analysts' one-day and one-month queries?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-which-folder-key-best-supports-these-queries).
 1. [ ] Scan date
-    &gt; Every date folder holds scans from every depot, so the job would have to open all of them. Where to look: L4 slides 21 and 23; practise [Which folder key best supports the analysts' one-day and one-month queries?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-which-folder-key-best-supports-these-queries).
+    &gt; Every date folder holds scans from every depot, so the job would have to open all of them. Where to look: L4 slides 21 and 23; practise [Which folder partition key best supports the analysts' one-day and one-month queries?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-which-folder-key-best-supports-these-queries).
 1. [ ] Scan hour
-    &gt; Every hour folder holds scans from every depot, so the audit would open them all; three years would also make about 26,000 small folders. Where to look: L4 slides 21 and 23; practise [Which folder key best supports the analysts' one-day and one-month queries?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-which-folder-key-best-supports-these-queries).
+    &gt; Every hour folder holds scans from every depot, so the audit would open them all; three years would also make about 26,000 small folders. Where to look: L4 slides 21 and 23; practise [Which folder partition key best supports the analysts' one-day and one-month queries?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-which-folder-key-best-supports-these-queries).
 1. [ ] Parcel id
-    &gt; 80 million folders of a few rows each, and nothing in the name says which depot a parcel passed through. Where to look: L4 slide 23; practise [Which folder key best supports the analysts' one-day and one-month queries?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-which-folder-key-best-supports-these-queries).
+    &gt; 80 million folders of a few rows each, and nothing in the name says which depot a parcel passed through. Where to look: L4 slide 23; practise [Which folder partition key best supports the analysts' one-day and one-month queries?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-which-folder-key-best-supports-these-queries).
 </div>
 </section>
 <section id="why-the-stage-is-slow" class="level3">

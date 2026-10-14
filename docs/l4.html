@@ -164,7 +164,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#part-storage-side" id="toc-part-storage-side" class="nav-link active" data-scroll-target="#part-storage-side">Storage side of scaling up</a>
   <ul class="collapse">
   <li><a href="#q-what-does-each-filter-condition-make-spark-read" id="toc-q-what-does-each-filter-condition-make-spark-read" class="nav-link" data-scroll-target="#q-what-does-each-filter-condition-make-spark-read">What does each filter condition make Spark read?</a></li>
-  <li><a href="#q-which-folder-key-best-supports-these-queries" id="toc-q-which-folder-key-best-supports-these-queries" class="nav-link" data-scroll-target="#q-which-folder-key-best-supports-these-queries">Which folder key best supports the analysts’ one-day and one-month queries?</a></li>
+  <li><a href="#q-which-folder-key-best-supports-these-queries" id="toc-q-which-folder-key-best-supports-these-queries" class="nav-link" data-scroll-target="#q-which-folder-key-best-supports-these-queries">Which folder partition key best supports the analysts’ one-day and one-month queries?</a></li>
   <li><a href="#q-which-changes-spread-the-scan-over-all-four-threads" id="toc-q-which-changes-spread-the-scan-over-all-four-threads" class="nav-link" data-scroll-target="#q-which-changes-spread-the-scan-over-all-four-threads">Which changes spread the scan over all four threads?</a></li>
   </ul></li>
   <li><a href="#part-scaling-out" id="toc-part-scaling-out" class="nav-link" data-scroll-target="#part-scaling-out">Scaling out: more nodes, and a network between them</a>
@@ -242,9 +242,9 @@ shuffle_answers: true
 ## For each filter condition on the loans folder, what does Spark open and read? Each option may be used once, more than once, or not at all.
 
 - `month = '2025-11'` :: 1 or 2 files opened, every row group read
-    &gt; The condition names the folder key, so Spark opens the November 2025 folder and rules out the other 3 by their names, without reading their row groups. Every row in the November 2025 file is a November 2025 loan, so every row group is read.
+    &gt; The condition names the folder partition key, so Spark opens the November 2025 folder and rules out the other 3 by their names, without reading their row groups. Every row in the November 2025 file is a November 2025 loan, so every row group is read.
 - `month IN ('2025-11', '2025-12')` :: 1 or 2 files opened, every row group read
-    &gt; The condition names the folder key, so Spark opens the November 2025 and December 2025 folders and rules out the other 2 by their names, without reading their row groups. Every row in those two files is a November 2025 or December 2025 loan, so every row group of both is read.
+    &gt; The condition names the folder partition key, so Spark opens the November 2025 and December 2025 folders and rules out the other 2 by their names, without reading their row groups. Every row in those two files is a November 2025 or December 2025 loan, so every row group of both is read.
 - `branch_id = 17` :: all 4 files opened, some row groups may be skipped
     &gt; All 4 files are opened, because the condition does not name `month`. Inside each file the rows are sorted by branch, so each row group has a narrow `branch_id` range. Where the writer stored each row group's min and max in the footer, the reader skips the row groups whose range does not include 17, without fetching those row groups.
 - `loan_date = DATE '2025-11-14'` :: all 4 files opened, some row groups may be skipped
@@ -259,7 +259,7 @@ shuffle_answers: true
 <p>Slide: 15, 20, 21, 23, 31</p>
 </section>
 <section id="q-which-folder-key-best-supports-these-queries" class="level3">
-<h3 class="anchored" data-anchor-id="q-which-folder-key-best-supports-these-queries">Which folder key best supports the analysts’ one-day and one-month queries?</h3>
+<h3 class="anchored" data-anchor-id="q-which-folder-key-best-supports-these-queries">Which folder partition key best supports the analysts’ one-day and one-month queries?</h3>
 <p>A news site keeps its page views from January 2024 to December 2025 in S3 as one Parquet file, with no folder partitions:</p>
 <pre><code>s3://news-site/page-views/
 └── page-views.parquet    4 GB, rows sorted by view time, many row groups</code></pre>
@@ -269,7 +269,7 @@ shuffle_answers: true
 shuffle_answers: true
 ---
 
-## Which folder key best supports the analysts' one-day and one-month queries?
+## Which folder partition key best supports the analysts' one-day and one-month queries?
 
 1. [x] `month`: 24 folders of about 170 MB
     &gt; Each query names one month, so it opens one folder. Inside that folder, the footer's minimum and maximum view times let a daily query skip other days' row groups, and each folder partition is over 100 MB. A `day` key would also let a daily query open one folder, but each folder would hold only about 5.5 MB, below DuckDB's 100 MB guidance, and a monthly query would open about 30 of them.

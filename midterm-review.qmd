@@ -377,23 +377,23 @@ shuffle_answers: true
     > 180 vCPU-hours divided by 4 vCPUs per node is a number of node-hours, not of nodes. The 45 node-hours still have to be spread over the hours left. Where to look: L4 slide 37; practise [Scale up, scale out, or neither?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-scale-up-scale-out-or-neither).
 ```
 
-### 16. Choosing the folder key
+### 16. Choosing the folder partition key
 
 ```quizdown
 ---
 shuffle_answers: true
 ---
 
-## A delivery company keeps three years of parcel scans in S3 as Parquet, about 200 GB a year. Each row is one scan: the scan time, the depot (300 depots), the parcel id (80 million parcels) and the status. Each week an audit job reads all three years of scans at one depot, a different depot each week. Which folder key lets that job skip all the other data, while keeping the number of folders small and each folder large?
+## A delivery company keeps three years of parcel scans in S3 as Parquet, about 200 GB a year. Each row is one scan: the scan time, the depot (300 depots), the parcel id (80 million parcels) and the status. Each week an audit job reads all three years of scans at one depot, a different depot each week. Which folder partition key lets that job skip all the other data, while keeping the number of folders small and each folder large?
 
 1. [x] Depot
-    > The job reads one depot's folder and skips the other 299. Three years over 300 depots is about 2 GB a folder. Where to look: L4 slides 22–23; practise [Which folder key best supports the analysts' one-day and one-month queries?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-which-folder-key-best-supports-these-queries).
+    > The job reads one depot's folder and skips the other 299. Three years over 300 depots is about 2 GB a folder. Where to look: L4 slides 22–23; practise [Which folder partition key best supports the analysts' one-day and one-month queries?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-which-folder-key-best-supports-these-queries).
 1. [ ] Scan date
-    > Every date folder holds scans from every depot, so the job would have to open all of them. Where to look: L4 slides 21 and 23; practise [Which folder key best supports the analysts' one-day and one-month queries?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-which-folder-key-best-supports-these-queries).
+    > Every date folder holds scans from every depot, so the job would have to open all of them. Where to look: L4 slides 21 and 23; practise [Which folder partition key best supports the analysts' one-day and one-month queries?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-which-folder-key-best-supports-these-queries).
 1. [ ] Scan hour
-    > Every hour folder holds scans from every depot, so the audit would open them all; three years would also make about 26,000 small folders. Where to look: L4 slides 21 and 23; practise [Which folder key best supports the analysts' one-day and one-month queries?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-which-folder-key-best-supports-these-queries).
+    > Every hour folder holds scans from every depot, so the audit would open them all; three years would also make about 26,000 small folders. Where to look: L4 slides 21 and 23; practise [Which folder partition key best supports the analysts' one-day and one-month queries?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-which-folder-key-best-supports-these-queries).
 1. [ ] Parcel id
-    > 80 million folders of a few rows each, and nothing in the name says which depot a parcel passed through. Where to look: L4 slide 23; practise [Which folder key best supports the analysts' one-day and one-month queries?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-which-folder-key-best-supports-these-queries).
+    > 80 million folders of a few rows each, and nothing in the name says which depot a parcel passed through. Where to look: L4 slide 23; practise [Which folder partition key best supports the analysts' one-day and one-month queries?](https://cpsc436c-2026w1.github.io/lecture-reviews/l4.html#q-which-folder-key-best-supports-these-queries).
 ```
 
 ### 17. Why the stage is slow
