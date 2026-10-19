@@ -1,0 +1,60 @@
+---
+title: "Tutorials"
+toc: true
+toc-location: left
+toc-title: "Tutorials"
+---
+
+TA-led tutorials. Each entry says what you do in it, which lecture or assignment it supports, and where to find its
+materials.
+
+## Block 2 {#block-2}
+
+### EMR cluster from the console {#emr-cluster}
+
+- **What you do:** You launch an EMR cluster from the AWS console in your sandbox account, step by step, and check
+  that it starts. You then terminate the cluster so that it stops billing.
+- **Supports:** L5 (Spark on a cluster) and A2, which runs its Spark job on EMR at two and then four core nodes.
+- **Materials:** step-by-step guide on Canvas.
+
+### Spark on Glue tutorial {#glue-tutorial}
+
+Two parts, each a Glue notebook in the [Spark on Glue tutorial repository](https://github.com/cpsc436c-2026w1/l7-spark-glue).
+Set up your account once with the repository's
+[step 1](https://github.com/cpsc436c-2026w1/l7-spark-glue#1-set-up-your-account-once) before part A.
+
+A Glue session bills until it stops, even after you close the browser tab. End each notebook with its last cell,
+`%stop_session`.
+
+#### Part A: how Spark reads files {#glue-part-a}
+
+- **What you do:** You run the notebook in your sandbox account and see, for each query, which folders, files and row
+  groups Spark reads and how many tasks it starts. Exercises 2 to 6 then ask you to predict those numbers for new
+  queries on the 36 months of taxi trips.
+- **Supports:** L7 (Spark as a managed service, and its demos on reading files).
+- **Materials:** the notebook [`l7a_data-read.ipynb`](https://github.com/cpsc436c-2026w1/l7-spark-glue/blob/main/l7a_data-read.ipynb).
+
+#### Part B: slow queries and their fixes {#glue-part-b}
+
+- **What you do:** You run three slow queries from L6 on Glue: input that can't be split finely enough, a join on a
+  hot key and a window query. Before each run you write down how many tasks you expect, then you read the stage
+  table to find what makes the query slow and which change fixes it. Exercises B1 to B5 follow, with their answers
+  in commented-out cells.
+- **Supports:** [L6](w2-l6.qmd) (why a cluster job is slow) and L7.
+- **Materials:** the notebook [`l7b_slow-queries.ipynb`](https://github.com/cpsc436c-2026w1/l7-spark-glue/blob/main/l7b_slow-queries.ipynb).
+
+## Block 3 {#block-3}
+
+### Tutorial 1: New York rides in Athena {#b3-t1}
+
+- **What you do:** You query the course's rides table in Athena, predicting how much each query reads before you
+  run it. You then copy one month into your own account and change it: delete rows, read the table as it was before
+  the delete, load a day twice and repair it, add a column, and join your copy with a course table.
+- **Supports:** L10 (lakehouses: Iceberg tables, snapshots and time travel) and L11, and the use and change tasks
+  in A3.
+- **Before the tutorial:** run the one-time setup in the repository's
+  [step 1](https://github.com/cpsc436c-2026w1/b3-t1-athena-rides#1-set-up-your-account-once) (about 8 minutes, in
+  CloudShell).
+- **Materials:** the [tutorial 1 repository](https://github.com/cpsc436c-2026w1/b3-t1-athena-rides): the steps, one
+  SQL file per step with the expected results, and the setup script.
+

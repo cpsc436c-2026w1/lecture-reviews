@@ -25,10 +25,24 @@ website:
             text: "L6: how Spark runs a query"
           - href: midterm-review.qmd
             text: "Midterm review"
-      - href: https://cpsc436c-2026w1.github.io/a1-starter/
-        text: A1 starter
-      - href: https://cpsc436c-2026w1.github.io/a2-starter/
-        text: A2 starter
+      - text: Tutorials
+        menu:
+          - href: tutorials.qmd
+            text: All tutorials
+          - href: tutorials.qmd#emr-cluster
+            text: "EMR cluster from the console"
+          - href: tutorials.qmd#glue-part-a
+            text: "Spark on Glue, part A: how Spark reads files"
+          - href: tutorials.qmd#glue-part-b
+            text: "Spark on Glue, part B: slow queries and their fixes"
+          - href: tutorials.qmd#b3-t1
+            text: "Block 3, tutorial 1: New York rides in Athena"
+      - text: Assignments
+        menu:
+          - href: https://cpsc436c-2026w1.github.io/a1-starter/
+            text: A1 starter
+          - href: https://cpsc436c-2026w1.github.io/a2-starter/
+            text: A2 starter
 
 format:
   html:
