@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "CPSC 436C lecture reviews"
+  title: "CPSC 436C companion"
   page-navigation: false
   navbar:
     left:
