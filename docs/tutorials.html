@@ -145,19 +145,19 @@ ul.task-list li input[type="checkbox"] {
   </li>  
         <li>
     <a class="dropdown-item" href="./tutorials.html#emr-cluster">
- <span class="dropdown-text">EMR cluster from the console</span></a>
+ <span class="dropdown-text">B2T1: Cluster/EMR</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./tutorials.html#glue-part-a">
- <span class="dropdown-text">Spark on Glue, part A: how Spark reads files</span></a>
+ <span class="dropdown-text">B2T2 part A: Spark/Glue, how Spark reads files</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./tutorials.html#glue-part-b">
- <span class="dropdown-text">Spark on Glue, part B: slow queries and their fixes</span></a>
+ <span class="dropdown-text">B2T2 part B: Spark/Glue, slow queries and their fixes</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./tutorials.html#b3-t1">
- <span class="dropdown-text">Block 3, tutorial 1: New York rides in Athena</span></a>
+ <span class="dropdown-text">B3T1: Lakehouse/Athena+Glue</span></a>
   </li>  
     </ul>
   </li>
@@ -193,12 +193,12 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#block-2" id="toc-block-2" class="nav-link active" data-scroll-target="#block-2">Block 2</a>
   <ul class="collapse">
-  <li><a href="#emr-cluster" id="toc-emr-cluster" class="nav-link" data-scroll-target="#emr-cluster">EMR cluster from the console</a></li>
-  <li><a href="#glue-tutorial" id="toc-glue-tutorial" class="nav-link" data-scroll-target="#glue-tutorial">Spark on Glue tutorial</a></li>
+  <li><a href="#emr-cluster" id="toc-emr-cluster" class="nav-link" data-scroll-target="#emr-cluster">B2T1: Cluster/EMR</a></li>
+  <li><a href="#glue-tutorial" id="toc-glue-tutorial" class="nav-link" data-scroll-target="#glue-tutorial">B2T2: Spark/Glue</a></li>
   </ul></li>
   <li><a href="#block-3" id="toc-block-3" class="nav-link" data-scroll-target="#block-3">Block 3</a>
   <ul class="collapse">
-  <li><a href="#b3-t1" id="toc-b3-t1" class="nav-link" data-scroll-target="#b3-t1">Tutorial 1: New York rides in Athena</a></li>
+  <li><a href="#b3-t1" id="toc-b3-t1" class="nav-link" data-scroll-target="#b3-t1">B3T1: Lakehouse/Athena+Glue</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -233,7 +233,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="block-2" class="level2">
 <h2 class="anchored" data-anchor-id="block-2">Block 2</h2>
 <section id="emr-cluster" class="level3">
-<h3 class="anchored" data-anchor-id="emr-cluster">EMR cluster from the console</h3>
+<h3 class="anchored" data-anchor-id="emr-cluster">B2T1: Cluster/EMR</h3>
 <ul>
 <li><strong>What you do:</strong> You launch an EMR cluster from the AWS console in your sandbox account, step by step, and check that it starts. You then terminate the cluster so that it stops billing.</li>
 <li><strong>Supports:</strong> L5 (Spark on a cluster) and A2, which runs its Spark job on EMR at two and then four core nodes.</li>
@@ -241,8 +241,8 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 </section>
 <section id="glue-tutorial" class="level3">
-<h3 class="anchored" data-anchor-id="glue-tutorial">Spark on Glue tutorial</h3>
-<p>Two parts, each a Glue notebook in the <a href="https://github.com/cpsc436c-2026w1/l7-spark-glue">Spark on Glue tutorial repository</a>. Set up your account once with the repository’s <a href="https://github.com/cpsc436c-2026w1/l7-spark-glue#1-set-up-your-account-once">step 1</a> before part A.</p>
+<h3 class="anchored" data-anchor-id="glue-tutorial">B2T2: Spark/Glue</h3>
+<p>Two parts, each a Glue notebook in the <a href="https://github.com/cpsc436c-2026w1/l7-spark-glue">B2T2 repository</a>. Set up your account once with the repository’s <a href="https://github.com/cpsc436c-2026w1/l7-spark-glue#1-set-up-your-account-once">step 1</a> before part A.</p>
 <p>A Glue session bills until it stops, even after you close the browser tab. End each notebook with its last cell, <code>%stop_session</code>.</p>
 <section id="glue-part-a" class="level4">
 <h4 class="anchored" data-anchor-id="glue-part-a">Part A: how Spark reads files</h4>
@@ -265,12 +265,12 @@ ul.task-list li input[type="checkbox"] {
 <section id="block-3" class="level2">
 <h2 class="anchored" data-anchor-id="block-3">Block 3</h2>
 <section id="b3-t1" class="level3">
-<h3 class="anchored" data-anchor-id="b3-t1">Tutorial 1: New York rides in Athena</h3>
+<h3 class="anchored" data-anchor-id="b3-t1">B3T1: Lakehouse/Athena+Glue</h3>
 <ul>
 <li><strong>What you do:</strong> You query the course’s rides table in Athena, predicting how much each query reads before you run it. You then copy one month into your own account and change it: delete rows, read the table as it was before the delete, load a day twice and repair it, add a column, and join your copy with a course table.</li>
 <li><strong>Supports:</strong> L10 (lakehouses: Iceberg tables, snapshots and time travel) and L11, and the use and change tasks in A3.</li>
 <li><strong>Before the tutorial:</strong> run the one-time setup in the repository’s <a href="https://github.com/cpsc436c-2026w1/b3-t1-athena-rides#1-set-up-your-account-once">step 1</a> (about 8 minutes, in CloudShell).</li>
-<li><strong>Materials:</strong> the <a href="https://github.com/cpsc436c-2026w1/b3-t1-athena-rides">tutorial 1 repository</a>: the steps, one SQL file per step with the expected results, and the setup script.</li>
+<li><strong>Materials:</strong> the <a href="https://github.com/cpsc436c-2026w1/b3-t1-athena-rides">B3T1 repository</a>: the steps, one SQL file per step with the expected results, and the setup script.</li>
 </ul>
 
 

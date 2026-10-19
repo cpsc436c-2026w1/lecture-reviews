@@ -10,16 +10,16 @@ materials.
 
 ## Block 2 {#block-2}
 
-### EMR cluster from the console {#emr-cluster}
+### B2T1: Cluster/EMR {#emr-cluster}
 
 - **What you do:** You launch an EMR cluster from the AWS console in your sandbox account, step by step, and check
   that it starts. You then terminate the cluster so that it stops billing.
 - **Supports:** L5 (Spark on a cluster) and A2, which runs its Spark job on EMR at two and then four core nodes.
 - **Materials:** step-by-step guide on Canvas.
 
-### Spark on Glue tutorial {#glue-tutorial}
+### B2T2: Spark/Glue {#glue-tutorial}
 
-Two parts, each a Glue notebook in the [Spark on Glue tutorial repository](https://github.com/cpsc436c-2026w1/l7-spark-glue).
+Two parts, each a Glue notebook in the [B2T2 repository](https://github.com/cpsc436c-2026w1/l7-spark-glue).
 Set up your account once with the repository's
 [step 1](https://github.com/cpsc436c-2026w1/l7-spark-glue#1-set-up-your-account-once) before part A.
 
@@ -45,7 +45,7 @@ A Glue session bills until it stops, even after you close the browser tab. End e
 
 ## Block 3 {#block-3}
 
-### Tutorial 1: New York rides in Athena {#b3-t1}
+### B3T1: Lakehouse/Athena+Glue {#b3-t1}
 
 - **What you do:** You query the course's rides table in Athena, predicting how much each query reads before you
   run it. You then copy one month into your own account and change it: delete rows, read the table as it was before
@@ -55,6 +55,6 @@ A Glue session bills until it stops, even after you close the browser tab. End e
 - **Before the tutorial:** run the one-time setup in the repository's
   [step 1](https://github.com/cpsc436c-2026w1/b3-t1-athena-rides#1-set-up-your-account-once) (about 8 minutes, in
   CloudShell).
-- **Materials:** the [tutorial 1 repository](https://github.com/cpsc436c-2026w1/b3-t1-athena-rides): the steps, one
+- **Materials:** the [B3T1 repository](https://github.com/cpsc436c-2026w1/b3-t1-athena-rides): the steps, one
   SQL file per step with the expected results, and the setup script.
 

@@ -30,13 +30,13 @@ website:
           - href: tutorials.qmd
             text: All tutorials
           - href: tutorials.qmd#emr-cluster
-            text: "EMR cluster from the console"
+            text: "B2T1: Cluster/EMR"
           - href: tutorials.qmd#glue-part-a
-            text: "Spark on Glue, part A: how Spark reads files"
+            text: "B2T2 part A: Spark/Glue, how Spark reads files"
           - href: tutorials.qmd#glue-part-b
-            text: "Spark on Glue, part B: slow queries and their fixes"
+            text: "B2T2 part B: Spark/Glue, slow queries and their fixes"
           - href: tutorials.qmd#b3-t1
-            text: "Block 3, tutorial 1: New York rides in Athena"
+            text: "B3T1: Lakehouse/Athena+Glue"
       - text: Assignments
         menu:
           - href: https://cpsc436c-2026w1.github.io/a1-starter/
