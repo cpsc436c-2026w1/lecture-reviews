@@ -36,6 +36,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-listing/list.min.js"></script>
+<script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -73,7 +75,65 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script>
 
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-title',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-title-sort'] }],
+      
+      searchColumns: ["listing-title","listing-author"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -214,20 +274,77 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>Each page follows one lecture part by part, with the quizzes from the slides. The 📝 on a quiz slide links to the same quiz here.</p>
-<ul>
-<li><a href="./l1.html">L1: the four resources, and reading only what you need</a></li>
-<li><a href="./l2.html">L2: EC2, S3 and Lambda by example</a></li>
-<li><a href="./l3.html">L3: cost models, capacity and what starts a function</a></li>
-<li><a href="./l4.html">L4: scaling up, scaling out, and where the data lives</a></li>
-<li><a href="./l5.html">L5: Spark on a cluster</a></li>
-<li><a href="./w2-l6.html">L6: how Spark runs a query, and why it might be slow</a></li>
-</ul>
-<p>Before the midterm: <a href="./midterm-review.html">Midterm review</a>, practice questions on L1 to L7 with feedback on every option.</p>
+<p>Each page follows one lecture part by part, with the quizzes from the slides. The 📝 on a quiz slide links to the same quiz here. Tutorials are on the <a href="./tutorials.html">Tutorials</a> page.</p>
 
 
 
-</main> <!-- /main -->
+
+<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
+<table class="quarto-listing-table table">
+<thead>
+<tr>
+
+<th>
+Review page
+</th>
+
+</tr>
+</thead>
+<tbody class="list">
+
+<tr data-index="0" data-listing-file-modified-sort="1792449898686" data-listing-reading-time-sort="12" data-listing-word-count-sort="2391" data-listing-title-sort="L1 review: the four resources, and reading only what you need" data-listing-filename-sort="l1.qmd">
+<td>
+<a href="./l1.html" class="title listing-title">L1 review: the four resources, and reading only what you need</a>
+</td>
+
+</tr>
+
+<tr data-index="1" data-listing-file-modified-sort="1792449898687" data-listing-reading-time-sort="13" data-listing-word-count-sort="2547" data-listing-title-sort="L2 review: EC2, S3 and Lambda by example" data-listing-filename-sort="l2.qmd">
+<td>
+<a href="./l2.html" class="title listing-title">L2 review: EC2, S3 and Lambda by example</a>
+</td>
+
+</tr>
+
+<tr data-index="2" data-listing-file-modified-sort="1792449898689" data-listing-reading-time-sort="16" data-listing-word-count-sort="3148" data-listing-title-sort="L3 review: cost models, capacity and what starts a function" data-listing-filename-sort="l3.qmd">
+<td>
+<a href="./l3.html" class="title listing-title">L3 review: cost models, capacity and what starts a function</a>
+</td>
+
+</tr>
+
+<tr data-index="3" data-listing-file-modified-sort="1792449898690" data-listing-reading-time-sort="15" data-listing-word-count-sort="2976" data-listing-title-sort="L4 review: scaling up, scaling out, and where the data lives" data-listing-filename-sort="l4.qmd">
+<td>
+<a href="./l4.html" class="title listing-title">L4 review: scaling up, scaling out, and where the data lives</a>
+</td>
+
+</tr>
+
+<tr data-index="4" data-listing-file-modified-sort="1792449898691" data-listing-reading-time-sort="13" data-listing-word-count-sort="2494" data-listing-title-sort="L5 review: Spark on a cluster" data-listing-filename-sort="l5.qmd">
+<td>
+<a href="./l5.html" class="title listing-title">L5 review: Spark on a cluster</a>
+</td>
+
+</tr>
+
+<tr data-index="5" data-listing-file-modified-sort="1792449898692" data-listing-reading-time-sort="19" data-listing-word-count-sort="3678" data-listing-title-sort="L6 review: how Spark runs a query, and why it might be slow" data-listing-filename-sort="w2-l6.qmd">
+<td>
+<a href="./w2-l6.html" class="title listing-title">L6 review: how Spark runs a query, and why it might be slow</a>
+</td>
+
+</tr>
+
+<tr data-index="6" data-listing-file-modified-sort="1792449898692" data-listing-reading-time-sort="41" data-listing-word-count-sort="8014" data-listing-title-sort="Midterm review" data-listing-filename-sort="midterm-review.qmd">
+<td>
+<a href="./midterm-review.html" class="title listing-title">Midterm review</a>
+</td>
+
+</tr>
+
+</tbody>
+</table>
+<div class="listing-no-matching d-none">No matching items</div>
+</div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";

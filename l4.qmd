@@ -1,4 +1,5 @@
 ---
+order: 4
 title: "L4 review: scaling up, scaling out, and where the data lives"
 format:
   html:

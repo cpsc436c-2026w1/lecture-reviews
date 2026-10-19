@@ -1,4 +1,5 @@
 ---
+order: 6
 title: "L6 review: how Spark runs a query, and why it might be slow"
 format:
   html:

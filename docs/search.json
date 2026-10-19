@@ -319,6 +319,6 @@
     "href": "index.html",
     "title": "Lecture reviews",
     "section": "",
-    "text": "Each page follows one lecture part by part, with the quizzes from the slides. The 📝 on a quiz slide links to the same quiz here.\n\nL1: the four resources, and reading only what you need\nL2: EC2, S3 and Lambda by example\nL3: cost models, capacity and what starts a function\nL4: scaling up, scaling out, and where the data lives\nL5: Spark on a cluster\nL6: how Spark runs a query, and why it might be slow\n\nBefore the midterm: Midterm review, practice questions on L1 to L7 with feedback on every option."
+    "text": "Each page follows one lecture part by part, with the quizzes from the slides. The 📝 on a quiz slide links to the same quiz here. Tutorials are on the Tutorials page.\n\n\n\n\n\n\n\n\n\n\nReview page\n\n\n\n\n\n\n\n\nL1 review: the four resources, and reading only what you need\n\n\n\n\n\n\nL2 review: EC2, S3 and Lambda by example\n\n\n\n\n\n\nL3 review: cost models, capacity and what starts a function\n\n\n\n\n\n\nL4 review: scaling up, scaling out, and where the data lives\n\n\n\n\n\n\nL5 review: Spark on a cluster\n\n\n\n\n\n\nL6 review: how Spark runs a query, and why it might be slow\n\n\n\n\n\n\nMidterm review\n\n\n\n\n\n\nNo matching items"
   }
 ]

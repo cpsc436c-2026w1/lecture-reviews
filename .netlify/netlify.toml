@@ -7,8 +7,9 @@ redirects = []
 [functions."*"]
 
 [build]
-publish = "/Users/imusabirov/mds/436c"
+publish = "/Users/imusabirov/mds/436c/lecture-reviews-publish"
 publishOrigin = "default"
+base = "/Users/imusabirov/mds/436c/lecture-reviews-publish"
 
 [build.environment]
 

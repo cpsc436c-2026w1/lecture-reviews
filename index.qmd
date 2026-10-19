@@ -1,15 +1,19 @@
 ---
 title: "Lecture reviews"
 toc: false
+listing:
+  contents:
+    - "l*.qmd"
+    - "w2-l*.qmd"
+    - "midterm-review.qmd"
+    - "!*-changes.qmd"
+  type: table
+  fields: [title]
+  field-display-names:
+    title: "Review page"
+  sort: "order"
+  sort-ui: false
+  filter-ui: false
 ---
 
-Each page follows one lecture part by part, with the quizzes from the slides. The 📝 on a quiz slide links to the same quiz here.
-
-- [L1: the four resources, and reading only what you need](l1.qmd)
-- [L2: EC2, S3 and Lambda by example](l2.qmd)
-- [L3: cost models, capacity and what starts a function](l3.qmd)
-- [L4: scaling up, scaling out, and where the data lives](l4.qmd)
-- [L5: Spark on a cluster](l5.qmd)
-- [L6: how Spark runs a query, and why it might be slow](w2-l6.qmd)
-
-Before the midterm: [Midterm review](midterm-review.qmd), practice questions on L1 to L7 with feedback on every option.
+Each page follows one lecture part by part, with the quizzes from the slides. The 📝 on a quiz slide links to the same quiz here. Tutorials are on the [Tutorials](tutorials.qmd) page.
