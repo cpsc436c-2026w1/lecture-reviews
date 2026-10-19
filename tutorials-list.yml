@@ -1,0 +1,12 @@
+- title: "B2T1: Cluster/EMR"
+  description: "Launch an EMR cluster from the console, check it starts, terminate it"
+  path: tutorials.qmd#emr-cluster
+- title: "B2T2 part A: Spark/Glue, how Spark reads files"
+  description: "Glue notebook: which folders, files and row groups Spark reads"
+  path: tutorials.qmd#glue-part-a
+- title: "B2T2 part B: Spark/Glue, slow queries and their fixes"
+  description: "Glue notebook: three slow queries from L6 and what fixes each"
+  path: tutorials.qmd#glue-part-b
+- title: "B3T1: Lakehouse/Athena+Glue"
+  description: "Query the course rides table in Athena, copy a month, change it, look back"
+  path: tutorials.qmd#b3-t1

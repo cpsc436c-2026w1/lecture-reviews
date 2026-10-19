@@ -317,8 +317,29 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "Lecture reviews",
+    "title": "CPSC 436C companion",
     "section": "",
-    "text": "Each page follows one lecture part by part, with the quizzes from the slides. The 📝 on a quiz slide links to the same quiz here. Tutorials are on the Tutorials page.\n\n\n\n\n\n\n\n\n\n\nReview page\n\n\n\n\n\n\n\n\nL1 review: the four resources, and reading only what you need\n\n\n\n\n\n\nL2 review: EC2, S3 and Lambda by example\n\n\n\n\n\n\nL3 review: cost models, capacity and what starts a function\n\n\n\n\n\n\nL4 review: scaling up, scaling out, and where the data lives\n\n\n\n\n\n\nL5 review: Spark on a cluster\n\n\n\n\n\n\nL6 review: how Spark runs a query, and why it might be slow\n\n\n\n\n\n\nMidterm review\n\n\n\n\n\n\nNo matching items"
+    "text": "Each page follows one lecture part by part, with the quizzes from the slides. The 📝 on a quiz slide links to the same quiz here.\n\n\n\n\n\n\nReview page\n\n\n\n\n\n\n\n\nL1 review: the four resources, and reading only what you need\n\n\n\n\n\n\nL2 review: EC2, S3 and Lambda by example\n\n\n\n\n\n\nL3 review: cost models, capacity and what starts a function\n\n\n\n\n\n\nL4 review: scaling up, scaling out, and where the data lives\n\n\n\n\n\n\nL5 review: Spark on a cluster\n\n\n\n\n\n\nL6 review: how Spark runs a query, and why it might be slow\n\n\n\n\n\n\nMidterm review\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "index.html#lecture-reviews",
+    "href": "index.html#lecture-reviews",
+    "title": "CPSC 436C companion",
+    "section": "",
+    "text": "Each page follows one lecture part by part, with the quizzes from the slides. The 📝 on a quiz slide links to the same quiz here.\n\n\n\n\n\n\nReview page\n\n\n\n\n\n\n\n\nL1 review: the four resources, and reading only what you need\n\n\n\n\n\n\nL2 review: EC2, S3 and Lambda by example\n\n\n\n\n\n\nL3 review: cost models, capacity and what starts a function\n\n\n\n\n\n\nL4 review: scaling up, scaling out, and where the data lives\n\n\n\n\n\n\nL5 review: Spark on a cluster\n\n\n\n\n\n\nL6 review: how Spark runs a query, and why it might be slow\n\n\n\n\n\n\nMidterm review\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "index.html#tutorials",
+    "href": "index.html#tutorials",
+    "title": "CPSC 436C companion",
+    "section": "Tutorials",
+    "text": "Tutorials\nDetails and setup for each tutorial are on the Tutorials page.\n\n\n\n\n\n\nTutorial\n\n\n\nWhat you do\n\n\n\n\n\n\n\n\nB2T1: Cluster/EMR\n\n\nLaunch an EMR cluster from the console, check it starts, terminate it\n\n\n\n\n\n\nB2T2 part A: Spark/Glue, how Spark reads files\n\n\nGlue notebook: which folders, files and row groups Spark reads\n\n\n\n\n\n\nB2T2 part B: Spark/Glue, slow queries and their fixes\n\n\nGlue notebook: three slow queries from L6 and what fixes each\n\n\n\n\n\n\nB3T1: Lakehouse/Athena+Glue\n\n\nQuery the course rides table in Athena, copy a month, change it, look back\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "index.html#assignments",
+    "href": "index.html#assignments",
+    "title": "CPSC 436C companion",
+    "section": "Assignments",
+    "text": "Assignments\n\n\n\n\n\n\nAssignment\n\n\n\n\n\n\n\n\nA1 starter\n\n\n\n\n\n\nA2 starter\n\n\n\n\n\n\nNo matching items"
   }
 ]

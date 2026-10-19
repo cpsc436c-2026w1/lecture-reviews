@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Lecture reviews – CPSC 436C lecture reviews</title>
+<title>CPSC 436C companion – CPSC 436C lecture reviews</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -78,7 +78,7 @@ ul.task-list li input[type="checkbox"] {
 <script>
 
   window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    const listingTargetEl = window.document.querySelector('#listing-reviews .list');
     if (!listingTargetEl) {
       // No listing discovered, do not attach.
       return; 
@@ -91,7 +91,63 @@ ul.task-list li input[type="checkbox"] {
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+    window['quarto-listings']['listing-reviews'] = new List('listing-reviews', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-tutorials .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-title','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-title-sort'] }],
+      
+      searchColumns: ["listing-title","listing-description"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-tutorials'] = new List('listing-tutorials', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-assignments .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-title',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-title-sort'] }],
+      
+      searchColumns: ["listing-title"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-assignments'] = new List('listing-assignments', options);
 
     if (window['quarto-listing-loaded']) {
       window['quarto-listing-loaded']();
@@ -257,7 +313,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Lecture reviews</h1>
+<h1 class="title">CPSC 436C companion</h1>
 </div>
 
 
@@ -274,12 +330,10 @@ window.Quarto = {
 </header>
 
 
-<p>Each page follows one lecture part by part, with the quizzes from the slides. The 📝 on a quiz slide links to the same quiz here. Tutorials are on the <a href="./tutorials.html">Tutorials</a> page.</p>
-
-
-
-
-<div class="quarto-listing quarto-listing-container-table" id="listing-listing">
+<section id="lecture-reviews" class="level2">
+<h2 class="anchored" data-anchor-id="lecture-reviews">Lecture reviews</h2>
+<p>Each page follows one lecture part by part, with the quizzes from the slides. The 📝 on a quiz slide links to the same quiz here.</p>
+<div id="listing-reviews" class="quarto-listing quarto-listing-container-table">
 <table class="quarto-listing-table table">
 <thead>
 <tr>
@@ -344,7 +398,112 @@ Review page
 </tbody>
 </table>
 <div class="listing-no-matching d-none">No matching items</div>
-</div></main> <!-- /main -->
+</div>
+</section>
+<section id="tutorials" class="level2">
+<h2 class="anchored" data-anchor-id="tutorials">Tutorials</h2>
+<p>Details and setup for each tutorial are on the <a href="./tutorials.html">Tutorials</a> page.</p>
+<div id="listing-tutorials" class="quarto-listing quarto-listing-container-table">
+<table class="quarto-listing-table table">
+<thead>
+<tr>
+
+<th>
+Tutorial
+</th>
+
+<th>
+What you do
+</th>
+
+</tr>
+</thead>
+<tbody class="list">
+
+<tr data-index="0" data-listing-title-sort="B2T1: Cluster/EMR">
+<td>
+<a href="./tutorials.html#emr-cluster" class="title listing-title">B2T1: Cluster/EMR</a>
+</td>
+<td>
+<span class="listing-description">Launch an EMR cluster from the console, check it starts, terminate it</span>
+</td>
+
+</tr>
+
+<tr data-index="1" data-listing-title-sort="B2T2 part A: Spark/Glue, how Spark reads files">
+<td>
+<a href="./tutorials.html#glue-part-a" class="title listing-title">B2T2 part A: Spark/Glue, how Spark reads files</a>
+</td>
+<td>
+<span class="listing-description">Glue notebook: which folders, files and row groups Spark reads</span>
+</td>
+
+</tr>
+
+<tr data-index="2" data-listing-title-sort="B2T2 part B: Spark/Glue, slow queries and their fixes">
+<td>
+<a href="./tutorials.html#glue-part-b" class="title listing-title">B2T2 part B: Spark/Glue, slow queries and their fixes</a>
+</td>
+<td>
+<span class="listing-description">Glue notebook: three slow queries from L6 and what fixes each</span>
+</td>
+
+</tr>
+
+<tr data-index="3" data-listing-title-sort="B3T1: Lakehouse/Athena+Glue">
+<td>
+<a href="./tutorials.html#b3-t1" class="title listing-title">B3T1: Lakehouse/Athena+Glue</a>
+</td>
+<td>
+<span class="listing-description">Query the course rides table in Athena, copy a month, change it, look back</span>
+</td>
+
+</tr>
+
+</tbody>
+</table>
+<div class="listing-no-matching d-none">No matching items</div>
+</div>
+</section>
+<section id="assignments" class="level2">
+<h2 class="anchored" data-anchor-id="assignments">Assignments</h2>
+<div id="listing-assignments" class="quarto-listing quarto-listing-container-table">
+<table class="quarto-listing-table table">
+<thead>
+<tr>
+
+<th>
+Assignment
+</th>
+
+</tr>
+</thead>
+<tbody class="list">
+
+<tr data-index="0" data-listing-title-sort="A1 starter">
+<td>
+<a href="https://cpsc436c-2026w1.github.io/a1-starter/" class="title listing-title">A1 starter</a>
+</td>
+
+</tr>
+
+<tr data-index="1" data-listing-title-sort="A2 starter">
+<td>
+<a href="https://cpsc436c-2026w1.github.io/a2-starter/" class="title listing-title">A2 starter</a>
+</td>
+
+</tr>
+
+</tbody>
+</table>
+<div class="listing-no-matching d-none">No matching items</div>
+</div>
+
+
+
+</section>
+
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
