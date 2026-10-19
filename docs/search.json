@@ -18,7 +18,7 @@
     "href": "tutorials.html#block-3",
     "title": "Tutorials",
     "section": "Block 3",
-    "text": "Block 3\n\nB3T1: Lakehouse/Athena+Glue\n\nWhat you do: You query the course’s rides table in Athena, predicting how much each query reads before you run it. You then copy one month into your own account and change it: delete rows, read the table as it was before the delete, load a day twice and repair it, add a column, and join your copy with a course table.\nSupports: L10 (lakehouses: Iceberg tables, snapshots and time travel) and L11, and the use and change tasks in A3.\nBefore the tutorial: run the one-time setup in the repository’s step 1 (about 8 minutes, in CloudShell).\nMaterials: the B3T1 repository: the steps, one SQL file per step with the expected results, and the setup script."
+    "text": "Block 3\n\nB3T1: Lakehouse/Athena+Glue\n\nWhat you do: You query the course’s rides table in Athena, predicting how much each query reads before you run it. You then copy one month into your own account and change it: delete rows, read the table as it was before the delete, load a day twice and repair it, add a column, and join your copy with a course table.\nSupports: L10 (lakehouses: Iceberg tables, snapshots and time travel) and L11, and the use and change tasks in A3.\nBefore the tutorial: run the one-time setup in the repository’s step 1 (in CloudShell).\nMaterials: the B3T1 repository: the steps, one SQL file per step with the expected results, and the setup script."
   },
   {
     "objectID": "l3.html",
