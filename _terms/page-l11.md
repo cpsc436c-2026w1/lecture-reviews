@@ -2,6 +2,8 @@
 
 **CTAS** (`CREATE TABLE ... AS SELECT`). Writes a query's result as a new table.
 
+**`UNLOAD`**. Runs a query and writes its result as files to an empty S3 location, with no table.
+
 **`ALTER TABLE ... ADD COLUMNS`**. A schema change, written as a new metadata file with no new snapshot.
 
 **Metadata tables** (`"t$partitions"`, `"t$files"`, `"t$snapshots"`, `"t$history"`). Read-only tables Athena makes from an Iceberg table's metadata, one row per partition, data file or snapshot.
@@ -45,7 +47,3 @@
 **Storage class**. S3's price tier for an object: lower monthly price, a fee per GB read and a minimum duration.
 
 **Lifecycle rule**. An S3 bucket rule that moves or deletes the objects under a prefix a set number of days after they were written.
-
-### Appendix
-
-**`UNLOAD`**. Runs a query and writes its result as files to an empty S3 location, with no table.

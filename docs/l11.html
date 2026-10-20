@@ -217,8 +217,11 @@ ul.task-list li input[type="checkbox"] {
   </ul></li>
   <li><a href="#part-engine" id="toc-part-engine" class="nav-link" data-scroll-target="#part-engine">Choosing an engine for a regular workload</a>
   <ul class="collapse">
-  <li><a href="#q-where-from" id="toc-q-where-from" class="nav-link" data-scroll-target="#q-where-from">Where do you get each piece of information?</a></li>
-  <li><a href="#q-which-bill" id="toc-q-which-bill" class="nav-link" data-scroll-target="#q-which-bill">Which option bills each part of the cost?</a></li>
+  <li><a href="#q-where-from" id="toc-q-where-from" class="nav-link" data-scroll-target="#q-where-from">Step 1: where do you get each piece of information?</a></li>
+  <li><a href="#q-which-bill" id="toc-q-which-bill" class="nav-link" data-scroll-target="#q-which-bill">Step 2: which option bills each part of the cost?</a></li>
+  <li><a href="#we-athena-cluster" id="toc-we-athena-cluster" class="nav-link" data-scroll-target="#we-athena-cluster">Step 3, read: worked example, Athena or a cluster?</a></li>
+  <li><a href="#we-glue-cluster" id="toc-we-glue-cluster" class="nav-link" data-scroll-target="#we-glue-cluster">Step 4, finish it: Glue or the same cluster?</a></li>
+  <li><a href="#we-own" id="toc-we-own" class="nav-link" data-scroll-target="#we-own">Step 5, on your own: new workload</a></li>
   </ul></li>
   <li><a href="#part-snapshots" id="toc-part-snapshots" class="nav-link" data-scroll-target="#part-snapshots">What the table records</a>
   <ul class="collapse">
@@ -236,7 +239,6 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#d4-corrections" id="toc-d4-corrections" class="nav-link" data-scroll-target="#d4-corrections">D4 corrections</a></li>
   <li><a href="#d5-upkeep" id="toc-d5-upkeep" class="nav-link" data-scroll-target="#d5-upkeep">D5 upkeep</a></li>
   <li><a href="#d6-object-storage" id="toc-d6-object-storage" class="nav-link" data-scroll-target="#d6-object-storage">D6 object storage</a></li>
-  <li><a href="#appendix" id="toc-appendix" class="nav-link" data-scroll-target="#appendix">Appendix</a></li>
   <li><a href="#lake-and-lakehouse" id="toc-lake-and-lakehouse" class="nav-link" data-scroll-target="#lake-and-lakehouse">Lake and lakehouse</a></li>
   <li><a href="#icebergs-levels" id="toc-icebergs-levels" class="nav-link" data-scroll-target="#icebergs-levels">Iceberg’s levels</a></li>
   <li><a href="#what-the-table-format-fixes" id="toc-what-the-table-format-fixes" class="nav-link" data-scroll-target="#what-the-table-format-fixes">What the table format fixes</a></li>
@@ -378,15 +380,15 @@ shuffle_answers: false
 </section>
 <section id="part-engine" class="level2">
 <h2 class="anchored" data-anchor-id="part-engine">Choosing an engine for a regular workload</h2>
-<p>L11 worked two examples: Athena against a 3-node EMR cluster up 10 hours a day (equal at about 425 runs a day of one heavy report query), and Glue against the same cluster. These two questions rebuild that reasoning for a new case. Your own crossover, with numbers, is in A3.</p>
+<p>Five steps, from naming the inputs to a crossover of your own. Steps 1 and 2 are quizzes; step 3 is a worked example to read; in step 4 you finish one; step 5 you do alone. A3 task 2 asks for the same on the branch’s loads. We’ve seen this recipe on the D3 redesign slide (steps 3-5).</p>
 <section id="q-where-from" class="level3">
-<h3 class="anchored" data-anchor-id="q-where-from">Where do you get each piece of information?</h3>
+<h3 class="anchored" data-anchor-id="q-where-from">Step 1: where do you get each piece of information?</h3>
 <p>A team runs the same report queries on Athena every day and asks whether to move them to Trino on an EMR cluster.</p>
 <div class="quizdown">
 ## Where do you get each piece of information for this decision? Each option may be used once, more than once, or not at all.
 
 - Data scanned by each report query :: Athena query history
-  &gt; Athena records each query's Data scanned. Data scanned per run (at least 10 MB) × price per TB × runs a day is Athena's daily cost, as in worked example 1.
+  &gt; Athena records each query's Data scanned. For billing, AWS rounds it up to the next MB, with a 10 MB minimum per query; the billed amount per run × price per TB × runs a day is Athena's daily cost, as in step 3.
 - Number of report runs a day today :: Athena query history
   &gt; Each run appears in the history. Runs a day multiply the cost per run on Athena, and decide how busy a cluster would be.
 - Run time of one report on a cluster :: Pilot run on a cluster
@@ -408,7 +410,7 @@ shuffle_answers: false
 </div>
 </section>
 <section id="q-which-bill" class="level3">
-<h3 class="anchored" data-anchor-id="q-which-bill">Which option bills each part of the cost?</h3>
+<h3 class="anchored" data-anchor-id="q-which-bill">Step 2: which option bills each part of the cost?</h3>
 <p>Your pilot measured one report query: about 2.8 GB of Data scanned on Athena, about 10 seconds on a 3-node EMR cluster, and about 2 minutes as a Glue job (Glue version 5). Here “EMR cluster” means everything its nodes are billed for: the EC2 price and the EMR price.</p>
 <div class="quizdown">
 ---
@@ -436,12 +438,208 @@ shuffle_answers: true
 - :: None of them
 </div>
 </section>
+<section id="we-athena-cluster" class="level3">
+<h3 class="anchored" data-anchor-id="we-athena-cluster">Step 3, read: worked example, Athena or a cluster?</h3>
+<p>A report query runs on Athena today. Would 3 nodes running Trino on EMR be cheaper?</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 30%">
+<col style="width: 48%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Input</th>
+<th>Value</th>
+<th>Where you read it</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Expected load</td>
+<td>500 runs a day, at most 60 in the busiest hour</td>
+<td>stakeholders and business case</td>
+</tr>
+<tr class="even">
+<td>Run time on 3 nodes</td>
+<td>10 s per run</td>
+<td>Trino web UI, <strong>Elapsed</strong>, from a pilot run</td>
+</tr>
+<tr class="odd">
+<td>Data scanned per run</td>
+<td>3 GB = 0.003 TB</td>
+<td>Athena query history, or <strong>Data scanned</strong> under the results in the editor</td>
+</tr>
+<tr class="even">
+<td>Athena price</td>
+<td>$5.50 per TB of Data scanned</td>
+<td>AWS Athena pricing page, Canada (Central)</td>
+</tr>
+<tr class="odd">
+<td>Cluster up</td>
+<td>10 hours a day</td>
+<td>stakeholders and business case</td>
+</tr>
+<tr class="even">
+<td>Node price</td>
+<td>$0.22 per node-hour</td>
+<td>EC2 m7g.xlarge $0.18 + EMR $0.04 per hour, AWS pricing pages</td>
+</tr>
+</tbody>
+</table>
+<ol type="1">
+<li><strong>Fit first.</strong> Busiest hour: 60 runs × 10 s = 600 s of work, out of 3,600 s. The 3 nodes keep up, one run at a time. (If they did not, you would size the cluster up and price the bigger one.)</li>
+<li><strong>Athena, a day.</strong> 0.003 TB × $5.50 per TB = $0.0165 a run; 500 runs × $0.0165 = $8.25.</li>
+<li><strong>Cluster, a day.</strong> 3 nodes × $0.22 per node-hour × 10 hours = $6.60 for any load the cluster keeps up with.</li>
+<li><strong>Crossover.</strong> $6.60 ÷ $0.0165 = 400 runs a day. At 500 a day the cluster is cheaper; below 400, Athena is.</li>
+</ol>
+<p>Not counted: the minutes a cluster takes to start (its nodes are billed then too) and S3 requests.</p>
+</section>
+<section id="we-glue-cluster" class="level3">
+<h3 class="anchored" data-anchor-id="we-glue-cluster">Step 4, finish it: Glue or the same cluster?</h3>
+<p>The same report could run as a Glue job instead. Compare it with the same cluster as in step 3: 3 nodes, up 10 hours a day, $6.60 a day.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 30%">
+<col style="width: 48%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Input</th>
+<th>Value</th>
+<th>Where you read it</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Expected load</td>
+<td>500 runs a day</td>
+<td>as in step 3</td>
+</tr>
+<tr class="even">
+<td>Workers</td>
+<td>2 DPU (2 G.1X workers)</td>
+<td>Glue job run details, <strong>Worker type</strong> and <strong>Number of workers</strong> (G.1X = 1 DPU each)</td>
+</tr>
+<tr class="odd">
+<td>Billed time per run</td>
+<td>2 minutes</td>
+<td>Glue job run details, <strong>Execution time</strong>; at least 1 minute is billed</td>
+</tr>
+<tr class="even">
+<td>Glue price</td>
+<td>$0.44 per DPU-hour</td>
+<td>AWS Glue pricing page, Canada (Central)</td>
+</tr>
+<tr class="odd">
+<td>Cluster, a day</td>
+<td>3 nodes × $0.22 × 10 hours = $6.60</td>
+<td>step 3</td>
+</tr>
+</tbody>
+</table>
+<p>Fill in the blanks on paper, then open the answer.</p>
+<ol type="1">
+<li>Glue, one run: 2 DPU × 2 minutes = ___ DPU-minutes = ___ DPU-hour; × $0.44 = ___ a run.</li>
+<li>Glue, a day: 500 runs × ___ = ___, against the cluster’s $6.60.</li>
+<li>Crossover: $6.60 ÷ ___ ≈ ___ runs a day. Which is cheaper at 500 runs a day? And for one run a night?</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled" title="Answer, step 4">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer, step 4
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>2 × 2 = 4 DPU-minutes = 4/60 DPU-hour; 4/60 × $0.44 ≈ $0.02933 a run.</li>
+<li>500 × $0.02933 ≈ $14.67 a day, against $6.60.</li>
+<li>$6.60 ÷ $0.02933 ≈ 225 runs a day. At 500 a day the cluster is cheaper. For one run a night, Glue is cheaper: it bills about 3 cents, while the cluster’s nodes are billed for 10 hours.</li>
+</ol>
+<p>No fit check here: each Glue run gets its own workers. Glue bills each run’s execution time, at least 1 minute.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="we-own" class="level3">
+<h3 class="anchored" data-anchor-id="we-own">Step 5, on your own: new workload</h3>
+<p>An online shop’s sales report:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 40%">
+<col style="width: 60%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Input</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Expected load</td>
+<td>120 runs a day, at most 20 in the busiest hour</td>
+</tr>
+<tr class="even">
+<td>Data scanned per run on Athena</td>
+<td>5 GB</td>
+</tr>
+<tr class="odd">
+<td>Run time on 3 nodes</td>
+<td>15 s per run</td>
+</tr>
+<tr class="even">
+<td>Cluster up</td>
+<td>12 hours a day, at $0.22 per node-hour</td>
+</tr>
+<tr class="odd">
+<td>As a Glue job</td>
+<td>2 DPU, 1.5 minutes billed per run, $0.44 per DPU-hour</td>
+</tr>
+<tr class="even">
+<td>Athena price</td>
+<td>$5.50 per TB of Data scanned</td>
+</tr>
+</tbody>
+</table>
+<p>Work through the same four steps as in step 3, then price Glue as in step 4. Which of the three is cheapest at 120 runs a day?</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Answer, step 5">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer, step 5
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Fit: 20 × 15 s = 300 s of 3,600 s. The 3 nodes keep up.</li>
+<li>Athena: 0.005 TB × $5.50 = $0.0275 a run; 120 × $0.0275 = $3.30 a day.</li>
+<li>Cluster: 3 × $0.22 × 12 = $7.92 a day.</li>
+<li>Crossover, Athena against the cluster: $7.92 ÷ $0.0275 = 288 runs a day; at 120, Athena is cheaper.</li>
+<li>Glue: 2 × 1.5 = 3 DPU-minutes = 0.05 DPU-hour × $0.44 = $0.022 a run; 120 × $0.022 = $2.64 a day.</li>
+</ol>
+<p>Glue is cheapest here: each run scans 5 GB, which Athena bills by the TB, while Glue bills 1.5 minutes. The rules of thumb are where you start; the arithmetic decides. Glue’s runs also wait while workers start, which matters if someone waits for the report.</p>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="part-snapshots" class="level2">
 <h2 class="anchored" data-anchor-id="part-snapshots">What the table records</h2>
 <section id="q-snapshots" class="level3">
 <h3 class="anchored" data-anchor-id="q-snapshots">What does <code>$snapshots</code> show after each statement?</h3>
 <p>You copy the shop’s orders into your own Iceberg table, <code>shop.orders_copy</code>, with Athena, and run the statements below one after another. After each one you look at <code>"orders_copy$snapshots"</code>.</p>
+<p>D1, D4 and D5 checks might help you to answer. If it is still not super clear, experiment with the <a href="https://github.com/cpsc436c-2026w1/b3-t1-athena-rides">Tutorial 1</a> dataset.</p>
 <div class="quizdown">
 ---
 shuffle_answers: true
@@ -548,6 +746,7 @@ shuffle_answers: true
 <section id="d1-catalog-and-table-format" class="level3">
 <h3 class="anchored" data-anchor-id="d1-catalog-and-table-format">D1 catalog and table format</h3>
 <p><strong>CTAS</strong> (<code>CREATE TABLE ... AS SELECT</code>). Writes a query’s result as a new table.</p>
+<p><strong><code>UNLOAD</code></strong>. Runs a query and writes its result as files to an empty S3 location, with no table.</p>
 <p><strong><code>ALTER TABLE ... ADD COLUMNS</code></strong>. A schema change, written as a new metadata file with no new snapshot.</p>
 <p><strong>Metadata tables</strong> (<code>"t$partitions"</code>, <code>"t$files"</code>, <code>"t$snapshots"</code>, <code>"t$history"</code>). Read-only tables Athena makes from an Iceberg table’s metadata, one row per partition, data file or snapshot.</p>
 <p><strong>Snapshot operation</strong>. What <code>$snapshots</code> records for each snapshot: <code>append</code> (files added), <code>overwrite</code> (rows deleted or changed), <code>replace</code> (files rewritten, rows unchanged).</p>
@@ -580,10 +779,6 @@ shuffle_answers: true
 <h3 class="anchored" data-anchor-id="d6-object-storage">D6 object storage</h3>
 <p><strong>Storage class</strong>. S3’s price tier for an object: lower monthly price, a fee per GB read and a minimum duration.</p>
 <p><strong>Lifecycle rule</strong>. An S3 bucket rule that moves or deletes the objects under a prefix a set number of days after they were written.</p>
-</section>
-<section id="appendix" class="level3">
-<h3 class="anchored" data-anchor-id="appendix">Appendix</h3>
-<p><strong><code>UNLOAD</code></strong>. Runs a query and writes its result as files to an empty S3 location, with no table.</p>
 </section>
 <section id="lake-and-lakehouse" class="level3">
 <h3 class="anchored" data-anchor-id="lake-and-lakehouse">Lake and lakehouse</h3>
