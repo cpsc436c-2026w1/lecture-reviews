@@ -380,7 +380,7 @@ shuffle_answers: false
 </section>
 <section id="part-engine" class="level2">
 <h2 class="anchored" data-anchor-id="part-engine">Choosing an engine for a regular workload</h2>
-<p>Five steps, from naming the inputs to a crossover of your own. Steps 1 and 2 are quizzes; step 3 is a worked example to read; in step 4 you finish one; step 5 you do alone. A3 task 2 asks for the same on the branch’s loads. We’ve seen this recipe on the D3 redesign slide (steps 3-5).</p>
+<p>Five steps, from naming the inputs to your own cost comparison (a crossover). Steps 1 and 2 are quizzes; step 3 is a worked example to read; in step 4 you finish one; step 5 you do alone. A3 task 2 asks for the same on the branch’s loads. We’ve seen this cost recipe on the D3 redesign slide (steps 3-5).</p>
 <section id="q-where-from" class="level3">
 <h3 class="anchored" data-anchor-id="q-where-from">Step 1: where do you get each piece of information?</h3>
 <p>A team runs the same report queries on Athena every day and asks whether to move them to Trino on an EMR cluster.</p>
@@ -389,12 +389,12 @@ shuffle_answers: false
 
 - Data scanned by each report query :: Athena query history
   &gt; Athena records each query's Data scanned. For billing, AWS rounds it up to the next MB, with a 10 MB minimum per query; the billed amount per run × price per TB × runs a day is Athena's daily cost, as in step 3.
-- Number of report runs a day today :: Athena query history
-  &gt; Each run appears in the history. Runs a day multiply the cost per run on Athena, and decide how busy a cluster would be.
+- How many times we ran a report per day :: Stakeholders and business case
+  &gt; The people who use the report know how often they run it, and how often they will. Runs a day multiply the cost per run on Athena, and decide how busy a cluster would be.
 - Run time of one report on a cluster :: Pilot run on a cluster
   &gt; Run time on the cluster you are considering tells you how many reports its nodes can serve in the hours it is up.
-- Reports an hour that the cluster keeps up with :: Pilot run on a cluster
-  &gt; Running reports in parallel on the pilot cluster shows whether its nodes keep up when the reports come, including the busiest hour.
+- Cluster's resource ceiling for your report (the most runs an hour it can keep up with) :: Pilot run on a cluster
+  &gt; Running reports in parallel on the pilot cluster shows how many runs an hour its nodes can finish; compare that ceiling with the busiest hour's load.
 - Price per TB of Data scanned :: AWS price list
   &gt; With Data scanned per run and runs a day, it gives Athena's daily cost, for your Region.
 - Price per hour of each node :: AWS price list
@@ -488,9 +488,9 @@ shuffle_answers: true
 </tbody>
 </table>
 <ol type="1">
-<li><strong>Fit first.</strong> Busiest hour: 60 runs × 10 s = 600 s of work, out of 3,600 s. The 3 nodes keep up, one run at a time. (If they did not, you would size the cluster up and price the bigger one.)</li>
+<li><strong>Fit first.</strong> Busiest hour: 60 runs × 10 s = 600 s of work. Running one report at a time, the 3 nodes’ ceiling (the most work they can keep up with) is 3,600 s of work an hour, so the load fits. (If it did not, you would size the cluster up and price the bigger one.)</li>
 <li><strong>Athena, a day.</strong> 0.003 TB × $5.50 per TB = $0.0165 a run; 500 runs × $0.0165 = $8.25.</li>
-<li><strong>Cluster, a day.</strong> 3 nodes × $0.22 per node-hour × 10 hours = $6.60 for any load the cluster keeps up with.</li>
+<li><strong>Cluster, a day.</strong> 3 nodes × $0.22 per node-hour × 10 hours = $6.60 for any load under its ceiling.</li>
 <li><strong>Crossover.</strong> $6.60 ÷ $0.0165 = 400 runs a day. At 500 a day the cluster is cheaper; below 400, Athena is.</li>
 </ol>
 <p>Not counted: the minutes a cluster takes to start (its nodes are billed then too) and S3 requests.</p>
@@ -622,13 +622,13 @@ shuffle_answers: true
 <div id="callout-2" class="callout-2-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <ol type="1">
-<li>Fit: 20 × 15 s = 300 s of 3,600 s. The 3 nodes keep up.</li>
+<li>Fit: 20 × 15 s = 300 s of work in the busiest hour, under the 3 nodes’ ceiling of 3,600 s.</li>
 <li>Athena: 0.005 TB × $5.50 = $0.0275 a run; 120 × $0.0275 = $3.30 a day.</li>
 <li>Cluster: 3 × $0.22 × 12 = $7.92 a day.</li>
 <li>Crossover, Athena against the cluster: $7.92 ÷ $0.0275 = 288 runs a day; at 120, Athena is cheaper.</li>
 <li>Glue: 2 × 1.5 = 3 DPU-minutes = 0.05 DPU-hour × $0.44 = $0.022 a run; 120 × $0.022 = $2.64 a day.</li>
 </ol>
-<p>Glue is cheapest here: each run scans 5 GB, which Athena bills by the TB, while Glue bills 1.5 minutes. The rules of thumb are where you start; the arithmetic decides. Glue’s runs also wait while workers start, which matters if someone waits for the report.</p>
+<p>Glue is cheapest here: each run scans 5 GB, which Athena bills by the TB, while Glue bills 1.5 minutes. Use rules of thumb only as an initial guide; use the cost calculation for the final choice. Glue’s runs also wait while workers start, which matters if someone waits for the report.</p>
 </div>
 </div>
 </div>
@@ -727,15 +727,15 @@ shuffle_answers: true
 - This week's orders, which every dashboard query reads in full every few minutes :: S3 Standard
   &gt; Data read all the time pays no fee per GB read in Standard; in any colder class the fee per read would soon cost more than the storage it saves.
 - Iceberg metadata files and manifests, which every query reads first :: S3 Standard
-  &gt; Every query reads them, so a fee per GB read would land on every query; they are small, so the storage price hardly matters.
+  &gt; Every query reads them, so every query would incur the fee per GB read. The files are small, so their storage cost is low.
 - Last quarter's orders, kept for years, which customer service must query at once; each month, queries read 0.6 GB for each GB stored :: Standard-IA
-  &gt; Per GB stored, each month: Standard \$0.025; Standard-IA \$0.0138 + 0.6 × \$0.01 = \$0.0198; Glacier Instant Retrieval \$0.005 + 0.6 × \$0.03 = \$0.023. Read now and then, so Standard-IA is cheapest.
+  &gt; Per GB stored, each month: Standard \$0.025; Standard-IA \$0.0138 + 0.6 × \$0.01 = \$0.0198; Glacier Instant Retrieval \$0.005 + 0.6 × \$0.03 = \$0.023. Read occasionally, so Standard-IA is cheapest.
 - Session logs kept for 60 days, needed at once after a bug report; over the 60 days, reads total 1 GB for each GB stored :: Standard-IA
   &gt; Per GB over the 60 days: Standard \$0.050; Standard-IA 2 × \$0.0138 + \$0.01 = \$0.0376; Glacier Instant Retrieval bills its 90-day minimum, 3 × \$0.005 + \$0.03 = \$0.045.
 - Orders from three years ago, kept for audits, read once or twice a year with the same Athena queries :: Glacier Instant Retrieval
   &gt; Stored for years and read rarely: the lowest monthly price that Athena still reads directly. The higher fee per GB read hardly matters at one or two reads a year.
 - Monthly exports of the product catalogue, kept seven years for tax rules and opened about once a year, at once when asked :: Glacier Instant Retrieval
-  &gt; Kept for years, opened rarely, and needed at once when asked: Glacier Instant Retrieval returns the file on the read, without a restore.
+  &gt; Kept for years, opened rarely, and needed at once when asked: Glacier Instant Retrieval makes the file available immediately when it is read; no restore is required.
 - :: Glacier Flexible Retrieval
   &gt; A file in this class must be restored before it can be read, which takes minutes to hours, and an Athena query on an Iceberg table that holds such a file fails.
 </div>
