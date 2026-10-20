@@ -733,7 +733,7 @@ shuffle_answers: true
 - Session logs kept for 60 days, needed immediately after a bug report, without waiting for a restore; over the 60 days, reads total 1 GB for each GB stored :: Standard-IA
   &gt; Per GB over the 60 days: Standard \$0.050; Standard-IA 2 × \$0.0138 + \$0.01 = \$0.0376; Glacier Instant Retrieval bills its 90-day minimum, 3 × \$0.005 + \$0.03 = \$0.045.
 - Orders from three years ago, kept for audits for years to come; each year, Athena queries read about 1 GB for each GB stored :: Glacier Instant Retrieval
-  &gt; Per GB stored, each year: Standard 12 × \$0.025 = \$0.30; Standard-IA 12 × \$0.0138 + \$0.01 = \$0.176; Glacier Instant Retrieval 12 × \$0.005 + \$0.03 = \$0.09. The lowest price that Athena still reads directly; the higher fee per GB read hardly matters at one full read a year.
+  &gt; Per GB stored, each year: Standard 12 × \$0.025 = \$0.30; Standard-IA 12 × \$0.0138 + \$0.01 ≈ \$0.176; Glacier Instant Retrieval 12 × \$0.005 + \$0.03 = \$0.09. The lowest price that Athena still reads directly; the higher fee per GB read hardly matters at one full read a year.
 - Monthly exports of the product catalogue, kept seven years for tax rules, read in full once a year, and needed immediately when asked, without waiting for a restore :: Glacier Instant Retrieval
   &gt; Kept for years, read in full once a year, and needed immediately: Glacier Instant Retrieval makes the file available immediately when it is read; no restore is required.
 - :: Glacier Flexible Retrieval
