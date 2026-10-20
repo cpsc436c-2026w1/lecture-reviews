@@ -23,6 +23,10 @@ website:
             text: "L5: Spark on a cluster"
           - href: w2-l6.qmd
             text: "L6: how Spark runs a query"
+          - href: l10.qmd
+            text: "L10: lakes, lakehouses and query engines"
+          - href: l11.qmd
+            text: "L11: assembling the lakehouse in Athena and Glue"
           - href: midterm-review.qmd
             text: "Midterm review"
       - text: Tutorials

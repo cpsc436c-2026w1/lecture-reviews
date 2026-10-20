@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>L10 review: lakes, lakehouses and query engines – CPSC 436C companion</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-fc5028672c55bc042a1fdef173a2e080.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/quizdown-1.3.2/quizdown.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-1.3.2/quizdownKatex.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-1.3.2/quizdownHighlight.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-1.3.2/quizdown-init.js"></script>
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">CPSC 436C companion</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lecture-reviews" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Lecture reviews</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-lecture-reviews">    
+        <li>
+    <a class="dropdown-item" href="./index.html">
+ <span class="dropdown-text">All reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l1.html">
+ <span class="dropdown-text">L1: the four resources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l2.html">
+ <span class="dropdown-text">L2: EC2, S3 and Lambda</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l3.html">
+ <span class="dropdown-text">L3: cost models and what starts a function</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l4.html">
+ <span class="dropdown-text">L4: scaling up and out</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l5.html">
+ <span class="dropdown-text">L5: Spark on a cluster</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./w2-l6.html">
+ <span class="dropdown-text">L6: how Spark runs a query</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l10.html">
+ <span class="dropdown-text">L10: lakes, lakehouses and query engines</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l11.html">
+ <span class="dropdown-text">L11: assembling the lakehouse in Athena and Glue</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./midterm-review.html">
+ <span class="dropdown-text">Midterm review</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutorials" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tutorials</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tutorials">    
+        <li>
+    <a class="dropdown-item" href="./tutorials.html">
+ <span class="dropdown-text">All tutorials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#emr-cluster">
+ <span class="dropdown-text">B2T1: Cluster/EMR</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#glue-part-a">
+ <span class="dropdown-text">B2T2 part A: Spark/Glue, how Spark reads files</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#glue-part-b">
+ <span class="dropdown-text">B2T2 part B: Spark/Glue, slow queries and their fixes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#b3-t1">
+ <span class="dropdown-text">B3T1: Lakehouse/Athena+Glue</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-assignments" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Assignments</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-assignments">    
+        <li>
+    <a class="dropdown-item" href="https://cpsc436c-2026w1.github.io/a1-starter/">
+ <span class="dropdown-text">A1 starter</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://cpsc436c-2026w1.github.io/a2-starter/">
+ <span class="dropdown-text">A2 starter</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Parts</h2>
+   
+  <ul>
+  <li><a href="#part-layers" id="toc-part-layers" class="nav-link active" data-scroll-target="#part-layers">Layers of a lakehouse</a>
+  <ul class="collapse">
+  <li><a href="#q-which-layer" id="toc-q-which-layer" class="nav-link" data-scroll-target="#q-which-layer">Which layer does each tool or format belong to?</a></li>
+  </ul></li>
+  <li><a href="#part-lake-vs-lakehouse" id="toc-part-lake-vs-lakehouse" class="nav-link" data-scroll-target="#part-lake-vs-lakehouse">What the lakehouse changes</a>
+  <ul class="collapse">
+  <li><a href="#q-lake-or-lakehouse" id="toc-q-lake-or-lakehouse" class="nav-link" data-scroll-target="#q-lake-or-lakehouse">Data lake, lakehouse, or both?</a></li>
+  </ul></li>
+  <li><a href="#part-terms" id="toc-part-terms" class="nav-link" data-scroll-target="#part-terms">Terms used on this page</a>
+  <ul class="collapse">
+  <li><a href="#lake-and-lakehouse" id="toc-lake-and-lakehouse" class="nav-link" data-scroll-target="#lake-and-lakehouse">Lake and lakehouse</a></li>
+  <li><a href="#icebergs-levels" id="toc-icebergs-levels" class="nav-link" data-scroll-target="#icebergs-levels">Iceberg’s levels</a></li>
+  <li><a href="#what-the-table-format-fixes" id="toc-what-the-table-format-fixes" class="nav-link" data-scroll-target="#what-the-table-format-fixes">What the table format fixes</a></li>
+  <li><a href="#not-layers-of-a-lakehouse" id="toc-not-layers-of-a-lakehouse" class="nav-link" data-scroll-target="#not-layers-of-a-lakehouse">Not layers of a lakehouse</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">L10 review: lakes, lakehouses and query engines</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>If you need to look up a term, the <a href="#part-terms">relevant vocabulary is below</a>.</p>
+<section id="part-layers" class="level2">
+<h2 class="anchored" data-anchor-id="part-layers">Layers of a lakehouse</h2>
+<section id="q-which-layer" class="level3">
+<h3 class="anchored" data-anchor-id="q-which-layer">Which layer does each tool or format belong to?</h3>
+<p>In a lakehouse, your files stay in your own storage, and you pick a separate tool or format for each part that a cloud warehouse supplies as one service. Each tool or format below belongs to one of those parts.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## Put each tool or format on its layer of a lakehouse. Each option may be used once, more than once, or not at all.
+
+- Parquet :: Storage format
+  &gt; Parquet encodes the rows of one data file, column by column, with a footer. The table format (Iceberg) is the metadata above many such files.
+- Spark :: Query engine
+  &gt; Spark SQL plans the query and runs the plan. On EMR, a cluster manager (YARN) starts Spark's executors on the cluster's nodes; YARN runs under the engine and is not a layer of the lakehouse.
+- S3 :: Object storage
+  &gt; S3 stores data files and metadata files as objects; the table's metadata records which files form the table.
+- Iceberg :: Table format
+  &gt; Iceberg's metadata files list the data files in the table's current snapshot, with the schema and the snapshots. Parquet encodes the rows.
+- Trino :: Query engine
+  &gt; Trino plans the SQL query and runs the plan on its workers. A connector gives Trino access to one source, such as a catalog, so it is part of the engine, not a layer of the lakehouse.
+- Glue Data Catalog :: Catalog
+  &gt; The Glue Data Catalog lists tables and points each Iceberg table to its current metadata file.
+- :: Cluster manager
+  &gt; A cluster manager (YARN on EMR, L5) starts Spark's executors on the nodes. It runs under the engine and is not one of the lakehouse's parts.
+- :: Connector
+  &gt; In Trino a connector is how the engine reads one source, for example the Glue Data Catalog (L10). It belongs to the engine, not to a layer of its own.
+</div>
+<p>Slide: 23, 24</p>
+</section>
+</section>
+<section id="part-lake-vs-lakehouse" class="level2">
+<h2 class="anchored" data-anchor-id="part-lake-vs-lakehouse">What the lakehouse changes</h2>
+<section id="q-lake-or-lakehouse" class="level3">
+<h3 class="anchored" data-anchor-id="q-lake-or-lakehouse">Data lake, lakehouse, or both?</h3>
+<p>An online shop’s orders, kept two ways. In the data lake, the table is a folder of Parquet files in S3, one subfolder per day. In the lakehouse, the table is an Iceberg table in the Glue Data Catalog over those Parquet files, partitioned by the day of <code>order_time</code>. Athena reads both tables and changes the Iceberg table.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## Does each statement describe the data lake, the lakehouse, or both? Each option may be used once, more than once, or not at all.
+
+- The rows are stored as Parquet objects in an S3 bucket :: Both
+  &gt; Both keep Parquet files in S3. The difference is the table format and the catalog above them.
+- A query skips day folders only if its filter uses the folder partition column :: Data lake
+  &gt; In a data lake the engine can skip day folders only when the filter uses the folder partition column (P2). An Iceberg table's partition value is derived from the order time (Iceberg partitioning), so a filter on the order time skips other days.
+- A delete adds a small file that lists the removed rows, and the data file is not changed :: Lakehouse
+  &gt; Iceberg calls it a delete file, and Athena's `DELETE` on an Iceberg table writes one (P4). Readers skip the rows it lists, and the data file itself is not changed. A folder of Parquet files has no delete files: changing a row means writing a new copy of its file.
+- A query can read the table as it was last Friday :: Lakehouse
+  &gt; Iceberg keeps each snapshot until it is expired, and time travel reads an earlier one (P5). A folder has no snapshots, so nothing records which files formed the table last Friday.
+- A data file is not edited after it is written :: Both
+  &gt; In both, a Parquet file is never edited once written. The lakehouse adds delete files or new data files instead (P4).
+- A reader lists the folder and reads whatever files are there now :: Data lake
+  &gt; A folder has no table commit that makes all files of one write visible together, so a reader can see part of a write (P1). An Iceberg reader finds the data files through the current snapshot's manifests instead of listing the folder.
+- :: Neither
+  &gt; Every statement here describes the data lake, the lakehouse, or both of them.
+</div>
+<p>Slide: 14 to 18, 42</p>
+</section>
+</section>
+<section id="part-terms" class="level2">
+<h2 class="anchored" data-anchor-id="part-terms">Terms used on this page</h2>
+<section id="lake-and-lakehouse" class="level3">
+<h3 class="anchored" data-anchor-id="lake-and-lakehouse">Lake and lakehouse</h3>
+<p><strong>Data lake.</strong> Raw files in object storage, read by engines that list the folders; a folder of files has no commit, no record of its schema and no history.</p>
+<p><strong>Lakehouse.</strong> A lake whose tables have a table format and a catalog, so readers see whole commits.</p>
+<p><strong>Query engine.</strong> Parses SQL, plans it and runs it: Spark SQL, Trino, DuckDB, Athena.</p>
+<p><strong>Catalog.</strong> Lists tables and points to each table’s current metadata file: the Glue Data Catalog.</p>
+<p><strong>Table format.</strong> Metadata files that say which data files are the table now, with the schema and the snapshots: Iceberg.</p>
+<p><strong>Object storage.</strong> Keeps files as objects in buckets: S3. Which files form a table is recorded in the metadata above it.</p>
+<p><strong>Storage format (file format).</strong> Encodes rows in one data file, with a footer: Parquet.</p>
+</section>
+<section id="icebergs-levels" class="level3">
+<h3 class="anchored" data-anchor-id="icebergs-levels">Iceberg’s levels</h3>
+<p><strong>Catalog entry.</strong> The table’s name and the path of its current metadata file.</p>
+<p><strong>Metadata file.</strong> The schema, the partition spec (how files are grouped, for example by month) and the snapshots; each snapshot names a manifest list.</p>
+<p><strong>Manifest.</strong> Lists data files, each with its partition value, row count, and minimum and maximum per column.</p>
+<p><strong>Data file.</strong> A file that contains rows of a table: a Parquet file.</p>
+<p><strong>Commit.</strong> Writing new metadata files, then switching the catalog entry to the new one in one step; readers see the old snapshot or the new one, never half.</p>
+<p><strong>Snapshot.</strong> One version of the table: the data files that were the table after one commit.</p>
+</section>
+<section id="what-the-table-format-fixes" class="level3">
+<h3 class="anchored" data-anchor-id="what-the-table-format-fixes">What the table format fixes</h3>
+<p><strong>Iceberg partitioning.</strong> The table is partitioned by a value Iceberg derives from a column, for example the month of <code>pickup_datetime</code>, and each data file’s partition value is kept in the manifests. Because the value is derived (hidden partitioning), a filter on the column itself skips files, with no folder partition column to name. Separately, the manifests keep each file’s minimum and maximum per column, which also let an engine skip files.</p>
+<p><strong>Delete file.</strong> A small file that lists which rows of a data file are deleted. Readers skip those rows, and the data file itself is not changed.</p>
+<p><strong>Compaction.</strong> Rewriting many small data files into fewer larger ones (<code>OPTIMIZE</code>).</p>
+<p><strong>Time travel.</strong> Reading the table as it was at an earlier snapshot, as long as that snapshot has not been expired.</p>
+</section>
+<section id="not-layers-of-a-lakehouse" class="level3">
+<h3 class="anchored" data-anchor-id="not-layers-of-a-lakehouse">Not layers of a lakehouse</h3>
+<p><strong>Cluster manager.</strong> Starts an engine’s processes on a cluster’s nodes, for example YARN starting Spark’s executors on EMR (L5).</p>
+<p><strong>Connector.</strong> In Trino, how the engine reads one source, such as the Glue Data Catalog or a database (L10).</p>
+<p><strong><code>_SUCCESS</code> file.</strong> An empty file Spark writes when a job finishes writing a folder; readers of the folder do not check it by default.</p>
+<p><strong>Folder partition column.</strong> A column whose value is a folder name, such as <code>month=2024-03</code>; a data lake skips folders only when a query names it.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
