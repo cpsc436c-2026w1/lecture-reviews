@@ -224,12 +224,12 @@ Fill in the blanks on paper, then open the answer.
 
 1. Glue, one run: 2 DPU × 2 minutes = ___ DPU-minutes = ___ DPU-hour; × \$0.44 = ___ a run.
 2. Glue, a day: 500 runs × ___ = ___, against the cluster's \$6.60.
-3. Crossover: \$6.60 ÷ ___ ≈ ___ runs a day. Which is cheaper at 500 runs a day? And for one run a night?
+3. Crossover: \$6.60 ÷ ___ ≈ ___ runs a day. Which is cheaper above the crossover, and which below it? Which fits occasional runs?
 
 ::: {.callout-tip collapse="true" title="Answer, step 4"}
 1. 2 × 2 = 4 DPU-minutes = 4/60 DPU-hour; 4/60 × \$0.44 ≈ \$0.02933 a run.
 2. 500 × \$0.02933 ≈ \$14.67 a day, against \$6.60.
-3. \$6.60 ÷ \$0.02933 ≈ 225 runs a day. At 500 a day the cluster is cheaper. For one run a night, Glue is cheaper: it bills about 3 cents, while the cluster's nodes are billed for 10 hours.
+3. \$6.60 ÷ \$0.02933 ≈ 225 runs a day. Above about 225 runs a day the cluster is cheaper (at 500 a day, \$6.60 against \$14.67); below it, Glue is. For occasional runs Glue is cheaper: each run bills about 3 cents, while the cluster's nodes are billed for their 10 hours a day.
 
 No fit check here: each Glue run gets its own workers. Glue bills each run's execution time, at least 1 minute.
 :::
