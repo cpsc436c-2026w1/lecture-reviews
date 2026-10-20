@@ -227,7 +227,7 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#q-snapshots" id="toc-q-snapshots" class="nav-link" data-scroll-target="#q-snapshots">What does <code>$snapshots</code> show after each statement?</a></li>
   </ul></li>
-  <li><a href="#part-storage" id="toc-part-storage" class="nav-link" data-scroll-target="#part-storage">Where old data lives</a>
+  <li><a href="#part-storage" id="toc-part-storage" class="nav-link" data-scroll-target="#part-storage">Where old data should live</a>
   <ul class="collapse">
   <li><a href="#q-storage-class" id="toc-q-storage-class" class="nav-link" data-scroll-target="#q-storage-class">Which storage class fits each kind of data?</a></li>
   </ul></li>
@@ -288,8 +288,8 @@ shuffle_answers: true
 
 - Trino plans and runs your SQL on the orders table; you start no cluster and pay for the query's Data scanned :: Athena
   &gt; Athena's engine (version 3) is built on Trino, which is open source. AWS adds everything around the engine: no cluster to start, the workgroup and its Data scanned limit, and the bill per TB of Data scanned.
-- Spark runs your PySpark script; you choose a worker type and a number of workers and pay per DPU-hour :: Glue
-  &gt; A Glue job runs Apache Spark. The script is ordinary PySpark plus a few Glue lines (`GlueContext`, `job.commit`); without those lines it runs on EMR or on your laptop.
+- Spark runs your PySpark script; you choose a worker type and a number of workers and pay per DPU-hour :: AWS Glue job
+  &gt; A Glue job runs Apache Spark. The script is ordinary PySpark plus a few Glue lines (`GlueContext`, `job.commit`); with those lines removed, the same script runs on EMR or on your laptop.
 - Spark runs a PySpark script on a cluster whose node types you choose; each node is billed per second while the cluster is up :: EMR
   &gt; EMR starts EC2 instances and installs open-source software on them: Spark (L5), and also Trino or Hive if you ask. You choose the nodes, and they are billed while up, busy or idle.
 - An Iceberg table needs one place that records which metadata file is current; Athena, Glue jobs and EMR all look it up there :: Glue Data Catalog
@@ -315,7 +315,7 @@ shuffle_answers: true
 
 ## Match each situation to the lakehouse feature that handles it. Not all options will be used.
 
-- An auditor asks what yesterday's total sales were before this morning's correction :: Time travel
+- An auditor asks what yesterday's total sales were before this morning's correction, while that snapshot is still retained :: Time travel
   &gt; Each data change creates a snapshot that is kept until it is expired, and a query can read the snapshot that was current before the correction (P5).
 - After weeks of hourly loads the table holds thousands of small files, and every query starts slowly :: Compaction
   &gt; Compaction rewrites many small data files into fewer larger ones (P3). The manifests already save the folder listing; the small files are what remains to fix.
@@ -353,14 +353,14 @@ shuffle_answers: false
 - [ ] None: no level skips data
     &gt; The manifests keep last Monday's files, and the query reads one column: files and columns both skip.
 
-## Query: all orders from last Monday with a `total` above \$500. Which levels skip data? Select all that apply.
+## Query: the `total` values for last Monday's orders whose `total` is above \$500. Every row group in Monday's files contains at least one such order. Which levels skip data? Select all that apply.
 
 - [x] Files (manifests)
     &gt; The filter on `order_time` covers last Monday, so the manifests keep that day's files and skip every other day's.
 - [ ] Row groups (footer minimum and maximum)
-    &gt; The rows are sorted by `order_time`, not by `total`, so each row group's minimum and maximum `total` span a wide range; nearly every row group of Monday's files may hold an order above \$500.
+    &gt; Every Monday row group has a `total` above \$500, so its maximum cannot rule it out. The rows are sorted by `order_time`, not by `total`.
 - [x] Columns (projection)
-    &gt; The query reads `order_time` and `total` for the filters and the columns it returns; any column it does not name is skipped.
+    &gt; The query reads `order_time` for the filter and `total` for the filter and the result; every other column is skipped.
 - [ ] None: no level skips data
     &gt; The manifests keep last Monday's files, and the query names only the columns it needs: files and columns both skip.
 
@@ -389,8 +389,8 @@ shuffle_answers: false
 
 - Data scanned by each report query :: Athena query history
   &gt; Athena records each query's Data scanned. For billing, AWS rounds it up to the next MB, with a 10 MB minimum per query; the billed amount per run × price per TB × runs a day is Athena's daily cost, as in step 3.
-- How many times we ran a report per day :: Stakeholders and business case
-  &gt; The people who use the report know how often they run it, and how often they will. Runs a day multiply the cost per run on Athena, and decide how busy a cluster would be.
+- Expected report load next year: runs per day and the most runs in one hour :: Stakeholders and business case
+  &gt; The people who use the report know how often they will run it. Runs per day multiply Athena's daily cost, and the busiest hour decides how much cluster capacity is needed. How often it ran in the past is in Athena query history.
 - Run time of one report on a cluster :: Pilot run on a cluster
   &gt; Run time on the cluster you are considering tells you how many reports its nodes can serve in the hours it is up.
 - Cluster's resource ceiling for your report (the most runs an hour it can keep up with) :: Pilot run on a cluster
@@ -411,7 +411,7 @@ shuffle_answers: false
 </section>
 <section id="q-which-bill" class="level3">
 <h3 class="anchored" data-anchor-id="q-which-bill">Step 2: which option bills each part of the cost?</h3>
-<p>Your pilot measured one report query: about 2.8 GB of Data scanned on Athena, about 10 seconds on a 3-node EMR cluster, and about 2 minutes as a Glue job (Glue version 5). Here “EMR cluster” means everything its nodes are billed for: the EC2 price and the EMR price.</p>
+<p>Your pilot measured one report query: about 3 GB of Data scanned on Athena, about 10 seconds on a 3-node EMR cluster, and about 2 minutes as a Glue job (Glue version 5). Here “EMR cluster” means everything its nodes are billed for: the EC2 price and the EMR price.</p>
 <div class="quizdown">
 ---
 shuffle_answers: true
@@ -436,6 +436,7 @@ shuffle_answers: true
 - Requests an engine makes to read the files :: S3
     &gt; Reading files means requests to the bucket, billed at standard S3 rates on top of the engine's own bill.
 - :: None of them
+    &gt; Every line here is billed by Athena, Glue, the EMR cluster or S3.
 </div>
 </section>
 <section id="we-athena-cluster" class="level3">
@@ -650,22 +651,22 @@ shuffle_answers: true
 - `CREATE TABLE shop.orders_copy ... AS SELECT` :: append
   &gt; The copy adds data files and removes none, so the first snapshot is an append.
 - `INSERT INTO shop.orders_copy` with the same hour of orders, run a second time :: append
-  &gt; A second run adds the same rows again as new data files: another append, with the same row count.
-- `DELETE FROM shop.orders_copy WHERE status = 'test'` :: overwrite
+  &gt; A second run adds the same rows again as new data files: another append. It adds as many rows as the first run, so the table now holds duplicate rows.
+- `DELETE FROM shop.orders_copy WHERE status = 'test'` (the table has a `status` column and some test orders) :: overwrite
   &gt; Athena's `DELETE` writes delete files against existing data files, and Athena records it as overwrite.
-- `OPTIMIZE shop.orders_copy REWRITE DATA USING BIN_PACK` :: replace
+- `OPTIMIZE shop.orders_copy REWRITE DATA USING BIN_PACK`, when enough small data files or delete files are eligible for a rewrite :: replace
   &gt; Compaction adds and removes data files without changing the rows, which is what replace records.
 - `ALTER TABLE shop.orders_copy ADD COLUMNS (gift_wrap boolean)` :: no new snapshot
   &gt; A schema change writes a new metadata file; the list of snapshots stays as it was.
 - `VACUUM shop.orders_copy` :: no new snapshot
-  &gt; `VACUUM` removes snapshots older than the table's age property and adds none.
+  &gt; `VACUUM` adds no snapshot. It removes only snapshots older than the table's age property (5 days by default), so in this sequence of statements run minutes apart it removes none.
 - :: delete
   &gt; The Iceberg spec has a delete operation, but Athena records its `DELETE` and `MERGE` as overwrite. Other engines may record delete.
 </div>
 </section>
 </section>
 <section id="part-storage" class="level2">
-<h2 class="anchored" data-anchor-id="part-storage">Where old data lives</h2>
+<h2 class="anchored" data-anchor-id="part-storage">Where old data should live</h2>
 <section id="q-storage-class" class="level3">
 <h3 class="anchored" data-anchor-id="q-storage-class">Which storage class fits each kind of data?</h3>
 <p>An online shop keeps its orders as an Iceberg table in S3 that Athena queries, plus a few other kinds of files. The S3 storage classes in ca-central-1:</p>

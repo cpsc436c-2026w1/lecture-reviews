@@ -269,7 +269,7 @@ shuffle_answers: true
 - Iceberg :: Table format
   &gt; Iceberg's metadata files list the data files in the table's current snapshot, with the schema and the snapshots. Parquet encodes the rows.
 - Trino :: Query engine
-  &gt; Trino plans the SQL query and runs the plan on its workers. A connector gives Trino access to one source, such as a catalog, so it is part of the engine, not a layer of the lakehouse.
+  &gt; Trino plans the SQL query and runs the plan on its workers. A connector gives Trino access to one source, such as a data lake or a database, so it is part of the engine, not a layer of the lakehouse.
 - Glue Data Catalog :: Catalog
   &gt; The Glue Data Catalog lists tables and points each Iceberg table to its current metadata file.
 - :: Cluster manager
@@ -277,7 +277,7 @@ shuffle_answers: true
 - :: Connector
   &gt; In Trino a connector is how the engine reads one source, for example the Glue Data Catalog (L10). It belongs to the engine, not to a layer of its own.
 </div>
-<p>Slide: 23, 24</p>
+<p>Slide: 24, 25</p>
 </section>
 </section>
 <section id="part-lake-vs-lakehouse" class="level2">
@@ -298,7 +298,7 @@ shuffle_answers: true
   &gt; In a data lake the engine can skip day folders only when the filter uses the folder partition column (P2). An Iceberg table's partition value is derived from the order time (Iceberg partitioning), so a filter on the order time skips other days.
 - A delete adds a small file that lists the removed rows, and the data file is not changed :: Lakehouse
   &gt; Iceberg calls it a delete file, and Athena's `DELETE` on an Iceberg table writes one (P4). Readers skip the rows it lists, and the data file itself is not changed. A folder of Parquet files has no delete files: changing a row means writing a new copy of its file.
-- A query can read the table as it was last Friday :: Lakehouse
+- A query can read the table as it was last Friday, while that snapshot is still retained :: Lakehouse
   &gt; Iceberg keeps each snapshot until it is expired, and time travel reads an earlier one (P5). A folder has no snapshots, so nothing records which files formed the table last Friday.
 - A data file is not edited after it is written :: Both
   &gt; In both, a Parquet file is never edited once written. The lakehouse adds delete files or new data files instead (P4).
@@ -307,7 +307,7 @@ shuffle_answers: true
 - :: Neither
   &gt; Every statement here describes the data lake, the lakehouse, or both of them.
 </div>
-<p>Slide: 14 to 18, 42</p>
+<p>Slide: 14 to 19, 43</p>
 </section>
 </section>
 <section id="part-terms" class="level2">
