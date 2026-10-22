@@ -30,7 +30,7 @@ shuffle_answers: true
 - Dashboard executes the same 20 large-scan queries every few minutes, all day :: Trino on EMR
   > Calculate the crossover first: at this load the cluster, billed per node-hour, costs less than paying per query (the review page works the numbers).
 - :: Lambda
-  > Lambda runs functions, not SQL over a table; none of these workloads asks for it.
+  > With custom layers and the maximum memory setting you might be able to run some of these workloads in Lambda, but it is not the best solution for any of them.
 ```
 
 ## Which store fits each workload? {#part-stores}
