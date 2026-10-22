@@ -27,6 +27,8 @@ website:
             text: "L10: lakes, lakehouses and query engines"
           - href: l11.qmd
             text: "L11: assembling the lakehouse in Athena and Glue"
+          - href: l12.qmd
+            text: "L12: operational stores and copies"
           - href: midterm-review.qmd
             text: "Midterm review"
       - text: Tutorials

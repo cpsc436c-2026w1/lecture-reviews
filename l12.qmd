@@ -1,0 +1,111 @@
+---
+order: 12
+title: "L12 review: live trips in an operational store, and what copies can promise"
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-title: "Parts"
+filters:
+  - quizdown
+---
+
+If you need to look up a term, the [relevant vocabulary is below](#part-terms).
+
+## Which engine fits each workload? {#part-engines}
+
+A recap of L11: the rides history in the lakehouse, read by different engines.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## For each workload, choose the engine that fits it best. Each option may be used once, more than once, or not at all.
+
+- Analysts occasionally ask new questions about trip history data, without idle billing :: Athena
+  > Athena bills per TB of Data scanned and no query charge between queries (S3 storage is billed either way), which suits questions that come and go.
+- Nightly job rewrites yesterday's trips data into a sorted Iceberg table; it runs about 10 minutes :: Glue job
+  > A Glue job bills DPU-hours for the run only, so a regular batch pays for its 10 minutes and nothing else.
+- Dashboard executes the same 20 large-scan queries every few minutes, all day :: Trino on EMR
+  > Calculate the crossover first: at this load the cluster, billed per node-hour, costs less than paying per query (the review page works the numbers).
+- :: Lambda
+  > Lambda runs functions, not SQL over a table; none of these workloads asks for it.
+```
+
+## Which store fits each workload? {#part-stores}
+
+Operational and analytical stores side by side: DynamoDB, a relational database, S3 and the lakehouse.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## Match each workload to the store that fits it best. Each option may be used once, more than once, or not at all.
+
+- A game keeps each player's score as one small record, updated by player id tens of thousands of times a second at peak. Nothing joins it to other data :: DynamoDB
+  > Small items, always found by one key, at a rate that changes with the game: what DynamoDB is built for.
+- A shopping site reads and writes each visitor's cart by cart id on every page view, with ten times the traffic on sale days. No query joins carts :: DynamoDB
+  > One key per request and traffic that jumps: DynamoDB scales on demand and answers in milliseconds.
+- An order system runs one query that joins customers, orders and products, and changes several tables in one transaction :: Relational database (RDS)
+  > Joins across tables and transactions over several tables are what a relational database does. DynamoDB has no joins.
+- A video site stores each uploaded video, files of several gigabytes :: S3
+  > A DynamoDB item is at most 400 KB. Large files go to S3, as objects.
+- Analysts ask a new SQL question every week over 5 TB of order history from three years :: Lakehouse (Athena on Iceberg)
+  > Ad hoc questions that scan a lot of history: columns in Parquet, billed by Data scanned.
+- A nightly report adds up about 3 TB of sales records by product :: Lakehouse (Athena on Iceberg)
+  > A scan of terabytes on DynamoDB would read every item, for hours and dollars. The lakehouse reads only the columns the report needs.
+```
+
+## Which reads need a strong read? {#part-reads}
+
+Reads in the trip app: when a read may be a moment old, and when it must return the latest write.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## For each read in the trip app, choose the least expensive option that meets its need. Each option may be used once, more than once, or not at all.
+
+- The driver app reads trip t-0042 back right after its own accept succeeded, to show the assigned driver :: Strongly consistent read
+  > Read-after-write: an eventual read might come from a replica without the accept and show the trip still "requested".
+- The driver app shows whether the passenger has cancelled, right after the passenger phoned the driver to say so :: Strongly consistent read
+  > Another user's write the driver already knows about: an eventual read could still show the trip as active.
+- The passenger app refreshes the driver's position on the map every two seconds, where an old position is acceptable :: Eventually consistent read
+  > An old position is acceptable here, later refreshes replace it, and eventual reads cost half.
+- The passenger app shows the fare right after the passenger's promo-code update succeeded :: Strongly consistent read
+  > Read-after-write: the passenger just wrote, and an old fare on screen would look like the promo failed.
+- A list of the passenger's past trips, where a trip that just finished may appear on the next refresh :: Eventually consistent read
+  > An old list is acceptable on this screen, and eventual reads cost half.
+- :: Federated query from Athena
+  > A query taking seconds through a connector serves reports, not a screen that must open in milliseconds.
+```
+
+## Which problem is each situation? {#part-problems}
+
+A food-delivery app keeps live orders in DynamoDB and order history in a lakehouse.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## Food-delivery app keeps orders in DynamoDB and order history in a lakehouse. Match each situation to the problem it shows. Each option may be used once, more than once, or not at all.
+
+- A customer edits the delivery address, and the confirmation screen right after shows the old one :: Replication lag
+  > The read came from a replica that did not have the write yet. A strongly consistent read would have shown it.
+- Two couriers both mark the same order "picked up", and the order ends up with the second courier's name :: Lost update
+  > Both read "waiting" correctly, and the second write replaced the first. A conditional write would have refused one.
+- A nightly load into the lakehouse runs twice after a timeout, and yesterday's orders appear twice :: Non-idempotent load
+  > Duplicates do not go away by waiting. An idempotent load (a `MERGE` keyed by order id over deduplicated input) would have left one copy.
+- The link between two Regions fails, and the app in one Region returns errors for order updates until it returns :: Netsplit
+  > The Region chose to refuse writes rather than let the two Regions disagree.
+- :: Scan
+  > A Scan reads every item. It costs money and time, and no copies disagree.
+```
+
+## Terms used on this page {#part-terms}
+
+{{< include _terms/page-l12.md >}}
