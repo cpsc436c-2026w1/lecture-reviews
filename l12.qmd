@@ -1,6 +1,6 @@
 ---
 order: 12
-title: "L12 review: live trips in an operational store, and what copies can promise"
+title: "L12 review: DynamoDB as OLTP storage, distributed database problems and properties"
 format:
   html:
     toc: true
