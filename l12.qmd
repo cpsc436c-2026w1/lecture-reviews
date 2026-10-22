@@ -48,8 +48,8 @@ shuffle_answers: true
   > Small items, always found by one key, at a rate that changes with the game: what DynamoDB is built for.
 - A shopping site reads and writes each visitor's cart by cart id on every page view, with ten times the traffic on sale days. No query joins carts :: DynamoDB
   > One key per request and traffic that jumps: DynamoDB scales on demand and answers in milliseconds.
-- An order system runs one query that joins customers, orders and products, and changes several tables in one transaction :: Relational database (RDS)
-  > Joins across tables and transactions over several tables are what a relational database does. DynamoDB has no joins.
+- An order system runs one query that joins customers, orders and products :: Relational database (RDS)
+  > Joins across tables are what a relational database does. DynamoDB has no joins.
 - A video site stores each uploaded video, files of several gigabytes :: S3
   > A DynamoDB item is at most 400 KB. Large files go to S3, as objects.
 - Analysts ask a new SQL question every week over 5 TB of order history from three years :: Lakehouse (Athena on Iceberg)
@@ -97,13 +97,13 @@ shuffle_answers: true
 - A customer edits the delivery address, and the confirmation screen right after shows the old one :: Replication lag
   > The read came from a replica that did not have the write yet. A strongly consistent read would have shown it.
 - Two couriers both mark the same order "picked up", and the order ends up with the second courier's name :: Lost update
-  > Both read "waiting" correctly, and the second write replaced the first. A conditional write would have refused one.
+  > Both read "waiting" correctly. The second write replaced the first. A conditional write would have refused one.
 - A nightly load into the lakehouse runs twice after a timeout, and yesterday's orders appear twice :: Non-idempotent load
   > Duplicates do not go away by waiting. An idempotent load (a `MERGE` keyed by order id over deduplicated input) would have left one copy.
 - The link between two Regions fails, and the app in one Region returns errors for order updates until it returns :: Netsplit
   > The Region chose to refuse writes rather than let the two Regions disagree.
 - :: Scan
-  > A Scan reads every item. It costs money and time, and no copies disagree.
+  > A Scan is a specific way to read data, not one of these problems.
 ```
 
 ## Terms used on this page {#part-terms}
