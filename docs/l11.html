@@ -207,7 +207,12 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Parts</h2>
    
   <ul>
-  <li><a href="#part-services" id="toc-part-services" class="nav-link active" data-scroll-target="#part-services">Open-source parts and AWS services</a>
+  <li><a href="#part-recap" id="toc-part-recap" class="nav-link active" data-scroll-target="#part-recap">Recap of L10</a>
+  <ul class="collapse">
+  <li><a href="#q-which-layer" id="toc-q-which-layer" class="nav-link" data-scroll-target="#q-which-layer">Which layer does each tool or format belong to?</a></li>
+  <li><a href="#q-lake-or-lakehouse" id="toc-q-lake-or-lakehouse" class="nav-link" data-scroll-target="#q-lake-or-lakehouse">Data lake, lakehouse, or both?</a></li>
+  </ul></li>
+  <li><a href="#part-services" id="toc-part-services" class="nav-link" data-scroll-target="#part-services">Open-source parts and AWS services</a>
   <ul class="collapse">
   <li><a href="#q-which-service" id="toc-q-which-service" class="nav-link" data-scroll-target="#q-which-service">Which AWS service runs or keeps each part?</a></li>
   </ul></li>
@@ -278,6 +283,63 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>If you need to look up a term, the <a href="#part-terms">relevant vocabulary is below</a>.</p>
+<section id="part-recap" class="level2">
+<h2 class="anchored" data-anchor-id="part-recap">Recap of L10</h2>
+<section id="q-which-layer" class="level3">
+<h3 class="anchored" data-anchor-id="q-which-layer">Which layer does each tool or format belong to?</h3>
+<p>In a lakehouse, your files stay in your own storage, and you pick a separate tool or format for each part that a cloud warehouse supplies as one service. Each tool or format below belongs to one of those parts.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## Put each tool or format on its layer of a lakehouse. Each option may be used once, more than once, or not at all.
+
+- Parquet :: Storage format
+  &gt; Parquet encodes the rows of one data file, column by column, with a footer. The table format (Iceberg) is the metadata above many such files.
+- Spark :: Query engine
+  &gt; Spark SQL plans the query and runs the plan. On EMR, a cluster manager (YARN) starts Spark's executors on the cluster's nodes; YARN runs under the engine and is not a layer of the lakehouse.
+- S3 :: Object storage
+  &gt; S3 stores data files and metadata files as objects; the table's metadata records which files form the table.
+- Iceberg :: Table format
+  &gt; Iceberg's metadata files list the data files in the table's current snapshot, with the schema and the snapshots. Parquet encodes the rows.
+- Trino :: Query engine
+  &gt; Trino plans the SQL query and runs the plan on its workers. A connector gives Trino access to one source, such as a data lake or a database, so it is part of the engine, not a layer of the lakehouse.
+- Glue Data Catalog :: Catalog
+  &gt; The Glue Data Catalog lists tables and points each Iceberg table to its current metadata file.
+- :: Cluster manager
+  &gt; A cluster manager (YARN on EMR, L5) starts Spark's executors on the nodes. It runs under the engine and is not one of the lakehouse's parts.
+- :: Connector
+  &gt; In Trino a connector is how the engine reads one source, for example the Glue Data Catalog (L10). It belongs to the engine, not to a layer of its own.
+</div>
+</section>
+<section id="q-lake-or-lakehouse" class="level3">
+<h3 class="anchored" data-anchor-id="q-lake-or-lakehouse">Data lake, lakehouse, or both?</h3>
+<p>An online shop’s orders, kept two ways. In the data lake, the table is a folder of Parquet files in S3, one subfolder per day. In the lakehouse, the table is an Iceberg table in the Glue Data Catalog over those Parquet files, partitioned by the day of <code>order_time</code>. Athena reads both tables and changes the Iceberg table.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## Does each statement describe the data lake, the lakehouse, or both? Each option may be used once, more than once, or not at all.
+
+- The rows are stored as Parquet objects in an S3 bucket :: Both
+  &gt; Both keep Parquet files in S3. The difference is the table format and the catalog above them.
+- A query skips day folders only if its filter uses the folder partition column :: Data lake
+  &gt; In a data lake the engine can skip day folders only when the filter uses the folder partition column (P2). An Iceberg table's partition value is derived from the order time (Iceberg partitioning), so a filter on the order time skips other days.
+- A delete adds a small file that lists the removed rows, and the data file is not changed :: Lakehouse
+  &gt; Iceberg calls it a delete file, and Athena's `DELETE` on an Iceberg table writes one (P4). Readers skip the rows it lists, and the data file itself is not changed. A folder of Parquet files has no delete files: changing a row means writing a new copy of its file.
+- A query can read the table as it was last Friday, while that snapshot is still retained :: Lakehouse
+  &gt; Iceberg keeps each snapshot until it is expired, and time travel reads an earlier one (P5). A folder has no snapshots, so nothing records which files formed the table last Friday.
+- A data file is not edited after it is written :: Both
+  &gt; In both, a Parquet file is never edited once written. The lakehouse adds delete files or new data files instead (P4).
+- A reader lists the folder and reads whatever files are there now :: Data lake
+  &gt; A folder has no table commit that makes all files of one write visible together, so a reader can see part of a write (P1). An Iceberg reader finds the data files through the current snapshot's manifests instead of listing the folder.
+- :: Neither
+  &gt; Every statement here describes the data lake, the lakehouse, or both of them.
+</div>
+</section>
+</section>
 <section id="part-services" class="level2">
 <h2 class="anchored" data-anchor-id="part-services">Open-source parts and AWS services</h2>
 <section id="q-which-service" class="level3">
