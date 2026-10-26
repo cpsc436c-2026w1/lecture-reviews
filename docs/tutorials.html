@@ -211,6 +211,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#block-3" id="toc-block-3" class="nav-link" data-scroll-target="#block-3">Block 3</a>
   <ul class="collapse">
   <li><a href="#b3-t1" id="toc-b3-t1" class="nav-link" data-scroll-target="#b3-t1">B3T1: Lakehouse/Athena+Glue</a></li>
+  <li><a href="#b3-t2" id="toc-b3-t2" class="nav-link" data-scroll-target="#b3-t2">B3T2: Lakehouse/Glue build and maintain</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -283,6 +284,15 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>Supports:</strong> L10 (lakehouses: Iceberg tables, snapshots and time travel) and L11, and the use and change tasks in A3.</li>
 <li><strong>Before the tutorial:</strong> run the one-time setup in the repository’s <a href="https://github.com/cpsc436c-2026w1/b3-t1-athena-rides#1-set-up-your-account-once">step 1</a> (in CloudShell).</li>
 <li><strong>Materials:</strong> the <a href="https://github.com/cpsc436c-2026w1/b3-t1-athena-rides">B3T1 repository</a>: the steps, one SQL file per step with the expected results, and the setup script.</li>
+</ul>
+</section>
+<section id="b3-t2" class="level3">
+<h3 class="anchored" data-anchor-id="b3-t2">B3T2: Lakehouse/Glue build and maintain</h3>
+<ul>
+<li><strong>What you do:</strong> You start a ready Glue job that loads one month of rides into an Iceberg table in your own account, and read its script while it runs. You predict how much a query will read from the table’s column sizes, then delete some rows, compact the table with <code>OPTIMIZE</code>, remove old snapshots and their files with <code>VACUUM</code>, and price the job’s run.</li>
+<li><strong>Supports:</strong> L10 and L11 (Iceberg maintenance: compaction, snapshots and <code>VACUUM</code>), and the build and maintain tasks in A3.</li>
+<li><strong>Before the tutorial:</strong> B3T1’s one-time setup, and the <a href="https://github.com/cpsc436c-2026w1/l7-spark-glue#1-set-up-your-account-once">B2T2 setup</a>, which creates your bucket and Glue role. Then run the repository’s <a href="https://github.com/cpsc436c-2026w1/b3-t2-glue-rides#2-set-up-the-job-once">step 2</a> in CloudShell.</li>
+<li><strong>Materials:</strong> the <a href="https://github.com/cpsc436c-2026w1/b3-t2-glue-rides">B3T2 repository</a>: the steps, one SQL file per step with what to predict, the Glue job and the setup script.</li>
 </ul>
 
 

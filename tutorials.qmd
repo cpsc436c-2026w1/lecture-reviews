@@ -58,3 +58,18 @@ A Glue session bills until it stops, even after you close the browser tab. End e
 - **Materials:** the [B3T1 repository](https://github.com/cpsc436c-2026w1/b3-t1-athena-rides): the steps, one
   SQL file per step with the expected results, and the setup script.
 
+### B3T2: Lakehouse/Glue build and maintain {#b3-t2}
+
+- **What you do:** You start a ready Glue job that loads one month of rides into an Iceberg table in your own
+  account, and read its script while it runs. You predict how much a query will read from the table's column sizes,
+  then delete some rows, compact the table with `OPTIMIZE`, remove old snapshots and their files with `VACUUM`, and
+  price the job's run.
+- **Supports:** L10 and L11 (Iceberg maintenance: compaction, snapshots and `VACUUM`), and the build and maintain
+  tasks in A3.
+- **Before the tutorial:** B3T1's one-time setup, and the
+  [B2T2 setup](https://github.com/cpsc436c-2026w1/l7-spark-glue#1-set-up-your-account-once), which creates your
+  bucket and Glue role. Then run the repository's
+  [step 2](https://github.com/cpsc436c-2026w1/b3-t2-glue-rides#2-set-up-the-job-once) in CloudShell.
+- **Materials:** the [B3T2 repository](https://github.com/cpsc436c-2026w1/b3-t2-glue-rides): the steps, one SQL
+  file per step with what to predict, the Glue job and the setup script.
+
