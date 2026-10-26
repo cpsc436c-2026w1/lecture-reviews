@@ -106,7 +106,7 @@ shuffle_answers: true
   > A Scan is a specific way to read data, not one of these problems.
 ```
 
-## What did the tutorials show? {#part-tutorials}
+## Learning from practice {#part-tutorials}
 
 I recommend to go through Block 3's [Tutorials 1](tutorials.qmd#b3-t1) and [2](tutorials.qmd#b3-t2) before starting this section.
 
