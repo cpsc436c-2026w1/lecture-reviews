@@ -211,6 +211,13 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#part-stores" id="toc-part-stores" class="nav-link" data-scroll-target="#part-stores">Which store fits each workload?</a></li>
   <li><a href="#part-reads" id="toc-part-reads" class="nav-link" data-scroll-target="#part-reads">Which reads need a strong read?</a></li>
   <li><a href="#part-problems" id="toc-part-problems" class="nav-link" data-scroll-target="#part-problems">Which problem is each situation?</a></li>
+  <li><a href="#part-tutorials" id="toc-part-tutorials" class="nav-link" data-scroll-target="#part-tutorials">What did the tutorials show?</a>
+  <ul class="collapse">
+  <li><a href="#part-names" id="toc-part-names" class="nav-link" data-scroll-target="#part-names">Which statement runs each operation?</a></li>
+  <li><a href="#part-maintenance" id="toc-part-maintenance" class="nav-link" data-scroll-target="#part-maintenance">What does each operation change?</a></li>
+  <li><a href="#part-athena-spark" id="toc-part-athena-spark" class="nav-link" data-scroll-target="#part-athena-spark">Athena or Spark?</a></li>
+  <li><a href="#part-job" id="toc-part-job" class="nav-link" data-scroll-target="#part-job">How a job writes and reloads a table</a></li>
+  </ul></li>
   <li><a href="#part-terms" id="toc-part-terms" class="nav-link" data-scroll-target="#part-terms">Terms used on this page</a></li>
   </ul>
 </nav>
@@ -253,13 +260,13 @@ shuffle_answers: true
 ## For each workload, choose the engine that fits it best. Each option may be used once, more than once, or not at all.
 
 - Analysts occasionally ask new questions about trip history data, without idle billing :: Athena
-  &gt; Athena bills per TB of Data scanned and no query charge between queries (S3 storage is billed either way), which suits questions that come and go.
-- Nightly job rewrites yesterday's trips data into a sorted Iceberg table; it runs about 10 minutes :: Glue job
+  &gt; Athena bills per TB of Data scanned and charges nothing between queries, which suits best ad-hoc queries. S3 storage is billed either way.
+- Nightly job rewrites yesterday's trips into a sorted Iceberg table. It runs for about 10 minutes :: Glue job
   &gt; A Glue job bills DPU-hours for the run only, so a regular batch pays for its 10 minutes and nothing else.
 - Dashboard executes the same 20 large-scan queries every few minutes, all day :: Trino on EMR
   &gt; Calculate the crossover first: at this load the cluster, billed per node-hour, costs less than paying per query (the review page works the numbers).
 - :: Lambda
-  &gt; With custom layers and the maximum memory setting you might be able to run some of these workloads in Lambda, but it is not the best solution for any of them.
+  &gt; With custom layers and the maximum memory setting you might be able to run some of these workloads in Lambda. However, it is not the best solution for any of them.
 </div>
 </section>
 <section id="part-stores" class="level2">
@@ -331,6 +338,147 @@ shuffle_answers: true
 - :: Scan
   &gt; A Scan is a specific way to read data, not one of these problems.
 </div>
+</section>
+<section id="part-tutorials" class="level2">
+<h2 class="anchored" data-anchor-id="part-tutorials">What did the tutorials show?</h2>
+<p>I recommend to go through Block 3’s <a href="./tutorials.html#b3-t1">Tutorials 1</a> and <a href="./tutorials.html#b3-t2">2</a> before starting this section.</p>
+<section id="part-names" class="level3">
+<h3 class="anchored" data-anchor-id="part-names">Which statement runs each operation?</h3>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## An online shop keeps its orders in an Iceberg table. Match each operation to the Athena statement that runs it. Not all options will be used.
+
+- Remove the orders of closed accounts :: `DELETE FROM orders WHERE …`
+  &gt; Athena's `DELETE` writes delete files that mark the removed rows. The data files stay as they were.
+- Merge small files, and files with deleted rows, into fewer larger files :: `OPTIMIZE orders REWRITE DATA USING BIN_PACK`
+  &gt; Bin-packing, merging files up to a target size, is the only way Athena compacts a table.
+- Drop snapshots older than a set age, and delete the files that no remaining snapshot uses :: `VACUUM orders`
+  &gt; One statement does both. The table property `vacuum_max_snapshot_age_seconds` sets how old a snapshot must be.
+- Add a column for the delivery method :: `ALTER TABLE orders ADD COLUMNS (delivery string)`
+  &gt; Only the table's metadata changes. No data file is rewritten.
+- :: `COMPACT TABLE orders`
+  &gt; Athena has no `COMPACT` statement. Compaction is `OPTIMIZE`.
+- :: `EXPIRE SNAPSHOTS orders`
+  &gt; Athena has no such statement. `VACUUM` expires snapshots.
+
+## The same shop runs maintenance from a Glue job in Spark. Iceberg's maintenance procedures run with `CALL`, through the Iceberg catalog, which this job names `glue_catalog`. Match each operation to the Spark statement that runs it. Not all options will be used.
+
+- Remove the orders of closed accounts :: `DELETE FROM orders WHERE …`
+  &gt; `DELETE` is also Athena's statement. By default Spark rewrites the data files that held the rows (copy-on-write), unless the table property `write.delete.mode` is `merge-on-read`, which writes delete files as Athena does.
+- Merge small files, and files with deleted rows, into fewer larger files :: `CALL glue_catalog.system.rewrite_data_files(…)`
+  &gt; Iceberg's compaction procedure. Athena's `OPTIMIZE` takes none of these settings, and this procedure takes a strategy, a sort order and a target file size.
+- Drop snapshots older than a set age, and delete the files that no remaining snapshot uses :: `CALL glue_catalog.system.expire_snapshots(…)`
+  &gt; It drops the snapshots and deletes the files that only those snapshots used.
+- Delete files in the table's folder that no snapshot ever listed, such as files left by a failed write :: `CALL glue_catalog.system.remove_orphan_files(…)`
+  &gt; These are orphan files. The procedure can list them first with `dry_run =&gt; true`. Athena's `VACUUM` deletes them directly.
+- :: `CALL glue_catalog.system.optimize(…)`
+  &gt; Iceberg has no `optimize` procedure. `OPTIMIZE` is Athena's name for compaction, and Spark with Iceberg uses `rewrite_data_files`.
+- :: `CALL glue_catalog.system.vacuum(…)`
+  &gt; Iceberg has no `vacuum` procedure. `VACUUM` is Athena's name, and in Spark the same work is two calls, `expire_snapshots` and `remove_orphan_files`.
+</div>
+</section>
+<section id="part-maintenance" class="level3">
+<h3 class="anchored" data-anchor-id="part-maintenance">What does each operation change?</h3>
+<p>The shop’s orders table has one folder per order day. Each hour a job appends a few small files, and last week the shop deleted, in Athena, the orders of customers who closed their accounts.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## For each goal, choose the operation that achieves it. Each option may be used once, more than once, or not at all.
+
+- Queries no longer read the delete files from last week's deletions :: Compaction
+  &gt; Compaction rewrites each data file without its deleted rows, so later queries have no delete files to read. In Athena: `OPTIMIZE`. In Spark: `rewrite_data_files`, then `rewrite_position_delete_files` to clear delete files that still point at rewritten data files.
+- Each day's many small files become a few large files :: Compaction
+  &gt; Compaction merges small files up to a target size. In Athena: `OPTIMIZE`. In Spark: `rewrite_data_files`, which can also sort the rows.
+- Files in S3 take less space than before last week's deletions :: Snapshot expiry
+  &gt; The old files stay in S3 while an older snapshot still lists them. Snapshot expiry drops those snapshots and deletes the files only they used. In Athena: `VACUUM`. In Spark: `expire_snapshots`.
+- Time-travel queries can no longer return the deleted orders :: Snapshot expiry
+  &gt; Until the old snapshots are expired, a time-travel query can still read the files that hold those orders. In Athena: `VACUUM`. In Spark: `expire_snapshots`.
+- :: Deleting rows
+  &gt; Deleting rows, with `DELETE` in Athena and Spark, adds new files and keeps the old ones in S3, so on its own it meets none of these goals.
+
+## The shop runs one `DELETE` on the orders table in Athena. Which statements are true right after it? Select all that apply.
+
+- [x] No data file was rewritten
+    &gt; Athena writes delete files that mark the rows. It does not rewrite the data files.
+- [x] More files in the table than before
+    &gt; Each `DELETE` statement adds delete files. Compaction later folds them into rewritten data files.
+- [x] Time travel to before the `DELETE` shows the deleted rows
+    &gt; The earlier snapshot lists the same data files and none of the new delete files.
+- [ ] Less storage in S3 than before
+    &gt; Nothing is removed from S3. The delete files add a little storage.
+- [ ] Queries read fewer files than before
+    &gt; Queries now read the delete files as well as the data files, until compaction.
+
+## You run compaction (`OPTIMIZE`) and then list the table's folder in S3. It holds more data than before. Why?
+
+1. [x] Earlier snapshots still list the old data and delete files
+    &gt; Compaction writes new files and commits a new snapshot. The old files still belong to earlier snapshots until snapshot expiry (`VACUUM`) drops them. In Spark: `expire_snapshots`.
+1. [ ] Compaction keeps the delete files, which now apply to the new files
+    &gt; The new files are written without the deleted rows, so the new snapshot lists no delete files. The old delete files stay only for the earlier snapshots.
+1. [ ] Compaction keeps a backup copy of the table for safety
+    &gt; No backup is made. Compaction writes only the new, merged files.
+</div>
+</section>
+<section id="part-athena-spark" class="level3">
+<h3 class="anchored" data-anchor-id="part-athena-spark">Athena or Spark?</h3>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## For each maintenance need on an Iceberg table, choose where you can do it. Each option may be used once, more than once, or not at all.
+
+- Compact only one day's folder, not the whole table :: Athena or Spark
+  &gt; Athena's `OPTIMIZE … WHERE` on the day column, or Spark's `rewrite_data_files` with a `where` filter.
+- Sort the rows inside each file by order time during compaction :: Spark only
+  &gt; Athena's `OPTIMIZE` only merges files and keeps the rows in the order they were written. Spark's `rewrite_data_files` takes `strategy =&gt; 'sort'`.
+- Choose the target size of the files that compaction writes :: Spark only
+  &gt; Athena picks the target size itself, and none of its table properties sets it. Spark's `rewrite_data_files` takes `target-file-size-bytes`.
+- Compact only the files holding one store's orders, when the table has one folder per day, not per store :: Spark only
+  &gt; Athena's `WHERE` in `OPTIMIZE` accepts only the columns the folders are named by. Spark's `where` filter can name other columns.
+- Expire snapshots older than a set age :: Athena or Spark
+  &gt; Athena's `VACUUM` uses the table property `vacuum_max_snapshot_age_seconds`. Spark's `expire_snapshots` takes `older_than` in each call.
+- List orphan files, which no snapshot ever listed, before deleting them :: Spark only
+  &gt; Spark's `remove_orphan_files` with `dry_run =&gt; true`. Athena's `VACUUM` deletes them directly.
+- Run maintenance as queries in the query editor, without starting a job or a notebook session :: Athena only
+  &gt; Athena runs `OPTIMIZE` and `VACUUM` as queries. Spark needs a Glue job or a notebook session.
+- Pay for compaction by the data it scans, not by worker time :: Athena only
+  &gt; Athena bills `OPTIMIZE` by the data scanned during the rewrite. A Glue job or session bills its DPUs for the time it runs.
+- :: Neither
+  &gt; Each need here can be met in Athena, Spark or both.
+</div>
+</section>
+<section id="part-job" class="level3">
+<h3 class="anchored" data-anchor-id="part-job">How a job writes and reloads a table</h3>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## A Glue job reads a week of orders and calls `repartition(8)`, which spreads the rows evenly over 8 Spark partitions without looking at their day. So each Spark partition holds orders from all seven days. The job writes them to a table with one folder per day, with `write.distribution-mode = none`, so Spark does not regroup the rows by day before writing. How many files does each day's folder get?
+
+1. [x] 8, one from each task
+    &gt; Each task writes one file into every day folder it has rows for, and here every task has rows for every day.
+1. [ ] One
+    &gt; One file per day needs the rows regrouped by day before writing, which `write.distribution-mode = hash` does.
+1. [ ] 56, eight for each of the seven days
+    &gt; 56 is the number of files for the whole week, across all seven folders.
+
+## A Glue job appends one day of orders to the table on each run. A run finishes successfully, and then someone presses **Run** in the console again. What does the table hold?
+
+1. [x] Every order of that day twice
+    &gt; An append doesn't check what is already loaded. To make the load safe to repeat, delete that day before writing it, as you did to repair the double load in the Athena tutorial. A `MERGE` on a key also works.
+1. [ ] Every order of that day once, because Iceberg skips duplicate rows
+    &gt; Iceberg has no unique-key check on append.
+1. [ ] Every order of that day once, because Glue stops a duplicate job run by default
+    &gt; By default Glue allows one run of a job at a time, so it refuses a second start only while the first run is still going. After the first run succeeds, the second run starts and appends the day again.
+</div>
+</section>
 </section>
 <section id="part-terms" class="level2">
 <h2 class="anchored" data-anchor-id="part-terms">Terms used on this page</h2>
