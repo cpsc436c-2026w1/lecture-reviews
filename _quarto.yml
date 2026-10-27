@@ -29,6 +29,8 @@ website:
             text: "L11: assembling the lakehouse in Athena and Glue"
           - href: l12.qmd
             text: "L12: DynamoDB as OLTP storage, distributed database problems and properties"
+          - href: l13.qmd
+            text: "L13: netsplit and CAP, data latency (freshness)"
           - href: midterm-review.qmd
             text: "Midterm review"
       - text: Tutorials

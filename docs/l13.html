@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.19">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>L13 review: netsplit and CAP, data latency (freshness) – CPSC 436C companion</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-bf27225e3a48a9273f3daa8f8e829971.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-fc5028672c55bc042a1fdef173a2e080.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/quizdown-1.3.2/quizdown.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-1.3.2/quizdownKatex.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-1.3.2/quizdownHighlight.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-1.3.2/quizdown-init.js"></script>
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">CPSC 436C companion</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lecture-reviews" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Lecture reviews</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-lecture-reviews">    
+        <li>
+    <a class="dropdown-item" href="./index.html">
+ <span class="dropdown-text">All reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l1.html">
+ <span class="dropdown-text">L1: the four resources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l2.html">
+ <span class="dropdown-text">L2: EC2, S3 and Lambda</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l3.html">
+ <span class="dropdown-text">L3: cost models and what starts a function</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l4.html">
+ <span class="dropdown-text">L4: scaling up and out</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l5.html">
+ <span class="dropdown-text">L5: Spark on a cluster</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./w2-l6.html">
+ <span class="dropdown-text">L6: how Spark runs a query</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l10.html">
+ <span class="dropdown-text">L10: lakes, lakehouses and query engines</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l11.html">
+ <span class="dropdown-text">L11: assembling the lakehouse in Athena and Glue</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l12.html">
+ <span class="dropdown-text">L12: DynamoDB as OLTP storage, distributed database problems and properties</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l13.html">
+ <span class="dropdown-text">L13: netsplit and CAP, data latency (freshness)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./midterm-review.html">
+ <span class="dropdown-text">Midterm review</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutorials" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tutorials</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tutorials">    
+        <li>
+    <a class="dropdown-item" href="./tutorials.html">
+ <span class="dropdown-text">All tutorials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#emr-cluster">
+ <span class="dropdown-text">B2T1: Cluster/EMR</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#glue-part-a">
+ <span class="dropdown-text">B2T2 part A: Spark/Glue, how Spark reads files</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#glue-part-b">
+ <span class="dropdown-text">B2T2 part B: Spark/Glue, slow queries and their fixes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#b3-t1">
+ <span class="dropdown-text">B3T1: Lakehouse/Athena+Glue</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-assignments" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Assignments</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-assignments">    
+        <li>
+    <a class="dropdown-item" href="https://cpsc436c-2026w1.github.io/a1-starter/">
+ <span class="dropdown-text">A1 starter</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://cpsc436c-2026w1.github.io/a2-starter/">
+ <span class="dropdown-text">A2 starter</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Parts</h2>
+   
+  <ul>
+  <li><a href="#part-replication" id="toc-part-replication" class="nav-link active" data-scroll-target="#part-replication">When does a replicated store answer “done”?</a></li>
+  <li><a href="#part-reads" id="toc-part-reads" class="nav-link" data-scroll-target="#part-reads">What may the buyer’s read return?</a></li>
+  <li><a href="#part-changes" id="toc-part-changes" class="nav-link" data-scroll-target="#part-changes">What reaches each copy?</a></li>
+  <li><a href="#part-requirements" id="toc-part-requirements" class="nav-link" data-scroll-target="#part-requirements">Which way meets each requirement with the slowest refresh?</a></li>
+  <li><a href="#part-terms" id="toc-part-terms" class="nav-link" data-scroll-target="#part-terms">Terms used on this page</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">L13 review: netsplit and CAP, data latency (freshness)</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>If you need to look up a term, the <a href="#part-terms">relevant vocabulary is below</a>. The check on which problem each situation shows, from the start of L13, is on the <a href="l12.html#part-problems">L12 page</a>.</p>
+<section id="part-replication" class="level2">
+<h2 class="anchored" data-anchor-id="part-replication">When does a replicated store answer “done”?</h2>
+<p>A recap of L12: one leader, two followers, and when the leader confirms a write.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## A ticket app keeps seat availability in a store with one leader and two followers. The app sends the leader a write: seat 14C is sold. For each situation, choose the kind of replication that produces it. Each option may be used once, more than once, or not at all.
+
+- Leader answers "done" only after both followers have the change :: Synchronous
+  &gt; A confirmed write survives the loss of the leader, because both followers have it. A majority would have answered after the first follower had the change.
+- Leader fails right after answering "done", before any follower has the change, and the write is lost :: Asynchronous
+  &gt; A confirmed write that only the leader had is lost when a follower without it takes over.
+- Leader answers "done" after the faster of its two followers has the change :: Majority (quorum)
+  &gt; Two of three replicas have it, so losing any one replica keeps the write. DynamoDB works this way. The leader waited for one follower, which asynchronous replication never does.
+- Leader answers "done" right after its own commit, while it sends the change to the followers :: Asynchronous
+  &gt; The leader waits for no follower, so writes are fast, and a confirmed write may exist only on the leader.
+- Every confirmed write survives the loss of any one replica, and one slow follower does not delay writes :: Majority (quorum)
+  &gt; The leader waits for one of its two followers, so every confirmed write is on two of the three replicas, and losing any one still leaves a copy. The leader does not wait for the slower follower, which gets the change a little later. Synchronous replication also keeps the write safe, but there the slow follower delays every write.
+- One slow follower makes every write wait :: Synchronous
+  &gt; The leader cannot answer until every follower it waits for has the change, so the slowest one sets the pace.
+- :: Linearizable
+  &gt; Linearizability is about what a read may return after a write has finished. It does not say how many followers must have the change before the leader answers "done".
+</div>
+</section>
+<section id="part-reads" class="level2">
+<h2 class="anchored" data-anchor-id="part-reads">What may the buyer’s read return?</h2>
+<p>A recap of L12: a follower that is behind, and the two kinds of DynamoDB read.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## A ticket app keeps seat availability in DynamoDB. The seller marks seat 14C "sold" and reads it back from the leader: "sold". No other write changes seat 14C. The seller then texts the buyer. A moment later the buyer's app reads seat 14C from a follower that is behind and gets "available". Which statements are true? Select all that apply.
+
+- [x] Buyer's read is not linearizable
+    &gt; The buyer's read started after the seller's read had returned "sold", and no later write changed the seat. A linearizable read would have to return "sold".
+- [x] Buyer's app used an eventually consistent read
+    &gt; A strongly consistent read goes to the leader. A read served by a follower that is behind was an eventually consistent read.
+- [x] Strongly consistent read by the buyer would have returned "sold"
+    &gt; In DynamoDB a strongly consistent read goes to the leader, which has the latest write.
+- [ ] Strongly consistent read uses the same read units as an eventually consistent one
+    &gt; A strongly consistent read uses 1 read unit per 4 KB, an eventually consistent read 0.5.
+- [ ] Strong reads alone stop two buyers from both buying seat 14C
+    &gt; Both buyers can read "available" correctly at the same moment, then both write. Preventing that needs a conditional write, which checks and writes in one step.
+</div>
+</section>
+<section id="part-changes" class="level2">
+<h2 class="anchored" data-anchor-id="part-changes">What reaches each copy?</h2>
+<p>Polling, the change stream and the outbox, after a few fast changes and one delete.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## Between two polls, within one minute, the app moves trip t-0042 from accepted to arrived to started. Then a cleanup job deletes trip t-0091, which every copy already holds, from the table directly, without going through the app. For each way of getting changes out, choose what reaches the copy. Not all options will be used.
+
+- Poll the table every 5 minutes on an updated-at column :: Latest status only, without the delete
+  &gt; Each poll sees only the state at the moment it asks, so the two changes between two polls reach the copy as one. A deleted item matches no query, so the copy never learns of the delete.
+- Read the table's change stream :: Every status change, with the delete
+  &gt; The stream is the store's own record of changes. It carries every change in order for each item, including deletes, whoever made them.
+- Write an outbox row in the same transaction as each change the app makes :: Every status change, without the delete
+  &gt; The outbox holds only what the app wrote. The cleanup job wrote no outbox row, so the copy never learns of the delete.
+- :: Latest status only, with the delete
+  &gt; Only the stream sees a deleted item. A poll finds nothing to return, and the outbox holds only what the app wrote.
+- :: Nothing until tomorrow's export
+  &gt; That is what a nightly export gives. Each of these three ways gets changes to the copy within minutes or seconds.
+</div>
+</section>
+<section id="part-requirements" class="level2">
+<h2 class="anchored" data-anchor-id="part-requirements">Which way meets each requirement with the slowest refresh?</h2>
+<p>Data latency requirements in EARS, and the four ways to keep a copy up to date.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## A food-delivery app keeps orders in DynamoDB. Each 20-minute load ends before the next starts. The daily load runs from 02:00 to 03:00. For each requirement, choose the way that meets it with the slowest refresh, and of two that refresh equally often, the cheaper one. Each option may be used once, more than once, or not at all.
+
+- WHEN the monthly invoice runs on the 1st at 06:00, INVOICING SHALL include every order delivered before the 1st at 00:00 :: Data lake, daily partitions
+  &gt; The 02:00 load adds the finished day and finishes by 03:00, so every order delivered before 00:00 is in by 06:00. A fresher way adds nothing the invoice needs.
+- WHILE orders are open, KITCHEN SCREEN SHALL show each new order with data latency under 10 s at p99 :: Streaming
+  &gt; Only a stream gets each change to the reader within seconds. A 20-minute load misses the target on every order.
+- WHEN the restaurant dashboard refreshes, DASHBOARD SHALL show orders with data latency under 1 h at p95 :: Lakehouse, delete files, every 20 min
+  &gt; A 20-minute load meets the hour with time to spare, and readers always see one whole snapshot. A daily load can be a day behind. A stream also meets the hour, with more freshness than the dashboard needs.
+- WHEN the tax report runs at 06:00 the day after a quarter ends, REPORT SHALL include every order of the quarter :: Data lake, daily partitions
+  &gt; The daily load of the quarter's last day finishes by 03:00, so every order is in by 06:00. A fresher way adds nothing the report needs.
+- WHILE couriers are on shift, DISPATCH SHALL see each order's status with data latency under 30 s at p95 :: Streaming
+  &gt; 30 seconds is far below a 20-minute schedule. Each status change has to reach dispatch as it happens.
+- WHEN a manager opens the shift summary, SUMMARY SHALL show sales with data latency under 1 h at p99 :: Lakehouse, delete files, every 20 min
+  &gt; A 20-minute load meets a p99 of 1 h as long as each run takes well under 40 minutes.
+- :: Data lake, rewritten every 20 min
+  &gt; It refreshes every 20 minutes, as the lakehouse does, and costs more, \$4.15 a day against \$1.29 in the cost table for the rides app. Readers can also see half-replaced files while it runs.
+</div>
+</section>
+<section id="part-terms" class="level2">
+<h2 class="anchored" data-anchor-id="part-terms">Terms used on this page</h2>
+<p><strong>System of record</strong>. The store with the authoritative copy; other copies are derived from it.</p>
+<p><strong>Operational system (OLTP), analytical system (OLAP), point query</strong>. Many small reads and writes by key, in milliseconds; scans and aggregates over many records; one record fetched by its key.</p>
+<p><strong>Row-oriented, column-oriented</strong>. One record’s values stored together; one column’s values stored together.</p>
+<p><strong>Item, partition key, sort key</strong>. DynamoDB’s record; the key part that picks its storage partition; the optional part that orders items sharing a partition key.</p>
+<p><strong><code>GetItem</code>, <code>Query</code>, <code>Scan</code></strong>. One item by key; the items of one partition key; every item.</p>
+<p><strong>Read request unit / write request unit</strong>. One strong read (or two eventual) of up to 4 KB; one write of up to 1 KB.</p>
+<p><strong>Export, federated query, derived copy</strong>. A copy of the store’s items written to S3 (all, or those changed in a time window); a query that reads the store through a connector; a result computed elsewhere and written back.</p>
+<p><strong>Partial failure, timeout, netsplit</strong>. Some parts fail; giving up waiting; nodes that cannot reach each other.</p>
+<p><strong>Replication, sharding</strong>. The same data on several nodes; a different slice on each node.</p>
+<p><strong>Replica, leader, follower</strong>. A copy on another node; in single-leader replication, the one that takes writes; the ones that copy from it.</p>
+<p><strong>Region, Availability Zone (AZ)</strong>. A geographic area; one or more isolated data centres (buildings of nodes) in a Region, with their own power and network.</p>
+<p><strong>Synchronous, asynchronous, majority (quorum)</strong>. “done” after the required followers have it; after the leader’s own commit; after more than half have it.</p>
+<p><strong>Replication lag, eventual consistency, read-after-write</strong>. A follower behind the leader; agreement if writes stop, no deadline; your reads show your writes.</p>
+<p><strong>Linearizability</strong>. Behaves as one copy, in real-time order; “strong consistency” is a vague name for it.</p>
+<p><strong>Eventually / strongly consistent read</strong>. Any replica, may be old, 0.5 units per 4 KB; the leader, the latest value including every write finished before the read, 1 unit per 4 KB.</p>
+<p><strong>CAP, PACELC</strong>. During a netsplit, linearizable or a non-error answer from every working node; else, latency or consistency.</p>
+<p><strong>Lost update, compare-and-set, conditional write, optimistic concurrency</strong>. The second write replaces the first; write only if unchanged; DynamoDB’s form; check at the end, retry if changed.</p>
+<p><strong>Transaction, ACID, BASE</strong>. A group that succeeds or fails whole; atomicity, consistency, isolation, durability; mostly “not ACID”.</p>
+<p><strong>Serializability</strong>. The outcome of concurrent transactions equals running them one at a time.</p>
+<p><strong>Timeliness, integrity, idempotent</strong>. Shows the latest; nothing lost or duplicated; twice has the effect of once.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
