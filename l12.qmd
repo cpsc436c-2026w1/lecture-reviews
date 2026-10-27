@@ -92,18 +92,20 @@ A food-delivery app keeps live orders in DynamoDB and order history in a lakehou
 shuffle_answers: true
 ---
 
-## Food-delivery app keeps orders in DynamoDB and order history in a lakehouse. Match each situation to the problem it shows. Each option may be used once, more than once, or not at all.
+## A food-delivery app keeps orders in DynamoDB and order history in a lakehouse. Match each situation to the problem it shows. Not all options will be used.
 
-- A customer edits the delivery address, and the confirmation screen right after shows the old one :: Replication lag
-  > The read came from a replica that did not have the write yet. A strongly consistent read would have shown it.
+- A customer's address change succeeds, and an eventually consistent read on the confirmation screen right after shows the old address :: Replication lag
+  > The read came from a replica that did not have the write yet. No link failed. A strongly consistent read would have shown the new address.
 - Two couriers both mark the same order "picked up", and the order ends up with the second courier's name :: Lost update
-  > Both read "waiting" correctly. The second write replaced the first. A conditional write would have refused one.
+  > Both couriers read the order before either wrote. The second write replaced the first. A conditional write would have refused one.
 - A nightly load into the lakehouse runs twice after a timeout, and yesterday's orders appear twice :: Non-idempotent load
-  > Duplicates do not go away by waiting. An idempotent load (a `MERGE` keyed by order id over deduplicated input) would have left one copy.
-- The link between two Regions fails, and the app in one Region returns errors for order updates until it returns :: Netsplit
+  > Running the load again adds the same orders again. An idempotent load (a `MERGE` keyed by order id over deduplicated input) leaves one copy of each.
+- The link between two Regions fails, and the app in one Region returns errors for order updates until the link is back :: Netsplit
   > The Region chose to refuse writes rather than let the two Regions disagree.
-- :: Scan
-  > A Scan is a specific way to read data, not one of these problems.
+- :: Hot partition
+  > One partition key taking most of the traffic overloads one storage partition. None of these situations is about load on one key.
+- :: Write lost in failover
+  > A write is lost in failover when the leader fails before any follower has it. In none of these situations does a leader fail.
 ```
 
 ## Learning from practice {#part-tutorials}
