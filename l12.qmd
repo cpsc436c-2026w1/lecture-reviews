@@ -92,16 +92,16 @@ A food-delivery app keeps live orders in DynamoDB and order history in a lakehou
 shuffle_answers: true
 ---
 
-## A food-delivery app keeps orders in DynamoDB and order history in a lakehouse. Match each situation to the problem it shows. Not all options will be used.
+## A food-delivery app keeps orders in a database copied across two Regions and order history in a lakehouse. Match each situation to the problem it shows. Not all options will be used.
 
 - A customer's address change succeeds, and an eventually consistent read on the confirmation screen right after shows the old address :: Replication lag
   > The read came from a replica that did not have the write yet. No link failed. A strongly consistent read would have shown the new address.
-- Two couriers both mark the same order "picked up", and the order ends up with the second courier's name :: Lost update
+- Two couriers both read the order as "ready" and mark it "picked up", and the order ends up with the second courier's name :: Lost update
   > Both couriers read the order before either wrote. The second write replaced the first. A conditional write would have refused one.
 - A nightly load into the lakehouse runs twice after a timeout, and yesterday's orders appear twice :: Non-idempotent load
   > Running the load again adds the same orders again. An idempotent load (a `MERGE` keyed by order id over deduplicated input) leaves one copy of each.
 - The link between two Regions fails, and the app in one Region returns errors for order updates until the link is back :: Netsplit
-  > The Region chose to refuse writes rather than let the two Regions disagree.
+  > The cut-off Region refuses writes, so the two Regions never disagree. That is the consistency choice in a netsplit (CAP). DynamoDB, in this case, would by default keep taking writes in both Regions and settle conflicting writes later: the last writer wins.
 - :: Hot partition
   > One partition key taking most of the traffic overloads one storage partition. None of these situations is about load on one key.
 - :: Write lost in failover
