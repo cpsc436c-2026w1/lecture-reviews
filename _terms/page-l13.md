@@ -38,9 +38,9 @@
 
 **Timeliness, integrity, idempotent**. Shows the latest; nothing lost or duplicated; twice has the effect of once.
 
-### Data latency (freshness)
+### How answer freshness influences architecture (batch vs streaming)
 
-**Data latency**. The time from a change in the source to the moment a reader can see it in its copy. DDIA calls the property data freshness.
+**Data latency**. The time from a change in the source to the moment a reader can see it. DDIA calls the property data freshness.
 
 **Service level objective (SLO)**. A target for a measured quantity, often a percentile.
 
@@ -52,8 +52,16 @@
 
 **Change data capture (CDC)**. Reading a store's change log and turning each change into an event that other systems read.
 
-**Snapshot**. A copy of the whole table at one time, which a new copy starts from before it follows the log.
+**Snapshot**. Every item of a table as of one moment (for DynamoDB, a full export; in Iceberg, a commit), which a new copy starts from before it follows the log.
+
+**Percentile (p90, p95, p99)**. The time within which 90, 95 or 99 of every 100 changes arrive.
+
+**Event**. A record of one change, which other systems read.
+
+**Incremental export**. DynamoDB's export of the items that changed over a window of 15 minutes to 24 hours, one record per item.
 
 **Outbox table**. A table the application writes each outgoing event to, in the same transaction as the change.
 
 **Polling**. The reader asks the source for new data every *T* seconds.
+
+**Data liberation**. Publishing the data other systems need from a store, kept up to date with every change.

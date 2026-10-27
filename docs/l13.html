@@ -217,7 +217,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#part-requirements" id="toc-part-requirements" class="nav-link" data-scroll-target="#part-requirements">Which way meets each requirement with the slowest refresh?</a></li>
   <li><a href="#part-terms" id="toc-part-terms" class="nav-link" data-scroll-target="#part-terms">Terms used on this page</a>
   <ul class="collapse">
-  <li><a href="#data-latency-freshness" id="toc-data-latency-freshness" class="nav-link" data-scroll-target="#data-latency-freshness">Data latency (freshness)</a></li>
+  <li><a href="#how-answer-freshness-influences-architecture-batch-vs-streaming" id="toc-how-answer-freshness-influences-architecture-batch-vs-streaming" class="nav-link" data-scroll-target="#how-answer-freshness-influences-architecture-batch-vs-streaming">How answer freshness influences architecture (batch vs streaming)</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -367,17 +367,21 @@ shuffle_answers: true
 <p><strong>Transaction, ACID, BASE</strong>. A group that succeeds or fails whole; atomicity, consistency, isolation, durability; mostly “not ACID”.</p>
 <p><strong>Serializability</strong>. The outcome of concurrent transactions equals running them one at a time.</p>
 <p><strong>Timeliness, integrity, idempotent</strong>. Shows the latest; nothing lost or duplicated; twice has the effect of once.</p>
-<section id="data-latency-freshness" class="level3">
-<h3 class="anchored" data-anchor-id="data-latency-freshness">Data latency (freshness)</h3>
-<p><strong>Data latency</strong>. The time from a change in the source to the moment a reader can see it in its copy. DDIA calls the property data freshness.</p>
+<section id="how-answer-freshness-influences-architecture-batch-vs-streaming" class="level3">
+<h3 class="anchored" data-anchor-id="how-answer-freshness-influences-architecture-batch-vs-streaming">How answer freshness influences architecture (batch vs streaming)</h3>
+<p><strong>Data latency</strong>. The time from a change in the source to the moment a reader can see it. DDIA calls the property data freshness.</p>
 <p><strong>Service level objective (SLO)</strong>. A target for a measured quantity, often a percentile.</p>
 <p><strong>Service level agreement (SLA)</strong>. An agreement that states the SLOs and what users get when they are missed.</p>
 <p><strong>Dual write</strong>. The application writes the same change to two systems itself, and no transaction covers both.</p>
 <p><strong>Change log</strong>. A store’s own append-only record of every change.</p>
 <p><strong>Change data capture (CDC)</strong>. Reading a store’s change log and turning each change into an event that other systems read.</p>
-<p><strong>Snapshot</strong>. A copy of the whole table at one time, which a new copy starts from before it follows the log.</p>
+<p><strong>Snapshot</strong>. Every item of a table as of one moment (for DynamoDB, a full export; in Iceberg, a commit), which a new copy starts from before it follows the log.</p>
+<p><strong>Percentile (p90, p95, p99)</strong>. The time within which 90, 95 or 99 of every 100 changes arrive.</p>
+<p><strong>Event</strong>. A record of one change, which other systems read.</p>
+<p><strong>Incremental export</strong>. DynamoDB’s export of the items that changed over a window of 15 minutes to 24 hours, one record per item.</p>
 <p><strong>Outbox table</strong>. A table the application writes each outgoing event to, in the same transaction as the change.</p>
 <p><strong>Polling</strong>. The reader asks the source for new data every <em>T</em> seconds.</p>
+<p><strong>Data liberation</strong>. Publishing the data other systems need from a store, kept up to date with every change.</p>
 
 
 </section>
