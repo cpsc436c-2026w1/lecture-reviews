@@ -4,8 +4,13 @@ import re, sys
 deck, out = sys.argv[1], sys.argv[2]
 s = open(deck).read()
 parts = []
-for m in re.finditer(r'(?ms)^## Definitions from this lecture[^\n]*\n(.*?)(?=^#{1,2} )', s):
+for m in re.finditer(r'(?ms)^## Definitions from this (?:lecture|part)[^\n]*\n(.*?)(?=^#{1,2} )', s):
     body = re.sub(r'::: notes.*?\n:::', '', m.group(1), flags=re.S)
+    if 'this part' in m.group(0).split('\n', 1)[0] and not re.search(r'(?m)^\*\*.+\*\*\s*$', body):
+        # a part's slide with no group label takes the title of the block divider above it
+        div = re.findall(r'(?m)^# (Block \d+: .+?) \{#', s[:m.start()])
+        if div:
+            parts.append(f"### {re.sub(r'^Block \d+: ', '', div[-1])[:1].upper()}{re.sub(r'^Block \d+: ', '', div[-1])[1:]}\n")
     for line in body.split('\n'):
         h = re.match(r'^\*\*(.+?)\*\*\s*$', line.strip())
         b = re.match(r'^- \*\*(.+?)\*\*(.*?):\s*(.*)$', line.strip())
