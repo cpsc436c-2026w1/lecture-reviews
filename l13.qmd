@@ -104,13 +104,13 @@ shuffle_answers: true
 - WHILE orders are open, KITCHEN SCREEN SHALL show each new order with data latency under 10 s at p99 :: Streaming
   > A load takes minutes, so even an order placed just before one misses 10 s. Only a stream gets each change to the reader within seconds.
 - WHILE the restaurant is open, DASHBOARD SHALL show orders with data latency under 1 h at p95 :: Lakehouse, delete files, every 20 min
-  > A 20-minute load meets the hour with time to spare, and readers always see one whole snapshot. A daily load can be a day behind. A stream also meets the hour, with more freshness than the dashboard needs.
+  > A 20-minute load meets the hour with time to spare, and readers always see one whole snapshot. A daily load can be a day behind. The data lake rewritten every 20 minutes meets the hour too, but exports the whole table on every run. A stream also meets the hour, with more freshness than the dashboard needs.
 - WHEN the tax report runs at 06:00 the day after a quarter ends, REPORT SHALL include every order of the quarter :: Data lake, daily partitions
   > The daily load of the quarter's last day finishes by 03:00, so every order is in by 06:00. A fresher way adds nothing the report needs.
 - WHILE couriers are on shift, DISPATCH SHALL see each order's status with data latency under 30 s at p95 :: Streaming
   > 30 seconds is far below a 20-minute schedule. Each status change has to reach dispatch as it happens.
 - WHEN a manager opens the shift summary, SUMMARY SHALL show sales with data latency under 1 h at p99 :: Lakehouse, delete files, every 20 min
-  > A change waits at most 20 minutes for the next load, and that load ends before the next one starts. So we expect every change in the copy within 40 minutes, which is under 1 h even at p99.
+  > A change waits at most 20 minutes for the next load, and that load ends before the next one starts. So we expect every change in the copy within 40 minutes, which is under 1 h even at p99. Daily partitions can be a day behind. The data lake rewritten every 20 minutes also meets the hour, but each run exports the whole table, so the lakehouse is the cheaper of the two.
 - :: Data lake, rewritten every 20 min
   > It loads every 20 minutes, as the lakehouse does. But each run exports the whole table and rewrites the day's files, while the lakehouse copies only the changes, so the rewrite is the more expensive of the two. Readers can also see half-replaced files while it runs.
 ```
