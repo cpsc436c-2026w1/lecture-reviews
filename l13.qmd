@@ -92,12 +92,14 @@ shuffle_answers: true
 
 Data latency requirements in EARS, and the ways to keep a copy up to date.
 
+Fresher data is never free. A copy refreshed more often needs more loads, or an always-on stream of changes, and with them more maintenance concerns and costs. So if these constraints matter, for each reader we may choose the slowest refresh that still meets its requirement. We pay only for the freshness the reader needs, and we keep the simplest way that works.
+
 ```quizdown
 ---
 shuffle_answers: true
 ---
 
-## A food-delivery app keeps orders in DynamoDB. Each 20-minute load ends before the next starts. The daily load runs from 02:00 to 03:00 and adds the previous day's orders. For each requirement, choose the way that meets it with the slowest refresh, and of two that refresh equally often, the cheaper one. Each option may be used once, more than once, or not at all.
+## A food-delivery app keeps its orders in DynamoDB and copies them out in the ways listed below. Each of the two 20-minute ways to export finishes a load before the next one starts. The daily load runs from 02:00 to 03:00 and adds the previous day's orders. For each requirement, choose the way with the slowest refresh that still meets it. If two ways refresh equally often, choose the cheaper one. Each option may be used once, more than once, or not at all.
 
 - WHEN the monthly invoice runs on the 1st at 06:00, INVOICING SHALL include every order delivered before the 1st at 00:00 :: Data lake, daily partitions
   > The 02:00 load adds the finished day and finishes by 03:00, so every order delivered before 00:00 is in by 06:00. A fresher way adds nothing the invoice needs.
