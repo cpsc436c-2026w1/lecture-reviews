@@ -73,7 +73,7 @@ Polling, the change stream and the outbox, after a few fast changes and one dele
 shuffle_answers: true
 ---
 
-## Between two polls, within one minute, the trips API moves trip t-0042 from accepted to arrived to started. Then a cleanup job deletes trip t-0091, which every copy already holds, from the table directly, not through the trips API. For each way of getting changes out, choose what reaches the copy. Not all options will be used.
+## Between two polls, within one minute, the trips API moves trip t-0042 from accepted to arrived to started. The trips API is the application that owns the table: with each change it makes, it also writes an outbox row. Then a cleanup job deletes trip t-0091, which every copy already holds. The cleanup job writes to the table itself, without the trips API. For each way of getting changes out, choose what reaches the copy. Not all options will be used.
 
 - Poll the table every 5 minutes on an updated-at column :: Latest status only, without the delete
   > Each poll sees only the state at the moment it asks, so the two changes between two polls reach the copy as one. A deleted item matches no query, so the copy never learns of the delete.

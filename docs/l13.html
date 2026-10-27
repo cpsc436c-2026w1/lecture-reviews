@@ -306,7 +306,7 @@ shuffle_answers: true
 shuffle_answers: true
 ---
 
-## Between two polls, within one minute, the trips API moves trip t-0042 from accepted to arrived to started. Then a cleanup job deletes trip t-0091, which every copy already holds, from the table directly, not through the trips API. For each way of getting changes out, choose what reaches the copy. Not all options will be used.
+## Between two polls, within one minute, the trips API moves trip t-0042 from accepted to arrived to started. The trips API is the application that owns the table: with each change it makes, it also writes an outbox row. Then a cleanup job deletes trip t-0091, which every copy already holds. The cleanup job writes to the table itself, without the trips API. For each way of getting changes out, choose what reaches the copy. Not all options will be used.
 
 - Poll the table every 5 minutes on an updated-at column :: Latest status only, without the delete
   &gt; Each poll sees only the state at the moment it asks, so the two changes between two polls reach the copy as one. A deleted item matches no query, so the copy never learns of the delete.
@@ -333,65 +333,65 @@ shuffle_answers: true
 <thead>
 <tr class="header">
 <th></th>
-<th>Our app (1×)</th>
-<th>100×</th>
+<th style="text-align: right;">Our app (1×)</th>
+<th style="text-align: right;">100×</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td>Trip changes a day</td>
-<td>3.3 million</td>
-<td>326 million</td>
+<td style="text-align: right;">3.3 million</td>
+<td style="text-align: right;">326 million</td>
 </tr>
 <tr class="even">
 <td>Live table size</td>
-<td>0.38 GB</td>
-<td>38 GB</td>
+<td style="text-align: right;">0.38 GB</td>
+<td style="text-align: right;">38 GB</td>
 </tr>
 <tr class="odd">
 <td>Daily partitions: one export, one Glue run</td>
-<td>$0.060</td>
-<td>$4.59</td>
+<td style="text-align: right;">$0.06</td>
+<td style="text-align: right;">$4.59</td>
 </tr>
 <tr class="even">
 <td>Rewrite every 20 min: 72 full exports and Glue runs</td>
-<td>$4.15</td>
-<td>$310.76</td>
+<td style="text-align: right;">$4.15</td>
+<td style="text-align: right;">$310.76</td>
 </tr>
 <tr class="odd">
 <td>Lakehouse every 20 min: 72 incremental exports, 72 <code>MERGE</code> runs, nightly compaction</td>
-<td>$1.29</td>
-<td>$22.91</td>
+<td style="text-align: right;">$1.29</td>
+<td style="text-align: right;">$22.91</td>
 </tr>
 <tr class="even">
 <td>CDC: DynamoDB Streams to Lambda, reading the changes only</td>
-<td>$0.645</td>
-<td>$6.09</td>
+<td style="text-align: right;">$0.65</td>
+<td style="text-align: right;">$6.09</td>
 </tr>
 <tr class="odd">
 <td>&nbsp;&nbsp;+ write each change to a DynamoDB table</td>
-<td>+$2.24</td>
-<td>+$224.43</td>
+<td style="text-align: right;">+$2.24</td>
+<td style="text-align: right;">+$224.43</td>
 </tr>
 <tr class="even">
 <td>&nbsp;&nbsp;+ write each zone’s count every 30 s to a DynamoDB table</td>
-<td>+$0.521</td>
-<td>+$0.521</td>
+<td style="text-align: right;">+$0.52</td>
+<td style="text-align: right;">+$0.52</td>
 </tr>
 <tr class="odd">
 <td>&nbsp;&nbsp;+ append each zone’s count every 30 s to an Iceberg table through Athena</td>
-<td>+$0.260</td>
-<td>+$0.260</td>
+<td style="text-align: right;">+$0.26</td>
+<td style="text-align: right;">+$0.26</td>
 </tr>
 <tr class="even">
 <td><span style="color:#8a8f98">&nbsp;&nbsp;+ a full copy into the lakehouse through Kinesis and Firehose</span></td>
-<td><span style="color:#8a8f98">L14</span></td>
-<td></td>
+<td style="text-align: right;"><span style="color:#8a8f98">L14</span></td>
+<td style="text-align: right;"></td>
 </tr>
 <tr class="odd">
 <td><span style="color:#8a8f98">Zero-ETL integration: AWS copies the table into the lakehouse for you</span></td>
-<td><span style="color:#8a8f98">L14</span></td>
-<td></td>
+<td style="text-align: right;"><span style="color:#8a8f98">L14</span></td>
+<td style="text-align: right;"></td>
 </tr>
 </tbody>
 </table>
