@@ -88,9 +88,27 @@ shuffle_answers: true
 ```
 
 
+## What each way costs a day {#part-costs}
+
+The cost table from L13, at our scale and at 100 times it. Read it before the last check.
+
+::: {style="font-size: 0.9em"}
+{{< include _terms/l13-cost-table.md >}}
+:::
+
+How we ran the comparison:
+
+- 0.65 million trips a day (L12), each changed 5 times: requested, accepted, arrived, started, completed (assumed)
+- an item of 589 bytes with DynamoDB's per-item overhead (L12)
+- the live table keeps about one day of trips, because a time to live (TTL) deletes each trip a day after it finishes, once the nightly load has copied it (assumed), so a full export copies 0.38 GB, not L12's 358 GB of history
+- export \$0.11 per GB, and point-in-time recovery, which every export needs, \$0.22 per GB-month
+- each Glue run on 2 DPU: 60 s to start and commit, plus tutorial 2's run time in proportion to its rows (assumed)
+- Lambda polls the stream 4 times a second, so at a steady rate a batch holds about 10 changes at our scale and up to 100 at 100×. Each batch takes 200 ms at 512 MB (assumed). Writing to DynamoDB: surge pricing's count for each of 263 pickup zones (assumed), as in our demo, one write unit per update, \$0.6875 per million
+- Appending to Iceberg through Athena (measured, 10 appends of 263 rows): 1.6 s each, 0 bytes scanned so the 10 MB minimum is billed at \$5.50 per TB, and 4 new S3 objects (one data file, three metadata files) at \$0.0055 per 1,000 PUT requests. The Lambda waits for each append. 2,880 small files a day also need compaction
+
 ## Which way meets each requirement with the slowest refresh? {#part-requirements}
 
-Data latency requirements in EARS, and the four ways to keep a copy up to date.
+Data latency requirements in EARS, and the ways to keep a copy up to date, with what each costs a day.
 
 ```quizdown
 ---
@@ -112,7 +130,7 @@ shuffle_answers: true
 - WHEN a manager opens the shift summary, SUMMARY SHALL show sales with data latency under 1 h at p99 :: Lakehouse, delete files, every 20 min
   > A 20-minute load meets a p99 of 1 h as long as each run takes well under 40 minutes.
 - :: Data lake, rewritten every 20 min
-  > It refreshes every 20 minutes, as the lakehouse does, and costs more, \$4.15 a day against \$1.29 in the cost table for the rides app. Readers can also see half-replaced files while it runs.
+  > It refreshes every 20 minutes, as the lakehouse does, and costs more, \$4.15 a day against \$1.29 at our scale in the cost table. Readers can also see half-replaced files while it runs.
 ```
 
 

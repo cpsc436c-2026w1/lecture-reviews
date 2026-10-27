@@ -214,6 +214,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#part-replication" id="toc-part-replication" class="nav-link active" data-scroll-target="#part-replication">When does a replicated store answer “done”?</a></li>
   <li><a href="#part-reads" id="toc-part-reads" class="nav-link" data-scroll-target="#part-reads">What may the buyer’s read return?</a></li>
   <li><a href="#part-changes" id="toc-part-changes" class="nav-link" data-scroll-target="#part-changes">What reaches each copy?</a></li>
+  <li><a href="#part-costs" id="toc-part-costs" class="nav-link" data-scroll-target="#part-costs">What each way costs a day</a></li>
   <li><a href="#part-requirements" id="toc-part-requirements" class="nav-link" data-scroll-target="#part-requirements">Which way meets each requirement with the slowest refresh?</a></li>
   <li><a href="#part-terms" id="toc-part-terms" class="nav-link" data-scroll-target="#part-terms">Terms used on this page</a>
   <ul class="collapse">
@@ -319,9 +320,96 @@ shuffle_answers: true
   &gt; That is what a nightly export gives. Each of these three ways gets changes to the copy within minutes or seconds.
 </div>
 </section>
+<section id="part-costs" class="level2">
+<h2 class="anchored" data-anchor-id="part-costs">What each way costs a day</h2>
+<p>The cost table from L13, at our scale and at 100 times it. Read it before the last check.</p>
+<div style="font-size: 0.9em">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 60%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>Our app (1×)</th>
+<th>100×</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Trip changes a day</td>
+<td>3.3 million</td>
+<td>326 million</td>
+</tr>
+<tr class="even">
+<td>Live table size</td>
+<td>0.38 GB</td>
+<td>38 GB</td>
+</tr>
+<tr class="odd">
+<td>Daily partitions: one export, one Glue run</td>
+<td>$0.060</td>
+<td>$4.59</td>
+</tr>
+<tr class="even">
+<td>Rewrite every 20 min: 72 full exports and Glue runs</td>
+<td>$4.15</td>
+<td>$310.76</td>
+</tr>
+<tr class="odd">
+<td>Lakehouse every 20 min: 72 incremental exports, 72 <code>MERGE</code> runs, nightly compaction</td>
+<td>$1.29</td>
+<td>$22.91</td>
+</tr>
+<tr class="even">
+<td>CDC: DynamoDB Streams to Lambda, reading the changes only</td>
+<td>$0.645</td>
+<td>$6.09</td>
+</tr>
+<tr class="odd">
+<td>&nbsp;&nbsp;+ write each change to a DynamoDB table</td>
+<td>+$2.24</td>
+<td>+$224.43</td>
+</tr>
+<tr class="even">
+<td>&nbsp;&nbsp;+ write each zone’s count every 30 s to a DynamoDB table</td>
+<td>+$0.521</td>
+<td>+$0.521</td>
+</tr>
+<tr class="odd">
+<td>&nbsp;&nbsp;+ append each zone’s count every 30 s to an Iceberg table through Athena</td>
+<td>+$0.260</td>
+<td>+$0.260</td>
+</tr>
+<tr class="even">
+<td><span style="color:#8a8f98">&nbsp;&nbsp;+ a full copy into the lakehouse through Kinesis and Firehose</span></td>
+<td><span style="color:#8a8f98">L14</span></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td><span style="color:#8a8f98">Zero-ETL integration: AWS copies the table into the lakehouse for you</span></td>
+<td><span style="color:#8a8f98">L14</span></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>How we ran the comparison:</p>
+<ul>
+<li>0.65 million trips a day (L12), each changed 5 times: requested, accepted, arrived, started, completed (assumed)</li>
+<li>an item of 589 bytes with DynamoDB’s per-item overhead (L12)</li>
+<li>the live table keeps about one day of trips, because a time to live (TTL) deletes each trip a day after it finishes, once the nightly load has copied it (assumed), so a full export copies 0.38 GB, not L12’s 358 GB of history</li>
+<li>export $0.11 per GB, and point-in-time recovery, which every export needs, $0.22 per GB-month</li>
+<li>each Glue run on 2 DPU: 60 s to start and commit, plus tutorial 2’s run time in proportion to its rows (assumed)</li>
+<li>Lambda polls the stream 4 times a second, so at a steady rate a batch holds about 10 changes at our scale and up to 100 at 100×. Each batch takes 200 ms at 512 MB (assumed). Writing to DynamoDB: surge pricing’s count for each of 263 pickup zones (assumed), as in our demo, one write unit per update, $0.6875 per million</li>
+<li>Appending to Iceberg through Athena (measured, 10 appends of 263 rows): 1.6 s each, 0 bytes scanned so the 10 MB minimum is billed at $5.50 per TB, and 4 new S3 objects (one data file, three metadata files) at $0.0055 per 1,000 PUT requests. The Lambda waits for each append. 2,880 small files a day also need compaction</li>
+</ul>
+</section>
 <section id="part-requirements" class="level2">
 <h2 class="anchored" data-anchor-id="part-requirements">Which way meets each requirement with the slowest refresh?</h2>
-<p>Data latency requirements in EARS, and the four ways to keep a copy up to date.</p>
+<p>Data latency requirements in EARS, and the ways to keep a copy up to date, with what each costs a day.</p>
 <div class="quizdown">
 ---
 shuffle_answers: true
@@ -342,7 +430,7 @@ shuffle_answers: true
 - WHEN a manager opens the shift summary, SUMMARY SHALL show sales with data latency under 1 h at p99 :: Lakehouse, delete files, every 20 min
   &gt; A 20-minute load meets a p99 of 1 h as long as each run takes well under 40 minutes.
 - :: Data lake, rewritten every 20 min
-  &gt; It refreshes every 20 minutes, as the lakehouse does, and costs more, \$4.15 a day against \$1.29 in the cost table for the rides app. Readers can also see half-replaced files while it runs.
+  &gt; It refreshes every 20 minutes, as the lakehouse does, and costs more, \$4.15 a day against \$1.29 at our scale in the cost table. Readers can also see half-replaced files while it runs.
 </div>
 </section>
 <section id="part-terms" class="level2">
