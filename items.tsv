@@ -1,0 +1,22 @@
+link	page	anchor	deck_slide	added	status
+r11-01	l11.html	q-which-layer	l11-00	2026-10-26	live
+r11-02	l11.html	q-lake-or-lakehouse	l11-02b	2026-10-26	live
+r11-03	l11.html	q-which-service	l11-01s	2026-10-26	live
+r11-04	l11.html	q-which-fix	l11-90	2026-10-26	live
+r11-05	l11.html	q-levels	l11-32	2026-10-26	live
+r11-06	l11.html	q-where-from		2026-10-26	live
+r11-07	l11.html	q-which-bill		2026-10-26	live
+r11-08	l11.html	q-snapshots		2026-10-26	live
+r11-09	l11.html	q-storage-class		2026-10-26	live
+r12-01	l12.html	part-engines	l12-00	2026-10-26	live
+r12-02	l12.html	part-stores	l12-q1q	2026-10-26	live
+r12-03	l12.html	part-reads	l12-20	2026-10-26	live
+r12-04	l12.html	part-problems	l12-90	2026-10-26	live
+r12-05	l12.html	part-names		2026-10-26	live
+r12-06	l12.html	part-maintenance		2026-10-26	live
+r12-07	l12.html	part-athena-spark		2026-10-26	live
+r12-08	l12.html	part-job		2026-10-26	live
+r13-01	l13.html		l13-00	2026-10-26	planned
+r13-02	l13.html		l13-02	2026-10-26	planned
+r13-03	l13.html		l13-q2d	2026-10-26	planned
+r13-04	l13.html		l13-23	2026-10-26	planned
