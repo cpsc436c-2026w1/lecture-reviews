@@ -16,7 +16,7 @@ r12-05	l12.html	part-names		2026-10-26	live
 r12-06	l12.html	part-maintenance		2026-10-26	live
 r12-07	l12.html	part-athena-spark		2026-10-26	live
 r12-08	l12.html	part-job		2026-10-26	live
-r13-01	l13.html	part-replication	l13-00	2026-10-26	planned
-r13-02	l13.html	part-reads	l13-02	2026-10-26	planned
-r13-03	l13.html	part-changes	l13-q2d	2026-10-26	planned
-r13-04	l13.html	part-requirements	l13-23	2026-10-26	planned
+r13-01	l13.html	part-replication	l13-00	2026-10-26	live
+r13-02	l13.html	part-reads	l13-02	2026-10-26	live
+r13-03	l13.html	part-changes	l13-q2d	2026-10-26	live
+r13-04	l13.html	part-requirements	l13-23	2026-10-26	live
