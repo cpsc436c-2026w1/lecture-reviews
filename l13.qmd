@@ -73,16 +73,16 @@ Polling, the change stream and the outbox, after a few fast changes and one dele
 shuffle_answers: true
 ---
 
-## Between two polls, within one minute, the app moves trip t-0042 from accepted to arrived to started. Then a cleanup job deletes trip t-0091, which every copy already holds, from the table directly, without going through the app. For each way of getting changes out, choose what reaches the copy. Not all options will be used.
+## Between two polls, within one minute, the trips API moves trip t-0042 from accepted to arrived to started. Then a cleanup job deletes trip t-0091, which every copy already holds, from the table directly, not through the trips API. For each way of getting changes out, choose what reaches the copy. Not all options will be used.
 
 - Poll the table every 5 minutes on an updated-at column :: Latest status only, without the delete
   > Each poll sees only the state at the moment it asks, so the two changes between two polls reach the copy as one. A deleted item matches no query, so the copy never learns of the delete.
 - Read the table's change stream :: Every status change, with the delete
   > The stream is the store's own record of changes. It carries every change in order for each item, including deletes, whoever made them.
-- Write an outbox row in the same transaction as each change the app makes :: Every status change, without the delete
-  > The outbox holds only what the app wrote. The cleanup job wrote no outbox row, so the copy never learns of the delete.
+- Write an outbox row in the same transaction as each change the trips API makes :: Every status change, without the delete
+  > The outbox holds only what the trips API wrote. The cleanup job wrote no outbox row, so the copy never learns of the delete.
 - :: Latest status only, with the delete
-  > Only the stream sees a deleted item. A poll finds nothing to return, and the outbox holds only what the app wrote.
+  > Only the stream sees a deleted item. A poll finds nothing to return, and the outbox holds only what the trips API wrote.
 - :: Nothing until tomorrow's export
   > That is what a nightly export gives. Each of these three ways gets changes to the copy within minutes or seconds.
 ```
