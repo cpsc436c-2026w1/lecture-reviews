@@ -1,6 +1,6 @@
 ---
 order: 14
-title: "L14 review: message brokers, delivery guarantees and event time"
+title: "L14 review: message brokers and delivery guarantees"
 format:
   html:
     toc: true

@@ -66,10 +66,6 @@
 
 **Event sourcing** (DDIA 2e ch. 3). The event log is the truth, tables are derived views.
 
-**Materialized view**. A view built from events, rebuilt by replaying them.
-
-**CQRS**. Write to the event log, read from forms built per query.
-
 **Timeout**. The sender stops waiting for an answer after a set time.
 
 **Delivery guarantee**. How many times each message arrives.
@@ -94,10 +90,3 @@
 
 **On-failure destination**. Where Lambda reports a batch it skips.
 
-**Event time**. When the event happened, by the device's clock.
-
-**Arrival time**. When the event entered the stream, by the stream's clock.
-
-**Processing time**. When the consumer handles the event.
-
-**Clock offset** (DDIA). Received time minus sent time, added to the event time.
