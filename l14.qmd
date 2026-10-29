@@ -85,32 +85,6 @@ shuffle_answers: true
 ```
 
 
-## What happens to the count or the seat? {#part-delivery}
-
-Timeouts, retries and redelivery: what reaches the count, and what stops a duplicate.
-
-```quizdown
----
-shuffle_answers: true
----
-
-## A ticket app sends "seat 14C sold" to a standard SQS queue. A worker marks the seat sold and adds 1 to the show's count of seats sold, and a refund marks the seat available. When a message carries a sale id, the worker records the id only if it is new, and the id, the seat write and the add go in one transaction. The worker deletes each message after it succeeds. For each situation, choose what happens to the count, the seat or the shard. Not all options will be used.
-
-- The app's send times out after the queue stored the message, and the app sends it again. The message does not carry a sale id, and the worker processes both copies :: Counted twice
-  > After a timeout the app cannot tell a lost send from one that worked. This one had worked, so the retry stores a second copy. Without a sale id the worker cannot tell the copies apart, and adding 1 is not idempotent, so the count goes up by 2.
-- The message carries a sale id. The worker's transaction records the id, marks the seat and adds 1, then the worker crashes before deleting the message, so it is received again :: Counted once
-  > The message was not deleted, so it came back after the visibility timeout. That is at-least-once delivery working as designed. The first transaction recorded the sale id, so on the second delivery the condition fails and the whole transaction is cancelled: the seat and the count stay as they were.
-- The app's send times out, the app gives up, and the queue never stored the message :: Not counted
-  > The app does not retry, which is at-most-once from the app's side. The queue never stored the message, so the worker never receives it, and the sale is lost.
-- Two workers share the queue. One receives "14C sold" and crashes before applying it. The other applies the newer "14C refunded". Then the sale is delivered again and applied :: Ends with the older change
-  > A standard queue keeps order as best effort only, so a redelivered message can arrive after a newer one. Applied in that order, the seat ends sold although it was refunded. Applying a change only when its version is higher than the seat's current version fixes it.
-- The seat map's Lambda consumer reads a stream shard in order, and a record it always fails on is retried, because the mapping does not have a retry limit :: Later sales in that shard wait behind it
-  > A record the consumer always fails on is a poison message. Lambda keeps order within the shard, so it does not move past the record while it retries. A retry limit with an on-failure destination sets the record aside, so the rest of the shard can move on.
-- :: Count is a day behind
-  > A day behind is an export's schedule. The situations here are about duplicates, losses, order and a stuck shard, and none of them waits for a daily run.
-```
-
-
 ## Terms used on this page {#part-terms}
 
 {{< include _terms/page-l14.md >}}
