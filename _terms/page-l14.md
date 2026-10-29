@@ -4,7 +4,7 @@
 
 **Polling** (L13). The consumer asks the source for new data every *T* seconds.
 
-**Dual write** (L13). The application writes the same change to two systems, and no transaction covers both.
+**Dual write** (L13). The application writes the same change to two systems, and a transaction does not cover both.
 
 **Outbox table** (L13). A table the application writes each event to, in the same transaction as the change.
 
@@ -50,13 +50,17 @@
 
 **Fan-out** (DDIA). Each message is delivered to every subscriber.
 
+**Consumer group** (DDIA). The workers doing one job. Each group gets every message. One worker in the group gets each message.
+
+**Enhanced fan-out** (AWS, Kinesis). Each registered consumer gets its own read capacity on every shard (about read capacity, a different use of "fan-out").
+
 **Filter policy**. A subscriber's rule for which messages it gets.
 
 **Log**. Events appended in order and kept, read or not.
 
 **Log-based message broker** (DDIA). A broker that keeps a log.
 
-**Offset**. A consumer's position in a log.
+**Offset** (log position). A consumer's position in a log.
 
 **Retention period**. How long a log keeps each event.
 
@@ -65,6 +69,10 @@
 **Backpressure**. Block the producer until the consumers catch up.
 
 **Event sourcing** (DDIA 2e ch. 3). The event log is the truth, tables are derived views.
+
+**Source of truth** (L12's system of record). The store whose copy is right when copies disagree.
+
+**Tombstone**. An event that marks a key as deleted.
 
 **Timeout**. The sender stops waiting for an answer after a set time.
 
@@ -89,4 +97,3 @@
 **Dead-letter queue**. A queue where failed messages go aside.
 
 **On-failure destination**. Where Lambda reports a batch it skips.
-

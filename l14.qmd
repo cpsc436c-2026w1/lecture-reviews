@@ -45,7 +45,7 @@ shuffle_answers: false
 - Export the whole table every night :: 22A is not in the copy
   > The export at step 6 replaces the copy with the table, which no longer holds 22A.
 - Poll the table every 5 minutes on an updated-at column :: 22A is in the copy
-  > The poll at step 2 copied 22A. A deleted row matches no updated-at query, so the poll at step 6 never learns about the delete.
+  > The poll at step 2 copied 22A. A deleted row does not match any updated-at query, so the poll at step 6 does not learn about the delete.
 - Ticket API writes an outbox row in the same transaction as each change :: 22A is in the copy
   > Step 1 wrote an outbox row for 22A, so the copy has it. The cleanup job did not write one, so the delete never reaches the copy.
 - Read the table's change stream :: 22A is not in the copy
@@ -70,16 +70,16 @@ shuffle_answers: true
   > A queue, such as Amazon SQS, gives each delivery to one consumer, which deletes the message when it is done. Four printers sharing one queue split the orders between them. A standard queue can deliver a message again, so a printer may see a repeat. A topic with each printer subscribed would copy every order to all four.
 - A cancelled order must reach the courier app, the customer app and billing as it happens, each with its own copy, and they do not read it again later :: Topic
   > A topic, such as Amazon SNS, copies each message to every subscriber. On one shared queue, the three consumers would take messages away from each other, and each delivery of a cancel would go to only one of them. A log could also give each consumer every event, but it would keep events that nobody here reads again.
-- A new fraud model, started today, must also read the orders from the three days before it started :: Log
-  > A log, such as Kinesis Data Streams, keeps every event for its retention period, whether anyone has read it or not. So only a log has events for a consumer that did not exist when they were sent. Kinesis keeps 24 hours by default, so the retention period must already be at least three days when the model starts. A topic does not deliver messages from before the subscription, and a queue does not keep the messages its workers have already deleted.
+- A new fraud model, started today, must also read every order from the three days before it started, including orders other workers have already handled :: Log
+  > A log, such as Kinesis Data Streams, keeps every event for its retention period, whether anyone has read it or not. It can replay the three days for a new consumer if its retention was already at least three days, and Kinesis keeps 24 hours by default. A topic does not deliver messages from before the subscription, and a queue does not keep messages after its workers delete them.
 - After a bug, the delivery-time service reads the last two hours again, still within retention :: Log
   > Reading again is a replay: the consumer moves its offset, its position in the log, back two hours and reads again. A queue's worker deleted each message when it was done, and a topic does not keep anything once delivered.
 - Ten workers share sending receipts, one receipt per order :: Queue
   > Each delivery goes to one of the ten workers, which deletes the message when the receipt is sent. The workers share the messages, which DDIA calls load balancing. A redelivery can still send a second receipt, which Q2 deals with. A topic with each worker subscribed would send ten receipts per order.
 - A refunds service, beside billing and the courier app, wants only the cancelled orders, as they happen, and never reads them again :: Topic
-  > The refunds service is one more subscriber on the topic that carries the cancelled orders, with a filter policy, a rule that passes it only the cancels. Each subscriber still gets its own copy of what it asked for, and nothing has to be kept for later.
+  > The refunds service is one more subscriber on the topic that carries the cancelled orders, with a filter policy, a rule that passes it only the cancels. Each subscriber still gets its own copy of what it asked for, and the events do not need to be kept for replay.
 - :: Nightly export
-  > The app does not store these events in a table, so there is nothing to export, and an export would be a day late for every consumer here.
+  > The app does not store these events in a table, so a table export cannot carry them.
 - :: Dual write
   > The app would write each event once for each consumer itself, and a transaction does not cover those writes. One write can fail, or two writes can arrive in a different order, so the copies can disagree. A broker takes one write from the producer and serves the consumers from there.
 ```
