@@ -21,50 +21,48 @@ A recap of L13: five ways of keeping a copy of a table up to date, after two fas
 shuffle_answers: true
 ---
 
-## A ticket app keeps seats in a table, and a copy of the table feeds the seat map. Before this, the copy holds seat 22A. Within one minute, and between two polls, the ticket API writes "held" for seat 14C and then "sold". Then a cleanup job deletes seat 22A's item, writing to the table itself, without the ticket API. The nightly export replaces the whole copy. For each way of keeping the copy up to date, choose which statuses reach the copy and whether seat 22A is in the copy afterwards. Not all options will be used.
+## A ticket app keeps seats in a table, and a copy of the table feeds the seat map. Before this, the copy holds seat 22A. Within one minute, and between two polls, the ticket API writes "held" for seat 14C and then "sold". Then a cleanup job deletes seat 22A's item, writing to the table itself, without the ticket API, an outbox row or the copy. The nightly export replaces the whole copy. For each way of keeping the copy up to date, choose which statuses reach the copy and whether seat 22A is in the copy after the next poll and the next export, once every consumer has caught up. Not all options will be used.
 
 - Export the whole table every night :: "sold" only, and 22A is not in the copy
-  > The export replaces the whole copy with the table as it is at that moment, so "held" never reaches the copy and seat 22A is not in it. The copy is right, and up to a day late.
+  > The export replaces the whole copy with the table as it is at that moment, so "held" never reaches the copy and seat 22A is not in it. The copy is right, and up to a day plus the export's run time late.
 - Poll the table every 5 minutes on an updated-at column :: "sold" only, and 22A is in the copy
-  > A poll sees only the state at the moment it asks, so "held" and "sold" between two polls reach the copy as one change, "sold". A deleted item matches no query, so seat 22A stays in the copy for good.
+  > A poll sees only the state at the moment it asks, so "held" and "sold" between two polls reach the copy as one change, "sold". A deleted item matches no query, so seat 22A stays in the copy until something repairs it.
 - Ticket API writes an outbox row in the same transaction as each change :: "held" and "sold", and 22A is in the copy
-  > The outbox row commits together with the change, so every change the ticket API makes reaches the copy, "held" and then "sold". The cleanup job wrote no outbox row, so seat 22A stays in the copy for good.
+  > The outbox row commits together with the change, so every change the ticket API makes reaches the copy, "held" and then "sold". The cleanup job did not write an outbox row, so seat 22A stays in the copy until something repairs it.
 - Read the table's change stream :: "held" and "sold", and 22A is not in the copy
   > The change stream is the store's own record of its committed changes. It carries "held", "sold" and the delete of seat 22A, whoever made them, so once its consumer has applied each of them, 22A is not in the copy.
 - Ticket API writes each change to the table and then to the copy, in two separate calls :: "held" and "sold" if each second write succeeds, and 22A is in the copy
   > Writing to the table and then to the copy is a dual write, and no transaction covers both writes. Each change the ticket API makes reaches the copy unless its second write fails. The cleanup job wrote only to the table, so seat 22A stays in the copy. Two writers can also reach the copy in a different order, so the copy can stay wrong even for the changes it got.
 - :: "held" only, and 22A is not in the copy
-  > No way here keeps only the first write. A poll or an export reads the state when it runs, and by then it is "sold". Only the export and the change stream take seat 22A out of the copy.
+  > A poll or an export reads the state when it runs, and by then it is "sold". A dual write that loses "sold" does leave only "held", but it also leaves seat 22A in the copy. Only the export and the change stream take seat 22A out of the copy.
 ```
 
 
-## What should carry the events? {#part-brokers}
-
-Queue, topic and log: which kind of message broker fits each consumer.
+## Queue, topic and log: which kind of message broker fits each consumer {#part-brokers}
 
 ```quizdown
 ---
 shuffle_answers: true
 ---
 
-## A food-delivery app sends order events through AWS. For each need, choose what should carry the events. Each option may be used once, more than once, or not at all.
+## A food-delivery app sends order events through AWS and does not store them in a table. For each need, choose the one option that should carry the events, without combining options. Each option may be used once, more than once, or not at all.
 
 - Each new order is assigned to one of four kitchen printers :: Queue
-  > A queue, such as Amazon SQS, gives each delivery to one consumer, which deletes the message when it is done. Four printers sharing one queue split the orders between them. A topic would copy every order to all four.
+  > A queue, such as Amazon SQS, gives each delivery to one consumer, which deletes the message when it is done. Four printers sharing one queue split the orders between them. A standard queue can deliver a message again, so a printer may see a repeat. A topic with each printer subscribed would copy every order to all four.
 - A cancelled order must reach the courier app, the customer app and billing as it happens, each its own copy, and none of them reads it again later :: Topic
-  > A topic, such as Amazon SNS, copies each message to every subscriber. On a queue, three consumers would take messages away from each other, and each cancel would reach only one of them. A log could also give each consumer every event, but it would keep events that nobody here reads again.
+  > A topic, such as Amazon SNS, copies each message to every subscriber. On one shared queue, the three consumers would take messages away from each other, and each delivery of a cancel would go to only one of them. A log could also give each consumer every event, but it would keep events that nobody here reads again.
 - A new fraud model, started today, must also read the orders from the three days before it started :: Log
   > A log, such as Kinesis Data Streams, keeps every event for its retention period, whether anyone has read it or not. So only a log has events for a consumer that did not exist when they were sent. Kinesis keeps 24 hours by default, so the retention period must already be at least three days when the model starts. A topic does not deliver messages from before the subscription, and a queue does not keep the messages its workers have already deleted.
-- After a bug, the delivery-time service reads the last two hours again :: Log
+- After a bug, the delivery-time service reads the last two hours again, still within retention :: Log
   > Reading again is a replay: the consumer moves its offset, its position in the log, back two hours and reads again. A queue's worker deleted each message when it was done, and a topic does not keep anything once delivered.
 - Ten workers share sending receipts, one receipt per order :: Queue
-  > Each delivery goes to one of the ten workers, which deletes the message when the receipt is sent. The workers share the messages, which DDIA calls load balancing. A topic would send ten receipts per order.
+  > Each delivery goes to one of the ten workers, which deletes the message when the receipt is sent. The workers share the messages, which DDIA calls load balancing. A redelivery can still send a second receipt, which Q2 deals with. A topic with each worker subscribed would send ten receipts per order.
 - A refunds service, beside billing and the courier app, wants only the cancelled orders, as they happen, and never reads them again :: Topic
   > The refunds service is one more subscriber on the topic that carries the cancelled orders, with a filter policy, a rule that passes it only the cancels. Each subscriber still gets its own copy of what it asked for, and nothing has to be kept for later.
 - :: Nightly export
-  > An export is a day late for every consumer here, and none of them needs history beyond a few days.
+  > The app does not store these events in a table, so there is nothing to export, and an export would be a day late for every consumer here.
 - :: Dual write
-  > The app would write each event once for each consumer itself, and no transaction covers those writes. One write can fail, or two writes can arrive in a different order, so the copies can disagree. A broker takes one write and delivers it to every consumer.
+  > The app would write each event once for each consumer itself, and no transaction covers those writes. One write can fail, or two writes can arrive in a different order, so the copies can disagree. A broker takes one write from the producer and serves the consumers from there.
 ```
 
 
