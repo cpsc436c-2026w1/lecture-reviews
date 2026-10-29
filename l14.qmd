@@ -1,0 +1,99 @@
+---
+order: 14
+title: "L14 review: message brokers, delivery guarantees and event time"
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-title: "Parts"
+filters:
+  - quizdown
+---
+
+If you need to look up a term, the [relevant vocabulary is below](#part-terms).
+
+## What reaches each copy? {#part-recap}
+
+A recap of L13: five ways of keeping a copy of a table up to date, after two fast changes and one delete.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## A ticket app keeps seats in a table, and a copy of the table feeds the seat map. Before this, the copy holds seat 22A. Within one minute, and between two polls, the ticket API writes "held" for seat 14C and then "sold". Then a cleanup job deletes seat 22A's item, writing to the table itself, without the ticket API. The nightly export replaces the whole copy. For each way of keeping the copy up to date, choose which statuses reach the copy and whether seat 22A is in the copy afterwards. Not all options will be used.
+
+- Export the whole table every night :: "sold" only, and 22A is not in the copy
+  > The export replaces the whole copy with the table as it is at that moment, so "held" never reaches the copy and seat 22A is not in it. The copy is right, and up to a day late.
+- Poll the table every 5 minutes on an updated-at column :: "sold" only, and 22A is in the copy
+  > A poll sees only the state at the moment it asks, so "held" and "sold" between two polls reach the copy as one change, "sold". A deleted item matches no query, so seat 22A stays in the copy for good.
+- Ticket API writes an outbox row in the same transaction as each change :: "held" and "sold", and 22A is in the copy
+  > The outbox row commits together with the change, so every change the ticket API makes reaches the copy, "held" and then "sold". The cleanup job wrote no outbox row, so seat 22A stays in the copy for good.
+- Read the table's change stream :: "held" and "sold", and 22A is not in the copy
+  > The change stream is the store's own record of its committed changes. It carries "held", "sold" and the delete of seat 22A, whoever made them, so once its consumer has applied each of them, 22A is not in the copy.
+- Ticket API writes each change to the table and then to the copy, in two separate calls :: "held" and "sold" if each second write succeeds, and 22A is in the copy
+  > Writing to the table and then to the copy is a dual write, and no transaction covers both writes. Each change the ticket API makes reaches the copy unless its second write fails. The cleanup job wrote only to the table, so seat 22A stays in the copy. Two writers can also reach the copy in a different order, so the copy can stay wrong even for the changes it got.
+- :: "held" only, and 22A is not in the copy
+  > No way here keeps only the first write. A poll or an export reads the state when it runs, and by then it is "sold". Only the export and the change stream take seat 22A out of the copy.
+```
+
+
+## What should carry the events? {#part-brokers}
+
+Queue, topic and log: which kind of message broker fits each consumer.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## A food-delivery app sends order events through AWS. For each need, choose what should carry the events. Each option may be used once, more than once, or not at all.
+
+- Each new order is assigned to one of four kitchen printers :: Queue
+  > A queue, such as Amazon SQS, gives each delivery to one consumer, which deletes the message when it is done. Four printers sharing one queue split the orders between them. A topic would copy every order to all four.
+- A cancelled order must reach the courier app, the customer app and billing as it happens, each its own copy, and none of them reads it again later :: Topic
+  > A topic, such as Amazon SNS, copies each message to every subscriber. On a queue, three consumers would take messages away from each other, and each cancel would reach only one of them. A log could also give each consumer every event, but it would keep events that nobody here reads again.
+- A new fraud model, started today, must also read the orders from the three days before it started :: Log
+  > A log, such as Kinesis Data Streams, keeps every event for its retention period, whether anyone has read it or not. So only a log has events for a consumer that did not exist when they were sent. Kinesis keeps 24 hours by default, so the retention period must already be at least three days when the model starts. A topic does not deliver messages from before the subscription, and a queue does not keep the messages its workers have already deleted.
+- After a bug, the delivery-time service reads the last two hours again :: Log
+  > Reading again is a replay: the consumer moves its offset, its position in the log, back two hours and reads again. A queue's worker deleted each message when it was done, and a topic does not keep anything once delivered.
+- Ten workers share sending receipts, one receipt per order :: Queue
+  > Each delivery goes to one of the ten workers, which deletes the message when the receipt is sent. The workers share the messages, which DDIA calls load balancing. A topic would send ten receipts per order.
+- A refunds service, beside billing and the courier app, wants only the cancelled orders, as they happen, and never reads them again :: Topic
+  > The refunds service is one more subscriber on the topic that carries the cancelled orders, with a filter policy, a rule that passes it only the cancels. Each subscriber still gets its own copy of what it asked for, and nothing has to be kept for later.
+- :: Nightly export
+  > An export is a day late for every consumer here, and none of them needs history beyond a few days.
+- :: Dual write
+  > The app would write each event once for each consumer itself, and no transaction covers those writes. One write can fail, or two writes can arrive in a different order, so the copies can disagree. A broker takes one write and delivers it to every consumer.
+```
+
+
+## What happens to the count or the seat? {#part-delivery}
+
+Timeouts, retries and redelivery: what reaches the count, and what stops a duplicate.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## A ticket app sends "seat 14C sold" to a standard SQS queue. A worker marks the seat sold and adds 1 to the show's count of seats sold, and a refund marks the seat available. When a message carries a sale id, the worker records the id only if it is new, and the id, the seat write and the add go in one transaction. The worker deletes each message after it succeeds. For each situation, choose what happens to the count, the seat or the shard. Not all options will be used.
+
+- The app's send times out after the queue stored the message, and the app sends it again. The message does not carry a sale id, and the worker processes both copies :: Counted twice
+  > After a timeout the app cannot tell a lost send from one that worked. This one had worked, so the retry stores a second copy. Without a sale id the worker cannot tell the copies apart, and adding 1 is not idempotent, so the count goes up by 2.
+- The message carries a sale id. The worker's transaction records the id, marks the seat and adds 1, then the worker crashes before deleting the message, so it is received again :: Counted once
+  > The message was not deleted, so it came back after the visibility timeout. That is at-least-once delivery working as designed. The first transaction recorded the sale id, so on the second delivery the condition fails and the whole transaction is cancelled: the seat and the count stay as they were.
+- The app's send times out, the app gives up, and the queue never stored the message :: Not counted
+  > The app does not retry, which is at-most-once from the app's side. The queue never stored the message, so the worker never receives it, and the sale is lost.
+- Two workers share the queue. One receives "14C sold" and crashes before applying it. The other applies the newer "14C refunded". Then the sale is delivered again and applied :: Ends with the older change
+  > A standard queue keeps order as best effort only, so a redelivered message can arrive after a newer one. Applied in that order, the seat ends sold although it was refunded. Applying a change only when its version is higher than the seat's current version fixes it.
+- The seat map's Lambda consumer reads a stream shard in order, and a record it always fails on is retried, because the mapping does not have a retry limit :: Later sales in that shard wait behind it
+  > A record the consumer always fails on is a poison message. Lambda keeps order within the shard, so it does not move past the record while it retries. A retry limit with an on-failure destination sets the record aside, so the rest of the shard can move on.
+- :: Count is a day behind
+  > A day behind is an export's schedule. The situations here are about duplicates, losses, order and a stuck shard, and none of them waits for a daily run.
+```
+
+
+## Terms used on this page {#part-terms}
+
+{{< include _terms/page-l14.md >}}

@@ -13,7 +13,7 @@ for m in re.finditer(r'(?ms)^## Definitions from this (?:lecture|part)[^\n]*\n(.
             parts.append(f"### {re.sub(r'^Block \d+: ', '', div[-1])[:1].upper()}{re.sub(r'^Block \d+: ', '', div[-1])[1:]}\n")
     for line in body.split('\n'):
         h = re.match(r'^\*\*(.+?)\*\*\s*$', line.strip())
-        b = re.match(r'^- \*\*(.+?)\*\*(.*?):\s*(.*)$', line.strip())
+        b = re.match(r"^- \*\*(.+?)\*\*((?:\s*\([^)]*\))?):\s*(.*)$", line.strip())
         if h:
             parts.append(f"### {h.group(1).replace('🔍 ', '')}\n")
         elif b:

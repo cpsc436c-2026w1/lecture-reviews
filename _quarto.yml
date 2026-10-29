@@ -31,6 +31,8 @@ website:
             text: "L12: DynamoDB as OLTP storage, distributed database problems and properties"
           - href: l13.qmd
             text: "L13: netsplit and CAP, data latency (freshness)"
+          - href: l14.qmd
+            text: "L14: message brokers, delivery guarantees and event-time windows"
           - href: midterm-review.qmd
             text: "Midterm review"
       - text: Tutorials
