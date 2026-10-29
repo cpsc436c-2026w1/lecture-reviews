@@ -254,23 +254,38 @@ ul.task-list li input[type="checkbox"] {
 <p>A recap of L13: five ways of keeping a copy of a table up to date, after two fast changes and one delete.</p>
 <div class="quizdown">
 ---
-shuffle_answers: true
+shuffle_answers: false
 ---
 
-## A ticket app keeps seats in a table, and a copy of the table feeds the seat map. Before this, the copy holds seat 22A. Within one minute, and between two polls, the ticket API writes "held" for seat 14C and then "sold". Then a cleanup job deletes seat 22A's item, writing to the table itself, without the ticket API, an outbox row or the copy. The nightly export replaces the whole copy. For each way of keeping the copy up to date, choose which statuses reach the copy and whether seat 22A is in the copy after the next poll and the next export, once every consumer has caught up. Not all options will be used.
+## A ticket app stores seats in a table. For each row below, a separate copy of the table uses only the named method and starts with seat 22A. Between two polls, the ticket API writes seat 14C as "held" and then "sold". A cleanup job then deletes 22A directly from the table. It does not call the API, write an outbox row or update a copy. The nightly export replaces the whole copy. Assume every call succeeds, changes are applied in the order they were made, and a delete that reaches a copy removes the row. Look at each copy after the next poll or export, or once its consumer has caught up. Which of seat 14C's statuses reach each copy? Each option may be used once, more than once, or not at all.
 
-- Export the whole table every night :: "sold" only, and 22A is not in the copy
-  &gt; The export replaces the whole copy with the table as it is at that moment, so "held" never reaches the copy and seat 22A is not in it. The copy is right, and up to a day plus the export's run time late.
-- Poll the table every 5 minutes on an updated-at column :: "sold" only, and 22A is in the copy
-  &gt; A poll sees only the state at the moment it asks, so "held" and "sold" between two polls reach the copy as one change, "sold". A deleted item matches no query, so seat 22A stays in the copy until something repairs it.
-- Ticket API writes an outbox row in the same transaction as each change :: "held" and "sold", and 22A is in the copy
-  &gt; The outbox row commits together with the change, so every change the ticket API makes reaches the copy, "held" and then "sold". The cleanup job did not write an outbox row, so seat 22A stays in the copy until something repairs it.
-- Read the table's change stream :: "held" and "sold", and 22A is not in the copy
-  &gt; The change stream is the store's own record of its committed changes. It carries "held", "sold" and the delete of seat 22A, whoever made them, so once its consumer has applied each of them, 22A is not in the copy.
-- Ticket API writes each change to the table and then to the copy, in two separate calls :: "held" and "sold" if each second write succeeds, and 22A is in the copy
-  &gt; Writing to the table and then to the copy is a dual write, and no transaction covers both writes. Each change the ticket API makes reaches the copy unless its second write fails. The cleanup job wrote only to the table, so seat 22A stays in the copy. Two writers can also reach the copy in a different order, so the copy can stay wrong even for the changes it got.
-- :: "held" only, and 22A is not in the copy
-  &gt; A poll or an export reads the state when it runs, and by then it is "sold". A dual write that loses "sold" does leave only "held", but it also leaves seat 22A in the copy. Only the export and the change stream take seat 22A out of the copy.
+- Export the whole table every night :: "sold" only
+  &gt; At export time, the table holds 14C only as "sold".
+- Poll the table every 5 minutes on an updated-at column :: "sold" only
+  &gt; The next poll reads the row as it is now, "sold". It does not recover earlier values.
+- Ticket API writes an outbox row in the same transaction as each change :: "held", then "sold"
+  &gt; Each API change commits with its own outbox row, so the copy applies "held" and then "sold".
+- Read the table's change stream :: "held", then "sold"
+  &gt; The stream records both committed changes, in order for one item.
+- Ticket API writes each change to the table and then to the copy, in two separate calls :: "held", then "sold"
+  &gt; Here both copy calls succeed, in order. No transaction covers the two writes, so in general a call can fail, or two calls can arrive in a different order.
+- :: "held" only
+  &gt; Export and polling get only "sold". The other three ways apply "held" and then "sold".
+
+## A ticket app stores seats in a table. For each row below, a separate copy of the table uses only the named method and starts with seat 22A. Between two polls, the ticket API writes seat 14C as "held" and then "sold". A cleanup job then deletes 22A directly from the table. It does not call the API, write an outbox row or update a copy. The nightly export replaces the whole copy. Assume every call succeeds, changes are applied in the order they were made, and a delete that reaches a copy removes the row. Look at each copy after the next poll or export, or once its consumer has caught up. Is seat 22A still in each copy? Each option may be used once, more than once, or not at all.
+
+- Export the whole table every night :: 22A is not in the copy
+  &gt; The export replaces the copy with the table, which no longer holds 22A.
+- Poll the table every 5 minutes on an updated-at column :: 22A is still in the copy
+  &gt; A deleted row matches no updated-at query, so the poll never learns about the delete.
+- Ticket API writes an outbox row in the same transaction as each change :: 22A is still in the copy
+  &gt; The cleanup job did not write an outbox row, so the copy does not receive the delete.
+- Read the table's change stream :: 22A is not in the copy
+  &gt; The stream records the direct delete too, whoever made it, so the consumer removes 22A.
+- Ticket API writes each change to the table and then to the copy, in two separate calls :: 22A is still in the copy
+  &gt; The cleanup job did not use the API or update the copy, so the dual write never sends the delete.
+- :: 22A is in the copy, marked deleted
+  &gt; That needs the copy to keep a deleted marker, and here a delete that reaches a copy removes the row. The export removes 22A by replacing the copy, and the other ways never learn about the delete.
 </div>
 </section>
 <section id="part-brokers" class="level2">
