@@ -68,7 +68,7 @@ shuffle_answers: true
 
 - Each new order is assigned to one of four kitchen printers :: Queue
   > A queue, such as Amazon SQS, gives each delivery to one consumer, which deletes the message when it is done. Four printers sharing one queue split the orders between them. A standard queue can deliver a message again, so a printer may see a repeat. A topic with each printer subscribed would copy every order to all four.
-- A cancelled order must reach the courier app, the customer app and billing as it happens, each its own copy, and none of them reads it again later :: Topic
+- A cancelled order must reach the courier app, the customer app and billing as it happens, each with its own copy, and they do not read it again later :: Topic
   > A topic, such as Amazon SNS, copies each message to every subscriber. On one shared queue, the three consumers would take messages away from each other, and each delivery of a cancel would go to only one of them. A log could also give each consumer every event, but it would keep events that nobody here reads again.
 - A new fraud model, started today, must also read the orders from the three days before it started :: Log
   > A log, such as Kinesis Data Streams, keeps every event for its retention period, whether anyone has read it or not. So only a log has events for a consumer that did not exist when they were sent. Kinesis keeps 24 hours by default, so the retention period must already be at least three days when the model starts. A topic does not deliver messages from before the subscription, and a queue does not keep the messages its workers have already deleted.
@@ -81,7 +81,7 @@ shuffle_answers: true
 - :: Nightly export
   > The app does not store these events in a table, so there is nothing to export, and an export would be a day late for every consumer here.
 - :: Dual write
-  > The app would write each event once for each consumer itself, and no transaction covers those writes. One write can fail, or two writes can arrive in a different order, so the copies can disagree. A broker takes one write from the producer and serves the consumers from there.
+  > The app would write each event once for each consumer itself, and a transaction does not cover those writes. One write can fail, or two writes can arrive in a different order, so the copies can disagree. A broker takes one write from the producer and serves the consumers from there.
 ```
 
 

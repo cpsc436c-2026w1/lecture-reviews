@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>L14 review: message brokers, delivery guarantees and event time – CPSC 436C companion</title>
+<title>L14 review: message brokers and delivery guarantees – CPSC 436C companion</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -230,7 +230,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">L14 review: message brokers, delivery guarantees and event time</h1>
+<h1 class="title">L14 review: message brokers and delivery guarantees</h1>
 </div>
 
 
@@ -302,7 +302,7 @@ shuffle_answers: true
 
 - Each new order is assigned to one of four kitchen printers :: Queue
   &gt; A queue, such as Amazon SQS, gives each delivery to one consumer, which deletes the message when it is done. Four printers sharing one queue split the orders between them. A standard queue can deliver a message again, so a printer may see a repeat. A topic with each printer subscribed would copy every order to all four.
-- A cancelled order must reach the courier app, the customer app and billing as it happens, each its own copy, and none of them reads it again later :: Topic
+- A cancelled order must reach the courier app, the customer app and billing as it happens, each with its own copy, and they do not read it again later :: Topic
   &gt; A topic, such as Amazon SNS, copies each message to every subscriber. On one shared queue, the three consumers would take messages away from each other, and each delivery of a cancel would go to only one of them. A log could also give each consumer every event, but it would keep events that nobody here reads again.
 - A new fraud model, started today, must also read the orders from the three days before it started :: Log
   &gt; A log, such as Kinesis Data Streams, keeps every event for its retention period, whether anyone has read it or not. So only a log has events for a consumer that did not exist when they were sent. Kinesis keeps 24 hours by default, so the retention period must already be at least three days when the model starts. A topic does not deliver messages from before the subscription, and a queue does not keep the messages its workers have already deleted.
@@ -315,7 +315,7 @@ shuffle_answers: true
 - :: Nightly export
   &gt; The app does not store these events in a table, so there is nothing to export, and an export would be a day late for every consumer here.
 - :: Dual write
-  &gt; The app would write each event once for each consumer itself, and no transaction covers those writes. One write can fail, or two writes can arrive in a different order, so the copies can disagree. A broker takes one write from the producer and serves the consumers from there.
+  &gt; The app would write each event once for each consumer itself, and a transaction does not cover those writes. One write can fail, or two writes can arrive in a different order, so the copies can disagree. A broker takes one write from the producer and serves the consumers from there.
 </div>
 </section>
 <section id="part-terms" class="level2">
@@ -354,8 +354,6 @@ shuffle_answers: true
 <p><strong>Replay</strong>. Move the offset back and read again.</p>
 <p><strong>Backpressure</strong>. Block the producer until the consumers catch up.</p>
 <p><strong>Event sourcing</strong> (DDIA 2e ch.&nbsp;3). The event log is the truth, tables are derived views.</p>
-<p><strong>Materialized view</strong>. A view built from events, rebuilt by replaying them.</p>
-<p><strong>CQRS</strong>. Write to the event log, read from forms built per query.</p>
 <p><strong>Timeout</strong>. The sender stops waiting for an answer after a set time.</p>
 <p><strong>Delivery guarantee</strong>. How many times each message arrives.</p>
 <p><strong>At-most-once</strong>. Never retry, so a message may be lost.</p>
@@ -368,10 +366,6 @@ shuffle_answers: true
 <p><strong>Poison message</strong>. An event the consumer always fails on.</p>
 <p><strong>Dead-letter queue</strong>. A queue where failed messages go aside.</p>
 <p><strong>On-failure destination</strong>. Where Lambda reports a batch it skips.</p>
-<p><strong>Event time</strong>. When the event happened, by the device’s clock.</p>
-<p><strong>Arrival time</strong>. When the event entered the stream, by the stream’s clock.</p>
-<p><strong>Processing time</strong>. When the consumer handles the event.</p>
-<p><strong>Clock offset</strong> (DDIA). Received time minus sent time, added to the event time.</p>
 
 
 </section>
