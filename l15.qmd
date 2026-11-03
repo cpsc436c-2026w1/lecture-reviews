@@ -1,0 +1,69 @@
+---
+order: 15
+title: "L15 review: generative AI in a data app, querychat over the NYC taxi table"
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-title: "Parts"
+filters:
+  - quizdown
+---
+
+If you need to look up a term, the [relevant vocabulary is below](#part-terms).
+
+## Where does each piece go? {#part-request}
+
+```quizdown
+---
+shuffle_answers: false
+schema_building: true
+---
+
+## A library builds a chat beside its `loans` table (one row per loan) with querychat, the same way as the app in the lecture: a reader asks in plain words, our app adds matching paragraphs from the library's loan rules, the model writes SQL, and the app runs it in DuckDB. For each piece, choose which part of the requests to the model carries it. Each option may be used more than once.
+
+- "Return exactly one SELECT statement" :: System prompt
+  > A rule querychat writes for every chat. It sits in the system prompt, so every call resends it.
+- Term definition we wrote in the app's data description: "`loan_days` is the number of days a book was out" :: System prompt
+  > Our `data_description`. querychat puts it in the system prompt, so the model reads it on every call.
+- "Which authors' books are borrowed most often?" :: User message
+  > The reader's question is a user message.
+- Three paragraphs of the loan rules that our app's retrieval step picked for this question :: User message
+  > Our RAG step adds the retrieved chunks to the user message, before the question. The system prompt stays the same.
+- The summary of the `loans` table: its columns, types and value ranges :: Tool result
+  > The model asks for it with a `querychat_get_schema` tool call, and the summary comes back as a tool result. In this querychat version it is not in the system prompt.
+- The rows DuckDB returned for the model's SQL :: Tool result
+  > After a `querychat_query` tool call, our app runs the SQL and sends the rows back as a tool result, so the provider sees them.
+```
+
+
+## Who does what in one question? {#part-roles}
+
+```quizdown
+---
+shuffle_answers: false
+schema_building: true
+---
+
+## In the same app, a reader asks "Which authors' books are borrowed most often?". The steps are listed in the order they happen. For each step, choose who does it. Each option may be used more than once.
+
+- Picks the loan-rule paragraphs that match the question and adds them to the user message :: Our app
+  > Retrieval is our code: it scores the chunks and adds the best ones to the user message before any model call.
+- Issues a tool call to `querychat_get_schema` to ask for the table summary :: Model
+  > The model returns a tool call: it asks our app to run the tool. It does not run anything itself.
+- Runs the tool and sends the table summary back to the model as a tool result :: Our app
+  > The app runs the function the model asked for and sends its output back as a tool result.
+- Writes `SELECT author, COUNT(*) AS loans FROM loans GROUP BY author ORDER BY loans DESC` :: Model
+  > The SQL arrives as the argument of a `querychat_query` tool call.
+- Keeps only the first SQL statement and checks it is one SELECT over columns the table has :: Our app
+  > The cut and the validator are our code, before DuckDB sees the SQL.
+- Executes the SQL and returns the rows to our app :: DuckDB
+  > The database runs the query on our side. The model never touches the data directly.
+- Writes the final answer in words from the rows :: Model
+  > The reply comes from the model, after it reads the rows in the last tool result.
+```
+
+
+## Terms used on this page {#part-terms}
+
+{{< include _terms/page-l15.md >}}
