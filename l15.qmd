@@ -86,8 +86,8 @@ shuffle_answers: true
 - Model needs the table's columns before writing SQL :: Tool calling
   > The model asks for the schema with a `get_schema` tool call.
 - App needs the answer as `{"count": ...}` to draw a chart :: Structured output
-  > Structured output gives the answer a fixed shape that code can read.
-- Every reply must stay on library questions :: System prompt
+  > Structured output requests the answer in a fixed shape that code can read.
+- App tells the model to answer only library questions :: System prompt
   > The system prompt tells the model what it is for, on every call.
 - After a prompt change, we want to know if answers got better or worse :: Eval
   > An eval scores answers on a fixed dataset, before and after the change.
@@ -103,7 +103,7 @@ shuffle_answers: true
 |---|---|
 | System prompt | Describes the task: what the model is used for; outlines the interaction; sent with every call |
 | Tool calling | Lets the model ask our app for something only our app can get or do |
-| RAG | Adds local rules or text the model cannot know to the user message |
+| RAG | Adds matching local rules or text to the user message |
 | Structured output | Requests the model's response in a fixed shape. The model may fail to produce the shape, and a correct shape is not a correct result |
 | Post-processing | App code fixes simple, predictable mistakes in the output |
 | Eval | Measures whether a change made answers better or worse on a fixed dataset, scored by deterministic rules or by AI as a judge |

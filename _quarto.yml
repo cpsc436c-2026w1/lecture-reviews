@@ -36,7 +36,7 @@ website:
           - href: l15.qmd
             text: "L15: generative AI in a data app"
           - href: l16.qmd
-            text: "L16: cloud design for a user-facing GenAI app"
+            text: "L16: principles of cloud design for a user-facing GenAI app"
           - href: midterm-review.qmd
             text: "Midterm review"
       - text: Tutorials

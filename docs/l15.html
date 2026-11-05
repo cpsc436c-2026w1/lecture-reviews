@@ -158,7 +158,7 @@ ul.task-list li input[type="checkbox"] {
   </li>  
         <li>
     <a class="dropdown-item" href="./l16.html">
- <span class="dropdown-text">L16: cloud design for a user-facing GenAI app</span></a>
+ <span class="dropdown-text">L16: principles of cloud design for a user-facing GenAI app</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./midterm-review.html">
@@ -349,8 +349,8 @@ shuffle_answers: true
 - Model needs the table's columns before writing SQL :: Tool calling
   &gt; The model asks for the schema with a `get_schema` tool call.
 - App needs the answer as `{"count": ...}` to draw a chart :: Structured output
-  &gt; Structured output gives the answer a fixed shape that code can read.
-- Every reply must stay on library questions :: System prompt
+  &gt; Structured output requests the answer in a fixed shape that code can read.
+- App tells the model to answer only library questions :: System prompt
   &gt; The system prompt tells the model what it is for, on every call.
 - After a prompt change, we want to know if answers got better or worse :: Eval
   &gt; An eval scores answers on a fixed dataset, before and after the change.
@@ -382,7 +382,7 @@ shuffle_answers: true
 </tr>
 <tr class="odd">
 <td>RAG</td>
-<td>Adds local rules or text the model cannot know to the user message</td>
+<td>Adds matching local rules or text to the user message</td>
 </tr>
 <tr class="even">
 <td>Structured output</td>
