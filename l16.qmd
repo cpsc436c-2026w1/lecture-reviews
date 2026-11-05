@@ -10,7 +10,7 @@ filters:
   - quizdown
 ---
 
-If you need to look up a term, the [relevant vocabulary is below](#part-terms). The first part recaps L15; the second reviews L16.
+If you need to look up a term, the [relevant vocabulary is below](#part-terms). The first part recaps L15; the second reviews L16; the last table is for reading after class.
 
 # Recap of L15 {#part-recap}
 
@@ -312,20 +312,20 @@ shuffle_answers: true
 ```
 
 
-## What the Generative AI Lens lists under these two principles {#part-overview}
+## Selected Generative AI Lens practices, grouped by principle {#part-overview}
 
 For reading after class.
 
-::: {style="font-size:0.53em"}
+::: {}
 ✓ has · ◐ partly · ☐ lacks
 
 | Lens best practice | AI Engineering | Our dashboard |
 |---|---|---|
 | **Secure interaction boundaries** | | |
-| [GENSEC01-BP01](https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/gensec01-bp01.html) Grant least privilege access to foundation model endpoints | model gateway, ch. 10 | ◐ one key per provider per task, shared by visitors; gateway prototype gives each user a key |
+| [GENSEC01-BP01](https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/gensec01-bp01.html) Grant least privilege access to foundation model endpoints | model gateway, ch. 10 | ◐ live dashboard: one key per provider per task, shared by visitors. Gateway prototype: one key per user |
 | [GENSEC01-BP02](https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/gensec01-bp02.html) Implement private network communication between foundation models and applications | none | ☐ Groq and OpenAI reached over the internet |
 | [GENSEC01-BP03](https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/gensec01-bp03.html) Implement least privilege access permissions for foundation models accessing data stores | system-level defense, ch. 5 | ✓ model's SQL reaches only `taxi`; task role reads one S3 object |
-| [GENSEC02-BP01](https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/gensec02-bp01.html) Implement guardrails to mitigate harmful or incorrect model responses | output guardrails, ch. 10 | ◐ SQL checks; output guard only in the evals |
+| [GENSEC02-BP01](https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/gensec02-bp01.html) Implement guardrails to mitigate harmful or incorrect model responses | output guardrails, ch. 10 | ◐ live dashboard: SQL checks. Output guard only in the evals |
 | [GENSEC03-BP01](https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/gensec03-bp01.html) Implement control plane and data access monitoring to generative AI services and foundation models | monitoring and observability, ch. 10 | ◐ one trace item per question; log lines in CloudWatch Logs |
 | [GENSEC04-BP02](https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/gensec04-bp02.html) Sanitize and validate user inputs to foundation models | input guardrails, ch. 10 | ☐ no input guard in the live dashboard |
 | [GENSEC05-BP01](https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/gensec05-bp01.html) Implement least privilege access and permissions boundaries for agentic workflows | system-level defense, ch. 5 | ✓ query tools run one `SELECT` on `taxi`; DuckDB external access off and locked |

@@ -239,7 +239,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#part-push-pull" id="toc-part-push-pull" class="nav-link" data-scroll-target="#part-push-pull">Check: push or pull?</a></li>
   <li><a href="#part-risks" id="toc-part-risks" class="nav-link" data-scroll-target="#part-risks">Which fix for which risk?</a></li>
   <li><a href="#part-grocery" id="toc-part-grocery" class="nav-link" data-scroll-target="#part-grocery">Which principle does a first grocery app break?</a></li>
-  <li><a href="#part-overview" id="toc-part-overview" class="nav-link" data-scroll-target="#part-overview">What the Generative AI Lens lists under these two principles</a></li>
+  <li><a href="#part-overview" id="toc-part-overview" class="nav-link" data-scroll-target="#part-overview">Selected Generative AI Lens practices, grouped by principle</a></li>
   <li><a href="#part-terms" id="toc-part-terms" class="nav-link" data-scroll-target="#part-terms">Terms used on this page</a></li>
   </ul></li>
   </ul>
@@ -271,7 +271,7 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p>If you need to look up a term, the <a href="#part-terms">relevant vocabulary is below</a>. The first part recaps L15; the second reviews L16.</p>
+<p>If you need to look up a term, the <a href="#part-terms">relevant vocabulary is below</a>. The first part recaps L15; the second reviews L16; the last table is for reading after class.</p>
 <section id="part-recap" class="level1">
 <h1>Recap of L15</h1>
 <section id="part-roles" class="level2">
@@ -637,9 +637,9 @@ shuffle_answers: true
 </div>
 </section>
 <section id="part-overview" class="level2">
-<h2 class="anchored" data-anchor-id="part-overview">What the Generative AI Lens lists under these two principles</h2>
+<h2 class="anchored" data-anchor-id="part-overview">Selected Generative AI Lens practices, grouped by principle</h2>
 <p>For reading after class.</p>
-<div style="font-size:0.53em">
+<div>
 <p>✓ has · ◐ partly · ☐ lacks</p>
 <table class="caption-top table">
 <thead>
@@ -658,7 +658,7 @@ shuffle_answers: true
 <tr class="even">
 <td><a href="https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/gensec01-bp01.html">GENSEC01-BP01</a> Grant least privilege access to foundation model endpoints</td>
 <td>model gateway, ch.&nbsp;10</td>
-<td>◐ one key per provider per task, shared by visitors; gateway prototype gives each user a key</td>
+<td>◐ live dashboard: one key per provider per task, shared by visitors. Gateway prototype: one key per user</td>
 </tr>
 <tr class="odd">
 <td><a href="https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/gensec01-bp02.html">GENSEC01-BP02</a> Implement private network communication between foundation models and applications</td>
@@ -673,7 +673,7 @@ shuffle_answers: true
 <tr class="odd">
 <td><a href="https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/gensec02-bp01.html">GENSEC02-BP01</a> Implement guardrails to mitigate harmful or incorrect model responses</td>
 <td>output guardrails, ch.&nbsp;10</td>
-<td>◐ SQL checks; output guard only in the evals</td>
+<td>◐ live dashboard: SQL checks. Output guard only in the evals</td>
 </tr>
 <tr class="even">
 <td><a href="https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/gensec03-bp01.html">GENSEC03-BP01</a> Implement control plane and data access monitoring to generative AI services and foundation models</td>
@@ -722,19 +722,19 @@ shuffle_answers: true
 <h2 class="anchored" data-anchor-id="part-terms">Terms used on this page</h2>
 <p><strong>Prompt injection</strong>. Instructions in what the user types, or in data the model reads, that make the model do what the app did not intend.</p>
 <p><strong>Direct prompt injection</strong>. The attacker writes the instructions into the prompt itself, such as the question.</p>
-<p><strong>Indirect prompt injection</strong>. The attacker places the instructions in data the app adds from its tools or RAG, such as a retrieved chunk.</p>
+<p><strong>Indirect prompt injection</strong>. The attacker places the instructions in data the app adds, such as a tool result or a chunk added through RAG.</p>
 <p><strong>Resource and access limits</strong> (caps). Limits on who may use the app and how much, such as sign-in, rate rules and quotas.</p>
-<p><strong>Per-key budgets</strong>. A spending limit for each student’s or team’s key, kept by a model gateway.</p>
-<p><strong>Model gateway</strong>. One service between the apps and the model providers: it holds the provider key, checks each key’s budget and forwards the call.</p>
-<p><strong>LLM capability restrictions</strong> (system-level defense). Limits on what the model’s actions can do that hold whatever the model writes, such as read-only tools, isolation and human approval for write actions.</p>
-<p><strong>Guardrail</strong>. A check on what goes into the model (input guard) or what comes out of it (output guard).</p>
+<p><strong>Per-key budgets</strong>. A spending limit for each key, kept by a model gateway.</p>
+<p><strong>Model gateway</strong>. A service between apps and model providers. It can hold the provider key, check each key’s budget and forward the calls.</p>
+<p><strong>LLM capability restrictions</strong> (system-level defense). Limits on the actions the model can take, whatever it writes. Examples: read-only tools, isolation and human approval for write actions.</p>
+<p><strong>Guardrails</strong>. Checks on what goes into the model and what comes out of it. An input guard checks the input; an output guard checks the output.</p>
 <p><strong>Post-processing</strong>. App code that fixes simple, predictable mistakes in the model’s output.</p>
-<p><strong>AI as a judge</strong>. An eval scorer that is itself a model, used when no exact check exists.</p>
+<p><strong>AI as a judge</strong>. A model used as an eval scorer, often when no exact check exists.</p>
 <p><strong>Prefill</strong>. The step that handles every input token of a request in one pass.</p>
 <p><strong>Decode</strong>. The step that generates the reply, one step for each output token.</p>
-<p><strong>Prompt cache</strong>. The provider keeps the processed start of a prompt that repeats, so later calls skip that part of prefill and pay less for it.</p>
-<p><strong>Load balancer</strong>. A service that receives each request and sends it to one of several tasks (push).</p>
-<p><strong>Competing consumers</strong>. Workers share the messages of one queue: each message goes to one of them, and an idle worker takes the next (pull).</p>
+<p><strong>Prompt cache</strong> (also context cache or prefix cache). The provider keeps the processed start of a prompt that repeats, so later calls reuse that work instead of repeating that part of prefill. Providers that offer it charge less for the cached part.</p>
+<p><strong>Load balancer</strong>. A service that receives requests and sends each one to one of several destinations (push). In our app, the destinations are tasks.</p>
+<p><strong>Competing consumers</strong>. Workers pull messages from one shared queue. One worker handles a message at a time, and an idle worker pulls the next one (pull).</p>
 
 
 </section>
