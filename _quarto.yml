@@ -35,6 +35,8 @@ website:
             text: "L14: message brokers, delivery guarantees and event-time windows"
           - href: l15.qmd
             text: "L15: generative AI in a data app"
+          - href: l16.qmd
+            text: "L16: cloud design for a user-facing GenAI app"
           - href: midterm-review.qmd
             text: "Midterm review"
       - text: Tutorials

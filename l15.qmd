@@ -41,27 +41,102 @@ schema_building: true
 
 ```quizdown
 ---
-shuffle_answers: false
-schema_building: true
+shuffle_answers: true
 ---
 
-## In the same app, a reader asks "Which authors' books are borrowed most often?". The steps are listed in the order they happen. For each step, choose who does it. Each option may be used more than once.
+## A library's chat app answers questions about its `loans` table, one row per loan. The app stores the library's loan rules as short paragraphs, gives the model two tools, `get_schema` and `query`, and runs SQL in DuckDB. A reader asks "How many loans came back late and owe a late fee?". The steps below are in the order they happen. For each step, choose who does it. Each option may be used once, more than once, or not at all.
 
-- Picks the loan-rule paragraphs that match the question and adds them to the user message :: Our app
-  > Retrieval is our code: it scores the chunks and adds the best ones to the user message before any model call.
-- Issues a tool call to `querychat_get_schema` to ask for the table summary :: Model
-  > The model returns a tool call: it asks our app to run the tool. It does not run anything itself.
-- Runs the tool and sends the table summary back to the model as a tool result :: Our app
-  > The app runs the function the model asked for and sends its output back as a tool result.
-- Writes `SELECT author, COUNT(*) AS loans FROM loans GROUP BY author ORDER BY loans DESC` :: Model
-  > The SQL arrives as the argument of a `querychat_query` tool call.
-- Keeps only the first SQL statement and checks it is one SELECT over columns the table has :: Our app
-  > The cut and the validator are our code, before DuckDB sees the SQL.
-- Executes the SQL and returns the rows to our app :: DuckDB
-  > The database runs the query on our side. The model never touches the data directly.
-- Writes the final answer in words from the rows :: Model
-  > The reply comes from the model, after it reads the rows in the last tool result.
+- Finds the loan rules that match the question (RAG) and adds them to the user message :: Our app
+  > RAG is our app's responsibility: it finds the matching loan rules and adds them to the user message.
+- Issues a tool call to `get_schema` to ask for a table summary :: Model
+  > Asking for a tool is the model's part: it returns a tool call and cannot run anything itself.
+- Runs the tool and sends the table summary back to the model :: Our app
+  > Running the tool is our app's responsibility: it runs the function and sends back the table summary.
+- Writes `SELECT COUNT(*) FROM loans WHERE returned_at > borrowed_at + INTERVAL 21 DAY` :: Model
+  > Writing the SQL is the model's part: it arrives as the argument of a `query` tool call.
+- Extracts only the first SQL statement and checks that the query is executable over the table :: Our app
+  > Checking the SQL is our app's responsibility: our code cuts and validates it before DuckDB sees it.
+- Executes the SQL and returns the result to our app :: DuckDB
+  > Executing the SQL is DuckDB's part: the model never touches the data.
+- Writes the final answer in words based on the result :: Model
+  > Writing the answer is the model's part: it reads the result and replies in words.
 ```
+
+**Our app runs the steps the model cannot**
+
+| Who | What they do |
+|---|---|
+| Our app | Accesses RAG; provides tools for the model; checks and cuts SQL (post-processing); sends every request with the history |
+| LLM | Reads requests; returns tool calls or text; cannot run anything on our side |
+| DuckDB | Executes SQL on our side; the model never touches the data (but sees it if we send it) |
+
+**History is our app's job.** The model does not remember the conversation: our app resends the whole history with every request.
+
+## Which technique fits each situation? {#part-techniques}
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## A library has a chat app over its `loans` table, one row per loan. The app has `get_schema` and `query` tools, runs SQL in DuckDB, and stores the library's loan rules as short paragraphs. Match each situation to the technique that addresses it. Not all options will be used.
+
+- Model does not know what "late" means at this library :: RAG
+  > RAG adds the matching loan rules to the user message.
+- Model needs the table's columns before writing SQL :: Tool calling
+  > The model asks for the schema with a `get_schema` tool call.
+- App needs the answer as `{"count": ...}` to draw a chart :: Structured output
+  > Structured output gives the answer a fixed shape that code can read.
+- Every reply must stay on library questions :: System prompt
+  > The system prompt tells the model what it is for, on every call.
+- After a prompt change, we want to know if answers got better or worse :: Eval
+  > An eval scores answers on a fixed dataset, before and after the change.
+- Generated SQL sometimes has extra text after the query ends :: Post-processing
+  > Post-processing in our code cuts the text after the SQL.
+- :: Larger model
+  > A larger model still does not know this library's rules or its data.
+```
+
+**Each technique has a different role in the app**
+
+| Technique | What it does |
+|---|---|
+| System prompt | Describes the task: what the model is used for; outlines the interaction; sent with every call |
+| Tool calling | Lets the model ask our app for something only our app can get or do |
+| RAG | Adds local rules or text the model cannot know to the user message |
+| Structured output | Requests the model's response in a fixed shape. The model may fail to produce the shape, and a correct shape is not a correct result |
+| Post-processing | App code fixes simple, predictable mistakes in the output |
+| Eval | Measures whether a change made answers better or worse on a fixed dataset, scored by deterministic rules or by AI as a judge |
+
+## What does each step rely on? {#part-reliance}
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## In the same library chat app (tools `get_schema` and `query`, SQL in DuckDB, loan rules as short paragraphs), what does each step rely on? Each option may be used once, more than once, or not at all.
+
+- Sends the system prompt with every call :: Our code
+  > Our code can still be wrong, so we rely on it through tests. A deploy could drop the system prompt.
+- Uses only columns from the schema :: Model
+  > Model output varies from call to call, so we check it with a validator. An invented column makes the query fail.
+- Passes only a single SELECT to DuckDB :: Our code
+  > Our code can still be wrong, so we rely on it through tests. A validator bug could let a `DELETE` through.
+- Answers in one sentence :: Model
+  > Model output varies from call to call, so we check it. A paragraph costs output tokens we pay for.
+- Calls `get_schema` before writing SQL :: Model
+  > Model output varies from call to call, so we check it. The model could skip the call and guess the columns.
+```
+
+**We rely on code and the model in different ways**
+
+| Reliance | Instrument of correctness | Why |
+|---|---|---|
+| Our code | Tests | Code can still be wrong; a bug repeats on every call |
+| The model | Validators on every call | Output varies from call to call |
+
+In the cloud, responsibility is split between you and the provider. Here I use the word *rely*. You may rely on the model for a step, but making sure it happens is still your responsibility.
 
 
 ## Terms used on this page {#part-terms}
