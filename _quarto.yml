@@ -51,6 +51,20 @@ website:
             text: "B2T2 part B: Spark/Glue, slow queries and their fixes"
           - href: tutorials.qmd#b3-t1
             text: "B3T1: Lakehouse/Athena+Glue"
+      - text: Project
+        menu:
+          - href: project-start.qmd
+            text: "Course project"
+          - href: project-proposal.qmd
+            text: "Setup and proposal"
+          - href: project-datasets.qmd
+            text: "Project datasets"
+          - href: project-experiments.qmd
+            text: "Experiment examples"
+          - href: project-startup.qmd
+            text: Project setup
+          - href: project-case-example.qmd
+            text: Proposal example
       - text: Assignments
         menu:
           - href: https://cpsc436c-2026w1.github.io/a1-starter/

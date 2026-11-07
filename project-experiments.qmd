@@ -1,0 +1,107 @@
+---
+title: "Experiment examples"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+---
+
+Two filled-in examples of `experiments/TEMPLATE.md`, up to section 6 (Method), which is what the proposal needs. The
+first compares two ways of storing data on one workload. The second evaluates an assistant over a set of questions
+with [Inspect AI](https://inspect.aisi.org.uk/). Both use the same template. They differ in their test cases and in
+how results are aggregated.
+
+Section 3 follows Kohavi, Tang and Xu, *Trustworthy Online Controlled Experiments* (2020). It names one **overall
+evaluation criterion** (OEC), the metric you compare the alternatives on. It adds **guardrail metrics**, limits an
+alternative must stay within to count at all.
+
+## Example 1: export format {#export-format}
+
+**1. Question.** For the nightly export, is Parquet or CSV cheaper to query from Athena when the dashboard reads one
+day at a time?
+
+**2. Design alternatives.**
+
+| Alternative | What it is | Why it might win |
+|---|---|---|
+| Parquet | the export written as Parquet, partitioned by day | Athena reads only the columns and day it needs |
+| CSV | the export written as gzipped CSV, partitioned by day | simpler to write and inspect |
+
+**3. Overall evaluation criterion and guardrails.**
+
+- OEC: data scanned per dashboard query (MB), lower is better.
+- Guardrails: median run time per query under 5 s. The rows returned differ in 0 rows between the alternatives.
+- Job story it informs: the dashboard user's story, for example JS02. Once requirements exist, the requirement
+  written from it.
+
+**4. Experiment setup.**
+
+- Same for both alternatives: the same 30 days of data, the same three dashboard queries, the same Athena
+  workgroup.
+- Test cases: one workload, the three dashboard queries over one day.
+
+**5. Prediction.** Parquet scans about a tenth of the data CSV scans, so it costs about a tenth as much. Run time is
+similar, because each query reads little data. Source: L7, reading Parquet footers and row groups.
+
+**6. Method.**
+
+- Commands: `bash experiments/export-format/run.sh parquet`, then `bash experiments/export-format/run.sh csv`.
+- Repeats: 5 runs of each query per alternative.
+- Evidence: `evidence/<run id>/` for each run: the command, the commit SHA, Athena's query statistics, and the script
+  that rebuilds the result table.
+
+## Example 2: an assistant evaluated with Inspect AI {#llm-eval}
+
+A generative-AI-first team on Open Food Facts. The team's assistant answers questions such as "Which breakfast cereals sold
+in Canada have under 5 g of sugar per 100 g?" by filling the parameters of one fixed Athena query. Here the test
+cases are a set of questions with known answers. Each metric is an aggregate over the set.
+
+**1. Question.** Which of the two course models gives the assistant more correct answers, within our token and
+latency limits?
+
+**2. Design alternatives.** The two models you have access to through the LTIC, served by the course LLM proxy, each
+behind the same assistant code.
+
+| Alternative | What it is | Why it might win |
+|---|---|---|
+| Qwen 3.6 35B-A3B | a mixture-of-experts model: 35B parameters, about 3B active per token | fewer active parameters per token, so it may answer faster |
+| Qwen 3.8 27B | a dense 27B model, the newer of the two | the newer model may follow the tool's parameters more reliably |
+
+**3. Overall evaluation criterion and guardrails.**
+
+- OEC: accuracy over the 90 scored answers per alternative (30 questions, 3 epochs), higher is better. A threshold
+  or ranking answer is correct when its product list matches the known list. A count answer is correct when its
+  number equals the known count.
+- Guardrails:
+  - accuracy on each question type (threshold, ranking, count) at least 70%;
+  - F1 of the returned product lists, for threshold and ranking questions, at least 0.8;
+  - under 4,000 tokens per question, input and output together;
+  - median latency under 5 s.
+- Job story it informs: the shopper's question story, for example JS01. Once requirements exist, the requirement
+  written from it.
+
+**4. Experiment setup.**
+
+- Same for both alternatives: the same assistant code and system prompt, temperature 0, the same Athena query
+  tool, the same product subset.
+- Test cases: 30 questions with known answers, 10 of each type, computed once by SQL over the product subset, in
+  `experiments/food-qa/questions.jsonl`. Each line holds the question, its type and the expected answer: a product list, or a count.
+
+**5. Prediction.** Qwen 3.8 27B has the higher accuracy, about 85% against 75%. Qwen 3.6 35B-A3B answers faster and
+stays within the latency guardrail with more room. Both use about the same number of tokens, because the prompt and
+the tool are the same. Source: L17 and L19, the request path and cost per question from token counts.
+
+**6. Method.**
+
+- Commands, one per alternative, against the course LLM proxy:
+  - `inspect eval experiments/food-qa/task.py --model openai-api/proxy/qwen3.6-35b-a3b --epochs 3`
+  - `inspect eval experiments/food-qa/task.py --model openai-api/proxy/qwen3.8-27b --epochs 3`
+
+  `task.py` defines one Inspect task: the dataset is `questions.jsonl`, the solver is the assistant, and the scorer
+  compares product lists and records accuracy, F1 and the question type.
+- Repeats: 30 questions × 3 epochs per alternative, so 90 scored answers each.
+- Evidence: `evidence/<run id>/` holds Inspect's log file for each run, the command, the commit SHA, and the script
+  that rebuilds the result table from the logs.
+
+**7. Result**, after the run, reports for each alternative: the OEC with its standard error over the 90 answers, and
+each guardrail with its value and whether it holds.

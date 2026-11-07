@@ -1,0 +1,56 @@
+---
+title: "Course project companion"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+---
+
+### Intro
+
+I'm excited to get to the project stage of the course. The project is a chance for you to practise cloud computing skills with a focus on decision-making. This includes analysing architecture trade-offs, choosing technologies, evaluating them, and adapting the requirements.
+
+As you get closer to the job market, project and collaboration skills are also super important. This course is not 310/410, so we keep the project and collaboration requirements lean where possible. As we are not a coding course, we will also have a chance to practice GenAI-assisted coding and design. The project is a chance to practise these skills in a (somewhat) realistic setting. We will use GenAI work and scaffolding and will learn to use it effectively for cloud design in a human team with AI support. At the same time, the goal is not a sloppy one-shot architecture that gets graded. That is why we introduce tools and scaffolding for the project, making sure you make some feedback and iterations on your ideas and designs, and will scaffold your implementation.
+
+In the project, you will:
+
+- collaborate on setting up your project infrastructure and team norms. These include norms for using generative AI and what contributions should adhere to.
+- set up your project and code infrastructure, and demonstrate using it well. For example, follow [GitHub flow](https://docs.github.com/en/get-started/using-github/github-flow), keep a good peer review practice, and implement checks and gates.
+- work with one of the generative AI assistants, or on your own, and learn how to make sure that AI-supported results are of high quality.
+- demonstrate adapting your team's shared context to integrate best practices of cloud design. These include design, documentation, implementation, working with requirements, and evaluating your system.
+
+We will have a few milestones, but a reasonable amount of your project evaluation will come from the process evidence -- you organizing your tools, workflow and collaboration, and your team demonstrating that you can adapt your design and implementation to the requirements and feedback you get. 
+
+### Topic
+
+You will choose one of three project shapes. All three use the same pieces: an operational store, a lake, and something your users see. What differs is which part comes first, and so where your team spends its design effort.
+
+- **Lakehouse first.** Your focus is setting up the lakehouse and the analytics on top of it: how data lands, how it is laid out, how queries run and what they cost. The operational store feeds the lake and stays simple.
+- **Operational first.** Your focus is the running system: an API over the current state, and writes that stay correct when many users act at once. Analytics comes second: the lake keeps the history and the reports.
+- **Generative AI first.** Your focus is the assistant: building its context, working with text, and checking that its answers are grounded and good enough. The lake and the operational store are its sources and its memory.
+
+You will also choose one of six datasets. While they are well known, they have each their own specifics and problems you will need to work on and include in your design.
+
+You can propose your own shape or your own dataset in the proposal. If you intend to, you should ideally email me as early as possible, so we can agree on what the project shape will look like for you before you submit the proposal.
+
+
+## Milestones
+
+We will use github for almost all submissions of the project (apart from presentation), as explained in more detail in the [setup and proposal](project-proposal.qmd) page. 
+
+The milestones are:
+
+| Milestone | Date | What you demonstrate | How you hand in |
+|---|---|---|---|
+| [Setup and proposal](project-proposal.qmd) | Fri Nov 13 EoD | Your repository, team norms and tools are set up; your case, data, shape, extension, first architecture and experiments are planned | tag `proposal` |
+| Feedback 1 | Tue Nov 17 EoD | Nothing to hand in. We add brief comments on your proposal, add some mandatory requirement constraints you will need to account for in your architecture (simulating interaction with a client), and select the experiment you need to run in your project. You may swap an extension until checkpoint 1 | `staff-feedback` issues |
+| Checkpoint 1: requirements and a first slice | Mon Nov 23 EoD | Numbered requirements and a design; a first slice running end to end: live updates arrive, are stored, reach the lake and show as one number to your users | tag `cp1` |
+| Checkpoint 2: review and the base running | | A Well-Architected review of your design and the change it leads to; the whole base running; scenarios ready for other teams | tag `cp2` |
+| Testing and presentation | | Other teams use your system and report issues; you answer them. A 5-minute presentation with questions | issues; slides in your repository |
+| Final hand-in and report | Tue Dec 15 EoD | Measurements anyone can re-run; the report on the course's five questions, with authors per section; the sandbox torn down | tag `final` |
+| Peer evaluation | | Brief evaluation of your teammates and project experience | announced later |
+
+: {tbl-colwidths="[22,14,44,20]"}
+
+Other dates are announced with each milestone. Repository hand-ins are tags in your course repository; the
+[setup and proposal](project-proposal.qmd) page explains how.

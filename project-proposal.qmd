@@ -1,0 +1,414 @@
+---
+title: "Setup and proposal"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+---
+
+In this stage, you set up your team's repository and working norms, and hand in a proposal for your system. The
+proposal is due **Friday 13 November, 23:59**. You submit it as a
+[commit](https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/about-commits)
+in your team repository, [tagged](https://git-scm.com/book/en/v2/Git-Basics-Tagging) `proposal`.
+
+## Checklist
+
+1. [Open your course repository and decide where you build](#repository).
+2. [Merge the pull request "Course files: team rules and templates"](#setup).
+3. [Set up your project board and link it](#board).
+4. [Agree on your collaboration norms](#norms).
+5. [Choose a dataset, a shape and extensions](#choices).
+6. [Write the proposal](#proposal).
+7. [Write your experiments and link them from the proposal](#experiments).
+8. [Tag the proposal and push the tag](#hand-in).
+
+## Your team repositories {#repository}
+
+### Your course repository
+
+Each team has its own private repository on github.students.cs.ubc.ca, the UBC GitHub for students:
+`CPSC436C-2026W-T1/team_NN`, where `NN` is your team number. Find it at
+<https://github.students.cs.ubc.ca/CPSC436C-2026W-T1>. The teaching team has already created it, and every member
+has write access. We call it your **course repository** on this page.
+
+Through your course repository, you communicate with us: your team's metadata, any private data we need from your
+team, and all the links we need to check your submissions. Course files arrive there too, and you hand in there.
+
+github.students works only on UBC networks: on campus, or over the
+[UBC VPN](https://it.ubc.ca/services/email-voice-internet/myvpn). The [setup page](project-startup.qmd) shows how to
+sign in, add an SSH key and clone.
+
+### Where you build {#where-you-build}
+
+You can build in your course repository, or in a repository of your own on github.com.
+
+**In your course repository.** There are no server-side checks (GitHub Actions) on github.students. You will need to
+run all checks and tests on the client side, on your own machines. We will follow up with instructions on how to do
+that, and on how we test it. Cloud coding agents cannot reach github.students.
+
+**In a private repository on github.com.** GitHub Actions work there, and cloud coding agents can reach it. A
+protected `main` branch in a private repository (our project requirement) needs GitHub Pro, which you can get for free
+with the [GitHub Student Developer Pack](https://education.github.com/pack). Only the team member who creates the
+repository needs it, but it is a good thing for everyone to have. If you build on github.com:
+
+1. Start it from your course repository, after you merge the course files, so both share one history. One member
+   runs, with the URL of a new, empty private repository on github.com:
+
+   ```bash
+   git clone git@github.students.cs.ubc.ca:CPSC436C-2026W-T1/team_NN.git
+   cd team_NN
+   git remote rename origin course
+   git remote add origin <URL of your github.com repository>
+   git push -u origin main
+   ```
+
+   The others clone the github.com repository and add the `course` remote with
+   `git remote add course git@github.students.cs.ubc.ca:CPSC436C-2026W-T1/team_NN.git`.
+2. Keep the repository private, and add my account, `ilyamusabirov`, as a collaborator. We use it to open
+   issues and pull requests, and to check your GitHub Actions setup. If the repository belongs to an organization,
+   give my account the Write role.
+3. In your course repository, open, review and merge a pull request that puts your github.com repository link in `metadata/team.yml`
+   as `github_repo`.
+4. Each member adds their own github.com login next to their CWL in `metadata/members.yml` in your course repository,
+   in a pull request they open themselves. Another member reviews and merges it. That pull request links your CWL to your login.
+5. Before every submission, push the tagged commit to your course repository, as in [Hand in](#hand-in).
+
+## Course files {#setup}
+
+During the project, we add templates, files and support for you. They arrive as pull requests in your course
+repository. Review and merge each one like any other pull request. If you build on github.com,
+bring each merged change into that repository too, through a pull request:
+
+```bash
+git fetch course
+git switch -c course-files origin/main
+git merge course/main
+git push -u origin course-files
+```
+
+Then open, review and merge the pull request from `course-files` on github.com.
+
+The first pull request is "Course files: team rules and templates", from branch `course/setup`. It gives you the templates that help you write the proposal and the design:
+`AGENTS.md`, `CONTRIBUTING.md`, `experiments/TEMPLATE.md`, the `docs/` templates for the proposal, requirements, design and tasks,
+and the MCP configuration examples for Claude Code and Kiro.
+
+## Collaboration norms {#norms}
+
+Two norms are enforced for every team:
+
+1. **GitHub flow.** Every change goes in by pull request, approved by someone other than its author. This is
+   [GitHub flow](https://docs.github.com/en/get-started/using-github/github-flow). `main` in your course repository is already
+   protected this way; if you build on github.com, protect `main` there too, with a
+   [branch protection rule](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches)
+   that requires a pull request with one approval. Staff feedback arrives as issues
+   labelled `staff-feedback`; close each one with the pull request that fixes it.
+2. **Course MCP.** If you use an assistant, connect it to the course MCP server and pass the test on the
+   [setup page](project-startup.qmd#setup-testing). We suggest Kiro, developed by Amazon: students get a free year
+   through [Kiro for Students](project-startup.qmd#getting-started-with-kiro). You can also use your own agent, for
+   example Claude Code.
+
+Setting up a team environment in which members using different agents work together effectively is one of the
+project's evaluated goals: the same `AGENTS.md`, the same course MCP, the same rules for pull requests and reviews,
+whichever agent each member uses.
+
+Everything else, your team decides. Hold one meeting with **all members present**, then adapt the two templates to
+your team. Change them to fit how your team works.
+
+- **Adapt `CONTRIBUTING.md`.** It defines how your team works. Discuss your principles and rules for collaboration,
+  and write the answers in its Team agreement section, one row per item:
+  - Roles: will you define roles for each member? Who owns which part, and who keeps the board current?
+  - Meetings: when do you meet, and how often? How do you record decisions?
+  - Response time: how quickly do you answer each other, give updates on work, and ask for help?
+  - Working style: do you work alone or together, at the same time or not? How do you hand work over?
+  - Disagreements: if you disagree, how do you settle it?
+  - Sources: which sources of information do you use: the course MCP server, AWS documentation, your own
+    measurements?
+  - Missed commitments: what does someone do when they cannot finish their part, and how early do they say so?
+
+  Then adapt the rest of the file: how work gets in (branches, one main change per pull request, commit messages,
+  reviews), how you synchronise your work and your release cycle, what tests run before a pull request, and how you
+  use generative AI (which tools, who uses them and for what, how AI-assisted work is marked in commits and pull
+  requests, and how a person checks it before review). The whole team may be held responsible for misuse.
+- **Adapt `AGENTS.md`.** It is the brief your assistants read at the start of every session (see [agents.md](https://agents.md/)).
+  The template has these sections, and the [setup page](project-startup.qmd#setting-up-agents.md) walks through each:
+
+  | Section | What it tells the assistant |
+  |---|---|
+  | Project | the project name, the team, your AWS lease and region |
+  | Our documents | that `docs/requirements.md`, `docs/design.md` and `docs/tasks.md` are the source of truth, and the id rules |
+  | Tasks and the project board | that `docs/tasks.md` is the source of truth, how S rows cite R lines, and how the board mirrors them |
+  | Course knowledge (MCP) | to search the course MCP server before stating a number or a rule |
+  | Reviews | how it reviews a change |
+  | Working on AWS | the profile, the name prefix and tags, and the teardown date |
+  | Pull requests and attribution | how pull requests are written, and how AI help is attributed |
+  | Boundaries | what it must never do: commit credentials, open public buckets, use `*` in IAM, start hourly-billed resources without asking |
+
+  : {tbl-colwidths="[30,70]"}
+
+  Adapt it with your team's choices. If you do not use an assistant, keep the file for the day you do. Keeping
+  `docs/tasks.md`, your requirements and the board linked comes at checkpoint 1; the
+  [setup page](project-startup.qmd#connecting-tasks-requirements-and-the-board) shows how.
+
+## Project board {#board}
+
+1. Set up a [GitHub Project](https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects)
+   for your team, next to the repository where you build: your course repository, or your github.com repository.
+2. Make it visible to the teaching team. On github.students, open the project's settings, choose Manage access, and
+   give the `staff` team the Read role. On github.com, add my account, `ilyamusabirov`, with the Read role in the
+   same place.
+3. In your course repository, open, review and merge a pull request that adds the project link to `metadata/team.yml` as `board`.
+
+## AWS sandbox {#aws}
+
+You do not need to do anything with AWS for the proposal. Your team gets a sandboxed AWS account, a group lease,
+once team leases are provisioned, early in the week of November 9. Until then, start nothing in your own AWS
+accounts.
+
+## Choices {#choices}
+
+**Dataset.** Choose one of the six, or propose your own (email the instructor early). For five of them, we
+give you a small sample to speed up your data exploration for the proposal, readable once your team lease arrives. [Project datasets](project-datasets.qmd) describes each one: its
+original data, what is in it, and what your design has to deal with.
+
+| Dataset | What it is | Preview |
+|---|---|---|
+| [NOAA GHCN-Daily](https://registry.opendata.aws/noaa-ghcn/) | daily weather observations from stations around the world | Canada from 2015 |
+| [CMS DE-SynPUF in OMOP](https://registry.opendata.aws/cmsdesynpuf-omop/) | synthetic patients: visits, diagnoses, drugs; 100,000 persons, 2008 to 2010 | the 100,000-person set as Parquet, with a label table for diagnosis and procedure codes |
+| [OpenAlex](https://openalex.org) | scholarly works, authors and institutions | one topic, 2015 to 2025: 86,024 works, 75% with an abstract |
+| [Overture Maps](https://overturemaps.org) and [City of Vancouver open data](https://opendata.vancouver.ca) | places, local areas and business licences | Vancouver places, local areas and business licences |
+| [Open Food Facts](https://world.openfoodfacts.org) | a food product catalogue with categories and nutrition | Canadian products without ingredients text, and Statistics Canada retail prices |
+| [GDELT 2.0](https://www.gdeltproject.org) | world news events, updated every 15 minutes | no preview: you read the live feed, with the course's GDELT pipeline as a recipe |
+
+: {tbl-colwidths="[28,46,26]"}
+
+**Shape.** Lakehouse first, operational first, or generative AI first, as described on the
+[course project](project-start.qmd) page.
+
+**Extensions.** Every team chooses extensions worth 2 points: one 2-point extension, or two 1-point extensions from any
+groups. A team of 6 chooses one more 1-point extension. Each extension adds one feature to your system, and you
+measure how well it works.
+
+::: {.callout-note collapse="true" icon=false title="Extensions to choose from"}
+
+**Data, 2 points**
+
+- **Streaming ingestion.** Updates go into your stores as they arrive, not in batches. You measure how long an
+  update takes to land.
+- **Windowed aggregates over the stream.** Your system computes counts or averages over time windows, for example
+  every 5 minutes, as updates arrive. It handles updates that arrive late.
+- **Change data capture to the lake.** Every change in DynamoDB reaches the lake by itself, through DynamoDB's
+  change stream. You measure how long a change takes to land, and an alarm fires when changes stop arriving.
+- **Concurrency correctness.** When two users change the same item at the same moment, your system accepts one
+  change and rejects the other. A test that races two clients shows it.
+
+**Generative AI, 2 points**
+
+- **Chat on the dashboard** (lakehouse first or operational first). Users ask questions in plain language and get
+  answers from your data.
+- **Hybrid retrieval with an eval.** Your system finds source text in two ways, word matching and embeddings, and
+  combines them. You measure how often it finds the right source. It needs text in your dataset.
+- **Agent with tools under controlled autonomy.** An assistant completes a task by calling your system's tools. It
+  can call only the tools you list, within limits you set on what it may do without asking.
+- **LLM eval matrix.** Your evaluation script runs models, prompts or settings on the same questions with known
+  answers. It reports accuracy and cost for each.
+- **Second provider with measured failover.** When the course model fails, requests switch to a second provider. You
+  measure how long the switch takes.
+- **Model routing, cheap model first.** Each question goes to a small model first, and to a larger one only when
+  needed. You measure cost and accuracy.
+
+**Infrastructure and testing, 2 points**
+
+- **Dashboard as an ECS service behind a load balancer.** Your dashboard runs in containers on Amazon ECS, with a
+  load balancer sharing out requests.
+- **Own checks against the deployed system.** Your user scenarios run on a schedule against your deployed system,
+  from a Lambda or Fargate runner, and report failures.
+- **Full infrastructure as code with timed restore.** Your whole system is created and torn down from code. You
+  measure how long a rebuild takes.
+- **Automated load test with a fix** (operational first only). A script drives your API at a fixed rate, and you
+  measure where it starts to fail. You change the part that fails first and run the test again.
+
+**Data, 1 point**
+
+- **Fan-out to several consumers.** Each update goes to a topic that two or more consumers read, and one of them
+  feeds the dashboard. A stopped consumer does not hold up the others.
+- **Lag monitoring for the lake.** Your export records when each change happened in DynamoDB and when it became
+  queryable in the lake. An alarm fires when the lag passes your limit, and the dashboard shows when its data was
+  last updated.
+- **Lakehouse maintenance on a schedule.** A schedule compacts your Iceberg tables and expires old snapshots. You
+  measure data scanned and run time before and after.
+- **Iceberg rollback or schema evolution.** Your system implements undoing an incorrect data load, or
+  transparently supports changes to a table's schema. Queries written before the change still return the right
+  results.
+- **Cached aggregates against direct Athena.** The dashboard reads totals from a cache instead of querying Athena
+  each time. You measure latency, data scanned and the age of the cached data.
+
+**Generative AI, 1 point** (your system needs an assistant)
+
+- **Answer or retrieval cache.** A repeated question gets a stored result instead of a new model call. Results you
+  mark as never cached are always computed again.
+- **Guardrails with a red-team log.** Checks on input and output stop requests you do not allow. You run attack
+  prompts and normal questions, and count what got through and what was wrongly refused.
+- **Trace analysis and alarms.** The traces link every model and tool call of one request. Alarms fire on errors,
+  slow answers and daily cost.
+
+**Infrastructure and testing, 1 point**
+
+- **CI test matrix.** Your tests run in continuous integration over several data sizes and variations. It needs
+  GitHub Actions, so a github.com repository.
+- **Contribution gates for people and agents.** Automatic checks fail a pull request that breaks your rules, for
+  example one that changes requirements and code together. It needs GitHub Actions.
+- **Agent resources kept current.** Automatic checks compare your assistants' instructions and context files with
+  the system as it changes. It needs GitHub Actions.
+- **MCP server for your system.** Assistants can query your system through the Model Context Protocol.
+- **Automated load test** (lakehouse first or generative AI first). A script drives your system at a fixed rate,
+  and you measure where it starts to fail.
+- **Failure injection.** When a part the dashboard depends on is unavailable, the dashboard keeps answering and says
+  what is missing. A command switches that part off for a set time to show it.
+
+**Pairs you cannot combine**
+
+- Streaming ingestion and fan-out.
+- Change data capture and lag monitoring for the lake.
+- Dashboard as an ECS service and automated load test, unless the load test targets another part.
+- Second provider and model routing.
+- Contribution gates and agent resources kept current.
+
+:::
+
+## Proposal {#proposal}
+
+Write the proposal in `docs/proposal.md`, which the course files give you with these sections as headings. It has no full requirements
+yet. The [proposal example](project-case-example.qmd) shows all seven sections for the L8 transit case, for a team of 6.
+
+1. **Business case.** What your system does, for whom, and the data it works with, in a few paragraphs. Answer
+   these first:
+   - What does your system do, and why, in 3 sentences or fewer?
+   - When and why would an organisation use it?
+2. **Job stories.** Start with one concrete example of use, and say who the users are: are they technical, and will
+   they roughly understand where the numbers come from? Then write one job story per user, numbered JS01, JS02 …, as
+   "When …, I want …, so that …", with how often and how much: for example "every day by 07:00", "within a second".
+   Choose 1 or 2 to focus on, by number, and say which needs each stands for, for example operational or
+   analytical. They decide what users see, your first slice, and the scenarios other teams will test.
+3. **Project shape and extensions.** Name them, and say in one or two sentences why they fit your case.
+4. **Data and workflows.** Name your dataset and the subset your system works with: which part of the original data
+   (years, places, topics), with its size in rows and GB. Choose the subset by exploring the original data, for
+   example with DuckDB over S3, as in [Explore the original data](project-datasets.qmd#explore). Then describe your data in 1 or 2 paragraphs that answer
+   the questions below. We use your numbers to generate the live updates for your system, so they set the load it has to handle.
+   Take each number from your dataset where it has one. Where it does not, give your own estimate and say so.
+
+   | Id | Question |
+   |---|---|
+   | DQ01 | What kinds of things does your system track, and how many of each? |
+   | DQ02 | What produces each kind of update, and how often? |
+   | DQ03 | What fields does each kind of update have? |
+   | DQ04 | Which events do updates trigger, and under what conditions? |
+   | DQ05 | What share of updates arrive late, arrive twice, or never arrive? |
+   | DQ06 | What do your users count, grouped by what, and over what time? |
+   | DQ07 | Which stream carries each kind of update or event, and what reads it? |
+   | DQ08 | What time period does the simulated run cover, and how long does it last? |
+
+   Then describe in 2 or 3 paragraphs how data gets to each user you focus on, starting from your shape: what starts
+   each step, and where each step's output lives. Say which part you expect to cost the most. The course's guiding
+   questions from L8 and L9 help:
+   - Data and readers: who reads each result, and is it operational (answers someone now) or analytical (looks back
+     over time)? Which questions are asked, how often, over how much data? Does new data arrive appended, in
+     batches, or updated in place?
+   - Load and cost: is the load steady, bursty or rare? What does the system cost when nothing happens?
+   - Storage: where does the data live after each step, and does it outlive the compute that made it? Do you keep
+     the raw data, and for how long?
+   - Team: how much of this does your team want to run itself?
+5. **Architecture sketch.** Draw it with any tool, commit the image in `docs/`, and show it in section 5. You may
+   use the [C4 model](https://c4model.com/) to structure it.
+   The sketch shows:
+   - what starts each step (a schedule, an upload, a request), drawn differently from data flow, for example dotted
+     arrows for triggers and solid arrows for data;
+   - where each step's output lives after the step finishes;
+   - each consumer, and which data it reads.
+6. **Experiments.** A link to each experiment file in `experiments/`, with its question in one line.
+7. **User interaction points.** A short plan for the dashboard, and for the API or chat if your shape has one.
+
+## Experiments {#experiments}
+
+`experiments/TEMPLATE.md` arrives with the course files. It has eight sections:
+
+1. Question
+2. Design alternatives
+3. Overall evaluation criterion and guardrails
+4. Experiment setup: what stays the same for both alternatives, and the test cases the experiment runs on
+5. Prediction
+6. Method
+7. Result
+8. What you conclude
+
+For the proposal, come up with 3 experiments. In the feedback on your proposal, we help you choose which of them
+to run.
+
+1. Copy `experiments/TEMPLATE.md` once for each experiment, for example as `experiments/export-format.md`.
+2. Fill in sections 1 to 6, up to and including Method. [Experiment examples](project-experiments.qmd) shows two
+   filled in: a data-layout experiment and an assistant evaluated with Inspect AI over a set of questions.
+3. Commit the file before you run anything. You run nothing for the proposal: the commands in Method are the ones
+   you plan to run. Sections 7 and 8 come after the run.
+4. Link each experiment file from section 6 of `docs/proposal.md`.
+
+## Hand in {#hand-in}
+
+1. Merge your proposal pull requests into `main` where you build.
+2. On the commit you hand in, create the tag: `git tag proposal`.
+3. Push the tag:
+   - if you build in your course repository: `git push origin proposal`;
+   - if you build on github.com: `git push course proposal`, with the course remote you added in
+     [Course files](#setup).
+     A tag carries its commit with it, so you do not push `main`.
+4. Check that the `proposal` tag shows in your course repository. The teaching team reads your work there, at the tag.
+
+## What is checked at the tag
+
+The teaching team reads your hand-in in your course repository: the files at the commit tagged `proposal`, and the
+two `metadata/` files on `main`.
+
+| Item | Done when |
+|---|---|
+| Course files | The teaching team's pull request "Course files: team rules and templates" (branch `course/setup`) is merged. |
+| `CONTRIBUTING.md` | Changed from the template for your team. The Team agreement section answers every question. It states your norms on generative AI and on testing. A TA reads it. |
+| `AGENTS.md` | Changed from the template for your team, with no placeholder left apart from the AWS line. A TA reads it. |
+| Both files | The changes went in through a pull request approved by someone other than its author. |
+| Assistant | Each member who uses an assistant has run the test in [Setup Testing](project-startup.qmd#setup-testing) with their own token. The course MCP server logs the call under that token, so you hand in nothing for it. |
+| github.com repository | If you build on github.com: the URL of your github.com repository is added to `metadata/team.yml` as `github_repo`; my account `ilyamusabirov` is a collaborator on it; `metadata/members.yml` has each member's github.com login, each added in a pull request that member opened. |
+| Project board | The URL of your project board is added to `metadata/team.yml` as `board`. |
+| Proposal | `docs/proposal.md` has sections 1 to 7 from [Proposal](#proposal). Section 3 names extensions worth 2 points (3 for a team of 6). Section 4 names your subset with its rows and GB, and answers DQ01 to DQ08. |
+| Experiments | `experiments/` has 3 copies of `experiments/TEMPLATE.md`, each linked from `docs/proposal.md`. In each, sections 1 to 6 are filled in. |
+| Workflow | Every change to `main` went in through a pull request approved by someone other than its author. |
+
+: {tbl-colwidths="[22,78]"}
+
+## Before you tag
+
+- [ ] The pull request "Course files: team rules and templates" is merged in your course repository.
+- [ ] `CONTRIBUTING.md` is changed for your team.
+- [ ] Every Team agreement question in `CONTRIBUTING.md` is answered.
+- [ ] `CONTRIBUTING.md` states your norms on generative AI.
+- [ ] `CONTRIBUTING.md` states your norms on testing.
+- [ ] `AGENTS.md` is changed for your team.
+- [ ] The `CONTRIBUTING.md` change was merged through a reviewed pull request.
+- [ ] The `AGENTS.md` change was merged through a reviewed pull request.
+- [ ] Each member who uses an assistant has passed the setup test with their own token.
+- If you build on github.com:
+  - [ ] The URL of your github.com repository is added to `metadata/team.yml` as `github_repo`.
+  - [ ] My account `ilyamusabirov` is a collaborator on your github.com repository.
+  - [ ] Every member's login is in `metadata/members.yml`, added in a pull request that member opened.
+- [ ] The URL of your project board is added to `metadata/team.yml` as `board`.
+- [ ] `docs/proposal.md` has sections 1 to 7.
+- [ ] Section 3 names extensions worth 2 points (3 for a team of 6).
+- [ ] Section 4 names your subset with its rows and GB.
+- [ ] Section 4 answers DQ01 to DQ08.
+- [ ] `experiments/` has 3 experiment files.
+- [ ] Each experiment file is linked from section 6 of `docs/proposal.md`.
+- [ ] Each experiment file has sections 1 to 6 filled in.
+- [ ] The architecture sketch is in `docs/` and shown in section 5.
+- [ ] Every change reached `main` through a pull request approved by someone other than its author.
+- [ ] The teaching team can open your project board.
+- [ ] `AGENTS.md` has no placeholder left, apart from the AWS line.
+
+**After you push the tag:**
+
+- [ ] The `proposal` tag shows in your course repository.

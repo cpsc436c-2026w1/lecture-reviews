@@ -1,0 +1,299 @@
+---
+title: "Project setup"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+    number-sections: true
+---
+
+This page helps you get started on your final project: getting your team repository onto your machine, then the
+files and tools your team and your assistants work with. What to hand in, and when, is on the
+[setup and proposal](project-proposal.qmd) page.
+
+## Getting your team repository
+
+Your team repository is `CPSC436C-2026W-T1/team_NN` on github.students. github.students works only on UBC networks:
+on campus, or over the [UBC VPN](https://it.ubc.ca/services/email-voice-internet/myvpn).
+
+1. **Sign in.** Open <https://github.students.cs.ubc.ca> and sign in with your CWL.
+2. **Add an SSH key.** In your github.students settings, under SSH keys, add your public key (for example
+   `~/.ssh/id_ed25519.pub`). If you do not have one, create it with `ssh-keygen -t ed25519`.
+3. **Check the connection.** Run `ssh -T git@github.students.cs.ubc.ca`. It greets you by your CWL.
+4. **Clone.** `git clone git@github.students.cs.ubc.ca:CPSC436C-2026W-T1/team_NN.git`, with your team's number.
+
+`main` is protected: every change goes in by pull request, approved by someone other than its author.
+
+## Files in your repository
+
+The pull request "Course files: team rules and templates" brings `AGENTS.md`, `CONTRIBUTING.md`,
+`experiments/TEMPLATE.md`, the `docs/` templates for the proposal, requirements, design and tasks, an example
+architecture sketch, the resource list `docs/resources.md`, `scripts/teardown.sh`, and the MCP configuration
+examples. The spec checker `tools/spec_check.py` arrives with the course files for checkpoint 1, when you write
+requirements.
+
+| File | What it is | Where to use it |
+|------|------------|-----------------|
+| `AGENTS.md` | Project instructions for coding assistants: project name and team, AWS lease and Region, how to use the course MCP, review procedure, pull request rules, and boundaries. | Repo root. Fill in the placeholders once at project start. Assistants read it at the start of every session. |
+| `.mcp.json` | MCP server config with the course server `436c` URL. It reads your token from the `KB_MCP_TOKEN` environment variable. Copy it from `.mcp.json.example`. | Repo root, on your machine only. It is in `.gitignore`, so never commit it. |
+| `docs/proposal.md` | The seven proposal sections as headings. | Write it for the proposal tag. |
+| `docs/requirements.md` | Numbered requirements R010, R020 … in EARS form, each with numbered constraints and a Given/When/Then test, plus assumptions Q010, Q020 …. | Write it after the proposal, before the design and tasks. Cite R ids in design, tasks, pull requests and reviews. |
+| `docs/design.md` | The architecture sketch (elements D010, D020 …), the data layout table, correctness properties P010, P020 … that each validate an R line, and the Lens answers table. | Write it after the requirements. Update it through a pull request when the architecture changes. |
+| `CONTRIBUTING.md` | How work gets into the repository (issues, branches, checks, pull requests, reviews) and the team agreement: roles, meetings, response times, disagreements. | Repo root. Fill in the placeholders as a team in your first week and merge it through a pull request. |
+| `docs/tasks.md` | Build steps S010, S020 …, each naming the R lines it serves and what it measures to show they hold. | Use it to plan and split the work. Name the S ids in each pull request. |
+
+## Getting Started with Kiro
+
+Kiro offers students a free year through
+[Kiro for Students](https://kiro.dev/changelog/general/kiro-for-students/), which allows:
+
+- One year of free access to Kiro, both the IDE and the CLI, including spec-driven development.
+- 1,000 credits per month for 12 months.
+- No credit card and no trial timer.
+
+### How to register
+
+Full instructions: [kiro.dev/students](https://kiro.dev/students/#instructions).
+
+1. **Sign up or log in.** Go to [kiro.dev/students](https://kiro.dev/students/) and sign in with **AWS Builder ID**
+   (recommended) or **GitHub**. Google also works. Whichever you choose, the email on that account must be your
+   **UBC student email**.
+   If you already have a Kiro account, link your UBC email to it.
+   - Do **not** use the "Your organization" sign-in option. The student program does not support it.
+2. **Verify your student status.** After signing in, open your account usage page. Eligible accounts see a banner that
+   says "You are eligible for Kiro Students". Click verify and complete the SheerID check, which takes about a minute.
+3. **Start building.** Once you are verified, you get 1,000 credits per month for one year.
+
+Credits do not roll over from month to month, and you cannot buy add-on credits under the student plan. After the
+year, your account drops to the Kiro free tier. Your code and specs stay in your repo. For help, use the student
+channel on the Kiro Discord.
+
+> After you register, install the Kiro CLI or IDE and sign in with the same account.
+
+## Setting up AGENTS.md
+
+### What AGENTS.md is for
+
+`AGENTS.md` is the instruction file for the coding assistant in your project. Kiro, Copilot CLI and Claude Code
+read it when a session starts. Claude Code reads it when the repository has no `CLAUDE.md`, from version 2.1.277; on
+an older version, update Claude Code. See [AGENTS.md in the Claude Code docs](https://code.claude.com/docs/en/memory#agents-md). It tells the assistant what it would otherwise have to guess:
+
+- **What the project is:** the project name, the team, the course, and the AWS lease and Region you work in.
+- **Where the design lives:** `docs/requirements.md`, `docs/design.md` and `docs/tasks.md` are the source of truth, and
+  the file gives the id rules (R, D, P, S, Q) the assistant must follow when it edits them.
+- **Where facts come from:** the assistant searches the course MCP server before it states a number or a rule about
+  AWS, Spark or file formats, and uses the AWS Knowledge MCP for AWS documentation.
+- **How work is done:** the review procedure, how to run the spec checker, how pull requests are written and
+  attributed.
+- **What is off limits:** no committed credentials, no public buckets, no `"Action": "*"` or `"Resource": "*"`, and no
+  hourly-billed resources or IAM changes without asking a person first.
+
+Think of it as the brief you would give a new teammate on day one. The assistant follows it in every session, so a
+wrong or missing value here shows up in everything it produces.
+
+### Instructions
+
+1. **Open `AGENTS.md` in the repo root.** The template ships with placeholders in angle brackets, `<…>`. Fill in
+   the placeholders, and adapt the rules to your team. Change a rule only through a pull request the team agrees on.
+
+2. **Fill in the Project line.**
+
+   | Placeholder | What to write | Example |
+   |-------------|---------------|---------|
+   | `<project name>` | A short name for your system | `TransitLens` |
+   | `<one sentence: …>` | What the system does and for whom | `Hourly ridership dashboards for city transit planners` |
+   | `<team-id>` | Your team id: `t` and your team number | `t07` for `team_07` |
+   | `<names>` | Every team member's name | `Ana Lee, Sam Roy` |
+
+3. **Fill in the AWS line** once your team has its AWS lease. Until then, leave it and fill in the rest.
+
+   | Placeholder | What to write | Example |
+   |-------------|---------------|---------|
+   | `<team>` (profile) | The AWS CLI profile name for your group lease | `t00` |
+   | `<amount>` | The team's budget for the term | `$20` |
+
+   Do **not** add the 12-digit AWS account id anywhere. The assistant gets it from
+   `aws sts get-caller-identity` when it needs it. Keep the Region as `ca-central-1`.
+
+4. **Fill in the Working on AWS section.**
+
+   | Placeholder | What to write | Example |
+   |-------------|---------------|---------|
+   | `<team>` in `aws sso login --profile <team>` | The same profile name as above | `t00` |
+   | `<team-id>-` | The name prefix for every resource | `t00-` |
+   | `Team=<team-id>, Owner=<name>` | The tags on every resource | `Team=t00, Owner=Ana Lee` |
+   | `<date>` (final teardown) | The date every resource must be deleted by | `2026-12-15` |
+
+5. **Check that nothing is left**, apart from the AWS line if your team has no lease yet. Search the file for the
+   placeholders:
+
+   ```bash
+   grep -n -E "<(project name|one sentence|names|team|team-id|amount|date|name|URL)" AGENTS.md
+   ```
+
+6. **Commit through a pull request.** `AGENTS.md` is shared by the whole team. Push the change on a branch and have
+   another member approve it; no direct pushes to `main`.
+
+## Setting up CONTRIBUTING.md
+
+`CONTRIBUTING.md` is the same kind of file for the people on the team that `AGENTS.md` is for the assistants. The
+repository process and review rules are already written and match `AGENTS.md`. Your team fills in the project name,
+the test command, the link to your development guide, the places to ask questions, and every row of the Team
+agreement table.
+
+1. **Meet as a team** and go through the rows of the Team agreement table: roles, meetings, response time, working
+   style, disagreements, sources, missed commitments. Write a sentence or two for each.
+2. **Adapt the rest of the file** to your team, including the `<…>` placeholders: the title, the test command, the development guide link and Where to ask. If
+   you have no tests or development guide yet, write "none yet" and fill them in when you build the first slice.
+3. **Commit through a pull request** approved by someone other than its author. Every member reads it before it is
+   merged.
+
+## MCP Setup
+
+If you use an assistant, connect it to two MCP servers:
+
+- Course MCP Knowledge Base
+- AWS Knowledge MCP
+
+You can find both in the `.mcp.json` example.
+
+Set the environment variable for the course MCP server. Your own token is in the issue "Your course MCP tokens" in
+your `team_NN` repository. Use only your own, and put this line in your shell profile, not in a file in the repository:
+
+```bash
+export KB_MCP_TOKEN=<TOKEN_FROM_INSTRUCTOR>
+```
+
+### AI Tool Setup
+
+#### Claude Code Setup
+
+1. Install Claude Code and sign in: [Claude Code quickstart](https://code.claude.com/docs/en/quickstart). Claude Code
+   runs on your own Claude account or API key.
+2. Copy `.mcp.json.example` to `.mcp.json` in the repo root. Claude Code reads it directly. `.mcp.json` is ignored by
+   git, so your token stays on your machine.
+
+Docs: [Connect Claude Code to tools via MCP](https://code.claude.com/docs/en/mcp)
+
+- See *Installing MCP servers → Option 1: Add a remote HTTP server* for `claude mcp add --transport http …`.
+- See *MCP installation scopes → Project scope (`.mcp.json`)*. Claude Code reads the project's `.mcp.json` in the repo
+  root directly.
+
+#### Kiro CLI Setup
+
+1. Register with [Kiro for Students](#getting-started-with-kiro), then install the Kiro CLI or IDE:
+   [Kiro CLI docs](https://kiro.dev/docs/cli/).
+2. Copy `.kiro/settings/mcp.json.example` to `.kiro/settings/mcp.json`. It holds the same two servers.
+
+Docs:
+
+- [Kiro CLI: MCP overview](https://kiro.dev/docs/cli/mcp/)
+- [Kiro CLI: MCP configuration](https://kiro.dev/docs/cli/mcp/configuration/)
+
+> Kiro does not read `.mcp.json`. It reads `.kiro/settings/mcp.json` in the project, or `~/.kiro/settings/mcp.json`
+globally. Add servers with `kiro-cli mcp add` or by editing that file, which uses the same top-level `mcpServers`
+object. Remote servers take a `url` and optional `headers`.
+
+### Testing MCP Server Connection & Tools
+
+Your `AGENTS.md` already tells your assistant when to use these sources. To make it more reliable, you could add explicit rules, for example: "If the task involves AWS costs, always check current pricing via the AWS Knowledge MCP server."
+
+Generally, you can specifically ask an agent to use an MCP server and tool in a plain-language prompt. **However, it’s also worth learning how to see which tools an MCP server exposes and how to tell the agent to call them directly.**
+
+#### Claude Code: call a specific MCP tool
+
+You can check if you are connected and what tools are available:
+
+```bash
+claude mcp list          # should show aws-knowledge: ✓ Connected
+claude                   # then run /mcp to see the tool names
+```
+
+Run Claude Code headlessly and approve the AWS Knowledge server's tools in advance:
+
+```bash
+claude -p "Use the aws-knowledge aws___search_documentation tool to find S3 bucket naming rules. Cite sources." \
+  --allowedTools "mcp__aws-knowledge"
+```
+
+- `-p` runs a single prompt non-interactively and prints the response.
+- Tools are named `mcp__<server>__<tool>`. `--allowedTools "mcp__aws-knowledge"` approves every tool from this server
+  without asking. It does not stop the assistant from trying other tools.
+- To allow a single tool, use its full name exactly as `/mcp` shows it, for example `mcp__aws-knowledge__search_documentation`. Some versions of the server add a prefix to tool names, so copy the name rather than guessing it.
+
+#### Kiro CLI: call a specific MCP tool
+
+You can check if you are connected and what tools are available:
+
+```bash
+kiro-cli mcp status      # or start kiro-cli and run /mcp or /tools
+```
+
+Run Kiro CLI headlessly and approve only the AWS Knowledge search tool:
+
+```bash
+kiro-cli chat --no-interactive --require-mcp-startup \
+  --trust-tools=@aws-knowledge/aws___search_documentation \
+  "Use the aws-knowledge aws___search_documentation tool to find S3 bucket naming rules. Cite sources."
+```
+
+- `--no-interactive` runs without a chat session and prints the first response.
+- `--trust-tools` approves the listed tools up front. The `@` prefix marks a tool as coming from an MCP server rather than a built-in tool (like `read` or `shell`): `@aws-knowledge/aws___search_documentation` means the `aws___search_documentation` tool from the server named `aws-knowledge` in `mcp.json`. Use `@aws-knowledge` alone to trust all of that server's tools. Run `/tools` in an interactive session to see the exact names.
+- `--require-mcp-startup` exits with code 3 if an MCP server fails to start, so a broken setup fails loudly instead of answering from the model's own knowledge.
+
+## Connecting tasks, requirements and the board
+
+Your assistant keeps three things linked: `docs/requirements.md` (the R lines), `docs/tasks.md` (the S rows, each
+citing the R lines it serves) and your GitHub Project board. The "Tasks and the project board" section of
+`AGENTS.md` holds the rules. For them to work, the assistant needs:
+
+1. **Board link.** Add its URL to `metadata/team.yml` in your course repository, as a line `board: <URL>`. Also put
+   it in the "Project board" line of the Project section of `AGENTS.md`, so the assistant finds it in the repository
+   it works in.
+2. **GitHub CLI with the project scope.** Install [GitHub CLI](https://cli.github.com/) and sign in with `gh auth login`
+   on each host you use. The assistant creates issues and board items through `gh`. Add the project scope:
+   - github.com: `gh auth refresh -h github.com -s project`;
+   - github.students: `gh auth refresh -h github.students.cs.ubc.ca -s project`, on a UBC network.
+3. **Permission to run `gh`.** In Kiro CLI, trust the shell tool for the session, for example
+   `kiro-cli chat --trust-tools=read,write,shell`. In Claude Code, allow `gh` commands when it asks.
+
+Test it at checkpoint 1, once your requirements and first tasks exist. Add one S row to `docs/tasks.md` with an empty Issue cell, and prompt:
+
+> Read AGENTS.md. Sync docs/tasks.md to the project board.
+
+**It passes when** the assistant creates one issue titled `S010: …` with the label `task`, adds it to the board as
+Todo, and opens a pull request that writes the issue number into the row. Run the same prompt again: it should
+report that everything is in sync and create nothing.
+
+The assistant never writes R lines to make a check pass. If a task needs an R line that does not exist, it stops and
+tells you.
+
+## Setup Testing
+
+You can test if you configured your MCP and `AGENTS.md` correctly by running this test:
+
+1. Start your assistant (Claude Code or Kiro) in the repo folder.
+2. Check the status of your MCP servers.
+   1. For Kiro CLI, type `/mcp` to see every active server and tools
+   2. For Claude Code CLI, use `claude mcp list`. This reports each server as connected, needs authentication, failed to connect, pending approval, rejected through `disabledMcpjsonServers`, or disabled for this project.
+3. Give the AI Agent this first prompt within the project root:
+
+   > Read AGENTS.md. Fetch the course start page and tell me what it offers.
+
+4. Watch which tools it calls.
+
+Run it with your own token, never another member's. The course MCP server records each call under your token;
+you hand in nothing for it.
+
+**It passes when** the assistant calls `get_kb_doc` on `436c-student/index.md` without you giving it the path, and then
+summarizes the course pages the start page lists. The path comes from `AGENTS.md`, so a pass shows that the assistant
+read the file and that it can reach the course server.
+
+**If it fails:**
+
+- *It does not call `get_kb_doc` at all:* the course server is not connected. Check that `.mcp.json` (Claude Code) or
+  `.kiro/settings/mcp.json` (Kiro) exists, and that your token is set in your shell.
+- *It calls the tool but the call errors:* check the server URL and the token. Your token is in the issue "Your course MCP tokens" in your course repository.
+- *It asks you for the path, or guesses another one:* it did not read `AGENTS.md`. Check that the file is in the repo
+  root and that you started the assistant from that folder.
+

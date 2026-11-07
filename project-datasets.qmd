@@ -1,0 +1,212 @@
+---
+title: "Project datasets"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+---
+
+Choose one of these six datasets, or propose your own (email the instructor early). Each one is well known, and each
+has its own specifics and problems your design has to deal with.
+
+Each section links to the original data. You choose the subset your system works with, and say which in section 4
+of your proposal. For five of the datasets, we give you a small sample, the preview, to speed up your data exploration for the
+proposal. It is in the course bucket `s3://436c-2026w1-project-data/preview/`, one folder per dataset: `ghcn/`,
+`synpuf/`, `openalex/`, `maps/` and `food/`. Your sandbox can read it once your team lease arrives. Until then, explore
+the original data, which needs no AWS account. For GDELT, you read the live feed itself.
+
+Your live updates are generated from your answers to the data questions in your proposal. The dataset itself is your
+history.
+
+## Explore the original data {#explore}
+
+DuckDB reads Parquet and CSV files straight from S3, so you can count, filter and sample a dataset without
+downloading it. The original datasets are in public buckets, so you need no AWS account for this. This query counts
+the days of each kind of observation at Vancouver International Airport:
+
+```sql
+INSTALL httpfs; LOAD httpfs;
+SET s3_region = 'us-east-1';
+
+SELECT ELEMENT, count(*) AS days, min(DATE) AS first_day, max(DATE) AS last_day
+FROM read_parquet('s3://noaa-ghcn-pds/parquet/by_station/STATION=CAN01108395/*/*.parquet',
+                  hive_partitioning = true)
+GROUP BY ELEMENT
+ORDER BY days DESC;
+```
+
+It reads only that station's files, and it takes a few seconds. To explore a dataset:
+
+1. Start with one partition or one file, and run `DESCRIBE` and `SUMMARIZE` on it to see the columns.
+2. Filter on the partition columns in the path, so DuckDB reads only the files it needs.
+3. Count rows and measure size for the subset you have in mind. Those numbers go into your proposal.
+4. Set `s3_region` to the region of the bucket: `us-east-1` for most of these, `us-west-2` for Overture.
+
+DuckDB also reads files over HTTPS, and from Hugging Face with `hf://` paths, which covers the Open Food Facts file
+and the City of Vancouver exports. For OpenAlex, the API is often quicker than the snapshot.
+
+## NOAA GHCN-Daily weather {#ghcn}
+
+**What it is.** Daily weather observations from stations around the world: temperature, precipitation, snow and
+more. [Registry page](https://registry.opendata.aws/noaa-ghcn/). Licence: CC0.
+
+**What is in it.**
+
+- One row per station, day and element, with quality flags.
+- Station metadata in fixed-width text files.
+- Updated daily, about two days behind.
+- There are 9,906 Canadian stations.
+- Canadian station IDs start with `CAN0`. The ID without `CAN0` is the station's Environment and Climate Change
+  Canada (ECCC) climate ID.
+
+**Original data.** `s3://noaa-ghcn-pds/parquet/by_station/` and `by_year/` (us-east-1), back to the 1800s.
+
+**Preview.** Canada from 1 January 2015, partitioned by year: 3,055 stations with temperature,
+ precipitation or snow, and the station list.
+
+**What to design for.**
+
+- The data is daily, but your live updates arrive every few minutes. Your system has to roll them up into days.
+- The two layouts in the bucket, by station and by year, serve different questions. The by-year files cannot skip
+  stations outside Canada.
+- There is no text, so the generative-AI-first shape has to answer from numbers.
+
+**Good additions.** ECCC's station list (province, elevation) joins on the ID without `CAN0`.
+ECCC's hourly data gives real updates below one day.
+
+## CMS synthetic patients (OMOP) {#synpuf}
+
+**What it is.** Synthetic Medicare patients built to look like real claims data, converted to the OMOP common data
+model. [Registry page](https://registry.opendata.aws/cmsdesynpuf-omop/). Public use, synthetic.
+
+**What is in it.**
+
+- The 100,000-person set: 15 OMOP tables (persons, visits, conditions, drugs, procedures and more).
+- About 0.9 GB of gzipped CSV, with header rows.
+- Visits from 2008 to 2010.
+
+**Original data.** `s3://synpuf-omop/` (us-east-1), gzipped CSV in three sizes: 1,000, 100,000 and 2.3 million
+persons.
+
+**Preview.** The 100,000-person set as Parquet, with a label table for ICD-9 diagnosis and procedure codes.
+The bucket has no OMOP vocabulary, so codes are numbers until you join labels.
+
+**What to design for.**
+
+- Diagnoses come as ICD-9-CM codes. The label table names 99% of diagnosis rows.
+- Procedures are labelled for only 37% of rows. Most of the rest are CPT-4 codes, which have no free label file.
+- Drug codes (NDC) can be labelled only in part.
+- The data is static, so your live updates (admissions, discharges, prescriptions) are generated.
+- There is no free text.
+
+**Good additions.** The CMS ICD-9-CM description files, for diagnosis names. The FDA NDC directory, for drug names.
+
+## OpenAlex scholarly works {#openalex}
+
+**What it is.** An open catalogue of scholarly works, authors, institutions, sources, funders and topics.
+[openalex.org](https://openalex.org). Licence: CC0.
+
+**What is in it.**
+
+- About 465 million works.
+- Each work carries topics, its publication year, references, authorships, and an abstract.
+- The abstract is stored as a word index, not as plain text.
+
+**Original data.** The snapshot in `s3://openalex/data/parquet/` (us-east-1), and the
+[OpenAlex API](https://docs.openalex.org).
+
+**Preview.** One topic, 2015 to 2025. For Cloud Computing and Resource Management, that is 86,024 works as
+the primary topic. We rebuilt the abstract as text for 64,241 of them (75%).
+
+**What to design for.**
+
+- The full snapshot is very large and is not partitioned by topic or year. Do not scan all of it: read a few of
+  its files, or use the API.
+- Abstracts need rebuilding from the word index before you can use them as text.
+- Citations arrive over time, so "how cited is this work" keeps changing.
+
+**Good additions.** ROR, the registry of research organisations (CC0), joins on each institution's ROR ID. NSERC and
+CIHR award lists join by name, and only roughly.
+
+## Vancouver maps: Overture places and city data {#maps}
+
+**What it is.** Places from [Overture Maps](https://overturemaps.org), and City of Vancouver open data. Licences:
+Overture places CDLA-Permissive-2.0; City of Vancouver data, the Open Government Licence – Vancouver.
+
+**What is in it.**
+
+- 46,038 Overture places inside a Vancouver bounding box, about 5 MB.
+- The city's 22 local area boundaries.
+- 207,243 business licences.
+
+**Original data.** Overture releases in `s3://overturemaps-us-west-2/release/` (us-west-2), and the
+[City of Vancouver open data portal](https://opendata.vancouver.ca).
+
+**Preview.** These three as Parquet files.
+
+**What to design for.**
+
+- Questions are about places and areas, so you need a spatial key, such as a grid cell or a local area. Spatial
+  queries were not taught.
+- Places open, close and get edited, so their current state changes.
+- Overture lives in a different AWS region from your sandbox.
+
+**Good additions.**
+
+- City of Vancouver Open Data: business licences, street trees, local area boundaries.
+- TransLink GTFS schedules. GTFS-realtime is a real live feed and needs a free key.
+- Statistics Canada census areas.
+
+## Open Food Facts {#food}
+
+**What it is.** A crowd-sourced catalogue of food products: names, ingredients, categories, nutrition.
+[world.openfoodfacts.org](https://world.openfoodfacts.org). Licence: ODbL.
+
+**What is in it.**
+
+- About 4.9 million products.
+- Canadian products are well filled in: names about 97%, categories about 89%, ingredients about 71%.
+
+**Original data.** The [product database on Hugging Face](https://huggingface.co/datasets/openfoodfacts/product-database)
+(`food.parquet`, with ingredients text), and Statistics Canada
+[table 18-10-0245-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810024501).
+
+**Preview.** 124,863 Canadian products, without ingredients text, and Statistics Canada monthly
+average retail prices.
+
+**What to design for.**
+
+- Assignment 3 already joined prices to receipts, and Assignment 4 built catalogue search. Your project needs a
+  different question.
+- Open Food Facts' own price data has almost nothing for Canada, so prices need another source.
+- Products are edited over time, so the catalogue has a current state and a history.
+
+**Good additions.**
+
+- Statistics Canada monthly average retail prices (table 18-10-0245), by product type.
+- USDA FoodData Central branded foods, by barcode.
+- Open Food Facts' category and ingredient taxonomies.
+
+## GDELT 2.0 world news events {#gdelt}
+
+**What it is.** World news coded into events (who did what to whom, where, with what tone), updated every
+15 minutes. [gdeltproject.org](https://www.gdeltproject.org). Terms: free and unrestricted use.
+
+**What is in it.** Every 15 minutes, three files:
+
+- events: 1,000 to 2,600 rows;
+- mentions: 2,400 to 4,100 rows;
+- GKG, themes and sources: 34 to 70 times the size of the events file.
+
+**Original data and preview.** No preview: you read the live feed, with the course's GDELT pipeline from the lectures as a recipe. The course bucket has the CAMEO code and country lookup tables in `preview/gdelt/`.
+Your test runs still use generated updates of the same shape, so the checks can compare against what really happened.
+
+**What to design for.**
+
+- This is the only real live feed on the list.
+- Mentions of an event arrive late, a median of an hour after the event, so late data is built in.
+- The same article URL appears in many rows.
+- A listed file is sometimes missing, so your pipeline has to tolerate gaps.
+- Leave out the GKG, or take a small part of it: it is almost all of the volume.
+- Article text cannot be redistributed.
+

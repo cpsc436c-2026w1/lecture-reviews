@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Project setup – CPSC 436C companion</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-158031087360bce0ff56dc785ce39e06.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">CPSC 436C companion</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lecture-reviews" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Lecture reviews</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-lecture-reviews">    
+        <li>
+    <a class="dropdown-item" href="./index.html">
+ <span class="dropdown-text">All reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l1.html">
+ <span class="dropdown-text">L1: the four resources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l2.html">
+ <span class="dropdown-text">L2: EC2, S3 and Lambda</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l3.html">
+ <span class="dropdown-text">L3: cost models and what starts a function</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l4.html">
+ <span class="dropdown-text">L4: scaling up and out</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l5.html">
+ <span class="dropdown-text">L5: Spark on a cluster</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./w2-l6.html">
+ <span class="dropdown-text">L6: how Spark runs a query</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l10.html">
+ <span class="dropdown-text">L10: lakes, lakehouses and query engines</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l11.html">
+ <span class="dropdown-text">L11: assembling the lakehouse in Athena and Glue</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l12.html">
+ <span class="dropdown-text">L12: DynamoDB as OLTP storage, distributed database problems and properties</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l13.html">
+ <span class="dropdown-text">L13: netsplit and CAP, data latency (freshness)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l14.html">
+ <span class="dropdown-text">L14: message brokers, delivery guarantees and event-time windows</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l15.html">
+ <span class="dropdown-text">L15: generative AI in a data app</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l16.html">
+ <span class="dropdown-text">L16: principles of cloud design for a user-facing GenAI app</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./midterm-review.html">
+ <span class="dropdown-text">Midterm review</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutorials" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tutorials</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tutorials">    
+        <li>
+    <a class="dropdown-item" href="./tutorials.html">
+ <span class="dropdown-text">All tutorials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#emr-cluster">
+ <span class="dropdown-text">B2T1: Cluster/EMR</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#glue-part-a">
+ <span class="dropdown-text">B2T2 part A: Spark/Glue, how Spark reads files</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#glue-part-b">
+ <span class="dropdown-text">B2T2 part B: Spark/Glue, slow queries and their fixes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#b3-t1">
+ <span class="dropdown-text">B3T1: Lakehouse/Athena+Glue</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-project" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Project</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-project">    
+        <li>
+    <a class="dropdown-item" href="./project-start.html">
+ <span class="dropdown-text">Course project</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-proposal.html">
+ <span class="dropdown-text">Setup and proposal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-datasets.html">
+ <span class="dropdown-text">Project datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-experiments.html">
+ <span class="dropdown-text">Experiment examples</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-startup.html">
+ <span class="dropdown-text">Project setup</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-case-example.html">
+ <span class="dropdown-text">Proposal example</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-assignments" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Assignments</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-assignments">    
+        <li>
+    <a class="dropdown-item" href="https://cpsc436c-2026w1.github.io/a1-starter/">
+ <span class="dropdown-text">A1 starter</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://cpsc436c-2026w1.github.io/a2-starter/">
+ <span class="dropdown-text">A2 starter</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#getting-your-team-repository" id="toc-getting-your-team-repository" class="nav-link active" data-scroll-target="#getting-your-team-repository"><span class="header-section-number">1</span> Getting your team repository</a></li>
+  <li><a href="#files-in-your-repository" id="toc-files-in-your-repository" class="nav-link" data-scroll-target="#files-in-your-repository"><span class="header-section-number">2</span> Files in your repository</a></li>
+  <li><a href="#getting-started-with-kiro" id="toc-getting-started-with-kiro" class="nav-link" data-scroll-target="#getting-started-with-kiro"><span class="header-section-number">3</span> Getting Started with Kiro</a></li>
+  <li><a href="#setting-up-agents.md" id="toc-setting-up-agents.md" class="nav-link" data-scroll-target="#setting-up-agents.md"><span class="header-section-number">4</span> Setting up AGENTS.md</a></li>
+  <li><a href="#setting-up-contributing.md" id="toc-setting-up-contributing.md" class="nav-link" data-scroll-target="#setting-up-contributing.md"><span class="header-section-number">5</span> Setting up CONTRIBUTING.md</a></li>
+  <li><a href="#mcp-setup" id="toc-mcp-setup" class="nav-link" data-scroll-target="#mcp-setup"><span class="header-section-number">6</span> MCP Setup</a></li>
+  <li><a href="#connecting-tasks-requirements-and-the-board" id="toc-connecting-tasks-requirements-and-the-board" class="nav-link" data-scroll-target="#connecting-tasks-requirements-and-the-board"><span class="header-section-number">7</span> Connecting tasks, requirements and the board</a></li>
+  <li><a href="#setup-testing" id="toc-setup-testing" class="nav-link" data-scroll-target="#setup-testing"><span class="header-section-number">8</span> Setup Testing</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Project setup</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This page helps you get started on your final project: getting your team repository onto your machine, then the files and tools your team and your assistants work with. What to hand in, and when, is on the <a href="./project-proposal.html">setup and proposal</a> page.</p>
+<section id="getting-your-team-repository" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="getting-your-team-repository"><span class="header-section-number">1</span> Getting your team repository</h2>
+<p>Your team repository is <code>CPSC436C-2026W-T1/team_NN</code> on github.students. github.students works only on UBC networks: on campus, or over the <a href="https://it.ubc.ca/services/email-voice-internet/myvpn">UBC VPN</a>.</p>
+<ol type="1">
+<li><strong>Sign in.</strong> Open <a href="https://github.students.cs.ubc.ca" class="uri">https://github.students.cs.ubc.ca</a> and sign in with your CWL.</li>
+<li><strong>Add an SSH key.</strong> In your github.students settings, under SSH keys, add your public key (for example <code>~/.ssh/id_ed25519.pub</code>). If you do not have one, create it with <code>ssh-keygen -t ed25519</code>.</li>
+<li><strong>Check the connection.</strong> Run <code>ssh -T git@github.students.cs.ubc.ca</code>. It greets you by your CWL.</li>
+<li><strong>Clone.</strong> <code>git clone git@github.students.cs.ubc.ca:CPSC436C-2026W-T1/team_NN.git</code>, with your team’s number.</li>
+</ol>
+<p><code>main</code> is protected: every change goes in by pull request, approved by someone other than its author.</p>
+</section>
+<section id="files-in-your-repository" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="files-in-your-repository"><span class="header-section-number">2</span> Files in your repository</h2>
+<p>The pull request “Course files: team rules and templates” brings <code>AGENTS.md</code>, <code>CONTRIBUTING.md</code>, <code>experiments/TEMPLATE.md</code>, the <code>docs/</code> templates for the proposal, requirements, design and tasks, an example architecture sketch, the resource list <code>docs/resources.md</code>, <code>scripts/teardown.sh</code>, and the MCP configuration examples. The spec checker <code>tools/spec_check.py</code> arrives with the course files for checkpoint 1, when you write requirements.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 34%">
+<col style="width: 48%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>What it is</th>
+<th>Where to use it</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>AGENTS.md</code></td>
+<td>Project instructions for coding assistants: project name and team, AWS lease and Region, how to use the course MCP, review procedure, pull request rules, and boundaries.</td>
+<td>Repo root. Fill in the placeholders once at project start. Assistants read it at the start of every session.</td>
+</tr>
+<tr class="even">
+<td><code>.mcp.json</code></td>
+<td>MCP server config with the course server <code>436c</code> URL. It reads your token from the <code>KB_MCP_TOKEN</code> environment variable. Copy it from <code>.mcp.json.example</code>.</td>
+<td>Repo root, on your machine only. It is in <code>.gitignore</code>, so never commit it.</td>
+</tr>
+<tr class="odd">
+<td><code>docs/proposal.md</code></td>
+<td>The seven proposal sections as headings.</td>
+<td>Write it for the proposal tag.</td>
+</tr>
+<tr class="even">
+<td><code>docs/requirements.md</code></td>
+<td>Numbered requirements R010, R020 … in EARS form, each with numbered constraints and a Given/When/Then test, plus assumptions Q010, Q020 ….</td>
+<td>Write it after the proposal, before the design and tasks. Cite R ids in design, tasks, pull requests and reviews.</td>
+</tr>
+<tr class="odd">
+<td><code>docs/design.md</code></td>
+<td>The architecture sketch (elements D010, D020 …), the data layout table, correctness properties P010, P020 … that each validate an R line, and the Lens answers table.</td>
+<td>Write it after the requirements. Update it through a pull request when the architecture changes.</td>
+</tr>
+<tr class="even">
+<td><code>CONTRIBUTING.md</code></td>
+<td>How work gets into the repository (issues, branches, checks, pull requests, reviews) and the team agreement: roles, meetings, response times, disagreements.</td>
+<td>Repo root. Fill in the placeholders as a team in your first week and merge it through a pull request.</td>
+</tr>
+<tr class="odd">
+<td><code>docs/tasks.md</code></td>
+<td>Build steps S010, S020 …, each naming the R lines it serves and what it measures to show they hold.</td>
+<td>Use it to plan and split the work. Name the S ids in each pull request.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="getting-started-with-kiro" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="getting-started-with-kiro"><span class="header-section-number">3</span> Getting Started with Kiro</h2>
+<p>Kiro offers students a free year through <a href="https://kiro.dev/changelog/general/kiro-for-students/">Kiro for Students</a>, which allows:</p>
+<ul>
+<li>One year of free access to Kiro, both the IDE and the CLI, including spec-driven development.</li>
+<li>1,000 credits per month for 12 months.</li>
+<li>No credit card and no trial timer.</li>
+</ul>
+<section id="how-to-register" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="how-to-register"><span class="header-section-number">3.1</span> How to register</h3>
+<p>Full instructions: <a href="https://kiro.dev/students/#instructions">kiro.dev/students</a>.</p>
+<ol type="1">
+<li><strong>Sign up or log in.</strong> Go to <a href="https://kiro.dev/students/">kiro.dev/students</a> and sign in with <strong>AWS Builder ID</strong> (recommended) or <strong>GitHub</strong>. Google also works. Whichever you choose, the email on that account must be your <strong>UBC student email</strong>. If you already have a Kiro account, link your UBC email to it.
+<ul>
+<li>Do <strong>not</strong> use the “Your organization” sign-in option. The student program does not support it.</li>
+</ul></li>
+<li><strong>Verify your student status.</strong> After signing in, open your account usage page. Eligible accounts see a banner that says “You are eligible for Kiro Students”. Click verify and complete the SheerID check, which takes about a minute.</li>
+<li><strong>Start building.</strong> Once you are verified, you get 1,000 credits per month for one year.</li>
+</ol>
+<p>Credits do not roll over from month to month, and you cannot buy add-on credits under the student plan. After the year, your account drops to the Kiro free tier. Your code and specs stay in your repo. For help, use the student channel on the Kiro Discord.</p>
+<blockquote class="blockquote">
+<p>After you register, install the Kiro CLI or IDE and sign in with the same account.</p>
+</blockquote>
+</section>
+</section>
+<section id="setting-up-agents.md" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="setting-up-agents.md"><span class="header-section-number">4</span> Setting up AGENTS.md</h2>
+<section id="what-agents.md-is-for" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="what-agents.md-is-for"><span class="header-section-number">4.1</span> What AGENTS.md is for</h3>
+<p><code>AGENTS.md</code> is the instruction file for the coding assistant in your project. Kiro, Copilot CLI and Claude Code read it when a session starts. Claude Code reads it when the repository has no <code>CLAUDE.md</code>, from version 2.1.277; on an older version, update Claude Code. See <a href="https://code.claude.com/docs/en/memory#agents-md">AGENTS.md in the Claude Code docs</a>. It tells the assistant what it would otherwise have to guess:</p>
+<ul>
+<li><strong>What the project is:</strong> the project name, the team, the course, and the AWS lease and Region you work in.</li>
+<li><strong>Where the design lives:</strong> <code>docs/requirements.md</code>, <code>docs/design.md</code> and <code>docs/tasks.md</code> are the source of truth, and the file gives the id rules (R, D, P, S, Q) the assistant must follow when it edits them.</li>
+<li><strong>Where facts come from:</strong> the assistant searches the course MCP server before it states a number or a rule about AWS, Spark or file formats, and uses the AWS Knowledge MCP for AWS documentation.</li>
+<li><strong>How work is done:</strong> the review procedure, how to run the spec checker, how pull requests are written and attributed.</li>
+<li><strong>What is off limits:</strong> no committed credentials, no public buckets, no <code>"Action": "*"</code> or <code>"Resource": "*"</code>, and no hourly-billed resources or IAM changes without asking a person first.</li>
+</ul>
+<p>Think of it as the brief you would give a new teammate on day one. The assistant follows it in every session, so a wrong or missing value here shows up in everything it produces.</p>
+</section>
+<section id="instructions" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="instructions"><span class="header-section-number">4.2</span> Instructions</h3>
+<ol type="1">
+<li><p><strong>Open <code>AGENTS.md</code> in the repo root.</strong> The template ships with placeholders in angle brackets, <code>&lt;…&gt;</code>. Fill in the placeholders, and adapt the rules to your team. Change a rule only through a pull request the team agrees on.</p></li>
+<li><p><strong>Fill in the Project line.</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 40%">
+<col style="width: 24%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Placeholder</th>
+<th>What to write</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>&lt;project name&gt;</code></td>
+<td>A short name for your system</td>
+<td><code>TransitLens</code></td>
+</tr>
+<tr class="even">
+<td><code>&lt;one sentence: …&gt;</code></td>
+<td>What the system does and for whom</td>
+<td><code>Hourly ridership dashboards for city transit planners</code></td>
+</tr>
+<tr class="odd">
+<td><code>&lt;team-id&gt;</code></td>
+<td>Your team id: <code>t</code> and your team number</td>
+<td><code>t07</code> for <code>team_07</code></td>
+</tr>
+<tr class="even">
+<td><code>&lt;names&gt;</code></td>
+<td>Every team member’s name</td>
+<td><code>Ana Lee, Sam Roy</code></td>
+</tr>
+</tbody>
+</table></li>
+<li><p><strong>Fill in the AWS line</strong> once your team has its AWS lease. Until then, leave it and fill in the rest.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 40%">
+<col style="width: 24%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Placeholder</th>
+<th>What to write</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>&lt;team&gt;</code> (profile)</td>
+<td>The AWS CLI profile name for your group lease</td>
+<td><code>t00</code></td>
+</tr>
+<tr class="even">
+<td><code>&lt;amount&gt;</code></td>
+<td>The team’s budget for the term</td>
+<td><code>$20</code></td>
+</tr>
+</tbody>
+</table>
+<p>Do <strong>not</strong> add the 12-digit AWS account id anywhere. The assistant gets it from <code>aws sts get-caller-identity</code> when it needs it. Keep the Region as <code>ca-central-1</code>.</p></li>
+<li><p><strong>Fill in the Working on AWS section.</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 35%">
+<col style="width: 40%">
+<col style="width: 24%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Placeholder</th>
+<th>What to write</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>&lt;team&gt;</code> in <code>aws sso login --profile &lt;team&gt;</code></td>
+<td>The same profile name as above</td>
+<td><code>t00</code></td>
+</tr>
+<tr class="even">
+<td><code>&lt;team-id&gt;-</code></td>
+<td>The name prefix for every resource</td>
+<td><code>t00-</code></td>
+</tr>
+<tr class="odd">
+<td><code>Team=&lt;team-id&gt;, Owner=&lt;name&gt;</code></td>
+<td>The tags on every resource</td>
+<td><code>Team=t00, Owner=Ana Lee</code></td>
+</tr>
+<tr class="even">
+<td><code>&lt;date&gt;</code> (final teardown)</td>
+<td>The date every resource must be deleted by</td>
+<td><code>2026-12-15</code></td>
+</tr>
+</tbody>
+</table></li>
+<li><p><strong>Check that nothing is left</strong>, apart from the AWS line if your team has no lease yet. Search the file for the placeholders:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-n</span> <span class="at">-E</span> <span class="st">"&lt;(project name|one sentence|names|team|team-id|amount|date|name|URL)"</span> AGENTS.md</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p><strong>Commit through a pull request.</strong> <code>AGENTS.md</code> is shared by the whole team. Push the change on a branch and have another member approve it; no direct pushes to <code>main</code>.</p></li>
+</ol>
+</section>
+</section>
+<section id="setting-up-contributing.md" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="setting-up-contributing.md"><span class="header-section-number">5</span> Setting up CONTRIBUTING.md</h2>
+<p><code>CONTRIBUTING.md</code> is the same kind of file for the people on the team that <code>AGENTS.md</code> is for the assistants. The repository process and review rules are already written and match <code>AGENTS.md</code>. Your team fills in the project name, the test command, the link to your development guide, the places to ask questions, and every row of the Team agreement table.</p>
+<ol type="1">
+<li><strong>Meet as a team</strong> and go through the rows of the Team agreement table: roles, meetings, response time, working style, disagreements, sources, missed commitments. Write a sentence or two for each.</li>
+<li><strong>Adapt the rest of the file</strong> to your team, including the <code>&lt;…&gt;</code> placeholders: the title, the test command, the development guide link and Where to ask. If you have no tests or development guide yet, write “none yet” and fill them in when you build the first slice.</li>
+<li><strong>Commit through a pull request</strong> approved by someone other than its author. Every member reads it before it is merged.</li>
+</ol>
+</section>
+<section id="mcp-setup" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="mcp-setup"><span class="header-section-number">6</span> MCP Setup</h2>
+<p>If you use an assistant, connect it to two MCP servers:</p>
+<ul>
+<li>Course MCP Knowledge Base</li>
+<li>AWS Knowledge MCP</li>
+</ul>
+<p>You can find both in the <code>.mcp.json</code> example.</p>
+<p>Set the environment variable for the course MCP server. Your own token is in the issue “Your course MCP tokens” in your <code>team_NN</code> repository. Use only your own, and put this line in your shell profile, not in a file in the repository:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">KB_MCP_TOKEN</span><span class="op">=&lt;</span>TOKEN_FROM_INSTRUCTOR<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="ai-tool-setup" class="level3" data-number="6.1">
+<h3 data-number="6.1" class="anchored" data-anchor-id="ai-tool-setup"><span class="header-section-number">6.1</span> AI Tool Setup</h3>
+<section id="claude-code-setup" class="level4" data-number="6.1.1">
+<h4 data-number="6.1.1" class="anchored" data-anchor-id="claude-code-setup"><span class="header-section-number">6.1.1</span> Claude Code Setup</h4>
+<ol type="1">
+<li>Install Claude Code and sign in: <a href="https://code.claude.com/docs/en/quickstart">Claude Code quickstart</a>. Claude Code runs on your own Claude account or API key.</li>
+<li>Copy <code>.mcp.json.example</code> to <code>.mcp.json</code> in the repo root. Claude Code reads it directly. <code>.mcp.json</code> is ignored by git, so your token stays on your machine.</li>
+</ol>
+<p>Docs: <a href="https://code.claude.com/docs/en/mcp">Connect Claude Code to tools via MCP</a></p>
+<ul>
+<li>See <em>Installing MCP servers → Option 1: Add a remote HTTP server</em> for <code>claude mcp add --transport http …</code>.</li>
+<li>See <em>MCP installation scopes → Project scope (<code>.mcp.json</code>)</em>. Claude Code reads the project’s <code>.mcp.json</code> in the repo root directly.</li>
+</ul>
+</section>
+<section id="kiro-cli-setup" class="level4" data-number="6.1.2">
+<h4 data-number="6.1.2" class="anchored" data-anchor-id="kiro-cli-setup"><span class="header-section-number">6.1.2</span> Kiro CLI Setup</h4>
+<ol type="1">
+<li>Register with <a href="#getting-started-with-kiro">Kiro for Students</a>, then install the Kiro CLI or IDE: <a href="https://kiro.dev/docs/cli/">Kiro CLI docs</a>.</li>
+<li>Copy <code>.kiro/settings/mcp.json.example</code> to <code>.kiro/settings/mcp.json</code>. It holds the same two servers.</li>
+</ol>
+<p>Docs:</p>
+<ul>
+<li><a href="https://kiro.dev/docs/cli/mcp/">Kiro CLI: MCP overview</a></li>
+<li><a href="https://kiro.dev/docs/cli/mcp/configuration/">Kiro CLI: MCP configuration</a></li>
+</ul>
+<blockquote class="blockquote">
+<p>Kiro does not read <code>.mcp.json</code>. It reads <code>.kiro/settings/mcp.json</code> in the project, or <code>~/.kiro/settings/mcp.json</code> globally. Add servers with <code>kiro-cli mcp add</code> or by editing that file, which uses the same top-level <code>mcpServers</code> object. Remote servers take a <code>url</code> and optional <code>headers</code>.</p>
+</blockquote>
+</section>
+</section>
+<section id="testing-mcp-server-connection-tools" class="level3" data-number="6.2">
+<h3 data-number="6.2" class="anchored" data-anchor-id="testing-mcp-server-connection-tools"><span class="header-section-number">6.2</span> Testing MCP Server Connection &amp; Tools</h3>
+<p>Your <code>AGENTS.md</code> already tells your assistant when to use these sources. To make it more reliable, you could add explicit rules, for example: “If the task involves AWS costs, always check current pricing via the AWS Knowledge MCP server.”</p>
+<p>Generally, you can specifically ask an agent to use an MCP server and tool in a plain-language prompt. <strong>However, it’s also worth learning how to see which tools an MCP server exposes and how to tell the agent to call them directly.</strong></p>
+<section id="claude-code-call-a-specific-mcp-tool" class="level4" data-number="6.2.1">
+<h4 data-number="6.2.1" class="anchored" data-anchor-id="claude-code-call-a-specific-mcp-tool"><span class="header-section-number">6.2.1</span> Claude Code: call a specific MCP tool</h4>
+<p>You can check if you are connected and what tools are available:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> mcp list          <span class="co"># should show aws-knowledge: ✓ Connected</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span>                   <span class="co"># then run /mcp to see the tool names</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Run Claude Code headlessly and approve the AWS Knowledge server’s tools in advance:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> <span class="at">-p</span> <span class="st">"Use the aws-knowledge aws___search_documentation tool to find S3 bucket naming rules. Cite sources."</span> <span class="dt">\</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--allowedTools</span> <span class="st">"mcp__aws-knowledge"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>-p</code> runs a single prompt non-interactively and prints the response.</li>
+<li>Tools are named <code>mcp__&lt;server&gt;__&lt;tool&gt;</code>. <code>--allowedTools "mcp__aws-knowledge"</code> approves every tool from this server without asking. It does not stop the assistant from trying other tools.</li>
+<li>To allow a single tool, use its full name exactly as <code>/mcp</code> shows it, for example <code>mcp__aws-knowledge__search_documentation</code>. Some versions of the server add a prefix to tool names, so copy the name rather than guessing it.</li>
+</ul>
+</section>
+<section id="kiro-cli-call-a-specific-mcp-tool" class="level4" data-number="6.2.2">
+<h4 data-number="6.2.2" class="anchored" data-anchor-id="kiro-cli-call-a-specific-mcp-tool"><span class="header-section-number">6.2.2</span> Kiro CLI: call a specific MCP tool</h4>
+<p>You can check if you are connected and what tools are available:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">kiro-cli</span> mcp status      <span class="co"># or start kiro-cli and run /mcp or /tools</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Run Kiro CLI headlessly and approve only the AWS Knowledge search tool:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">kiro-cli</span> chat <span class="at">--no-interactive</span> <span class="at">--require-mcp-startup</span> <span class="dt">\</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--trust-tools</span><span class="op">=</span>@aws-knowledge/aws___search_documentation <span class="dt">\</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Use the aws-knowledge aws___search_documentation tool to find S3 bucket naming rules. Cite sources."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>--no-interactive</code> runs without a chat session and prints the first response.</li>
+<li><code>--trust-tools</code> approves the listed tools up front. The <code>@</code> prefix marks a tool as coming from an MCP server rather than a built-in tool (like <code>read</code> or <code>shell</code>): <code>@aws-knowledge/aws___search_documentation</code> means the <code>aws___search_documentation</code> tool from the server named <code>aws-knowledge</code> in <code>mcp.json</code>. Use <code>@aws-knowledge</code> alone to trust all of that server’s tools. Run <code>/tools</code> in an interactive session to see the exact names.</li>
+<li><code>--require-mcp-startup</code> exits with code 3 if an MCP server fails to start, so a broken setup fails loudly instead of answering from the model’s own knowledge.</li>
+</ul>
+</section>
+</section>
+</section>
+<section id="connecting-tasks-requirements-and-the-board" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="connecting-tasks-requirements-and-the-board"><span class="header-section-number">7</span> Connecting tasks, requirements and the board</h2>
+<p>Your assistant keeps three things linked: <code>docs/requirements.md</code> (the R lines), <code>docs/tasks.md</code> (the S rows, each citing the R lines it serves) and your GitHub Project board. The “Tasks and the project board” section of <code>AGENTS.md</code> holds the rules. For them to work, the assistant needs:</p>
+<ol type="1">
+<li><strong>Board link.</strong> Add its URL to <code>metadata/team.yml</code> in your course repository, as a line <code>board: &lt;URL&gt;</code>. Also put it in the “Project board” line of the Project section of <code>AGENTS.md</code>, so the assistant finds it in the repository it works in.</li>
+<li><strong>GitHub CLI with the project scope.</strong> Install <a href="https://cli.github.com/">GitHub CLI</a> and sign in with <code>gh auth login</code> on each host you use. The assistant creates issues and board items through <code>gh</code>. Add the project scope:
+<ul>
+<li>github.com: <code>gh auth refresh -h github.com -s project</code>;</li>
+<li>github.students: <code>gh auth refresh -h github.students.cs.ubc.ca -s project</code>, on a UBC network.</li>
+</ul></li>
+<li><strong>Permission to run <code>gh</code>.</strong> In Kiro CLI, trust the shell tool for the session, for example <code>kiro-cli chat --trust-tools=read,write,shell</code>. In Claude Code, allow <code>gh</code> commands when it asks.</li>
+</ol>
+<p>Test it at checkpoint 1, once your requirements and first tasks exist. Add one S row to <code>docs/tasks.md</code> with an empty Issue cell, and prompt:</p>
+<blockquote class="blockquote">
+<p>Read AGENTS.md. Sync docs/tasks.md to the project board.</p>
+</blockquote>
+<p><strong>It passes when</strong> the assistant creates one issue titled <code>S010: …</code> with the label <code>task</code>, adds it to the board as Todo, and opens a pull request that writes the issue number into the row. Run the same prompt again: it should report that everything is in sync and create nothing.</p>
+<p>The assistant never writes R lines to make a check pass. If a task needs an R line that does not exist, it stops and tells you.</p>
+</section>
+<section id="setup-testing" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="setup-testing"><span class="header-section-number">8</span> Setup Testing</h2>
+<p>You can test if you configured your MCP and <code>AGENTS.md</code> correctly by running this test:</p>
+<ol type="1">
+<li><p>Start your assistant (Claude Code or Kiro) in the repo folder.</p></li>
+<li><p>Check the status of your MCP servers.</p>
+<ol type="1">
+<li>For Kiro CLI, type <code>/mcp</code> to see every active server and tools</li>
+<li>For Claude Code CLI, use <code>claude mcp list</code>. This reports each server as connected, needs authentication, failed to connect, pending approval, rejected through <code>disabledMcpjsonServers</code>, or disabled for this project.</li>
+</ol></li>
+<li><p>Give the AI Agent this first prompt within the project root:</p>
+<blockquote class="blockquote">
+<p>Read AGENTS.md. Fetch the course start page and tell me what it offers.</p>
+</blockquote></li>
+<li><p>Watch which tools it calls.</p></li>
+</ol>
+<p>Run it with your own token, never another member’s. The course MCP server records each call under your token; you hand in nothing for it.</p>
+<p><strong>It passes when</strong> the assistant calls <code>get_kb_doc</code> on <code>436c-student/index.md</code> without you giving it the path, and then summarizes the course pages the start page lists. The path comes from <code>AGENTS.md</code>, so a pass shows that the assistant read the file and that it can reach the course server.</p>
+<p><strong>If it fails:</strong></p>
+<ul>
+<li><em>It does not call <code>get_kb_doc</code> at all:</em> the course server is not connected. Check that <code>.mcp.json</code> (Claude Code) or <code>.kiro/settings/mcp.json</code> (Kiro) exists, and that your token is set in your shell.</li>
+<li><em>It calls the tool but the call errors:</em> check the server URL and the token. Your token is in the issue “Your course MCP tokens” in your course repository.</li>
+<li><em>It asks you for the path, or guesses another one:</em> it did not read <code>AGENTS.md</code>. Check that the file is in the repo root and that you started the assistant from that folder.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

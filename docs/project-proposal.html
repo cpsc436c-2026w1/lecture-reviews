@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Setup and proposal – CPSC 436C companion</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-158031087360bce0ff56dc785ce39e06.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">CPSC 436C companion</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lecture-reviews" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Lecture reviews</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-lecture-reviews">    
+        <li>
+    <a class="dropdown-item" href="./index.html">
+ <span class="dropdown-text">All reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l1.html">
+ <span class="dropdown-text">L1: the four resources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l2.html">
+ <span class="dropdown-text">L2: EC2, S3 and Lambda</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l3.html">
+ <span class="dropdown-text">L3: cost models and what starts a function</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l4.html">
+ <span class="dropdown-text">L4: scaling up and out</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l5.html">
+ <span class="dropdown-text">L5: Spark on a cluster</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./w2-l6.html">
+ <span class="dropdown-text">L6: how Spark runs a query</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l10.html">
+ <span class="dropdown-text">L10: lakes, lakehouses and query engines</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l11.html">
+ <span class="dropdown-text">L11: assembling the lakehouse in Athena and Glue</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l12.html">
+ <span class="dropdown-text">L12: DynamoDB as OLTP storage, distributed database problems and properties</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l13.html">
+ <span class="dropdown-text">L13: netsplit and CAP, data latency (freshness)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l14.html">
+ <span class="dropdown-text">L14: message brokers, delivery guarantees and event-time windows</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l15.html">
+ <span class="dropdown-text">L15: generative AI in a data app</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l16.html">
+ <span class="dropdown-text">L16: principles of cloud design for a user-facing GenAI app</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./midterm-review.html">
+ <span class="dropdown-text">Midterm review</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutorials" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tutorials</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tutorials">    
+        <li>
+    <a class="dropdown-item" href="./tutorials.html">
+ <span class="dropdown-text">All tutorials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#emr-cluster">
+ <span class="dropdown-text">B2T1: Cluster/EMR</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#glue-part-a">
+ <span class="dropdown-text">B2T2 part A: Spark/Glue, how Spark reads files</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#glue-part-b">
+ <span class="dropdown-text">B2T2 part B: Spark/Glue, slow queries and their fixes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#b3-t1">
+ <span class="dropdown-text">B3T1: Lakehouse/Athena+Glue</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-project" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Project</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-project">    
+        <li>
+    <a class="dropdown-item" href="./project-start.html">
+ <span class="dropdown-text">Course project</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-proposal.html">
+ <span class="dropdown-text">Setup and proposal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-datasets.html">
+ <span class="dropdown-text">Project datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-experiments.html">
+ <span class="dropdown-text">Experiment examples</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-startup.html">
+ <span class="dropdown-text">Project setup</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-case-example.html">
+ <span class="dropdown-text">Proposal example</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-assignments" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Assignments</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-assignments">    
+        <li>
+    <a class="dropdown-item" href="https://cpsc436c-2026w1.github.io/a1-starter/">
+ <span class="dropdown-text">A1 starter</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://cpsc436c-2026w1.github.io/a2-starter/">
+ <span class="dropdown-text">A2 starter</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#checklist" id="toc-checklist" class="nav-link active" data-scroll-target="#checklist">Checklist</a></li>
+  <li><a href="#repository" id="toc-repository" class="nav-link" data-scroll-target="#repository">Your team repositories</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Course files</a></li>
+  <li><a href="#norms" id="toc-norms" class="nav-link" data-scroll-target="#norms">Collaboration norms</a></li>
+  <li><a href="#board" id="toc-board" class="nav-link" data-scroll-target="#board">Project board</a></li>
+  <li><a href="#aws" id="toc-aws" class="nav-link" data-scroll-target="#aws">AWS sandbox</a></li>
+  <li><a href="#choices" id="toc-choices" class="nav-link" data-scroll-target="#choices">Choices</a></li>
+  <li><a href="#proposal" id="toc-proposal" class="nav-link" data-scroll-target="#proposal">Proposal</a></li>
+  <li><a href="#experiments" id="toc-experiments" class="nav-link" data-scroll-target="#experiments">Experiments</a></li>
+  <li><a href="#hand-in" id="toc-hand-in" class="nav-link" data-scroll-target="#hand-in">Hand in</a></li>
+  <li><a href="#what-is-checked-at-the-tag" id="toc-what-is-checked-at-the-tag" class="nav-link" data-scroll-target="#what-is-checked-at-the-tag">What is checked at the tag</a></li>
+  <li><a href="#before-you-tag" id="toc-before-you-tag" class="nav-link" data-scroll-target="#before-you-tag">Before you tag</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Setup and proposal</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>In this stage, you set up your team’s repository and working norms, and hand in a proposal for your system. The proposal is due <strong>Friday 13 November, 23:59</strong>. You submit it as a <a href="https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/about-commits">commit</a> in your team repository, <a href="https://git-scm.com/book/en/v2/Git-Basics-Tagging">tagged</a> <code>proposal</code>.</p>
+<section id="checklist" class="level2">
+<h2 class="anchored" data-anchor-id="checklist">Checklist</h2>
+<ol type="1">
+<li><a href="#repository">Open your course repository and decide where you build</a>.</li>
+<li><a href="#setup">Merge the pull request “Course files: team rules and templates”</a>.</li>
+<li><a href="#board">Set up your project board and link it</a>.</li>
+<li><a href="#norms">Agree on your collaboration norms</a>.</li>
+<li><a href="#choices">Choose a dataset, a shape and extensions</a>.</li>
+<li><a href="#proposal">Write the proposal</a>.</li>
+<li><a href="#experiments">Write your experiments and link them from the proposal</a>.</li>
+<li><a href="#hand-in">Tag the proposal and push the tag</a>.</li>
+</ol>
+</section>
+<section id="repository" class="level2">
+<h2 class="anchored" data-anchor-id="repository">Your team repositories</h2>
+<section id="your-course-repository" class="level3">
+<h3 class="anchored" data-anchor-id="your-course-repository">Your course repository</h3>
+<p>Each team has its own private repository on github.students.cs.ubc.ca, the UBC GitHub for students: <code>CPSC436C-2026W-T1/team_NN</code>, where <code>NN</code> is your team number. Find it at <a href="https://github.students.cs.ubc.ca/CPSC436C-2026W-T1" class="uri">https://github.students.cs.ubc.ca/CPSC436C-2026W-T1</a>. The teaching team has already created it, and every member has write access. We call it your <strong>course repository</strong> on this page.</p>
+<p>Through your course repository, you communicate with us: your team’s metadata, any private data we need from your team, and all the links we need to check your submissions. Course files arrive there too, and you hand in there.</p>
+<p>github.students works only on UBC networks: on campus, or over the <a href="https://it.ubc.ca/services/email-voice-internet/myvpn">UBC VPN</a>. The <a href="./project-startup.html">setup page</a> shows how to sign in, add an SSH key and clone.</p>
+</section>
+<section id="where-you-build" class="level3">
+<h3 class="anchored" data-anchor-id="where-you-build">Where you build</h3>
+<p>You can build in your course repository, or in a repository of your own on github.com.</p>
+<p><strong>In your course repository.</strong> There are no server-side checks (GitHub Actions) on github.students. You will need to run all checks and tests on the client side, on your own machines. We will follow up with instructions on how to do that, and on how we test it. Cloud coding agents cannot reach github.students.</p>
+<p><strong>In a private repository on github.com.</strong> GitHub Actions work there, and cloud coding agents can reach it. A protected <code>main</code> branch in a private repository (our project requirement) needs GitHub Pro, which you can get for free with the <a href="https://education.github.com/pack">GitHub Student Developer Pack</a>. Only the team member who creates the repository needs it, but it is a good thing for everyone to have. If you build on github.com:</p>
+<ol type="1">
+<li><p>Start it from your course repository, after you merge the course files, so both share one history. One member runs, with the URL of a new, empty private repository on github.com:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone git@github.students.cs.ubc.ca:CPSC436C-2026W-T1/team_NN.git</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> team_NN</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote rename origin course</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> remote add origin <span class="op">&lt;</span>URL of your github.com repository<span class="op">&gt;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push <span class="at">-u</span> origin main</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The others clone the github.com repository and add the <code>course</code> remote with <code>git remote add course git@github.students.cs.ubc.ca:CPSC436C-2026W-T1/team_NN.git</code>.</p></li>
+<li><p>Keep the repository private, and add my account, <code>ilyamusabirov</code>, as a collaborator. We use it to open issues and pull requests, and to check your GitHub Actions setup. If the repository belongs to an organization, give my account the Write role.</p></li>
+<li><p>In your course repository, open, review and merge a pull request that puts your github.com repository link in <code>metadata/team.yml</code> as <code>github_repo</code>.</p></li>
+<li><p>Each member adds their own github.com login next to their CWL in <code>metadata/members.yml</code> in your course repository, in a pull request they open themselves. Another member reviews and merges it. That pull request links your CWL to your login.</p></li>
+<li><p>Before every submission, push the tagged commit to your course repository, as in <a href="#hand-in">Hand in</a>.</p></li>
+</ol>
+</section>
+</section>
+<section id="setup" class="level2">
+<h2 class="anchored" data-anchor-id="setup">Course files</h2>
+<p>During the project, we add templates, files and support for you. They arrive as pull requests in your course repository. Review and merge each one like any other pull request. If you build on github.com, bring each merged change into that repository too, through a pull request:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> fetch course</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> switch <span class="at">-c</span> course-files origin/main</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> merge course/main</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push <span class="at">-u</span> origin course-files</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then open, review and merge the pull request from <code>course-files</code> on github.com.</p>
+<p>The first pull request is “Course files: team rules and templates”, from branch <code>course/setup</code>. It gives you the templates that help you write the proposal and the design: <code>AGENTS.md</code>, <code>CONTRIBUTING.md</code>, <code>experiments/TEMPLATE.md</code>, the <code>docs/</code> templates for the proposal, requirements, design and tasks, and the MCP configuration examples for Claude Code and Kiro.</p>
+</section>
+<section id="norms" class="level2">
+<h2 class="anchored" data-anchor-id="norms">Collaboration norms</h2>
+<p>Two norms are enforced for every team:</p>
+<ol type="1">
+<li><strong>GitHub flow.</strong> Every change goes in by pull request, approved by someone other than its author. This is <a href="https://docs.github.com/en/get-started/using-github/github-flow">GitHub flow</a>. <code>main</code> in your course repository is already protected this way; if you build on github.com, protect <code>main</code> there too, with a <a href="https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-protected-branches/about-protected-branches">branch protection rule</a> that requires a pull request with one approval. Staff feedback arrives as issues labelled <code>staff-feedback</code>; close each one with the pull request that fixes it.</li>
+<li><strong>Course MCP.</strong> If you use an assistant, connect it to the course MCP server and pass the test on the <a href="./project-startup.html#setup-testing">setup page</a>. We suggest Kiro, developed by Amazon: students get a free year through <a href="./project-startup.html#getting-started-with-kiro">Kiro for Students</a>. You can also use your own agent, for example Claude Code.</li>
+</ol>
+<p>Setting up a team environment in which members using different agents work together effectively is one of the project’s evaluated goals: the same <code>AGENTS.md</code>, the same course MCP, the same rules for pull requests and reviews, whichever agent each member uses.</p>
+<p>Everything else, your team decides. Hold one meeting with <strong>all members present</strong>, then adapt the two templates to your team. Change them to fit how your team works.</p>
+<ul>
+<li><p><strong>Adapt <code>CONTRIBUTING.md</code>.</strong> It defines how your team works. Discuss your principles and rules for collaboration, and write the answers in its Team agreement section, one row per item:</p>
+<ul>
+<li>Roles: will you define roles for each member? Who owns which part, and who keeps the board current?</li>
+<li>Meetings: when do you meet, and how often? How do you record decisions?</li>
+<li>Response time: how quickly do you answer each other, give updates on work, and ask for help?</li>
+<li>Working style: do you work alone or together, at the same time or not? How do you hand work over?</li>
+<li>Disagreements: if you disagree, how do you settle it?</li>
+<li>Sources: which sources of information do you use: the course MCP server, AWS documentation, your own measurements?</li>
+<li>Missed commitments: what does someone do when they cannot finish their part, and how early do they say so?</li>
+</ul>
+<p>Then adapt the rest of the file: how work gets in (branches, one main change per pull request, commit messages, reviews), how you synchronise your work and your release cycle, what tests run before a pull request, and how you use generative AI (which tools, who uses them and for what, how AI-assisted work is marked in commits and pull requests, and how a person checks it before review). The whole team may be held responsible for misuse.</p></li>
+<li><p><strong>Adapt <code>AGENTS.md</code>.</strong> It is the brief your assistants read at the start of every session (see <a href="https://agents.md/">agents.md</a>). The template has these sections, and the <a href="./project-startup.html#setting-up-agents.md">setup page</a> walks through each:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 70%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Section</th>
+<th>What it tells the assistant</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Project</td>
+<td>the project name, the team, your AWS lease and region</td>
+</tr>
+<tr class="even">
+<td>Our documents</td>
+<td>that <code>docs/requirements.md</code>, <code>docs/design.md</code> and <code>docs/tasks.md</code> are the source of truth, and the id rules</td>
+</tr>
+<tr class="odd">
+<td>Tasks and the project board</td>
+<td>that <code>docs/tasks.md</code> is the source of truth, how S rows cite R lines, and how the board mirrors them</td>
+</tr>
+<tr class="even">
+<td>Course knowledge (MCP)</td>
+<td>to search the course MCP server before stating a number or a rule</td>
+</tr>
+<tr class="odd">
+<td>Reviews</td>
+<td>how it reviews a change</td>
+</tr>
+<tr class="even">
+<td>Working on AWS</td>
+<td>the profile, the name prefix and tags, and the teardown date</td>
+</tr>
+<tr class="odd">
+<td>Pull requests and attribution</td>
+<td>how pull requests are written, and how AI help is attributed</td>
+</tr>
+<tr class="even">
+<td>Boundaries</td>
+<td>what it must never do: commit credentials, open public buckets, use <code>*</code> in IAM, start hourly-billed resources without asking</td>
+</tr>
+</tbody>
+</table>
+<p>Adapt it with your team’s choices. If you do not use an assistant, keep the file for the day you do. Keeping <code>docs/tasks.md</code>, your requirements and the board linked comes at checkpoint 1; the <a href="./project-startup.html#connecting-tasks-requirements-and-the-board">setup page</a> shows how.</p></li>
+</ul>
+</section>
+<section id="board" class="level2">
+<h2 class="anchored" data-anchor-id="board">Project board</h2>
+<ol type="1">
+<li>Set up a <a href="https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects">GitHub Project</a> for your team, next to the repository where you build: your course repository, or your github.com repository.</li>
+<li>Make it visible to the teaching team. On github.students, open the project’s settings, choose Manage access, and give the <code>staff</code> team the Read role. On github.com, add my account, <code>ilyamusabirov</code>, with the Read role in the same place.</li>
+<li>In your course repository, open, review and merge a pull request that adds the project link to <code>metadata/team.yml</code> as <code>board</code>.</li>
+</ol>
+</section>
+<section id="aws" class="level2">
+<h2 class="anchored" data-anchor-id="aws">AWS sandbox</h2>
+<p>You do not need to do anything with AWS for the proposal. Your team gets a sandboxed AWS account, a group lease, once team leases are provisioned, early in the week of November 9. Until then, start nothing in your own AWS accounts.</p>
+</section>
+<section id="choices" class="level2">
+<h2 class="anchored" data-anchor-id="choices">Choices</h2>
+<p><strong>Dataset.</strong> Choose one of the six, or propose your own (email the instructor early). For five of them, we give you a small sample to speed up your data exploration for the proposal, readable once your team lease arrives. <a href="./project-datasets.html">Project datasets</a> describes each one: its original data, what is in it, and what your design has to deal with.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 46%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Dataset</th>
+<th>What it is</th>
+<th>Preview</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="https://registry.opendata.aws/noaa-ghcn/">NOAA GHCN-Daily</a></td>
+<td>daily weather observations from stations around the world</td>
+<td>Canada from 2015</td>
+</tr>
+<tr class="even">
+<td><a href="https://registry.opendata.aws/cmsdesynpuf-omop/">CMS DE-SynPUF in OMOP</a></td>
+<td>synthetic patients: visits, diagnoses, drugs; 100,000 persons, 2008 to 2010</td>
+<td>the 100,000-person set as Parquet, with a label table for diagnosis and procedure codes</td>
+</tr>
+<tr class="odd">
+<td><a href="https://openalex.org">OpenAlex</a></td>
+<td>scholarly works, authors and institutions</td>
+<td>one topic, 2015 to 2025: 86,024 works, 75% with an abstract</td>
+</tr>
+<tr class="even">
+<td><a href="https://overturemaps.org">Overture Maps</a> and <a href="https://opendata.vancouver.ca">City of Vancouver open data</a></td>
+<td>places, local areas and business licences</td>
+<td>Vancouver places, local areas and business licences</td>
+</tr>
+<tr class="odd">
+<td><a href="https://world.openfoodfacts.org">Open Food Facts</a></td>
+<td>a food product catalogue with categories and nutrition</td>
+<td>Canadian products without ingredients text, and Statistics Canada retail prices</td>
+</tr>
+<tr class="even">
+<td><a href="https://www.gdeltproject.org">GDELT 2.0</a></td>
+<td>world news events, updated every 15 minutes</td>
+<td>no preview: you read the live feed, with the course’s GDELT pipeline as a recipe</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Shape.</strong> Lakehouse first, operational first, or generative AI first, as described on the <a href="./project-start.html">course project</a> page.</p>
+<p><strong>Extensions.</strong> Every team chooses extensions worth 2 points: one 2-point extension, or two 1-point extensions from any groups. A team of 6 chooses one more 1-point extension. Each extension adds one feature to your system, and you measure how well it works.</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Extensions to choose from">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Extensions to choose from
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Data, 2 points</strong></p>
+<ul>
+<li><strong>Streaming ingestion.</strong> Updates go into your stores as they arrive, not in batches. You measure how long an update takes to land.</li>
+<li><strong>Windowed aggregates over the stream.</strong> Your system computes counts or averages over time windows, for example every 5 minutes, as updates arrive. It handles updates that arrive late.</li>
+<li><strong>Change data capture to the lake.</strong> Every change in DynamoDB reaches the lake by itself, through DynamoDB’s change stream. You measure how long a change takes to land, and an alarm fires when changes stop arriving.</li>
+<li><strong>Concurrency correctness.</strong> When two users change the same item at the same moment, your system accepts one change and rejects the other. A test that races two clients shows it.</li>
+</ul>
+<p><strong>Generative AI, 2 points</strong></p>
+<ul>
+<li><strong>Chat on the dashboard</strong> (lakehouse first or operational first). Users ask questions in plain language and get answers from your data.</li>
+<li><strong>Hybrid retrieval with an eval.</strong> Your system finds source text in two ways, word matching and embeddings, and combines them. You measure how often it finds the right source. It needs text in your dataset.</li>
+<li><strong>Agent with tools under controlled autonomy.</strong> An assistant completes a task by calling your system’s tools. It can call only the tools you list, within limits you set on what it may do without asking.</li>
+<li><strong>LLM eval matrix.</strong> Your evaluation script runs models, prompts or settings on the same questions with known answers. It reports accuracy and cost for each.</li>
+<li><strong>Second provider with measured failover.</strong> When the course model fails, requests switch to a second provider. You measure how long the switch takes.</li>
+<li><strong>Model routing, cheap model first.</strong> Each question goes to a small model first, and to a larger one only when needed. You measure cost and accuracy.</li>
+</ul>
+<p><strong>Infrastructure and testing, 2 points</strong></p>
+<ul>
+<li><strong>Dashboard as an ECS service behind a load balancer.</strong> Your dashboard runs in containers on Amazon ECS, with a load balancer sharing out requests.</li>
+<li><strong>Own checks against the deployed system.</strong> Your user scenarios run on a schedule against your deployed system, from a Lambda or Fargate runner, and report failures.</li>
+<li><strong>Full infrastructure as code with timed restore.</strong> Your whole system is created and torn down from code. You measure how long a rebuild takes.</li>
+<li><strong>Automated load test with a fix</strong> (operational first only). A script drives your API at a fixed rate, and you measure where it starts to fail. You change the part that fails first and run the test again.</li>
+</ul>
+<p><strong>Data, 1 point</strong></p>
+<ul>
+<li><strong>Fan-out to several consumers.</strong> Each update goes to a topic that two or more consumers read, and one of them feeds the dashboard. A stopped consumer does not hold up the others.</li>
+<li><strong>Lag monitoring for the lake.</strong> Your export records when each change happened in DynamoDB and when it became queryable in the lake. An alarm fires when the lag passes your limit, and the dashboard shows when its data was last updated.</li>
+<li><strong>Lakehouse maintenance on a schedule.</strong> A schedule compacts your Iceberg tables and expires old snapshots. You measure data scanned and run time before and after.</li>
+<li><strong>Iceberg rollback or schema evolution.</strong> Your system implements undoing an incorrect data load, or transparently supports changes to a table’s schema. Queries written before the change still return the right results.</li>
+<li><strong>Cached aggregates against direct Athena.</strong> The dashboard reads totals from a cache instead of querying Athena each time. You measure latency, data scanned and the age of the cached data.</li>
+</ul>
+<p><strong>Generative AI, 1 point</strong> (your system needs an assistant)</p>
+<ul>
+<li><strong>Answer or retrieval cache.</strong> A repeated question gets a stored result instead of a new model call. Results you mark as never cached are always computed again.</li>
+<li><strong>Guardrails with a red-team log.</strong> Checks on input and output stop requests you do not allow. You run attack prompts and normal questions, and count what got through and what was wrongly refused.</li>
+<li><strong>Trace analysis and alarms.</strong> The traces link every model and tool call of one request. Alarms fire on errors, slow answers and daily cost.</li>
+</ul>
+<p><strong>Infrastructure and testing, 1 point</strong></p>
+<ul>
+<li><strong>CI test matrix.</strong> Your tests run in continuous integration over several data sizes and variations. It needs GitHub Actions, so a github.com repository.</li>
+<li><strong>Contribution gates for people and agents.</strong> Automatic checks fail a pull request that breaks your rules, for example one that changes requirements and code together. It needs GitHub Actions.</li>
+<li><strong>Agent resources kept current.</strong> Automatic checks compare your assistants’ instructions and context files with the system as it changes. It needs GitHub Actions.</li>
+<li><strong>MCP server for your system.</strong> Assistants can query your system through the Model Context Protocol.</li>
+<li><strong>Automated load test</strong> (lakehouse first or generative AI first). A script drives your system at a fixed rate, and you measure where it starts to fail.</li>
+<li><strong>Failure injection.</strong> When a part the dashboard depends on is unavailable, the dashboard keeps answering and says what is missing. A command switches that part off for a set time to show it.</li>
+</ul>
+<p><strong>Pairs you cannot combine</strong></p>
+<ul>
+<li>Streaming ingestion and fan-out.</li>
+<li>Change data capture and lag monitoring for the lake.</li>
+<li>Dashboard as an ECS service and automated load test, unless the load test targets another part.</li>
+<li>Second provider and model routing.</li>
+<li>Contribution gates and agent resources kept current.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="proposal" class="level2">
+<h2 class="anchored" data-anchor-id="proposal">Proposal</h2>
+<p>Write the proposal in <code>docs/proposal.md</code>, which the course files give you with these sections as headings. It has no full requirements yet. The <a href="./project-case-example.html">proposal example</a> shows all seven sections for the L8 transit case, for a team of 6.</p>
+<ol type="1">
+<li><p><strong>Business case.</strong> What your system does, for whom, and the data it works with, in a few paragraphs. Answer these first:</p>
+<ul>
+<li>What does your system do, and why, in 3 sentences or fewer?</li>
+<li>When and why would an organisation use it?</li>
+</ul></li>
+<li><p><strong>Job stories.</strong> Start with one concrete example of use, and say who the users are: are they technical, and will they roughly understand where the numbers come from? Then write one job story per user, numbered JS01, JS02 …, as “When …, I want …, so that …”, with how often and how much: for example “every day by 07:00”, “within a second”. Choose 1 or 2 to focus on, by number, and say which needs each stands for, for example operational or analytical. They decide what users see, your first slice, and the scenarios other teams will test.</p></li>
+<li><p><strong>Project shape and extensions.</strong> Name them, and say in one or two sentences why they fit your case.</p></li>
+<li><p><strong>Data and workflows.</strong> Name your dataset and the subset your system works with: which part of the original data (years, places, topics), with its size in rows and GB. Choose the subset by exploring the original data, for example with DuckDB over S3, as in <a href="./project-datasets.html#explore">Explore the original data</a>. Then describe your data in 1 or 2 paragraphs that answer the questions below. We use your numbers to generate the live updates for your system, so they set the load it has to handle. Take each number from your dataset where it has one. Where it does not, give your own estimate and say so.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Id</th>
+<th>Question</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>DQ01</td>
+<td>What kinds of things does your system track, and how many of each?</td>
+</tr>
+<tr class="even">
+<td>DQ02</td>
+<td>What produces each kind of update, and how often?</td>
+</tr>
+<tr class="odd">
+<td>DQ03</td>
+<td>What fields does each kind of update have?</td>
+</tr>
+<tr class="even">
+<td>DQ04</td>
+<td>Which events do updates trigger, and under what conditions?</td>
+</tr>
+<tr class="odd">
+<td>DQ05</td>
+<td>What share of updates arrive late, arrive twice, or never arrive?</td>
+</tr>
+<tr class="even">
+<td>DQ06</td>
+<td>What do your users count, grouped by what, and over what time?</td>
+</tr>
+<tr class="odd">
+<td>DQ07</td>
+<td>Which stream carries each kind of update or event, and what reads it?</td>
+</tr>
+<tr class="even">
+<td>DQ08</td>
+<td>What time period does the simulated run cover, and how long does it last?</td>
+</tr>
+</tbody>
+</table>
+<p>Then describe in 2 or 3 paragraphs how data gets to each user you focus on, starting from your shape: what starts each step, and where each step’s output lives. Say which part you expect to cost the most. The course’s guiding questions from L8 and L9 help:</p>
+<ul>
+<li>Data and readers: who reads each result, and is it operational (answers someone now) or analytical (looks back over time)? Which questions are asked, how often, over how much data? Does new data arrive appended, in batches, or updated in place?</li>
+<li>Load and cost: is the load steady, bursty or rare? What does the system cost when nothing happens?</li>
+<li>Storage: where does the data live after each step, and does it outlive the compute that made it? Do you keep the raw data, and for how long?</li>
+<li>Team: how much of this does your team want to run itself?</li>
+</ul></li>
+<li><p><strong>Architecture sketch.</strong> Draw it with any tool, commit the image in <code>docs/</code>, and show it in section 5. You may use the <a href="https://c4model.com/">C4 model</a> to structure it. The sketch shows:</p>
+<ul>
+<li>what starts each step (a schedule, an upload, a request), drawn differently from data flow, for example dotted arrows for triggers and solid arrows for data;</li>
+<li>where each step’s output lives after the step finishes;</li>
+<li>each consumer, and which data it reads.</li>
+</ul></li>
+<li><p><strong>Experiments.</strong> A link to each experiment file in <code>experiments/</code>, with its question in one line.</p></li>
+<li><p><strong>User interaction points.</strong> A short plan for the dashboard, and for the API or chat if your shape has one.</p></li>
+</ol>
+</section>
+<section id="experiments" class="level2">
+<h2 class="anchored" data-anchor-id="experiments">Experiments</h2>
+<p><code>experiments/TEMPLATE.md</code> arrives with the course files. It has eight sections:</p>
+<ol type="1">
+<li>Question</li>
+<li>Design alternatives</li>
+<li>Overall evaluation criterion and guardrails</li>
+<li>Experiment setup: what stays the same for both alternatives, and the test cases the experiment runs on</li>
+<li>Prediction</li>
+<li>Method</li>
+<li>Result</li>
+<li>What you conclude</li>
+</ol>
+<p>For the proposal, come up with 3 experiments. In the feedback on your proposal, we help you choose which of them to run.</p>
+<ol type="1">
+<li>Copy <code>experiments/TEMPLATE.md</code> once for each experiment, for example as <code>experiments/export-format.md</code>.</li>
+<li>Fill in sections 1 to 6, up to and including Method. <a href="./project-experiments.html">Experiment examples</a> shows two filled in: a data-layout experiment and an assistant evaluated with Inspect AI over a set of questions.</li>
+<li>Commit the file before you run anything. You run nothing for the proposal: the commands in Method are the ones you plan to run. Sections 7 and 8 come after the run.</li>
+<li>Link each experiment file from section 6 of <code>docs/proposal.md</code>.</li>
+</ol>
+</section>
+<section id="hand-in" class="level2">
+<h2 class="anchored" data-anchor-id="hand-in">Hand in</h2>
+<ol type="1">
+<li>Merge your proposal pull requests into <code>main</code> where you build.</li>
+<li>On the commit you hand in, create the tag: <code>git tag proposal</code>.</li>
+<li>Push the tag:
+<ul>
+<li>if you build in your course repository: <code>git push origin proposal</code>;</li>
+<li>if you build on github.com: <code>git push course proposal</code>, with the course remote you added in <a href="#setup">Course files</a>. A tag carries its commit with it, so you do not push <code>main</code>.</li>
+</ul></li>
+<li>Check that the <code>proposal</code> tag shows in your course repository. The teaching team reads your work there, at the tag.</li>
+</ol>
+</section>
+<section id="what-is-checked-at-the-tag" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-checked-at-the-tag">What is checked at the tag</h2>
+<p>The teaching team reads your hand-in in your course repository: the files at the commit tagged <code>proposal</code>, and the two <code>metadata/</code> files on <code>main</code>.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 78%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Item</th>
+<th>Done when</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Course files</td>
+<td>The teaching team’s pull request “Course files: team rules and templates” (branch <code>course/setup</code>) is merged.</td>
+</tr>
+<tr class="even">
+<td><code>CONTRIBUTING.md</code></td>
+<td>Changed from the template for your team. The Team agreement section answers every question. It states your norms on generative AI and on testing. A TA reads it.</td>
+</tr>
+<tr class="odd">
+<td><code>AGENTS.md</code></td>
+<td>Changed from the template for your team, with no placeholder left apart from the AWS line. A TA reads it.</td>
+</tr>
+<tr class="even">
+<td>Both files</td>
+<td>The changes went in through a pull request approved by someone other than its author.</td>
+</tr>
+<tr class="odd">
+<td>Assistant</td>
+<td>Each member who uses an assistant has run the test in <a href="./project-startup.html#setup-testing">Setup Testing</a> with their own token. The course MCP server logs the call under that token, so you hand in nothing for it.</td>
+</tr>
+<tr class="even">
+<td>github.com repository</td>
+<td>If you build on github.com: the URL of your github.com repository is added to <code>metadata/team.yml</code> as <code>github_repo</code>; my account <code>ilyamusabirov</code> is a collaborator on it; <code>metadata/members.yml</code> has each member’s github.com login, each added in a pull request that member opened.</td>
+</tr>
+<tr class="odd">
+<td>Project board</td>
+<td>The URL of your project board is added to <code>metadata/team.yml</code> as <code>board</code>.</td>
+</tr>
+<tr class="even">
+<td>Proposal</td>
+<td><code>docs/proposal.md</code> has sections 1 to 7 from <a href="#proposal">Proposal</a>. Section 3 names extensions worth 2 points (3 for a team of 6). Section 4 names your subset with its rows and GB, and answers DQ01 to DQ08.</td>
+</tr>
+<tr class="odd">
+<td>Experiments</td>
+<td><code>experiments/</code> has 3 copies of <code>experiments/TEMPLATE.md</code>, each linked from <code>docs/proposal.md</code>. In each, sections 1 to 6 are filled in.</td>
+</tr>
+<tr class="even">
+<td>Workflow</td>
+<td>Every change to <code>main</code> went in through a pull request approved by someone other than its author.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="before-you-tag" class="level2">
+<h2 class="anchored" data-anchor-id="before-you-tag">Before you tag</h2>
+<ul>
+<li><label><input type="checkbox">The pull request “Course files: team rules and templates” is merged in your course repository.</label></li>
+<li><label><input type="checkbox"><code>CONTRIBUTING.md</code> is changed for your team.</label></li>
+<li><label><input type="checkbox">Every Team agreement question in <code>CONTRIBUTING.md</code> is answered.</label></li>
+<li><label><input type="checkbox"><code>CONTRIBUTING.md</code> states your norms on generative AI.</label></li>
+<li><label><input type="checkbox"><code>CONTRIBUTING.md</code> states your norms on testing.</label></li>
+<li><label><input type="checkbox"><code>AGENTS.md</code> is changed for your team.</label></li>
+<li><label><input type="checkbox">The <code>CONTRIBUTING.md</code> change was merged through a reviewed pull request.</label></li>
+<li><label><input type="checkbox">The <code>AGENTS.md</code> change was merged through a reviewed pull request.</label></li>
+<li><label><input type="checkbox">Each member who uses an assistant has passed the setup test with their own token.</label></li>
+<li>If you build on github.com:
+<ul class="task-list">
+<li><label><input type="checkbox">The URL of your github.com repository is added to <code>metadata/team.yml</code> as <code>github_repo</code>.</label></li>
+<li><label><input type="checkbox">My account <code>ilyamusabirov</code> is a collaborator on your github.com repository.</label></li>
+<li><label><input type="checkbox">Every member’s login is in <code>metadata/members.yml</code>, added in a pull request that member opened.</label></li>
+</ul></li>
+<li><label><input type="checkbox">The URL of your project board is added to <code>metadata/team.yml</code> as <code>board</code>.</label></li>
+<li><label><input type="checkbox"><code>docs/proposal.md</code> has sections 1 to 7.</label></li>
+<li><label><input type="checkbox">Section 3 names extensions worth 2 points (3 for a team of 6).</label></li>
+<li><label><input type="checkbox">Section 4 names your subset with its rows and GB.</label></li>
+<li><label><input type="checkbox">Section 4 answers DQ01 to DQ08.</label></li>
+<li><label><input type="checkbox"><code>experiments/</code> has 3 experiment files.</label></li>
+<li><label><input type="checkbox">Each experiment file is linked from section 6 of <code>docs/proposal.md</code>.</label></li>
+<li><label><input type="checkbox">Each experiment file has sections 1 to 6 filled in.</label></li>
+<li><label><input type="checkbox">The architecture sketch is in <code>docs/</code> and shown in section 5.</label></li>
+<li><label><input type="checkbox">Every change reached <code>main</code> through a pull request approved by someone other than its author.</label></li>
+<li><label><input type="checkbox">The teaching team can open your project board.</label></li>
+<li><label><input type="checkbox"><code>AGENTS.md</code> has no placeholder left, apart from the AWS line.</label></li>
+</ul>
+<p><strong>After you push the tag:</strong></p>
+<ul class="task-list">
+<li><label><input type="checkbox">The <code>proposal</code> tag shows in your course repository.</label></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

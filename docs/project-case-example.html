@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Proposal example: the transit case – CPSC 436C companion</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-158031087360bce0ff56dc785ce39e06.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">CPSC 436C companion</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lecture-reviews" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Lecture reviews</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-lecture-reviews">    
+        <li>
+    <a class="dropdown-item" href="./index.html">
+ <span class="dropdown-text">All reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l1.html">
+ <span class="dropdown-text">L1: the four resources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l2.html">
+ <span class="dropdown-text">L2: EC2, S3 and Lambda</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l3.html">
+ <span class="dropdown-text">L3: cost models and what starts a function</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l4.html">
+ <span class="dropdown-text">L4: scaling up and out</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l5.html">
+ <span class="dropdown-text">L5: Spark on a cluster</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./w2-l6.html">
+ <span class="dropdown-text">L6: how Spark runs a query</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l10.html">
+ <span class="dropdown-text">L10: lakes, lakehouses and query engines</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l11.html">
+ <span class="dropdown-text">L11: assembling the lakehouse in Athena and Glue</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l12.html">
+ <span class="dropdown-text">L12: DynamoDB as OLTP storage, distributed database problems and properties</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l13.html">
+ <span class="dropdown-text">L13: netsplit and CAP, data latency (freshness)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l14.html">
+ <span class="dropdown-text">L14: message brokers, delivery guarantees and event-time windows</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l15.html">
+ <span class="dropdown-text">L15: generative AI in a data app</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l16.html">
+ <span class="dropdown-text">L16: principles of cloud design for a user-facing GenAI app</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./midterm-review.html">
+ <span class="dropdown-text">Midterm review</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutorials" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tutorials</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tutorials">    
+        <li>
+    <a class="dropdown-item" href="./tutorials.html">
+ <span class="dropdown-text">All tutorials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#emr-cluster">
+ <span class="dropdown-text">B2T1: Cluster/EMR</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#glue-part-a">
+ <span class="dropdown-text">B2T2 part A: Spark/Glue, how Spark reads files</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#glue-part-b">
+ <span class="dropdown-text">B2T2 part B: Spark/Glue, slow queries and their fixes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#b3-t1">
+ <span class="dropdown-text">B3T1: Lakehouse/Athena+Glue</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-project" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Project</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-project">    
+        <li>
+    <a class="dropdown-item" href="./project-start.html">
+ <span class="dropdown-text">Course project</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-proposal.html">
+ <span class="dropdown-text">Setup and proposal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-datasets.html">
+ <span class="dropdown-text">Project datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-experiments.html">
+ <span class="dropdown-text">Experiment examples</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-startup.html">
+ <span class="dropdown-text">Project setup</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-case-example.html">
+ <span class="dropdown-text">Proposal example</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-assignments" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Assignments</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-assignments">    
+        <li>
+    <a class="dropdown-item" href="https://cpsc436c-2026w1.github.io/a1-starter/">
+ <span class="dropdown-text">A1 starter</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://cpsc436c-2026w1.github.io/a2-starter/">
+ <span class="dropdown-text">A2 starter</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#business-case" id="toc-business-case" class="nav-link active" data-scroll-target="#business-case">1. Business case</a></li>
+  <li><a href="#job-stories" id="toc-job-stories" class="nav-link" data-scroll-target="#job-stories">2. Job stories</a></li>
+  <li><a href="#project-shape-and-extensions" id="toc-project-shape-and-extensions" class="nav-link" data-scroll-target="#project-shape-and-extensions">3. Project shape and extensions</a></li>
+  <li><a href="#data-and-workflows" id="toc-data-and-workflows" class="nav-link" data-scroll-target="#data-and-workflows">4. Data and workflows</a></li>
+  <li><a href="#architecture-sketch" id="toc-architecture-sketch" class="nav-link" data-scroll-target="#architecture-sketch">5. Architecture sketch</a></li>
+  <li><a href="#experiments" id="toc-experiments" class="nav-link" data-scroll-target="#experiments">6. Experiments</a></li>
+  <li><a href="#user-interaction-points" id="toc-user-interaction-points" class="nav-link" data-scroll-target="#user-interaction-points">7. User interaction points</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Proposal example: the transit case</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<style>td, th { overflow-wrap: break-word; hyphens: auto; }</style>
+<p>This page shows a proposal for the transit case from the L8 studio, in its scaled-up form (Part 2), written by a team of 6. It covers all seven proposal sections. The studio case is a scenario, so where a real team would report what it found in its dataset, this example uses the scenario’s facts. Use the page as a model for the shape: your own case will have different users and different data.</p>
+<section id="business-case" class="level2">
+<h2 class="anchored" data-anchor-id="business-case">1. Business case</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="About this section">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>About this section
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Say what your system does, for whom, and with what data, in a few paragraphs. The needs of each user, with how often and how much, go in the job stories.</p>
+</div>
+</div>
+<p>A year after a city’s pilot, the provincial transit authority takes the bus-data system over for all 15 transit agencies in the province. The system keeps every bus’s position reports, compares them with each agency’s timetable, and answers questions about delay: for agency managers each morning, for planners over months, for a data scientist’s weekly arrival-time model, and for riders right now. The authority’s data team is four people. The budget ceiling is about $1,500 a month.</p>
+<p>The data: position reports from about 4,000 buses on about 1,000 routes, every 30 seconds while a bus runs; each agency’s timetable, every version kept; and a live feed per agency of where its buses are now. Two years of records are kept.</p>
+</section>
+<section id="job-stories" class="level2">
+<h2 class="anchored" data-anchor-id="job-stories">2. Job stories</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="About this section">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>About this section
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A job story says what a user is doing when they need the system, what they want from it, and why. Write each one as three parts:</p>
+<blockquote class="blockquote">
+<p><strong>When</strong> <em>the situation the user is in</em>, <strong>I want</strong> <em>what the system should let them do</em>, <strong>so that</strong> <em>the outcome they care about</em>.</p>
+</blockquote>
+<p>Each story you focus on becomes a user scenario for the test window. For the rider’s story below (JS03), that is:</p>
+<blockquote class="blockquote">
+<p><strong>Scenario: the next bus.</strong> Call the API for stop 5021 on route 99. You should get the next bus’s expected arrival in under a second, with the time of the position report it is based on.</p>
+</blockquote>
+</div>
+</div>
+<p><strong>Example of use.</strong> At 07:00 a manager at one agency opens the dashboard. It shows that route 99 was on average 6 minutes late between 08:00 and 09:00 yesterday. Later, a rider at a stop on route 99 asks the app when the next bus arrives, and gets an answer within a second.</p>
+<p>Most users are not technical. Managers and riders need to trust the numbers without seeing how they are made, so the dashboard says which timetable each comparison uses.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 8%">
+<col style="width: 18%">
+<col style="width: 74%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Id</th>
+<th>User</th>
+<th>Job story</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>JS01</td>
+<td>Route planner</td>
+<td><strong>When</strong> I review a route for next season’s timetable, <strong>I want</strong> each trip’s running time on that route month by month over the last 6 months, in seconds, <strong>so that</strong> I can tell whether the timetable allows enough time.</td>
+</tr>
+<tr class="even">
+<td>JS02</td>
+<td>Data scientist</td>
+<td><strong>When</strong> I retrain the arrival-time model on Monday morning, <strong>I want</strong> the training table for the past year ready by 06:00, <strong>so that</strong> the app’s predictions use last week’s data.</td>
+</tr>
+<tr class="odd">
+<td>JS03</td>
+<td>Rider</td>
+<td><strong>When</strong> I am at a stop and the bus is not in sight, <strong>I want</strong> to know within a second when the next bus arrives, <strong>so that</strong> I can decide whether to wait or walk.</td>
+</tr>
+<tr class="even">
+<td>JS04</td>
+<td>Finance</td>
+<td><strong>When</strong> nobody is asking questions at night, <strong>I want</strong> the system to cost close to nothing, <strong>so that</strong> the monthly bill stays under the ceiling.</td>
+</tr>
+<tr class="odd">
+<td>JS05</td>
+<td>Agency manager</td>
+<td><strong>When</strong> I start the day at 07:00, <strong>I want</strong> yesterday’s average delay for every route and hour, compared with the timetable in force yesterday, <strong>so that</strong> I can raise the worst routes at the morning meeting.</td>
+</tr>
+</tbody>
+</table>
+<p>We want to focus on the rider and the agency manager. For the rider, we focus on operational needs and performance (JS03). For the agency manager, we focus on analytical needs (JS05).</p>
+</section>
+<section id="project-shape-and-extensions" class="level2">
+<h2 class="anchored" data-anchor-id="project-shape-and-extensions">3. Project shape and extensions</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="About this section">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>About this section
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Name your shape and your extensions, worth 2 points: one 2-point extension or two 1-point ones. A team of 6 names one more 1-point extension. Say in one or two sentences why each fits your case.</p>
+</div>
+</div>
+<p><strong>Shape: operational first.</strong> The rider’s question is the one that must not fail: an answer within a second, from the current position of every bus, under rush-hour load. The API over DynamoDB comes first. The lake keeps the history for managers and planners, and comes second.</p>
+<p><strong>2-point extension: streaming ingestion.</strong> Position reports go from the live stream into DynamoDB and the lake as they arrive, instead of in batches. With batches every 5 minutes, an expected arrival could rest on a report up to 5 minutes old. JS03 needs the report from the last 30 seconds.</p>
+<p><strong>1-point extension, because we are a team of 6: CI test matrix.</strong> The behave checks and our own tests run in continuous integration over two data sizes (one agency, and all 15) and with the stream’s faults on and off. Each pull request then shows whether the riders’ API still answers correctly when reports arrive late or twice.</p>
+</section>
+<section id="data-and-workflows" class="level2">
+<h2 class="anchored" data-anchor-id="data-and-workflows">4. Data and workflows</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="About this section">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>About this section
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Name the subset of your dataset your system works with, and its size. Then describe your data in 1 or 2 paragraphs: what exists, what each thing sends, what goes wrong, and what your users count. We use these numbers to generate the live updates for your system, so they set the load your system has to handle. Take each number from your dataset where it has one. Where it does not, give your own estimate and say so.</p>
+<p>Then describe in 2 or 3 paragraphs how data gets to each user you focus on, starting from your shape: what starts each step, and where each step’s output lives. This becomes your architecture sketch.</p>
+</div>
+</div>
+<p><strong>Subset.</strong> All 15 agencies, the last two years of position reports, and every timetable version in force in those two years. That is about 8.6 million reports a day (4,000 buses, one report every 30 s, 18 service hours, our estimate), so about 6 billion over two years. We measure the size in GB once we load one month.</p>
+<p><strong>What we found in the data.</strong> Each report holds the bus, its route and trip, its next stop, a sequence number, the time it was recorded, and how far behind the timetable the bus is. A report every 30 seconds per bus makes the positions stream the largest by far. The timetables change only every few weeks. Some reports arrive late, because a bus with no signal sends them when it reaches the depot. Some arrive twice. The sequence number tells the two apart. We estimate that 2% of reports arrive late and 1% arrive twice.</p>
+<p><strong>Constraints we chose.</strong> The rider gets an answer within 1 second. The managers’ table is ready by 07:00. A simulated run covers a weekday morning rush, one hour. A late report counts for yesterday if it arrives before 02:00.</p>
+<p><strong>Workflows.</strong> We chose operational first, so the rider’s workflow (JS03) comes first. Reports arrive on the stream. A Lambda keeps each bus’s latest report in DynamoDB, keyed by route and bus, and ignores a report older than the one it holds. For a stop, the riders’ API finds the routes and scheduled times at that stop in the current timetable, also in DynamoDB, and adds each bus’s current delay to get the expected arrival.</p>
+<p>The manager’s workflow (JS05) branches off the same stream. The Lambda also appends every report to the lake’s <code>events</code> table, partitioned by service day. A nightly job at 02:00 joins yesterday’s reports with the timetable in force yesterday and writes the average delay by route and hour. The managers’ dashboard reads that table. We expect the stream and the DynamoDB writes to cost the most, because they run all day.</p>
+</section>
+<section id="architecture-sketch" class="level2">
+<h2 class="anchored" data-anchor-id="architecture-sketch">5. Architecture sketch</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="About this section">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>About this section
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For each step: what starts it, where its output lives, and who reads it. Draw triggers differently from data, for example dotted arrows for what starts a step and solid arrows for data.</p>
+</div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/example-transit-sketch.svg" class="img-fluid figure-img"></p>
+<figcaption>Architecture sketch for the transit case: the position stream feeds an ingest Lambda, which keeps each bus’s latest report in DynamoDB and appends every report to the lake’s events table. A rider’s request (dotted, it starts the lookup) reaches the riders’ API, which reads DynamoDB and the timetables. A 02:00 schedule (dotted) starts the nightly delay job, which reads the events and the timetables and writes delay by route and hour to the lake. An agency manager opens the dashboard (dotted), which reads that table.</figcaption>
+</figure>
+</div>
+<p>The sketch is drawn in PlantUML. Its source is <code>docs/architecture-sketch.example.puml</code> in the course files; copy it as a start for yours.</p>
+</section>
+<section id="experiments" class="level2">
+<h2 class="anchored" data-anchor-id="experiments">6. Experiments</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="About this section">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>About this section
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Three experiment candidates, one line each, each linked to its file in <code>experiments/</code> (shown here as file names). The feedback on your proposal helps you choose which to run. <a href="./project-experiments.html">Experiment examples</a> shows two filled in.</p>
+</div>
+</div>
+<ol type="1">
+<li><code>experiments/ingest-batching.md</code>: write each report to DynamoDB as it arrives, or batch each bus’s reports every 30 seconds. OEC: cost per day. Guardrail: the rider’s answer within 1 second.</li>
+<li><code>experiments/events-layout.md</code>: partition <code>events</code> by service day, or by agency and service day. OEC: data scanned by the nightly job. Guardrail: the table ready by 07:00.</li>
+<li><code>experiments/stop-lookup.md</code>: find a stop’s buses through the timetable, or keep a copy of each bus’s report under the stops it serves. OEC: median API latency. Guardrail: cost per day.</li>
+</ol>
+</section>
+<section id="user-interaction-points" class="level2">
+<h2 class="anchored" data-anchor-id="user-interaction-points">7. User interaction points</h2>
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="About this section">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>About this section
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A short plan for what each user sees: the dashboard, and the API or chat if your shape has one.</p>
+</div>
+</div>
+<ul>
+<li><strong>Riders’ API</strong>, documented in the repository:
+<ul>
+<li><code>GET /stops/{stop_id}/next</code>: the next bus on each route at that stop, its expected arrival, and the time of the report it is based on.</li>
+<li><code>GET /routes/{route_id}/buses</code>: every bus on the route now, with its delay.</li>
+</ul></li>
+<li><strong>Managers’ dashboard</strong>, a thin page: one table per agency, routes by hour of yesterday, each cell the average delay in minutes. A note under the table names the timetable version it compares with.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

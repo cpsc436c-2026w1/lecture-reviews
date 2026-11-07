@@ -1,0 +1,157 @@
+---
+title: "Proposal example: the transit case"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+---
+
+<style>td, th { overflow-wrap: break-word; hyphens: auto; }</style>
+
+This page shows a proposal for the transit case from the L8 studio, in its scaled-up form (Part 2), written by a
+team of 6. It covers all seven proposal sections. The studio case is a scenario, so where a real team would report
+what it found in its dataset, this example uses the scenario's facts. Use the page as a model for the shape: your
+own case will have different users and different data.
+
+## 1. Business case
+
+::: {.callout-note icon=false title="About this section"}
+Say what your system does, for whom, and with what data, in a few paragraphs. The needs of each user, with how
+often and how much, go in the job stories.
+:::
+
+A year after a city's pilot, the provincial transit authority takes the bus-data system over for all 15 transit
+agencies in the province. The system keeps every bus's position reports, compares them with each agency's timetable,
+and answers questions about delay: for agency managers each morning, for planners over months, for a data
+scientist's weekly arrival-time model, and for riders right now. The authority's data team is four people. The budget ceiling is about $1,500 a month.
+
+The data: position reports from about 4,000 buses on about 1,000 routes, every 30 seconds while a bus runs; each
+agency's timetable, every version kept; and a live feed per agency of where its buses are now. Two years of records
+are kept.
+
+## 2. Job stories
+
+::: {.callout-note icon=false title="About this section"}
+A job story says what a user is doing when they need the system, what they want from it, and why. Write each one as
+three parts:
+
+> **When** *the situation the user is in*, **I want** *what the system should let them do*, **so that** *the outcome they
+> care about*.
+
+Each story you focus on becomes a user scenario for the test window. For the rider's story below (JS03), that is:
+
+> **Scenario: the next bus.** Call the API for stop 5021 on route 99. You should get the next bus's expected arrival
+> in under a second, with the time of the position report it is based on.
+:::
+
+**Example of use.** At 07:00 a manager at one agency opens the dashboard. It shows that route 99 was on average 6
+minutes late between 08:00 and 09:00 yesterday. Later, a rider at a stop on route 99 asks the app when the next bus
+arrives, and gets an answer within a second.
+
+Most users are not technical. Managers and riders need to trust the numbers without seeing how they are made, so the
+dashboard says which timetable each comparison uses.
+
+| Id | User | Job story |
+|---|---|---|
+| JS01 | Route planner | **When** I review a route for next season's timetable, **I want** each trip's running time on that route month by month over the last 6 months, in seconds, **so that** I can tell whether the timetable allows enough time. |
+| JS02 | Data scientist | **When** I retrain the arrival-time model on Monday morning, **I want** the training table for the past year ready by 06:00, **so that** the app's predictions use last week's data. |
+| JS03 | Rider | **When** I am at a stop and the bus is not in sight, **I want** to know within a second when the next bus arrives, **so that** I can decide whether to wait or walk. |
+| JS04 | Finance | **When** nobody is asking questions at night, **I want** the system to cost close to nothing, **so that** the monthly bill stays under the ceiling. |
+| JS05 | Agency manager | **When** I start the day at 07:00, **I want** yesterday's average delay for every route and hour, compared with the timetable in force yesterday, **so that** I can raise the worst routes at the morning meeting. |
+
+: {tbl-colwidths="[8,18,74]"}
+
+We want to focus on the rider and the agency manager. For the rider, we focus on operational needs and
+performance (JS03). For the agency manager, we focus on analytical needs (JS05).
+
+## 3. Project shape and extensions
+
+::: {.callout-note icon=false title="About this section"}
+Name your shape and your extensions, worth 2 points: one 2-point extension or two 1-point ones. A team of 6 names
+one more 1-point extension. Say in one or two sentences why each fits your case.
+:::
+
+**Shape: operational first.** The rider's question is the one that must not fail: an answer within a second, from the
+current position of every bus, under rush-hour load. The API over DynamoDB comes first. The lake keeps the history for
+managers and planners, and comes second.
+
+**2-point extension: streaming ingestion.** Position reports go from the live stream into DynamoDB and the lake as
+they arrive, instead of in batches. With batches every 5 minutes, an
+expected arrival could rest on a report up to 5 minutes old. JS03 needs the report from the last 30 seconds.
+
+**1-point extension, because we are a team of 6: CI test matrix.** The behave checks and our own tests run in
+continuous integration over two data sizes (one agency, and all 15) and with the stream's faults on and off. Each pull
+request then shows whether the riders' API still answers correctly when reports arrive late or twice.
+
+## 4. Data and workflows
+
+::: {.callout-note icon=false title="About this section"}
+Name the subset of your dataset your system works with, and its size. Then describe your data in 1 or 2
+paragraphs: what exists, what each thing sends, what goes wrong, and what your users count. We use these numbers to generate the live updates for your system, so they set the load your system has to
+handle. Take each number from your dataset where it has one. Where it does not, give your own estimate and say so.
+
+Then describe in 2 or 3 paragraphs how data gets to each user you focus on, starting from your shape: what starts
+each step, and where each step's output lives. This becomes your architecture sketch.
+:::
+
+**Subset.** All 15 agencies, the last two years of position reports, and every timetable version in force in those
+two years. That is about 8.6 million reports a day (4,000 buses, one report every 30 s, 18 service hours, our
+estimate), so about 6 billion over two years. We measure the size in GB once we load one month.
+
+**What we found in the data.** Each report holds the bus, its route and trip, its next stop, a sequence number,
+the time it was recorded, and how far behind the timetable the bus is. A report every 30 seconds per bus makes the
+positions stream the largest by far. The timetables change only every few weeks. Some reports arrive late, because a
+bus with no signal sends them when it reaches the depot. Some arrive twice. The sequence number tells the two apart. We estimate that 2% of reports arrive late and 1%
+arrive twice.
+
+**Constraints we chose.** The rider gets an answer within 1 second. The managers' table is ready by 07:00. A simulated run covers a weekday morning rush, one hour. A late
+report counts for yesterday if it arrives before 02:00.
+
+**Workflows.** We chose operational first, so the rider's workflow (JS03) comes first. Reports arrive on the stream. A
+Lambda keeps each bus's latest report in DynamoDB, keyed by route and bus, and ignores a report older than the one it
+holds. For a stop, the riders' API finds the routes and scheduled times at that stop in the current timetable, also
+in DynamoDB, and adds each bus's current delay to get the expected arrival.
+
+The manager's workflow (JS05) branches off the same stream. The Lambda also appends every report to the lake's
+`events` table, partitioned by service day. A nightly job at 02:00 joins yesterday's reports with the timetable in
+force yesterday and writes the average delay by route and hour. The managers' dashboard reads that table. We expect
+the stream and the DynamoDB writes to cost the most, because they run all day.
+
+## 5. Architecture sketch
+
+::: {.callout-note icon=false title="About this section"}
+For each step: what starts it, where its output lives, and who reads it. Draw triggers differently from data, for
+example dotted arrows for what starts a step and solid arrows for data.
+:::
+
+![Architecture sketch for the transit case: the position stream feeds an ingest Lambda, which keeps each bus's latest report in DynamoDB and appends every report to the lake's events table. A rider's request (dotted, it starts the lookup) reaches the riders' API, which reads DynamoDB and the timetables. A 02:00 schedule (dotted) starts the nightly delay job, which reads the events and the timetables and writes delay by route and hour to the lake. An agency manager opens the dashboard (dotted), which reads that table.](img/example-transit-sketch.svg)
+
+The sketch is drawn in PlantUML. Its source is `docs/architecture-sketch.example.puml` in the course files; copy it as
+a start for yours.
+
+## 6. Experiments
+
+::: {.callout-note icon=false title="About this section"}
+Three experiment candidates, one line each, each linked to its file in `experiments/` (shown here as file names). The feedback on your proposal
+helps you choose which to run. [Experiment examples](project-experiments.qmd) shows two filled in.
+:::
+
+1. `experiments/ingest-batching.md`: write each report to DynamoDB as it arrives, or batch
+   each bus's reports every 30 seconds. OEC: cost per day. Guardrail: the rider's answer within 1 second.
+2. `experiments/events-layout.md`: partition `events` by service day, or by agency and
+   service day. OEC: data scanned by the nightly job. Guardrail: the table ready by 07:00.
+3. `experiments/stop-lookup.md`: find a stop's buses through the timetable, or keep a
+   copy of each bus's report under the stops it serves. OEC: median API latency. Guardrail: cost per day.
+
+## 7. User interaction points
+
+::: {.callout-note icon=false title="About this section"}
+A short plan for what each user sees: the dashboard, and the API or chat if your shape has one.
+:::
+
+- **Riders' API**, documented in the repository:
+  - `GET /stops/{stop_id}/next`: the next bus on each route at that stop, its expected arrival, and the time of the
+    report it is based on.
+  - `GET /routes/{route_id}/buses`: every bus on the route now, with its delay.
+- **Managers' dashboard**, a thin page: one table per agency, routes by hour of yesterday, each cell the average delay
+  in minutes. A note under the table names the timetable version it compares with.
