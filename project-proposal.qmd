@@ -153,9 +153,10 @@ your team. Change them to fit how your team works.
 
 1. Set up a [GitHub Project](https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects)
    for your team, next to the repository where you build: your course repository, or your github.com repository.
-2. Make it visible to the teaching team. On github.students, open the project's settings, choose Manage access, and
-   give the `staff` team the Read role. On github.com, add my account, `ilyamusabirov`, with the Read role in the
-   same place.
+2. Make it visible to the teaching team. ~~On github.students, open the project's settings, choose Manage access, and
+   give the `staff` team the Read role.~~ On github.students the teaching team already sees every project in the
+   course organization, so there is nothing to do there. On github.com, add my account, `ilyamusabirov`, with the
+   Read role in the project's settings, under Manage access.
 3. In your course repository, open, review and merge a pull request that adds the project link to `metadata/team.yml` as `board`.
 
 ## AWS sandbox {#aws}

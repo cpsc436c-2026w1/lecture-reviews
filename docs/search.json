@@ -669,7 +669,7 @@
     "href": "project-proposal.html#board",
     "title": "Setup and proposal",
     "section": "Project board",
-    "text": "Project board\n\nSet up a GitHub Project for your team, next to the repository where you build: your course repository, or your github.com repository.\nMake it visible to the teaching team. On github.students, open the project’s settings, choose Manage access, and give the staff team the Read role. On github.com, add my account, ilyamusabirov, with the Read role in the same place.\nIn your course repository, open, review and merge a pull request that adds the project link to metadata/team.yml as board."
+    "text": "Project board\n\nSet up a GitHub Project for your team, next to the repository where you build: your course repository, or your github.com repository.\nMake it visible to the teaching team. On github.students, open the project’s settings, choose Manage access, and give the staff team the Read role. On github.students the teaching team already sees every project in the course organization, so there is nothing to do there. On github.com, add my account, ilyamusabirov, with the Read role in the project’s settings, under Manage access.\nIn your course repository, open, review and merge a pull request that adds the project link to metadata/team.yml as board."
   },
   {
     "objectID": "project-proposal.html#aws",
