@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.10.20">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -74,10 +77,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-17888a1159294d3eb470f19f6f52f5a5.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-158031087360bce0ff56dc785ce39e06.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-9b4f01e8f4456798517379425c73b574.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -434,12 +437,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>About 4.9 million products.</li>
 <li>Canadian products are well filled in: names about 97%, categories about 89%, ingredients about 71%.</li>
 </ul>
-<p><strong>Original data.</strong> The <a href="https://huggingface.co/datasets/openfoodfacts/product-database">product database on Hugging Face</a> (<code>food.parquet</code>, with ingredients text), and Statistics Canada <a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810024501">table 18-10-0245-01</a>.</p>
+<p><strong>Original data.</strong> The <a href="https://huggingface.co/datasets/openfoodfacts/product-database">product database on Hugging Face</a> (<code>food.parquet</code>, with ingredients text), <a href="https://huggingface.co/datasets/openfoodfacts/open-prices">Open Prices on Hugging Face</a> (<code>prices.parquet</code>), and Statistics Canada <a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810024501">table 18-10-0245-01</a>.</p>
 <p><strong>Preview.</strong> 124,863 Canadian products, without ingredients text, and Statistics Canada monthly average retail prices.</p>
 <p><strong>What to design for.</strong></p>
 <ul>
-<li>Assignment 3 already joined prices to receipts, and Assignment 4 built catalogue search. Your project needs a different question.</li>
-<li>Open Food Facts’ own price data has almost nothing for Canada, so prices need another source.</li>
+<li><del>Assignment 3 already joined prices to receipts, and Assignment 4 built catalogue search. Your project needs a different question.</del> Assignment 3 already used French products and prices and reported the share of spend on Nutri-Score A and B products. Your project needs a question that Assignment 3 did not answer.</li>
+<li><del>Open Food Facts’ own price data has almost nothing for Canada, so prices need another source.</del> Open Prices, the price data Open Food Facts collects, has 714 Canadian records. <!--src: measured:open-prices-prices.parquet-2026-11-10 --> If you want to use Canadian data, take prices from Statistics Canada’s monthly average retail prices. They are averages by product type, not prices of single products, so you map product categories to those types yourself; they do not join by barcode. Otherwise, choose a country that Open Prices covers well.</li>
+<li>France has about 220,000 Open Prices records for about 79,000 products at about 2,500 locations (November 2026). <!--src: measured:open-prices-prices.parquet-2026-11-10 --></li>
+<li>The preview holds Canadian products only, so if you want to use French data instead, take French products from the original data.</li>
 <li>Products are edited over time, so the catalogue has a current state and a history.</li>
 </ul>
 <p><strong>Good additions.</strong></p>

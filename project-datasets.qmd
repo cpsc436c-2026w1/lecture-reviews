@@ -168,17 +168,26 @@ Overture places CDLA-Permissive-2.0; City of Vancouver data, the Open Government
 - Canadian products are well filled in: names about 97%, categories about 89%, ingredients about 71%.
 
 **Original data.** The [product database on Hugging Face](https://huggingface.co/datasets/openfoodfacts/product-database)
-(`food.parquet`, with ingredients text), and Statistics Canada
-[table 18-10-0245-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810024501).
+(`food.parquet`, with ingredients text),
+[Open Prices on Hugging Face](https://huggingface.co/datasets/openfoodfacts/open-prices) (`prices.parquet`),
+and Statistics Canada [table 18-10-0245-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810024501).
 
 **Preview.** 124,863 Canadian products, without ingredients text, and Statistics Canada monthly
 average retail prices.
 
 **What to design for.**
 
-- Assignment 3 already joined prices to receipts, and Assignment 4 built catalogue search. Your project needs a
-  different question.
-- Open Food Facts' own price data has almost nothing for Canada, so prices need another source.
+- ~~Assignment 3 already joined prices to receipts, and Assignment 4 built catalogue search. Your project needs a
+  different question.~~ Assignment 3 already used French products and prices and reported the share of spend on
+  Nutri-Score A and B products. Your project needs a question that Assignment 3 did not answer.
+- ~~Open Food Facts' own price data has almost nothing for Canada, so prices need another source.~~ Open Prices,
+  the price data Open Food Facts collects, has 714 Canadian records. <!--src: measured:open-prices-prices.parquet-2026-11-10 -->
+  If you want to use Canadian data, take prices from Statistics Canada's monthly average retail prices. They are
+  averages by product type, not prices of single products, so you map product categories to those types yourself;
+  they do not join by barcode. Otherwise, choose a country
+  that Open Prices covers well.
+- France has about 220,000 Open Prices records for about 79,000 products at about 2,500 locations (November 2026). <!--src: measured:open-prices-prices.parquet-2026-11-10 -->
+- The preview holds Canadian products only, so if you want to use French data instead, take French products from the original data.
 - Products are edited over time, so the catalogue has a current state and a history.
 
 **Good additions.**
