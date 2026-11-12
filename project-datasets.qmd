@@ -50,67 +50,34 @@ and the City of Vancouver exports. For OpenAlex, the API is often quicker than t
 
 ::: {.chg}
 ::: {.callout-note collapse="true"}
-## Install DuckDB and run a query
+## Run DuckDB from your laptop
 
-**Command line.** Install [uv](https://docs.astral.sh/uv/getting-started/installation/) if you do not have it,
-and then install the DuckDB command-line tool with uv. This works the same way on macOS, Linux and Windows:
-
-```bash
-uv tool install duckdb-cli
-```
-
-If the `duckdb` command is not found after this, run `uv tool update-shell` and open a new terminal.
-
-You can also install it without uv. On macOS or Linux, run:
+With [uv](https://docs.astral.sh/uv/getting-started/installation/) installed, this command downloads DuckDB and
+opens its prompt:
 
 ```bash
-curl https://install.duckdb.org | bash
+uvx --from duckdb-cli duckdb
 ```
 
-The script prints a line that puts `duckdb` on your path. Run that line in the same terminal to use `duckdb` now,
-and add it to your shell profile to use it in new terminals. On Windows, run this in PowerShell:
+Paste a query from this page at the prompt and press Enter. Type `.quit` to leave. For example:
 
-```powershell
-powershell -NoExit -ExecutionPolicy Bypass -Command "irm https://install.duckdb.org/install.ps1 | iex"
+```sql
+SELECT count(*) AS stations FROM 's3://436c-2026w1-project-data/preview/ghcn/stations.parquet';
 ```
 
-Type `duckdb` to open a prompt, paste the queries from this page, and type `.quit` to leave. To run queries saved
-in a file, use `duckdb < queries.sql`.
-
-**Python with uv.** Make a project folder and add DuckDB to it:
-
-```bash
-uv init proposal-data
-cd proposal-data
-uv add duckdb
-uv add --dev ipykernel
-```
-
-Save this as `query.py`, and run it with `uv run python query.py`:
+In a notebook whose environment has the `duckdb` package, import it and pass the query as a string. A cell that
+ends with `duckdb.sql(...)` shows the result as a table.
 
 ```python
 import duckdb
-
-duckdb.sql("INSTALL httpfs; LOAD httpfs; SET s3_region = 'ca-central-1';")
-duckdb.sql("SELECT file FROM glob('s3://436c-2026w1-project-data/preview/food/*')").show()
+duckdb.sql("SELECT count(*) AS stations FROM 's3://436c-2026w1-project-data/preview/ghcn/stations.parquet'")
 ```
-
-**Notebook in VS Code.** Install the Python and Jupyter extensions. Open the `proposal-data` folder, create
-`explore.ipynb`, select **Select Kernel**, and choose the `.venv` environment of the folder. Put the same lines in a
-cell. A cell that ends with `duckdb.sql(...)` shows the result as a table, without `.show()`.
 :::
 
 The `preview/` prefix of the course bucket holds the demo data and is public, so you can use DuckDB or other tools
-from your laptop to look at the data for your proposal. The bucket is in `ca-central-1`. Start each DuckDB
-session with these lines:
-
-```sql
-INSTALL httpfs; LOAD httpfs;
-SET s3_region = 'ca-central-1';
-```
-
-Each folder has a `README.md` that describes its files and their columns. Each dataset section below links to
-its README and has a query that lists its files and a query to start from. A link to a Parquet file downloads the file.
+from your laptop to look at the data for your proposal. Each folder has a `README.md` that describes its files and
+their columns. Each dataset section below links to its README and has a query that lists its files and a query to
+start from. A link to a Parquet file downloads the file.
 :::
 
 ## NOAA GHCN-Daily weather {#ghcn}
