@@ -286,6 +286,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul class="collapse">
   <li><a href="#explore" id="toc-explore" class="nav-link active" data-scroll-target="#explore">Explore the original data</a></li>
+  <li><a href="#preview" id="toc-preview" class="nav-link" data-scroll-target="#preview"><span class="chg">Read the preview from your laptop</span></a></li>
   <li><a href="#ghcn" id="toc-ghcn" class="nav-link" data-scroll-target="#ghcn">NOAA GHCN-Daily weather</a></li>
   <li><a href="#synpuf" id="toc-synpuf" class="nav-link" data-scroll-target="#synpuf">CMS synthetic patients (OMOP)</a></li>
   <li><a href="#openalex" id="toc-openalex" class="nav-link" data-scroll-target="#openalex">OpenAlex scholarly works</a></li>
@@ -322,7 +323,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>Choose one of these six datasets, or propose your own (email the instructor early). Each one is well known, and each has its own specifics and problems your design has to deal with.</p>
-<p>Each section links to the original data. You choose the subset your system works with, and say which in section 4 of your proposal. For five of the datasets, we give you a small sample, the preview, to speed up your data exploration for the proposal. It is in the course bucket <code>s3://436c-2026w1-project-data/preview/</code>, one folder per dataset: <code>ghcn/</code>, <code>synpuf/</code>, <code>openalex/</code>, <code>maps/</code> and <code>food/</code>. Your sandbox can read it once your team lease arrives. Until then, explore the original data, which needs no AWS account. For GDELT, you read the live feed itself.</p>
+<p>Each section links to the original data. You choose the subset your system works with, and say which in section 4 of your proposal. For five of the datasets, we give you a small sample, the preview, to speed up your data exploration for the proposal. It is in the course bucket <code>s3://436c-2026w1-project-data/preview/</code>, one folder per dataset: <code>ghcn/</code>, <code>synpuf/</code>, <code>openalex/</code>, <code>maps/</code> and <code>food/</code>. <del>Your sandbox can read it once your team lease arrives. Until then, explore the original data, which needs no AWS account.</del> <span class="chg">You can read it from your laptop without an AWS account: <a href="#preview">Read the preview from your laptop</a>.</span> For GDELT, you read the live feed itself.</p>
 <p>Your live updates are generated from your answers to the data questions in your proposal. The dataset itself is your history.</p>
 <section id="explore" class="level2">
 <h2 class="anchored" data-anchor-id="explore">Explore the original data</h2>
@@ -344,6 +345,49 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 <p>DuckDB also reads files over HTTPS, and from Hugging Face with <code>hf://</code> paths, which covers the Open Food Facts file and the City of Vancouver exports. For OpenAlex, the API is often quicker than the snapshot.</p>
 </section>
+<section id="preview" class="level2">
+<h2 class="anchored" data-anchor-id="preview"><span class="chg">Read the preview from your laptop</span></h2>
+<div class="chg">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Install DuckDB and run a query
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Command line.</strong> Install <a href="https://docs.astral.sh/uv/getting-started/installation/">uv</a> if you do not have it, and then install the DuckDB command-line tool with uv. This works the same way on macOS, Linux and Windows:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> tool install duckdb-cli</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If the <code>duckdb</code> command is not found after this, run <code>uv tool update-shell</code> and open a new terminal.</p>
+<p>You can also install it without uv. On macOS or Linux, run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> https://install.duckdb.org <span class="kw">|</span> <span class="fu">bash</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The script prints a line that puts <code>duckdb</code> on your path. Run that line in the same terminal to use <code>duckdb</code> now, and add it to your shell profile to use it in new terminals. On Windows, run this in PowerShell:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>powershell <span class="op">-</span>NoExit <span class="op">-</span>ExecutionPolicy Bypass <span class="op">-</span>Command <span class="st">"irm https://install.duckdb.org/install.ps1 | iex"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Type <code>duckdb</code> to open a prompt, paste the queries from this page, and type <code>.quit</code> to leave. To run queries saved in a file, use <code>duckdb &lt; queries.sql</code>.</p>
+<p><strong>Python with uv.</strong> Make a project folder and add DuckDB to it:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> init proposal-data</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> proposal-data</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> add duckdb</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> add <span class="at">--dev</span> ipykernel</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Save this as <code>query.py</code>, and run it with <code>uv run python query.py</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> duckdb</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>duckdb.sql(<span class="st">"INSTALL httpfs; LOAD httpfs; SET s3_region = 'ca-central-1';"</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>duckdb.sql(<span class="st">"SELECT file FROM glob('s3://436c-2026w1-project-data/preview/food/*')"</span>).show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Notebook in VS Code.</strong> Install the Python and Jupyter extensions. Open the <code>proposal-data</code> folder, create <code>explore.ipynb</code>, select <strong>Select Kernel</strong>, and choose the <code>.venv</code> environment of the folder. Put the same lines in a cell. A cell that ends with <code>duckdb.sql(...)</code> shows the result as a table, without <code>.show()</code>.</p>
+</div>
+</div>
+</div>
+<p>The <code>preview/</code> prefix of the course bucket holds the demo data and is public, so you can use DuckDB or other tools from your laptop to look at the data for your proposal. The bucket is in <code>ca-central-1</code>. Start each DuckDB session with these lines:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>INSTALL httpfs; LOAD httpfs;</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">SET</span> s3_region <span class="op">=</span> <span class="st">'ca-central-1'</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Each folder has a <code>README.md</code> that describes its files and their columns. Each dataset section below links to its README and has a query that lists its files and a query to start from. A link to a Parquet file downloads the file.</p>
+</div>
+</section>
 <section id="ghcn" class="level2">
 <h2 class="anchored" data-anchor-id="ghcn">NOAA GHCN-Daily weather</h2>
 <p><strong>What it is.</strong> Daily weather observations from stations around the world: temperature, precipitation, snow and more. <a href="https://registry.opendata.aws/noaa-ghcn/">Registry page</a>. Licence: CC0.</p>
@@ -356,7 +400,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Canadian station IDs start with <code>CAN0</code>. The ID without <code>CAN0</code> is the station’s Environment and Climate Change Canada (ECCC) climate ID.</li>
 </ul>
 <p><strong>Original data.</strong> <code>s3://noaa-ghcn-pds/parquet/by_station/</code> and <code>by_year/</code> (us-east-1), back to the 1800s.</p>
-<p><strong>Preview.</strong> Canada from 1 January 2015, partitioned by year: 3,055 stations with temperature, precipitation or snow, and the station list.</p>
+<p><strong>Preview.</strong> Canada from 1 January 2015, partitioned by year: 3,055 stations with temperature, precipitation or snow, and the station list. <span class="chg">Files: <a href="https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/ghcn/README.md">README</a>, <a href="https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/ghcn/stations.parquet"><code>stations.parquet</code></a>, and one Parquet file for each year, which DuckDB reads together as <code>s3://436c-2026w1-project-data/preview/ghcn/daily/*/*.parquet</code>.</span></p>
+<div class="chg">
+<p>Files in the folder and its subfolders:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="kw">file</span> <span class="kw">FROM</span> glob(<span class="st">'s3://436c-2026w1-project-data/preview/ghcn/**'</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Number of daily maximum temperature observations, and of the stations that recorded them, for each year:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="dt">year</span>, <span class="fu">count</span>(<span class="op">*</span>) <span class="kw">AS</span> observations, <span class="fu">count</span>(<span class="kw">DISTINCT</span> station_id) <span class="kw">AS</span> stations</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> read_parquet(<span class="st">'s3://436c-2026w1-project-data/preview/ghcn/daily/*/*.parquet'</span>, hive_partitioning <span class="op">=</span> <span class="kw">true</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">WHERE</span> element <span class="op">=</span> <span class="st">'TMAX'</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="dt">year</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> <span class="dt">year</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><strong>What to design for.</strong></p>
 <ul>
 <li>The data is daily, but your live updates arrive every few minutes. Your system has to roll them up into days.</li>
@@ -375,7 +429,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Visits from 2008 to 2010.</li>
 </ul>
 <p><strong>Original data.</strong> <code>s3://synpuf-omop/</code> (us-east-1), gzipped CSV in three sizes: 1,000, 100,000 and 2.3 million persons.</p>
-<p><strong>Preview.</strong> The 100,000-person set as Parquet, with a label table for ICD-9 diagnosis and procedure codes. The bucket has no OMOP vocabulary, so codes are numbers until you join labels.</p>
+<p><strong>Preview.</strong> The 100,000-person set as Parquet, with a label table for ICD-9 diagnosis and procedure codes. The bucket has no OMOP vocabulary, so codes are numbers until you join labels. <span class="chg">Files: <a href="https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/synpuf/README.md">README</a>, and one Parquet file for each table, such as <a href="https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/synpuf/person.parquet"><code>person.parquet</code></a>.</span></p>
+<div class="chg">
+<p>Files in the folder:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="kw">file</span> <span class="kw">FROM</span> glob(<span class="st">'s3://436c-2026w1-project-data/preview/synpuf/*'</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The ten most frequent diagnosis codes, with their labels:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> c.condition_source_value <span class="kw">AS</span> icd9, l.short_description, <span class="fu">count</span>(<span class="op">*</span>) <span class="kw">AS</span> records</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> read_parquet(<span class="st">'s3://436c-2026w1-project-data/preview/synpuf/condition_occurrence.parquet'</span>) <span class="kw">AS</span> c</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="kw">LEFT</span> <span class="kw">JOIN</span> read_parquet(<span class="st">'s3://436c-2026w1-project-data/preview/synpuf/icd9_labels.parquet'</span>) <span class="kw">AS</span> l</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">ON</span> l.code <span class="op">=</span> c.condition_source_value</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> <span class="kw">ALL</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> records <span class="kw">DESC</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">10</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><strong>What to design for.</strong></p>
 <ul>
 <li>Diagnoses come as ICD-9-CM codes. The label table names 99% of diagnosis rows.</li>
@@ -396,7 +462,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>The abstract is stored as a word index, not as plain text.</li>
 </ul>
 <p><strong>Original data.</strong> The snapshot in <code>s3://openalex/data/parquet/</code> (us-east-1), and the <a href="https://docs.openalex.org">OpenAlex API</a>.</p>
-<p><strong>Preview.</strong> One topic, 2015 to 2025. For Cloud Computing and Resource Management, that is 86,024 works as the primary topic. We rebuilt the abstract as text for 64,241 of them (75%).</p>
+<p><strong>Preview.</strong> One topic, 2015 to 2025. For Cloud Computing and Resource Management, that is 86,024 works as the primary topic. We rebuilt the abstract as text for 64,241 of them (75%). <span class="chg">Files: <a href="https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/openalex/README.md">README</a>, <a href="https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/openalex/works.parquet"><code>works.parquet</code></a> and <a href="https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/openalex/institutions.parquet"><code>institutions.parquet</code></a>.</span></p>
+<div class="chg">
+<p>Files in the folder:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="kw">file</span> <span class="kw">FROM</span> glob(<span class="st">'s3://436c-2026w1-project-data/preview/openalex/*'</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Number of works for each year, and how many of them have an abstract:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> publication_year, <span class="fu">count</span>(<span class="op">*</span>) <span class="kw">AS</span> works, <span class="fu">count</span>(abstract) <span class="kw">AS</span> with_abstract</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> read_parquet(<span class="st">'s3://436c-2026w1-project-data/preview/openalex/works.parquet'</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> publication_year</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> publication_year;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><strong>What to design for.</strong></p>
 <ul>
 <li>The full snapshot is very large and is not partitioned by topic or year. Do not scan all of it: read a few of its files, or use the API.</li>
@@ -415,7 +490,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>207,243 business licences.</li>
 </ul>
 <p><strong>Original data.</strong> Overture releases in <code>s3://overturemaps-us-west-2/release/</code> (us-west-2), and the <a href="https://opendata.vancouver.ca">City of Vancouver open data portal</a>.</p>
-<p><strong>Preview.</strong> These three as Parquet files.</p>
+<p><strong>Preview.</strong> These three as Parquet files. <span class="chg">Files: <a href="https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/maps/README.md">README</a>, <a href="https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/maps/overture_places.parquet"><code>overture_places.parquet</code></a>, <a href="https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/maps/local_areas.parquet"><code>local_areas.parquet</code></a> and <a href="https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/maps/business_licences.parquet"><code>business_licences.parquet</code></a>.</span></p>
+<div class="chg">
+<p>Files in the folder:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="kw">file</span> <span class="kw">FROM</span> glob(<span class="st">'s3://436c-2026w1-project-data/preview/maps/*'</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The ten most frequent place categories:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> basic_category, <span class="fu">count</span>(<span class="op">*</span>) <span class="kw">AS</span> places</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> read_parquet(<span class="st">'s3://436c-2026w1-project-data/preview/maps/overture_places.parquet'</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> basic_category</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> places <span class="kw">DESC</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">10</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><strong>What to design for.</strong></p>
 <ul>
 <li>Questions are about places and areas, so you need a spatial key, such as a grid cell or a local area. Spatial queries were not taught.</li>
@@ -437,19 +522,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>About 4.9 million products.</li>
 <li>Canadian products are well filled in: names about 97%, categories about 89%, ingredients about 71%.</li>
 </ul>
-<p><strong>Original data.</strong> The <a href="https://huggingface.co/datasets/openfoodfacts/product-database">product database on Hugging Face</a> (<code>food.parquet</code>, with ingredients text), <a href="https://huggingface.co/datasets/openfoodfacts/open-prices">Open Prices on Hugging Face</a> (<code>prices.parquet</code>), and Statistics Canada <a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810024501">table 18-10-0245-01</a>.</p>
-<p><strong>Preview.</strong> 124,863 Canadian products, without ingredients text, and Statistics Canada monthly average retail prices.</p>
+<p><strong>Original data.</strong> The <a href="https://huggingface.co/datasets/openfoodfacts/product-database">product database on Hugging Face</a> (<code>food.parquet</code>, with ingredients text), <span class="chg"><a href="https://huggingface.co/datasets/openfoodfacts/open-prices">Open Prices on Hugging Face</a> (<code>prices.parquet</code>),</span> and Statistics Canada <a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810024501">table 18-10-0245-01</a>.</p>
+<p><strong>Preview.</strong> 124,863 Canadian products, without ingredients text, and Statistics Canada monthly average retail prices. <span class="chg">Files: <a href="https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/food/README.md">README</a>, <a href="https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/food/off_products_canada_no_ingredients.parquet"><code>off_products_canada_no_ingredients.parquet</code></a> and <a href="https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/food/statcan_retail_prices.parquet"><code>statcan_retail_prices.parquet</code></a>.</span></p>
+<div class="chg">
+<p>Files in the folder:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="kw">file</span> <span class="kw">FROM</span> glob(<span class="st">'s3://436c-2026w1-project-data/preview/food/*'</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Number of products for each Nutri-Score grade:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> nutriscore_grade, <span class="fu">count</span>(<span class="op">*</span>) <span class="kw">AS</span> products</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> read_parquet(<span class="st">'s3://436c-2026w1-project-data/preview/food/off_products_canada_no_ingredients.parquet'</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span> nutriscore_grade</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="kw">ORDER</span> <span class="kw">BY</span> nutriscore_grade;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><strong>What to design for.</strong></p>
 <ul>
-<li><del>Assignment 3 already joined prices to receipts, and Assignment 4 built catalogue search. Your project needs a different question.</del> Assignment 3 already used French products and prices and reported the share of spend on Nutri-Score A and B products. Your project needs a question that Assignment 3 did not answer.</li>
-<li><del>Open Food Facts’ own price data has almost nothing for Canada, so prices need another source.</del> Open Prices, the price data Open Food Facts collects, has 714 Canadian records. <!--src: measured:open-prices-prices.parquet-2026-11-10 --> If you want to use Canadian data, take prices from Statistics Canada’s monthly average retail prices. They are averages by product type, not prices of single products, so you map product categories to those types yourself; they do not join by barcode. Otherwise, choose a country that Open Prices covers well.</li>
-<li>France has about 220,000 Open Prices records for about 79,000 products at about 2,500 locations (November 2026). <!--src: measured:open-prices-prices.parquet-2026-11-10 --></li>
-<li>The preview holds Canadian products only, so if you want to use French data instead, take French products from the original data.</li>
-<li>Products are edited over time, so the catalogue has a current state and a history.</li>
+<li><del>Assignment 3 already joined prices to receipts, and Assignment 4 built catalogue search. Your project needs a different question.</del> <span class="chg">Assignment 3 already used French products and prices and reported the share of spend on Nutri-Score A and B products. Your project needs a question that Assignment 3 did not answer.</span></li>
+<li><del>Open Food Facts’ own price data has almost nothing for Canada, so prices need another source.</del> <span class="chg">Open Prices, the price data Open Food Facts collects, has 714 Canadian records.</span> <!--src: measured:open-prices-prices.parquet-2026-11-10 --> <span class="chg">If you want to use Canadian data, take prices from Statistics Canada’s monthly average retail prices. They are averages by product type, not prices of single products, so you map product categories to those types yourself; they do not join by barcode. Otherwise, choose a country that Open Prices covers well.</span></li>
+<li><span class="chg">France has about 220,000 Open Prices records for about 79,000 products at about 2,500 locations (November 2026).</span> <!--src: measured:open-prices-prices.parquet-2026-11-10 --></li>
+<li><span class="chg">The preview holds Canadian products only, so if you want to use French data instead, take French products from the original data.</span></li>
+<li><del>Products are edited over time, so the catalogue has a current state and a history.</del> <span class="chg">The preview and the original <code>food.parquet</code> each contain a snapshot of the catalogue. They hold each product’s state as of the snapshot and do not hold its history. Open Food Facts also publishes a file of changed products each day and keeps about the last two weeks of them.</span> <!--src: measured:off-delta-index-2026-11-10 (13 files) --></li>
 </ul>
 <p><strong>Good additions.</strong></p>
 <ul>
-<li>Statistics Canada monthly average retail prices (table 18-10-0245), by product type.</li>
+<li>Statistics Canada monthly average retail prices (table <del>18-10-0245</del> <span class="chg">18-10-0245-01</span>), by product type.</li>
 <li>USDA FoodData Central branded foods, by barcode.</li>
 <li>Open Food Facts’ category and ingredient taxonomies.</li>
 </ul>
@@ -463,7 +557,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>mentions: 2,400 to 4,100 rows;</li>
 <li>GKG, themes and sources: 34 to 70 times the size of the events file.</li>
 </ul>
-<p><strong>Original data and preview.</strong> No preview: you read the live feed, with the course’s GDELT pipeline from the lectures as a recipe. The course bucket has the CAMEO code and country lookup tables in <code>preview/gdelt/</code>. Your test runs still use generated updates of the same shape, so the checks can compare against what really happened.</p>
+<p><strong>Original data and preview.</strong> No preview: you read the live feed, with the course’s GDELT pipeline from the lectures as a recipe. The course bucket has the CAMEO code and country lookup tables in <code>preview/gdelt/</code>. <span class="chg">The <a href="https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/gdelt/README.md">README</a> lists them.</span> Your test runs still use generated updates of the same shape, so the checks can compare against what really happened.</p>
+<div class="chg">
+<p>Files in the folder and its subfolders:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="kw">file</span> <span class="kw">FROM</span> glob(<span class="st">'s3://436c-2026w1-project-data/preview/gdelt/**'</span>);</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The first rows of the CAMEO event codes:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span> <span class="op">*</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> read_parquet(<span class="st">'s3://436c-2026w1-project-data/preview/gdelt/lookups/cameo_eventcodes.parquet'</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="kw">LIMIT</span> <span class="dv">10</span>;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <p><strong>What to design for.</strong></p>
 <ul>
 <li>This is the only real live feed on the list.</li>

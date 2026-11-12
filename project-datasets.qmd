@@ -12,8 +12,9 @@ has its own specifics and problems your design has to deal with.
 Each section links to the original data. You choose the subset your system works with, and say which in section 4
 of your proposal. For five of the datasets, we give you a small sample, the preview, to speed up your data exploration for the
 proposal. It is in the course bucket `s3://436c-2026w1-project-data/preview/`, one folder per dataset: `ghcn/`,
-`synpuf/`, `openalex/`, `maps/` and `food/`. Your sandbox can read it once your team lease arrives. Until then, explore
-the original data, which needs no AWS account. For GDELT, you read the live feed itself.
+`synpuf/`, `openalex/`, `maps/` and `food/`. ~~Your sandbox can read it once your team lease arrives. Until then, explore
+the original data, which needs no AWS account.~~ [You can read it from your laptop without an AWS account:
+[Read the preview from your laptop](#preview).]{.chg} For GDELT, you read the live feed itself.
 
 Your live updates are generated from your answers to the data questions in your proposal. The dataset itself is your
 history.
@@ -45,6 +46,73 @@ It reads only that station's files, and it takes a few seconds. To explore a dat
 DuckDB also reads files over HTTPS, and from Hugging Face with `hf://` paths, which covers the Open Food Facts file
 and the City of Vancouver exports. For OpenAlex, the API is often quicker than the snapshot.
 
+## [Read the preview from your laptop]{.chg} {#preview}
+
+::: {.chg}
+::: {.callout-note collapse="true"}
+## Install DuckDB and run a query
+
+**Command line.** Install [uv](https://docs.astral.sh/uv/getting-started/installation/) if you do not have it,
+and then install the DuckDB command-line tool with uv. This works the same way on macOS, Linux and Windows:
+
+```bash
+uv tool install duckdb-cli
+```
+
+If the `duckdb` command is not found after this, run `uv tool update-shell` and open a new terminal.
+
+You can also install it without uv. On macOS or Linux, run:
+
+```bash
+curl https://install.duckdb.org | bash
+```
+
+The script prints a line that puts `duckdb` on your path. Run that line in the same terminal to use `duckdb` now,
+and add it to your shell profile to use it in new terminals. On Windows, run this in PowerShell:
+
+```powershell
+powershell -NoExit -ExecutionPolicy Bypass -Command "irm https://install.duckdb.org/install.ps1 | iex"
+```
+
+Type `duckdb` to open a prompt, paste the queries from this page, and type `.quit` to leave. To run queries saved
+in a file, use `duckdb < queries.sql`.
+
+**Python with uv.** Make a project folder and add DuckDB to it:
+
+```bash
+uv init proposal-data
+cd proposal-data
+uv add duckdb
+uv add --dev ipykernel
+```
+
+Save this as `query.py`, and run it with `uv run python query.py`:
+
+```python
+import duckdb
+
+duckdb.sql("INSTALL httpfs; LOAD httpfs; SET s3_region = 'ca-central-1';")
+duckdb.sql("SELECT file FROM glob('s3://436c-2026w1-project-data/preview/food/*')").show()
+```
+
+**Notebook in VS Code.** Install the Python and Jupyter extensions. Open the `proposal-data` folder, create
+`explore.ipynb`, select **Select Kernel**, and choose the `.venv` environment of the folder. Put the same lines in a
+cell. A cell that ends with `duckdb.sql(...)` shows the result as a table, without `.show()`.
+:::
+
+The `preview/` prefix of the course bucket holds the demo data and is public, so you can use DuckDB or other tools
+from your laptop to look at the data for your proposal. The bucket is in `ca-central-1`. Start each DuckDB
+session with these lines:
+
+```sql
+INSTALL httpfs; LOAD httpfs;
+SET s3_region = 'ca-central-1';
+```
+
+Each folder has a `README.md` that describes its files and their columns. Each dataset section below links to
+its README and has a query that lists its files and a query to start from. A link to a Parquet file downloads the file.
+:::
+
 ## NOAA GHCN-Daily weather {#ghcn}
 
 **What it is.** Daily weather observations from stations around the world: temperature, precipitation, snow and
@@ -62,7 +130,27 @@ more. [Registry page](https://registry.opendata.aws/noaa-ghcn/). Licence: CC0.
 **Original data.** `s3://noaa-ghcn-pds/parquet/by_station/` and `by_year/` (us-east-1), back to the 1800s.
 
 **Preview.** Canada from 1 January 2015, partitioned by year: 3,055 stations with temperature,
- precipitation or snow, and the station list.
+ precipitation or snow, and the station list. [Files: [README](https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/ghcn/README.md),
+ [`stations.parquet`](https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/ghcn/stations.parquet), and one Parquet file for each year, which DuckDB reads together as
+ `s3://436c-2026w1-project-data/preview/ghcn/daily/*/*.parquet`.]{.chg}
+
+::: {.chg}
+Files in the folder and its subfolders:
+
+```sql
+SELECT file FROM glob('s3://436c-2026w1-project-data/preview/ghcn/**');
+```
+
+Number of daily maximum temperature observations, and of the stations that recorded them, for each year:
+
+```sql
+SELECT year, count(*) AS observations, count(DISTINCT station_id) AS stations
+FROM read_parquet('s3://436c-2026w1-project-data/preview/ghcn/daily/*/*.parquet', hive_partitioning = true)
+WHERE element = 'TMAX'
+GROUP BY year
+ORDER BY year;
+```
+:::
 
 **What to design for.**
 
@@ -90,6 +178,28 @@ persons.
 
 **Preview.** The 100,000-person set as Parquet, with a label table for ICD-9 diagnosis and procedure codes.
 The bucket has no OMOP vocabulary, so codes are numbers until you join labels.
+[Files: [README](https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/synpuf/README.md), and one Parquet file for each table, such as
+[`person.parquet`](https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/synpuf/person.parquet).]{.chg}
+
+::: {.chg}
+Files in the folder:
+
+```sql
+SELECT file FROM glob('s3://436c-2026w1-project-data/preview/synpuf/*');
+```
+
+The ten most frequent diagnosis codes, with their labels:
+
+```sql
+SELECT c.condition_source_value AS icd9, l.short_description, count(*) AS records
+FROM read_parquet('s3://436c-2026w1-project-data/preview/synpuf/condition_occurrence.parquet') AS c
+LEFT JOIN read_parquet('s3://436c-2026w1-project-data/preview/synpuf/icd9_labels.parquet') AS l
+  ON l.code = c.condition_source_value
+GROUP BY ALL
+ORDER BY records DESC
+LIMIT 10;
+```
+:::
 
 **What to design for.**
 
@@ -117,6 +227,25 @@ The bucket has no OMOP vocabulary, so codes are numbers until you join labels.
 
 **Preview.** One topic, 2015 to 2025. For Cloud Computing and Resource Management, that is 86,024 works as
 the primary topic. We rebuilt the abstract as text for 64,241 of them (75%).
+[Files: [README](https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/openalex/README.md), [`works.parquet`](https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/openalex/works.parquet) and
+[`institutions.parquet`](https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/openalex/institutions.parquet).]{.chg}
+
+::: {.chg}
+Files in the folder:
+
+```sql
+SELECT file FROM glob('s3://436c-2026w1-project-data/preview/openalex/*');
+```
+
+Number of works for each year, and how many of them have an abstract:
+
+```sql
+SELECT publication_year, count(*) AS works, count(abstract) AS with_abstract
+FROM read_parquet('s3://436c-2026w1-project-data/preview/openalex/works.parquet')
+GROUP BY publication_year
+ORDER BY publication_year;
+```
+:::
 
 **What to design for.**
 
@@ -142,7 +271,27 @@ Overture places CDLA-Permissive-2.0; City of Vancouver data, the Open Government
 **Original data.** Overture releases in `s3://overturemaps-us-west-2/release/` (us-west-2), and the
 [City of Vancouver open data portal](https://opendata.vancouver.ca).
 
-**Preview.** These three as Parquet files.
+**Preview.** These three as Parquet files. [Files: [README](https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/maps/README.md),
+[`overture_places.parquet`](https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/maps/overture_places.parquet), [`local_areas.parquet`](https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/maps/local_areas.parquet)
+and [`business_licences.parquet`](https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/maps/business_licences.parquet).]{.chg}
+
+::: {.chg}
+Files in the folder:
+
+```sql
+SELECT file FROM glob('s3://436c-2026w1-project-data/preview/maps/*');
+```
+
+The ten most frequent place categories:
+
+```sql
+SELECT basic_category, count(*) AS places
+FROM read_parquet('s3://436c-2026w1-project-data/preview/maps/overture_places.parquet')
+GROUP BY basic_category
+ORDER BY places DESC
+LIMIT 10;
+```
+:::
 
 **What to design for.**
 
@@ -169,30 +318,52 @@ Overture places CDLA-Permissive-2.0; City of Vancouver data, the Open Government
 
 **Original data.** The [product database on Hugging Face](https://huggingface.co/datasets/openfoodfacts/product-database)
 (`food.parquet`, with ingredients text),
-[Open Prices on Hugging Face](https://huggingface.co/datasets/openfoodfacts/open-prices) (`prices.parquet`),
+[[Open Prices on Hugging Face](https://huggingface.co/datasets/openfoodfacts/open-prices) (`prices.parquet`),]{.chg}
 and Statistics Canada [table 18-10-0245-01](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810024501).
 
 **Preview.** 124,863 Canadian products, without ingredients text, and Statistics Canada monthly
-average retail prices.
+average retail prices. [Files: [README](https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/food/README.md),
+[`off_products_canada_no_ingredients.parquet`](https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/food/off_products_canada_no_ingredients.parquet) and
+[`statcan_retail_prices.parquet`](https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/food/statcan_retail_prices.parquet).]{.chg}
+
+::: {.chg}
+Files in the folder:
+
+```sql
+SELECT file FROM glob('s3://436c-2026w1-project-data/preview/food/*');
+```
+
+Number of products for each Nutri-Score grade:
+
+```sql
+SELECT nutriscore_grade, count(*) AS products
+FROM read_parquet('s3://436c-2026w1-project-data/preview/food/off_products_canada_no_ingredients.parquet')
+GROUP BY nutriscore_grade
+ORDER BY nutriscore_grade;
+```
+:::
 
 **What to design for.**
 
 - ~~Assignment 3 already joined prices to receipts, and Assignment 4 built catalogue search. Your project needs a
-  different question.~~ Assignment 3 already used French products and prices and reported the share of spend on
-  Nutri-Score A and B products. Your project needs a question that Assignment 3 did not answer.
-- ~~Open Food Facts' own price data has almost nothing for Canada, so prices need another source.~~ Open Prices,
-  the price data Open Food Facts collects, has 714 Canadian records. <!--src: measured:open-prices-prices.parquet-2026-11-10 -->
-  If you want to use Canadian data, take prices from Statistics Canada's monthly average retail prices. They are
+  different question.~~ [Assignment 3 already used French products and prices and reported the share of spend on
+  Nutri-Score A and B products. Your project needs a question that Assignment 3 did not answer.]{.chg}
+- ~~Open Food Facts' own price data has almost nothing for Canada, so prices need another source.~~ [Open Prices,
+  the price data Open Food Facts collects, has 714 Canadian records.]{.chg} <!--src: measured:open-prices-prices.parquet-2026-11-10 -->
+  [If you want to use Canadian data, take prices from Statistics Canada's monthly average retail prices. They are
   averages by product type, not prices of single products, so you map product categories to those types yourself;
   they do not join by barcode. Otherwise, choose a country
-  that Open Prices covers well.
-- France has about 220,000 Open Prices records for about 79,000 products at about 2,500 locations (November 2026). <!--src: measured:open-prices-prices.parquet-2026-11-10 -->
-- The preview holds Canadian products only, so if you want to use French data instead, take French products from the original data.
-- Products are edited over time, so the catalogue has a current state and a history.
+  that Open Prices covers well.]{.chg}
+- [France has about 220,000 Open Prices records for about 79,000 products at about 2,500 locations (November 2026).]{.chg} <!--src: measured:open-prices-prices.parquet-2026-11-10 -->
+- [The preview holds Canadian products only, so if you want to use French data instead, take French products from the original data.]{.chg}
+- ~~Products are edited over time, so the catalogue has a current state and a history.~~ [The preview and the
+  original `food.parquet` each contain a snapshot of the catalogue. They hold each product's state as of the
+  snapshot and do not hold its history. Open Food Facts also publishes a file of changed products each day and keeps about the last two
+  weeks of them.]{.chg} <!--src: measured:off-delta-index-2026-11-10 (13 files) -->
 
 **Good additions.**
 
-- Statistics Canada monthly average retail prices (table 18-10-0245), by product type.
+- Statistics Canada monthly average retail prices (table ~~18-10-0245~~ [18-10-0245-01]{.chg}), by product type.
 - USDA FoodData Central branded foods, by barcode.
 - Open Food Facts' category and ingredient taxonomies.
 
@@ -208,7 +379,24 @@ average retail prices.
 - GKG, themes and sources: 34 to 70 times the size of the events file.
 
 **Original data and preview.** No preview: you read the live feed, with the course's GDELT pipeline from the lectures as a recipe. The course bucket has the CAMEO code and country lookup tables in `preview/gdelt/`.
+[The [README](https://436c-2026w1-project-data.s3.ca-central-1.amazonaws.com/preview/gdelt/README.md) lists them.]{.chg}
 Your test runs still use generated updates of the same shape, so the checks can compare against what really happened.
+
+::: {.chg}
+Files in the folder and its subfolders:
+
+```sql
+SELECT file FROM glob('s3://436c-2026w1-project-data/preview/gdelt/**');
+```
+
+The first rows of the CAMEO event codes:
+
+```sql
+SELECT *
+FROM read_parquet('s3://436c-2026w1-project-data/preview/gdelt/lookups/cameo_eventcodes.parquet')
+LIMIT 10;
+```
+:::
 
 **What to design for.**
 

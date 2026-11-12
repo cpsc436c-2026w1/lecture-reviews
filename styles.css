@@ -4,3 +4,5 @@ pre { overflow-x: auto; }
 .quizdown pre, .quizdown code { font-size: 0.9em; }
 /* on phones keep the columns aligned and let the block scroll sideways instead of wrapping */
 @media (max-width: 600px) { pre, pre code { white-space: pre; font-size: 0.8em; } }
+/* corrections after release: new words in red, removed words struck */
+.chg, .chg code, .chg a, .chg pre code, .chg pre code span { color: #c0392b; }
