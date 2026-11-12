@@ -42,7 +42,7 @@ The milestones are:
 
 | Milestone | Date | What you demonstrate | How you hand in |
 |---|---|---|---|
-| [Setup and proposal](project-proposal.qmd) | Fri Nov 13 EoD | Your repository, team norms and tools are set up; your case, data, shape, extension, first architecture and experiments are planned | tag `proposal` |
+| [Setup and proposal](project-proposal.qmd) | ~~Fri Nov 13 EoD~~ [Sat Nov 14, noon]{.chg} | Your repository, team norms and tools are set up; your case, data, shape, extension, first architecture and experiments are planned | tag `proposal` |
 | Feedback 1 | Tue Nov 17 EoD | Nothing to hand in. We add brief comments on your proposal, add some mandatory requirement constraints you will need to account for in your architecture (simulating interaction with a client), and select the experiment you need to run in your project. You may swap an extension until checkpoint 1 | `staff-feedback` issues |
 | Checkpoint 1: requirements and a first slice | Mon Nov 23 EoD | Numbered requirements and a design; a first slice running end to end: live updates arrive, are stored, reach the lake and show as one number to your users | tag `cp1` |
 | Checkpoint 2: review and the base running | | A Well-Architected review of your design and the change it leads to; the whole base running; scenarios ready for other teams | tag `cp2` |

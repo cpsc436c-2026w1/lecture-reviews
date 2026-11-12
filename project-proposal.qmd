@@ -7,7 +7,7 @@ format:
 ---
 
 In this stage, you set up your team's repository and working norms, and hand in a proposal for your system. The
-proposal is due **Friday 13 November, 23:59**. You submit it as a
+proposal is due ~~**Friday 13 November, 23:59**~~ [**Saturday 14 November, 12:00 (noon)**]{.chg}. You submit it as a
 [commit](https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/about-commits)
 in your team repository, [tagged](https://git-scm.com/book/en/v2/Git-Basics-Tagging) `proposal`.
 
