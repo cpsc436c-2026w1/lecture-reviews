@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.20">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>L17 review: retrieval, memory and agent patterns in the cloud – CPSC 436C companion</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-17888a1159294d3eb470f19f6f52f5a5.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-9b4f01e8f4456798517379425c73b574.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/quizdown-1.3.2/quizdown.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-1.3.2/quizdownKatex.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-1.3.2/quizdownHighlight.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-1.3.2/quizdown-init.js"></script>
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">CPSC 436C companion</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lecture-reviews" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Lecture reviews</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-lecture-reviews">    
+        <li>
+    <a class="dropdown-item" href="./index.html">
+ <span class="dropdown-text">All reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l1.html">
+ <span class="dropdown-text">L1: the four resources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l2.html">
+ <span class="dropdown-text">L2: EC2, S3 and Lambda</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l3.html">
+ <span class="dropdown-text">L3: cost models and what starts a function</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l4.html">
+ <span class="dropdown-text">L4: scaling up and out</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l5.html">
+ <span class="dropdown-text">L5: Spark on a cluster</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./w2-l6.html">
+ <span class="dropdown-text">L6: how Spark runs a query</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l10.html">
+ <span class="dropdown-text">L10: lakes, lakehouses and query engines</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l11.html">
+ <span class="dropdown-text">L11: assembling the lakehouse in Athena and Glue</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l12.html">
+ <span class="dropdown-text">L12: DynamoDB as OLTP storage, distributed database problems and properties</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l13.html">
+ <span class="dropdown-text">L13: netsplit and CAP, data latency (freshness)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l14.html">
+ <span class="dropdown-text">L14: message brokers, delivery guarantees and event-time windows</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l15.html">
+ <span class="dropdown-text">L15: generative AI in a data app</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l16.html">
+ <span class="dropdown-text">L16: principles of cloud design for a user-facing GenAI app</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./midterm-review.html">
+ <span class="dropdown-text">Midterm review</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutorials" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tutorials</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tutorials">    
+        <li>
+    <a class="dropdown-item" href="./tutorials.html">
+ <span class="dropdown-text">All tutorials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#emr-cluster">
+ <span class="dropdown-text">B2T1: Cluster/EMR</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#glue-part-a">
+ <span class="dropdown-text">B2T2 part A: Spark/Glue, how Spark reads files</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#glue-part-b">
+ <span class="dropdown-text">B2T2 part B: Spark/Glue, slow queries and their fixes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#b3-t1">
+ <span class="dropdown-text">B3T1: Lakehouse/Athena+Glue</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-project" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Project</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-project">    
+        <li>
+    <a class="dropdown-item" href="./project-start.html">
+ <span class="dropdown-text">Course project</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-proposal.html">
+ <span class="dropdown-text">Setup and proposal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-datasets.html">
+ <span class="dropdown-text">Project datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-experiments.html">
+ <span class="dropdown-text">Experiment examples</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-startup.html">
+ <span class="dropdown-text">Project setup</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-case-example.html">
+ <span class="dropdown-text">Proposal example</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-assignments" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Assignments</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-assignments">    
+        <li>
+    <a class="dropdown-item" href="https://cpsc436c-2026w1.github.io/a1-starter/">
+ <span class="dropdown-text">A1 starter</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://cpsc436c-2026w1.github.io/a2-starter/">
+ <span class="dropdown-text">A2 starter</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Parts</h2>
+   
+  <ul>
+  <li><a href="#part-recap" id="toc-part-recap" class="nav-link active" data-scroll-target="#part-recap">Recap of L16</a>
+  <ul class="collapse">
+  <li><a href="#part-grocery-principles" id="toc-part-grocery-principles" class="nav-link" data-scroll-target="#part-grocery-principles">Which principle does each design choice serve?</a></li>
+  <li><a href="#part-trace-queries" id="toc-part-trace-queries" class="nav-link" data-scroll-target="#part-trace-queries">How do we query the trace table?</a></li>
+  </ul></li>
+  <li><a href="#part-review" id="toc-part-review" class="nav-link" data-scroll-target="#part-review">Review questions for L17</a>
+  <ul class="collapse">
+  <li><a href="#part-next-step" id="toc-part-next-step" class="nav-link" data-scroll-target="#part-next-step">Who decides the next step?</a></li>
+  <li><a href="#part-history-cache" id="toc-part-history-cache" class="nav-link" data-scroll-target="#part-history-cache">What should the bookshop app do with each request?</a></li>
+  <li><a href="#part-cost-quality" id="toc-part-cost-quality" class="nav-link" data-scroll-target="#part-cost-quality">Which design should the hardware store’s chat use for each request?</a></li>
+  <li><a href="#part-agent-risks" id="toc-part-agent-risks" class="nav-link" data-scroll-target="#part-agent-risks">Which control limits or diagnoses each risk of the grocery agent?</a></li>
+  <li><a href="#part-simplest-pattern" id="toc-part-simplest-pattern" class="nav-link" data-scroll-target="#part-simplest-pattern">Which pattern should the museum chat use for each request?</a></li>
+  <li><a href="#part-enforce" id="toc-part-enforce" class="nav-link" data-scroll-target="#part-enforce">Which part of the setup enforces each control on the library agent?</a></li>
+  <li><a href="#part-terms" id="toc-part-terms" class="nav-link" data-scroll-target="#part-terms">Terms used on this page</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">L17 review: retrieval, memory and agent patterns in the cloud</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>If you need to look up a term, the <a href="#part-terms">relevant vocabulary is below</a>. The first part recaps L16; the second reviews L17.</p>
+<section id="part-recap" class="level1">
+<h1>Recap of L16</h1>
+<section id="part-grocery-principles" class="level2">
+<h2 class="anchored" data-anchor-id="part-grocery-principles">Which principle does each design choice serve?</h2>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## A gym adds chat to its booking dashboard. A manager asks questions in plain words. The model turns each question into SQL. The dashboard app on Fargate container runs the query using DuckDB. For each design choice, choose the principle it serves. Not all options will be used.
+
+- Model calls go through a gateway that refuses the manager's key once its budget is spent :: Controlled autonomy
+  &gt; The gateway limits how much each key may spend and how often it may call, regardless of what the model or manager does.
+- Each question is stored with its SQL, model and price, so the team can trace a wrong reply :: Comprehensive observability
+  &gt; The trace records what happened and what the question cost, so the team can investigate a reported problem.
+- The app reads the provider key from Secrets Manager. DuckDB cannot read files or S3 :: Secure interaction boundaries
+  &gt; Secrets Manager supplies the key. DuckDB cannot read files or S3. These restrictions limit what the app and SQL can access.
+- The team switches to a smaller model after an eval shows it answers as well :: Resource efficiency
+  &gt; The eval shows that the smaller model answers as well on the tested questions.
+- :: Distributed resilience
+  &gt; Resilience keeps the app answering when a task or a zone fails. The design choices in this item do not do that.
+- :: Standardized resource management
+  &gt; This principle versions the prompt, the model list and the image. The design choices in this item do not version anything.
+</div>
+</section>
+<section id="part-trace-queries" class="level2">
+<h2 class="anchored" data-anchor-id="part-trace-queries">How do we query the trace table?</h2>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## A hotel's front-desk chat writes one trace item per question to a DynamoDB table with partition key `conversation_id` and sort key `ts`. Each item also records the `model` that answered (the app uses two), the `price` of the call and a `status`. For each question about the traces, choose the design that answers it. Not all options will be used.
+
+- After a guest reports a wrong answer, find every trace of that conversation in time order :: Query on the table's key
+  &gt; `conversation_id` is the partition key, so one Query reads only that conversation's items, sorted by `ts`.
+- Every 5 minutes, an alert checks for one model's failed traces in the last hour :: Query an index on model and time
+  &gt; The index is keyed by `model` and sorted by `ts`. The alert reads that model's last hour, then filters for failed traces. The filter runs after the read.
+- Find the average price per question for each model and each week since the chat launched :: Export to S3, then Athena
+  &gt; The average uses every item and is asked for now and then. Athena bills per TB of Data scanned. The table keeps serving conversations.
+- :: Scan with a filter expression
+  &gt; The filter runs after the read. A full Scan reads all items and charges for the data read, even when few items match.
+- :: Filter each conversation's Query by model
+  &gt; A Query needs one `conversation_id`. A Query cannot read one model's items across every conversation without that key.
+</div>
+</section>
+</section>
+<section id="part-review" class="level1">
+<h1>Review questions for L17</h1>
+<section id="part-next-step" class="level2">
+<h2 class="anchored" data-anchor-id="part-next-step">Who decides the next step?</h2>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## The grocery app could handle shoppers in several ways. For each behaviour, choose what sets the next step. Each option may be used once, more than once, or not at all.
+
+- App code runs three calls in the same order for every follow-up: rewrite it with the chat history, retrieve, answer :: App code runs a fixed path
+  &gt; App code sets the order before a request arrives. The order does not depend on what the model returns. This is a prompt chain.
+- App code starts a price check and a palm-oil check on the retrieved products at the same time, and waits for both before the reply :: App code runs a fixed path
+  &gt; App code starts both calls and combines their results. The model does not choose to run them. App code collects the results of the parallel calls.
+- Each request goes to a small model, which returns one word: "list", "search" or "out of scope". App code runs the code written for that word :: Model's reply picks one of the fixed paths
+  &gt; The model's word is a label. Each path behind a label is code we wrote and tested. The label determines which predefined path the app runs.
+- Each reply goes to a model call that compares it with the retrieved products and returns "pass" or "fail". App code accepts on "pass", asks for a new reply on "fail", and stops after two retries :: Model's reply picks one of the fixed paths
+  &gt; The model compares the reply with the retrieved products and returns "pass" or "fail". App code provides the accept and retry paths and stops after two retries. The returned value sets which path runs.
+- For "dinners for a week", one model call returns a list of dishes. The app runs one search for each dish in that list :: Model's reply sets the subtasks
+  &gt; The model returns the dishes that become separate searches at run time. App code runs the searches and limits how many it runs.
+- After each search result, a model call returns the next tool to call (search again, read the shopper's list, add a product) or a final reply. The app runs what it returns :: Model's reply sets each step
+  &gt; The model returns the next tool call, and at the end a final reply. This is an agent loop: after each tool result, the model returns another tool call or the final reply. App code must enforce a step cap and a budget, and require approval before a tool call that changes data.
+- :: Gateway sets the next step
+  &gt; The gateway checks the key and enforces rate and budget limits on every model call, from any step of the app. It does not choose the app's next step.
+</div>
+</section>
+<section id="part-history-cache" class="level2">
+<h2 class="anchored" data-anchor-id="part-history-cache">What should the bookshop app do with each request?</h2>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## A bookshop app retrieves from its catalogue and stores chat history in DynamoDB. Match each request or need to what the app should do. Not all options will be used.
+
+- “Which novels by Ursula K. Le Guin do you stock?”, asked by many shoppers each day :: Exact answer cache keyed by question and index version
+  &gt; A shared cached reply is suitable if all shoppers can see the same stock. The key must change when relevant catalogue content changes.
+- “When will my order arrive?” :: Fresh lookup for the signed-in shopper
+  &gt; Look up the order under the signed-in shopper’s ID. A shared cached answer could expose one shopper’s order to another.
+- Shopper asks “and the paperback one?” right after asking about a novel :: Rewrite the follow-up using chat history, then retrieve
+  &gt; On its own, “the paperback one” does not name a book. The rewrite adds the novel from the earlier turn, so retrieval gets a question that stands alone.
+- Chat window shows a shopper's earlier messages and replies, newest first, kept for one week :: Query the chat history by conversation ID
+  &gt; Conversation ID is the partition key and time the sort key; the query reads that partition in descending time order. Each turn stores an expiry time one week ahead. DynamoDB deletes expired items later, so the query filters them out until then.
+- :: Send every earlier turn with each model call
+  &gt; Earlier turns increase the input of every call. The context window limits how much fits. The history can instead be stored and read by key.
+- :: Cache keyed by the question text only
+  &gt; Without the index version in the key, old answers keep matching after the catalogue changes. A personal question would return another shopper's answer.
+</div>
+</section>
+<section id="part-cost-quality" class="level2">
+<h2 class="anchored" data-anchor-id="part-cost-quality">Which design should the hardware store’s chat use for each request?</h2>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## A hardware store's help chat retrieves from its product catalogue in DynamoDB, keyed by item number, and reads an orders table keyed by customer ID. Customers are signed in. Match each request or job to the design that should handle it. Not all options will be used.
+
+- “What is the status of my order 4471?” :: Fresh lookup by the customer's ID
+  &gt; The answer contains one customer's data. Look it up under that customer's key. Any shared cache must restrict access to that customer's entries.
+- “Write me a poem about hammers” :: Stock reply, no answer-model call
+  &gt; The request is outside the store's job. A stock reply does not call the answer model.
+- A comparison of three wall-anchor types that the small model fails in the store's eval :: Route to a stronger model
+  &gt; The store's eval shows the small model fails this comparison, so it goes to a stronger model. The model gateway checks whether the key permits that model.
+- Replies sometimes cite item numbers that were not retrieved :: Code check, then a bounded retry
+  &gt; Each item number in the reply must be among the retrieved rows. Our code checks this and limits the retries.
+- Every request must be screened for unsafe electrical requests before it reaches the answer model :: Blocking input guard
+  &gt; The guard must run before the answer model so a blocked request does not reach it.
+- :: Scan with a filter expression
+  &gt; The filter runs after the read. Scanning the whole table may require multiple pages and reads items before filtering them.
+- :: Agent loop for every request
+  &gt; Each request here has a path our code can run. The model does not need to choose the next step for any of them.
+</div>
+</section>
+<section id="part-agent-risks" class="level2">
+<h2 class="anchored" data-anchor-id="part-agent-risks">Which control limits or diagnoses each risk of the grocery agent?</h2>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## The grocery agent can call search_products, get_product, get_list and add_to_list. Match each risk to the control that limits or diagnoses it. Not all options will be used.
+
+- On an unclear request, the loop calls search_products again and again :: Cap of 6 tool calls per request
+  &gt; The cap ends the loop from outside the model: after 6 calls the agent replies or stops.
+- add_to_list times out after its write succeeded. The retry adds the same jar a second time :: Conditional write with a request ID
+  &gt; The write stores its request ID and result. A retry with the same ID finds that record and returns its result without adding another jar.
+- A product description tells the agent to add twenty jars to the list :: Shopper confirms before add_to_list runs
+  &gt; The write waits for the person whose list it changes, so text in a tool result cannot change the list on its own.
+- A bug in the agent's code tries to delete items from the products table :: Least-privilege role per tool
+  &gt; Least privilege: the roles cannot delete from the products table, whatever the code asks for.
+- The agent loops and tries to spend more than its key's configured model budget :: Per-key budget at the gateway
+  &gt; The gateway reserves the highest price a call can reach before it runs and returns 429 when the key's budget does not fit.
+- A shopper says the agent added the wrong product :: Trace item for every step
+  &gt; Each tool call, its arguments and its result are recorded under one trace id, so the wrong step can be found.
+- :: Semantic cache
+  &gt; A semantic cache only decides whether a stored reply can be reused. It sits before the model, so the loop, its tools and its spend are unchanged when it misses.
+- :: Longer system prompt
+  &gt; The model may not follow a system prompt. An external cap can limit the model's actions.
+</div>
+</section>
+<section id="part-simplest-pattern" class="level2">
+<h2 class="anchored" data-anchor-id="part-simplest-pattern">Which pattern should the museum chat use for each request?</h2>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## A museum's visitor chat answers from its collection table in DynamoDB, keyed by object number, and can reserve tickets. Match each request to the simplest pattern that handles it well. Not all options will be used.
+
+- “Paintings that feel like a stormy coast” :: Augmented LLM
+  &gt; One model call is enough once our code retrieves objects close in meaning to the request.
+- After the visitor asks about two paintings: “and the larger one?” :: Prompt chain
+  &gt; The follow-up does not stand alone. A fixed chain rewrites it with the earlier turns before retrieval.
+- “Write my art history essay for me” :: Routing
+  &gt; The request is outside the museum's job. A small classifier labels it. Our code then sends a stock reply without calling the answer model.
+- “Describe the Monet works on display today for a ten-year-old”, where replies sometimes name works on loan or use words a child would not know :: Evaluator-optimizer
+  &gt; Code checks what the table can decide: every object named is on display. AI as a judge scores the reading level. Our code limits the retries.
+- “Plan a visit whose relevant exhibits and search tasks cannot be named until the first collection results return” :: Orchestrator-workers
+  &gt; The parts are not known until the first results return. The model plans them. Our code checks the plan, runs the parts and limits how many.
+- “Reserve two tickets for Saturday” :: Fixed workflow with confirmation
+  &gt; The steps are known: confirm, then reserve. Our code runs them in order. The write waits for the visitor. The model does not need to choose its next action.
+- :: Agent with no step cap
+  &gt; These requests do not need open-ended steps. An agent without a cap or budget can loop and spend without limit.
+- :: Bounded agent with a step cap
+  &gt; A write alone does not need an agent. The model does not need to choose its next action at run time for any of these requests, so a simpler pattern serves each.
+</div>
+</section>
+<section id="part-enforce" class="level2">
+<h2 class="anchored" data-anchor-id="part-enforce">Which part of the setup enforces each control on the library agent?</h2>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## A city library runs an agent on Fargate that renews loans, places holds and waives fines. Its tools read and write DynamoDB tables. Each patron has a distinct gateway key. This gateway's budget resets monthly. Fine waivers run as a workflow that can pause until a person answers. For each control, choose the part of the setup that enforces it. Each option may be used once, more than once, or not at all.
+
+- The agent's model spend stops at 5 CAD per patron each month :: Gateway limits per key
+  &gt; The gateway reserves the highest price a request can reach before the call and refuses it when the reserve does not fit, so parallel requests cannot overspend.
+- One patron who sends too many requests a minute gets a 429 :: Gateway limits per key
+  &gt; The gateway limits requests per key, so one patron cannot exceed their configured request rate.
+- The agent's tools can read the catalogue table but cannot delete any item from it :: Least-privilege IAM role
+  &gt; Least privilege is set on the role the task runs with. A prompt cannot grant the model a permission the role does not have.
+- A librarian approves any fine waiver over 20 CAD before it is applied :: Pause in the workflow until a person answers
+  &gt; The workflow stops before the write and continues only if the librarian approves. If the librarian rejects the waiver or the wait times out, the waiver is not applied.
+- Staff can see every tool call, its arguments and its cost for one patron's request :: Trace item per agent step
+  &gt; Each trace item uses the request ID as its partition key and the step number as its sort key, so a Query returns the request's steps in order.
+- :: Larger model
+  &gt; Model size does not enforce a budget, a permission, an approval, a record or a pace. Each control here lives in a component around the model.
+</div>
+</section>
+<section id="part-terms" class="level2">
+<h2 class="anchored" data-anchor-id="part-terms">Terms used on this page</h2>
+<p><strong>Workflow</strong>. App code sets the possible steps and their order before a request arrives. Model calls and tools run inside those paths.</p>
+<p><strong>Agent</strong>. The model uses results from earlier steps to choose its next action or tool.</p>
+<p><strong>Bounded agent</strong>. An agent with limits on its actions, time or spend that the model cannot remove.</p>
+<p><strong>Augmented LLM</strong>. A model given information, tools or memory beyond what it learned in training. The book calls preparing this context construction.</p>
+<p><strong>Inverted index</strong>. For each term, the list of documents where it appears.</p>
+<p><strong>Vector index</strong>. Vectors organized so a search can quickly find the ones closest to a query’s vector.</p>
+<p><strong>Prompt chain</strong>. Two or more model calls in an order set by app code, where an earlier output feeds a later call.</p>
+<p><strong>Answer cache</strong>. A store of replies that the app reuses when a later request matches the cache key.</p>
+<p><strong>Parallel calls</strong>. Independent calls, to models or to other services, run at the same time. App code collects their results.</p>
+<p><strong>Router</strong>. A component that sends each request to one of several predefined paths: a cheaper model, a stronger model, a stock reply, a clarifying question or a person.</p>
+<p><strong>Evaluator-optimizer</strong>. One step produces a result. Another evaluates it against criteria. App code accepts the result or asks for a revision within a set limit.</p>
+<p><strong>Orchestrator-workers</strong>. A planner model call splits the request into subtasks that depend on it. App code runs a worker for each subtask, and a merge call combines their replies.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

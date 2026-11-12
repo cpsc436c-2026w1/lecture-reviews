@@ -1,0 +1,215 @@
+---
+order: 17
+title: "L17 review: retrieval, memory and agent patterns in the cloud"
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-title: "Parts"
+filters:
+  - quizdown
+---
+
+If you need to look up a term, the [relevant vocabulary is below](#part-terms). The first part recaps L16; the second reviews L17.
+
+# Recap of L16 {#part-recap}
+
+## Which principle does each design choice serve? {#part-grocery-principles}
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## A gym adds chat to its booking dashboard. A manager asks questions in plain words. The model turns each question into SQL. The dashboard app on Fargate container runs the query using DuckDB. For each design choice, choose the principle it serves. Not all options will be used.
+
+- Model calls go through a gateway that refuses the manager's key once its budget is spent :: Controlled autonomy
+  > The gateway limits how much each key may spend and how often it may call, regardless of what the model or manager does.
+- Each question is stored with its SQL, model and price, so the team can trace a wrong reply :: Comprehensive observability
+  > The trace records what happened and what the question cost, so the team can investigate a reported problem.
+- The app reads the provider key from Secrets Manager. DuckDB cannot read files or S3 :: Secure interaction boundaries
+  > Secrets Manager supplies the key. DuckDB cannot read files or S3. These restrictions limit what the app and SQL can access.
+- The team switches to a smaller model after an eval shows it answers as well :: Resource efficiency
+  > The eval shows that the smaller model answers as well on the tested questions.
+- :: Distributed resilience
+  > Resilience keeps the app answering when a task or a zone fails. The design choices in this item do not do that.
+- :: Standardized resource management
+  > This principle versions the prompt, the model list and the image. The design choices in this item do not version anything.
+```
+
+## How do we query the trace table? {#part-trace-queries}
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## A hotel's front-desk chat writes one trace item per question to a DynamoDB table with partition key `conversation_id` and sort key `ts`. Each item also records the `model` that answered (the app uses two), the `price` of the call and a `status`. For each question about the traces, choose the design that answers it. Not all options will be used.
+
+- After a guest reports a wrong answer, find every trace of that conversation in time order :: Query on the table's key
+  > `conversation_id` is the partition key, so one Query reads only that conversation's items, sorted by `ts`.
+- Every 5 minutes, an alert checks for one model's failed traces in the last hour :: Query an index on model and time
+  > The index is keyed by `model` and sorted by `ts`. The alert reads that model's last hour, then filters for failed traces. The filter runs after the read.
+- Find the average price per question for each model and each week since the chat launched :: Export to S3, then Athena
+  > The average uses every item and is asked for now and then. Athena bills per TB of Data scanned. The table keeps serving conversations.
+- :: Scan with a filter expression
+  > The filter runs after the read. A full Scan reads all items and charges for the data read, even when few items match.
+- :: Filter each conversation's Query by model
+  > A Query needs one `conversation_id`. A Query cannot read one model's items across every conversation without that key.
+```
+
+# Review questions for L17 {#part-review}
+
+## Who decides the next step? {#part-next-step}
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## The grocery app could handle shoppers in several ways. For each behaviour, choose what sets the next step. Each option may be used once, more than once, or not at all.
+
+- App code runs three calls in the same order for every follow-up: rewrite it with the chat history, retrieve, answer :: App code runs a fixed path
+  > App code sets the order before a request arrives. The order does not depend on what the model returns. This is a prompt chain.
+- App code starts a price check and a palm-oil check on the retrieved products at the same time, and waits for both before the reply :: App code runs a fixed path
+  > App code starts both calls and combines their results. The model does not choose to run them. App code collects the results of the parallel calls.
+- Each request goes to a small model, which returns one word: "list", "search" or "out of scope". App code runs the code written for that word :: Model's reply picks one of the fixed paths
+  > The model's word is a label. Each path behind a label is code we wrote and tested. The label determines which predefined path the app runs.
+- Each reply goes to a model call that compares it with the retrieved products and returns "pass" or "fail". App code accepts on "pass", asks for a new reply on "fail", and stops after two retries :: Model's reply picks one of the fixed paths
+  > The model compares the reply with the retrieved products and returns "pass" or "fail". App code provides the accept and retry paths and stops after two retries. The returned value sets which path runs.
+- For "dinners for a week", one model call returns a list of dishes. The app runs one search for each dish in that list :: Model's reply sets the subtasks
+  > The model returns the dishes that become separate searches at run time. App code runs the searches and limits how many it runs.
+- After each search result, a model call returns the next tool to call (search again, read the shopper's list, add a product) or a final reply. The app runs what it returns :: Model's reply sets each step
+  > The model returns the next tool call, and at the end a final reply. This is an agent loop: after each tool result, the model returns another tool call or the final reply. App code must enforce a step cap and a budget, and require approval before a tool call that changes data.
+- :: Gateway sets the next step
+  > The gateway checks the key and enforces rate and budget limits on every model call, from any step of the app. It does not choose the app's next step.
+```
+
+## What should the bookshop app do with each request? {#part-history-cache}
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## A bookshop app retrieves from its catalogue and stores chat history in DynamoDB. Match each request or need to what the app should do. Not all options will be used.
+
+- “Which novels by Ursula K. Le Guin do you stock?”, asked by many shoppers each day :: Exact answer cache keyed by question and index version
+  > A shared cached reply is suitable if all shoppers can see the same stock. The key must change when relevant catalogue content changes.
+- “When will my order arrive?” :: Fresh lookup for the signed-in shopper
+  > Look up the order under the signed-in shopper’s ID. A shared cached answer could expose one shopper’s order to another.
+- Shopper asks “and the paperback one?” right after asking about a novel :: Rewrite the follow-up using chat history, then retrieve
+  > On its own, “the paperback one” does not name a book. The rewrite adds the novel from the earlier turn, so retrieval gets a question that stands alone.
+- Chat window shows a shopper's earlier messages and replies, newest first, kept for one week :: Query the chat history by conversation ID
+  > Conversation ID is the partition key and time the sort key; the query reads that partition in descending time order. Each turn stores an expiry time one week ahead. DynamoDB deletes expired items later, so the query filters them out until then.
+- :: Send every earlier turn with each model call
+  > Earlier turns increase the input of every call. The context window limits how much fits. The history can instead be stored and read by key.
+- :: Cache keyed by the question text only
+  > Without the index version in the key, old answers keep matching after the catalogue changes. A personal question would return another shopper's answer.
+```
+
+## Which design should the hardware store's chat use for each request? {#part-cost-quality}
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## A hardware store's help chat retrieves from its product catalogue in DynamoDB, keyed by item number, and reads an orders table keyed by customer ID. Customers are signed in. Match each request or job to the design that should handle it. Not all options will be used.
+
+- “What is the status of my order 4471?” :: Fresh lookup by the customer's ID
+  > The answer contains one customer's data. Look it up under that customer's key. Any shared cache must restrict access to that customer's entries.
+- “Write me a poem about hammers” :: Stock reply, no answer-model call
+  > The request is outside the store's job. A stock reply does not call the answer model.
+- A comparison of three wall-anchor types that the small model fails in the store's eval :: Route to a stronger model
+  > The store's eval shows the small model fails this comparison, so it goes to a stronger model. The model gateway checks whether the key permits that model.
+- Replies sometimes cite item numbers that were not retrieved :: Code check, then a bounded retry
+  > Each item number in the reply must be among the retrieved rows. Our code checks this and limits the retries.
+- Every request must be screened for unsafe electrical requests before it reaches the answer model :: Blocking input guard
+  > The guard must run before the answer model so a blocked request does not reach it.
+- :: Scan with a filter expression
+  > The filter runs after the read. Scanning the whole table may require multiple pages and reads items before filtering them.
+- :: Agent loop for every request
+  > Each request here has a path our code can run. The model does not need to choose the next step for any of them.
+```
+
+## Which control limits or diagnoses each risk of the grocery agent? {#part-agent-risks}
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## The grocery agent can call search_products, get_product, get_list and add_to_list. Match each risk to the control that limits or diagnoses it. Not all options will be used.
+
+- On an unclear request, the loop calls search_products again and again :: Cap of 6 tool calls per request
+  > The cap ends the loop from outside the model: after 6 calls the agent replies or stops.
+- add_to_list times out after its write succeeded. The retry adds the same jar a second time :: Conditional write with a request ID
+  > The write stores its request ID and result. A retry with the same ID finds that record and returns its result without adding another jar.
+- A product description tells the agent to add twenty jars to the list :: Shopper confirms before add_to_list runs
+  > The write waits for the person whose list it changes, so text in a tool result cannot change the list on its own.
+- A bug in the agent's code tries to delete items from the products table :: Least-privilege role per tool
+  > Least privilege: the roles cannot delete from the products table, whatever the code asks for.
+- The agent loops and tries to spend more than its key's configured model budget :: Per-key budget at the gateway
+  > The gateway reserves the highest price a call can reach before it runs and returns 429 when the key's budget does not fit.
+- A shopper says the agent added the wrong product :: Trace item for every step
+  > Each tool call, its arguments and its result are recorded under one trace id, so the wrong step can be found.
+- :: Semantic cache
+  > A semantic cache only decides whether a stored reply can be reused. It sits before the model, so the loop, its tools and its spend are unchanged when it misses.
+- :: Longer system prompt
+  > The model may not follow a system prompt. An external cap can limit the model's actions.
+```
+
+## Which pattern should the museum chat use for each request? {#part-simplest-pattern}
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## A museum's visitor chat answers from its collection table in DynamoDB, keyed by object number, and can reserve tickets. Match each request to the simplest pattern that handles it well. Not all options will be used.
+
+- “Paintings that feel like a stormy coast” :: Augmented LLM
+  > One model call is enough once our code retrieves objects close in meaning to the request.
+- After the visitor asks about two paintings: “and the larger one?” :: Prompt chain
+  > The follow-up does not stand alone. A fixed chain rewrites it with the earlier turns before retrieval.
+- “Write my art history essay for me” :: Routing
+  > The request is outside the museum's job. A small classifier labels it. Our code then sends a stock reply without calling the answer model.
+- “Describe the Monet works on display today for a ten-year-old”, where replies sometimes name works on loan or use words a child would not know :: Evaluator-optimizer
+  > Code checks what the table can decide: every object named is on display. AI as a judge scores the reading level. Our code limits the retries.
+- “Plan a visit whose relevant exhibits and search tasks cannot be named until the first collection results return” :: Orchestrator-workers
+  > The parts are not known until the first results return. The model plans them. Our code checks the plan, runs the parts and limits how many.
+- “Reserve two tickets for Saturday” :: Fixed workflow with confirmation
+  > The steps are known: confirm, then reserve. Our code runs them in order. The write waits for the visitor. The model does not need to choose its next action.
+- :: Agent with no step cap
+  > These requests do not need open-ended steps. An agent without a cap or budget can loop and spend without limit.
+- :: Bounded agent with a step cap
+  > A write alone does not need an agent. The model does not need to choose its next action at run time for any of these requests, so a simpler pattern serves each.
+```
+
+## Which part of the setup enforces each control on the library agent? {#part-enforce}
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## A city library runs an agent on Fargate that renews loans, places holds and waives fines. Its tools read and write DynamoDB tables. Each patron has a distinct gateway key. This gateway's budget resets monthly. Fine waivers run as a workflow that can pause until a person answers. For each control, choose the part of the setup that enforces it. Each option may be used once, more than once, or not at all.
+
+- The agent's model spend stops at 5 CAD per patron each month :: Gateway limits per key
+  > The gateway reserves the highest price a request can reach before the call and refuses it when the reserve does not fit, so parallel requests cannot overspend.
+- One patron who sends too many requests a minute gets a 429 :: Gateway limits per key
+  > The gateway limits requests per key, so one patron cannot exceed their configured request rate.
+- The agent's tools can read the catalogue table but cannot delete any item from it :: Least-privilege IAM role
+  > Least privilege is set on the role the task runs with. A prompt cannot grant the model a permission the role does not have.
+- A librarian approves any fine waiver over 20 CAD before it is applied :: Pause in the workflow until a person answers
+  > The workflow stops before the write and continues only if the librarian approves. If the librarian rejects the waiver or the wait times out, the waiver is not applied.
+- Staff can see every tool call, its arguments and its cost for one patron's request :: Trace item per agent step
+  > Each trace item uses the request ID as its partition key and the step number as its sort key, so a Query returns the request's steps in order.
+- :: Larger model
+  > Model size does not enforce a budget, a permission, an approval, a record or a pace. Each control here lives in a component around the model.
+```
+
+## Terms used on this page {#part-terms}
+
+{{< include _terms/page-l17.md >}}
