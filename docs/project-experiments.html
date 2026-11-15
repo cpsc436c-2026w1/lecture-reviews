@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.10.20">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -12,10 +12,13 @@
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -39,10 +42,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-17888a1159294d3eb470f19f6f52f5a5.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-158031087360bce0ff56dc785ce39e06.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-9b4f01e8f4456798517379425c73b574.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -332,8 +335,8 @@ ul.task-list li input[type="checkbox"] {
 <section id="llm-eval" class="level2">
 <h2 class="anchored" data-anchor-id="llm-eval">Example 2: an assistant evaluated with Inspect AI</h2>
 <p>A generative-AI-first team on Open Food Facts. The team’s assistant answers questions such as “Which breakfast cereals sold in Canada have under 5 g of sugar per 100 g?” by filling the parameters of one fixed Athena query. Here the test cases are a set of questions with known answers. Each metric is an aggregate over the set.</p>
-<p><strong>1. Question.</strong> Which of the two course models gives the assistant more correct answers, within our token and latency limits?</p>
-<p><strong>2. Design alternatives.</strong> The two models you have access to through the LTIC, served by the course LLM proxy, each behind the same assistant code.</p>
+<p><strong>1. Question.</strong> Which of the two course models gives the assistant more correct answers, within our cost and latency limits?</p>
+<p><strong>2. Design alternatives.</strong> The two models you have access to through the LTIC, served by the model gateway, each behind the same assistant code.</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 33%">
@@ -362,12 +365,12 @@ ul.task-list li input[type="checkbox"] {
 </table>
 <p><strong>3. Overall evaluation criterion and guardrails.</strong></p>
 <ul>
-<li>OEC: accuracy over the 90 scored answers per alternative (30 questions, 3 epochs), higher is better. A threshold or ranking answer is correct when its product list matches the known list. A count answer is correct when its number equals the known count.</li>
+<li>OEC: accuracy over all scored answers per alternative (the current questions × 3 epochs), higher is better. A threshold or ranking answer is correct when its product list matches the known list. A count answer is correct when its number equals the known count. An answer to a question the subset cannot answer is correct when it does not return a product list or count and says the product subset does not contain the information needed.</li>
 <li>Guardrails:
 <ul>
-<li>accuracy on each question type (threshold, ranking, count) at least 70%;</li>
+<li>accuracy on each question type (threshold, ranking, count, not in the data) at least 70%;</li>
 <li>F1 of the returned product lists, for threshold and ranking questions, at least 0.8;</li>
-<li>under 4,000 tokens per question, input and output together;</li>
+<li>mean cost under 0.0005 CAD per scored answer, for each alternative over all questions and epochs: <code>(input tokens × input price + output tokens × output price) / 1,000,000</code>, with Inspect’s token counts and the model gateway’s prices in CAD per million tokens from L18 (Qwen 3.6 35B-A3B 0.05 input, 0.10 output; Qwen 3.8 27B 0.10 input, 0.20 output);</li>
 <li>median latency under 5 s.</li>
 </ul></li>
 <li>Job story it informs: the shopper’s question story, for example JS01. Once requirements exist, the requirement written from it.</li>
@@ -375,21 +378,23 @@ ul.task-list li input[type="checkbox"] {
 <p><strong>4. Experiment setup.</strong></p>
 <ul>
 <li>Same for both alternatives: the same assistant code and system prompt, temperature 0, the same Athena query tool, the same product subset.</li>
-<li>Test cases: 30 questions with known answers, 10 of each type, computed once by SQL over the product subset, in <code>experiments/food-qa/questions.jsonl</code>. Each line holds the question, its type and the expected answer: a product list, or a count.</li>
+<li>Test cases: 40 questions, 10 of each type, in <code>experiments/food-qa/questions.jsonl</code>. Each line holds the question, its type and the expected answer: a product list, a count, or “not in the data”. The answers to the first three types are computed once by SQL over the product subset. The fourth type asks about something the subset does not hold, such as a store’s stock today.</li>
+<li>Cases from failures: when a team member, or another team during testing, reports a wrong answer, check it against the product subset, record its expected answer, and add it to <code>questions.jsonl</code> unless the case is already there. Run both alternatives again on the expanded file before comparing them.</li>
 </ul>
-<p><strong>5. Prediction.</strong> Qwen 3.8 27B has the higher accuracy, about 85% against 75%. Qwen 3.6 35B-A3B answers faster and stays within the latency guardrail with more room. Both use about the same number of tokens, because the prompt and the tool are the same. Source: L17 and L19, the request path and cost per question from token counts.</p>
+<p><strong>5. Prediction.</strong> Qwen 3.8 27B has the higher accuracy, about 85% against 75%. Qwen 3.6 35B-A3B answers faster and stays within the latency guardrail with more room. Token use may differ despite the shared prompt and tool, and Qwen 3.8 27B costs more at equal token counts. Source: L17 for the request path, L18 for the model gateway’s prices.</p>
 <p><strong>6. Method.</strong></p>
 <ul>
-<li>Commands, one per alternative, against the course LLM proxy:
+<li>Commands, one per alternative, through the model gateway:
 <ul>
 <li><code>inspect eval experiments/food-qa/task.py --model openai-api/proxy/qwen3.6-35b-a3b --epochs 3</code></li>
 <li><code>inspect eval experiments/food-qa/task.py --model openai-api/proxy/qwen3.8-27b --epochs 3</code></li>
 </ul>
-<code>task.py</code> defines one Inspect task: the dataset is <code>questions.jsonl</code>, the solver is the assistant, and the scorer compares product lists and records accuracy, F1 and the question type.</li>
-<li>Repeats: 30 questions × 3 epochs per alternative, so 90 scored answers each.</li>
+<code>task.py</code> defines one Inspect task: the dataset is <code>questions.jsonl</code> and the solver is the assistant. The scorer checks product lists for threshold and ranking questions, numbers for count questions, and, for questions the subset cannot answer, that the reply returns no product list or count and says the subset lacks the information. The script that builds the result table from the Inspect logs computes the OEC and its standard error, accuracy by question type, product-list F1, mean CAD per scored answer and median latency, and marks each guardrail as held or not.</li>
+<li>Repeats: start with 40 questions × 3 epochs, so 120 scored answers per alternative; added failure cases increase both totals.</li>
+<li>When to run again: after any change to the prompt, the tool or the model, and before the <code>cp2</code> and <code>final</code> tags. Each run gets its own evidence folder, so the results of different runs can be compared.</li>
 <li>Evidence: <code>evidence/&lt;run id&gt;/</code> holds Inspect’s log file for each run, the command, the commit SHA, and the script that rebuilds the result table from the logs.</li>
 </ul>
-<p><strong>7. Result</strong>, after the run, reports for each alternative: the OEC with its standard error over the 90 answers, and each guardrail with its value and whether it holds.</p>
+<p><strong>7. Result</strong>, after the run, reports for each alternative: the OEC with a standard error computed across questions (from each question’s mean accuracy over its three epochs), and each guardrail with its value and whether it holds.</p>
 
 
 </section>
