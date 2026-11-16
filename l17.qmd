@@ -12,6 +12,8 @@ filters:
 
 If you need to look up a term, the [relevant vocabulary is below](#part-terms). The first part recaps L16; the second reviews L17.
 
+We mentioned the course LLM gateway in the lecture. Here is its code: [cpsc436c-2026w1/llm-gateway](https://github.com/cpsc436c-2026w1/llm-gateway).
+
 # Recap of L16 {#part-recap}
 
 ## Which principle does each design choice serve? {#part-grocery-principles}

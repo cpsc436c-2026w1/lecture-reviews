@@ -1005,7 +1005,7 @@
     "href": "l17.html",
     "title": "L17 review: retrieval, memory and agent patterns in the cloud",
     "section": "",
-    "text": "If you need to look up a term, the relevant vocabulary is below. The first part recaps L16; the second reviews L17."
+    "text": "If you need to look up a term, the relevant vocabulary is below. The first part recaps L16; the second reviews L17.\nWe mentioned the course LLM gateway in the lecture. Here is its code: cpsc436c-2026w1/llm-gateway."
   },
   {
     "objectID": "l17.html#part-grocery-principles",
