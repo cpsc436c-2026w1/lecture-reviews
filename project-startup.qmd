@@ -164,6 +164,29 @@ your `team_NN` repository. Use only your own, and put this line in your shell pr
 export KB_MCP_TOKEN=<TOKEN_FROM_INSTRUCTOR>
 ```
 
+### Course LLM gateway
+
+The same token is your key for the course LLM gateway, which serves the course's models (L16, L17). Its address is:
+
+```text
+https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1
+```
+
+Different course materials name the token and the address differently. They are the same two values:
+
+| Value | Name to use | Also accepted by course code | Name Inspect reads for `openai-api/proxy/...` models |
+|---|---|---|---|
+| Token | `KB_MCP_TOKEN` | `COURSE_MCP_TOKEN` (the L17 slides) | `PROXY_API_KEY` |
+| Gateway address | `COURSE_GATEWAY_URL` | `GATEWAY_URL` (the L17 slides; without `/v1`) | `PROXY_BASE_URL` |
+
+To run an Inspect eval through the gateway, set the two Inspect names from yours:
+
+```bash
+export COURSE_GATEWAY_URL=https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1
+export PROXY_BASE_URL=$COURSE_GATEWAY_URL
+export PROXY_API_KEY=$KB_MCP_TOKEN
+```
+
 ### AI Tool Setup
 
 #### Claude Code Setup
