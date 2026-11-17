@@ -91,3 +91,15 @@ A Glue session bills until it stops, even after you close the browser tab. End e
      [before you start](https://github.com/cpsc436c-2026w1/b5-t1-mcp-evals#before-you-start).
 - **Materials:** Use the [B5T1 repository](https://github.com/cpsc436c-2026w1/b5-t1-mcp-evals) (short link
   `ilm.wiki/436c/b5t1`). Part A is in `mcp/`, and part B is in `evals-gepa/`.
+- **Check your assistant's connection:** after part A's own check, ask your assistant these two things.
+  1. “List what the course MCP server offers: its tools and its topics.” A working reply names three tools:
+     `query_kb` searches the course's pages, `get_kb_doc` reads one page in full, and `list_kb_topics` lists the
+     topics. The topics include `436c-student`, the course's own pages, and reference topics such as Spark and
+     Parquet.
+  2. “Use the course MCP server: read the practice lens and run its lens pass on `docs/proposal.md`.” A working
+     reply is a table with the lens's two questions (how often each job story happens and how fast its answer is
+     needed; where each number in the data answers comes from), each classified as stated, partial or absent with
+     a quoted line, and then two or three suggestions.
+
+  The wording of the replies changes from run to run. Your model applies the lens; the course MCP server only
+  provides it.
