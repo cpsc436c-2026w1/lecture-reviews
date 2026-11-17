@@ -25,7 +25,7 @@ shuffle_answers: true
 
 - A customer asks “Do you sell Monstera deliciosa?”, using a plant name stored in the plant table :: Keyword search in a search index
   > The question contains an exact name from the plant table. A keyword index matches those words and ranks the plants that contain them.
-- A customer asks for “something that survives in a dark bathroom”, words that appear in no plant's name or description :: Vector search (embeddings) in a vector index
+- A customer asks for “something that survives in a dark bathroom”, words that don't appear in any plant's name or description :: Vector search (embeddings) in a vector index
   > The request describes meaning. A vector index can find descriptions close in meaning even without a shared word.
 - A customer asks about ferns, then asks “and the smaller one?” :: Rewrite call that reads the chat history
   > The follow-up does not stand alone. A model call rewrites the follow-up with the earlier turns, and app code searches with the rewritten question.
