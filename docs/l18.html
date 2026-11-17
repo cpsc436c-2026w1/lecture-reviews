@@ -358,7 +358,7 @@ shuffle_answers: true
   &gt; The two calls do not depend on each other. App code starts them together and collects the results.
 - A small model returns “booking”, “advice” or “out of scope”, and app code runs the code written for that word :: Routing
   &gt; The model's output is a label. Each path behind a label is code the shop wrote and tested.
-- One model call writes a reply. A separate model call returns “pass” or “fail” against the shop's rules, and app code asks for a new reply at most twice :: Evaluator-optimizer
+- One model call writes a reply. A separate model call checks it against the shop's rules and returns “pass” or “fail” with feedback. On “fail”, app code sends the feedback back and asks for a new reply :: Evaluator-optimizer
   &gt; One step produces and one step evaluates against criteria. App code accepts the reply or asks for a revision, within a limit.
 - :: Orchestrator-workers
   &gt; In orchestrator-workers a model call returns subtasks that depend on the request. In each behaviour here, app code set the steps in advance.
