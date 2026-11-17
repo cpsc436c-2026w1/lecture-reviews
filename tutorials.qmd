@@ -92,10 +92,11 @@ A Glue session bills until it stops, even after you close the browser tab. End e
 - **Materials:** Use the [B5T1 repository](https://github.com/cpsc436c-2026w1/b5-t1-mcp-evals) (short link
   `ilm.wiki/436c/b5t1`). Part A is in `mcp/`, and part B is in `evals-gepa/`.
 - **Check your assistant's connection:** after part A's own check, ask your assistant these two things.
-  1. “List what the course MCP server offers: its tools and its topics.” A working reply names three tools:
-     `query_kb` searches the course's pages, `get_kb_doc` reads one page in full, and `list_kb_topics` lists the
-     topics. The topics include `436c-student`, the course's own pages, and reference topics such as Spark and
-     Parquet.
+  1. “List what the course MCP server offers: its tools and the kinds of material it has.” A working reply names
+     `cpsc436c_search` (searches the course material), `cpsc436c_read` (reads one page in full) and
+     `cpsc436c_list` (lists the kinds of material, or the pages of one kind), and the kinds: guide, values,
+     dataset, lens and reference. It may also name `query_kb`, `get_kb_doc` and `list_kb_topics`: the same tools
+     under their old names, which keep working until the end of term.
   2. “Use the course MCP server: read the practice lens and run its lens pass on `docs/proposal.md`.” A working
      reply is a table with the lens's two questions (how often each job story happens and how fast its answer is
      needed; where each number in the data answers comes from), each classified as stated, partial or absent with
