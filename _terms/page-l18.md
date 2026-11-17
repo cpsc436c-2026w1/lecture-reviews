@@ -8,7 +8,7 @@
 
 **Bounded agent**. An agent with limits on its actions, time or spend that the model cannot remove. Reaching a limit stops the loop.
 
-**Approval gate**. A person approves before an action runs.
+**Approval gate**. A check that must pass before an action runs: a person approves, tests pass, or an eval score reaches a set threshold.
 
 **Idempotent write**. A write that has the same effect whether it is sent once or several times. Retries use the same request key so the store can recognize the repeated write.
 

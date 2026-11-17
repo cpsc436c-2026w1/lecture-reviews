@@ -497,7 +497,7 @@ shuffle_answers: true
 <p><strong>Orchestrator-workers</strong>. A planner model call splits the request into subtasks that depend on it. App code bounds the plan, runs a worker for each subtask and combines the results.</p>
 <p><strong>Agent loop</strong>. The model returns a tool call, app code runs it and sends the tool result back, and the model returns the next tool call or the final reply.</p>
 <p><strong>Bounded agent</strong>. An agent with limits on its actions, time or spend that the model cannot remove. Reaching a limit stops the loop.</p>
-<p><strong>Approval gate</strong>. A person approves before an action runs.</p>
+<p><strong>Approval gate</strong>. A check that must pass before an action runs: a person approves, tests pass, or an eval score reaches a set threshold.</p>
 <p><strong>Idempotent write</strong>. A write that has the same effect whether it is sent once or several times. Retries use the same request key so the store can recognize the repeated write.</p>
 <p><strong>Agent SDK</strong>. A library that runs the agent loop. It sends messages and tool definitions to the model, runs tool calls and sends tool results back to the model.</p>
 <p><strong>Router</strong> (L17). A component that sends each request to one of several predefined paths, such as a cheaper model or a stronger model.</p>
