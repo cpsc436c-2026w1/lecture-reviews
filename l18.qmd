@@ -29,8 +29,8 @@ shuffle_answers: true
   > The request describes meaning. A vector index can find descriptions close in meaning even without a shared word.
 - A customer asks about ferns, then asks “and the smaller one?” :: Rewrite call that reads the chat history
   > The follow-up does not stand alone. A model call rewrites the follow-up with the earlier turns, and app code searches with the rewritten question.
-- Many customers ask “How often do I water a cactus?” in the same words every day :: Answer cache keyed on the question and the catalogue's version
-  > The catalogue's version changes when new plant data is indexed. While the question and that version match, the app reuses the stored reply without another retrieval or model call.
+- Many customers ask “How often do I water a cactus?” in the same words every day :: Answer cache keyed on the question and the search index's version
+  > The search index's version changes when the plant table is indexed again. While the question and that version match, the app reuses the stored reply without another retrieval or model call.
 - A customer asks “What is in my basket?” :: Lookup by the customer's key, with no shared cache
   > The reply contains one customer's data. The app reads the basket under that customer's key and does not store the reply in a cache that other customers' requests read.
 - :: Scan with a filter expression
