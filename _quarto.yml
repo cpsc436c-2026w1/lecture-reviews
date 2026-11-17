@@ -39,6 +39,8 @@ website:
             text: "L16: principles of cloud design for a user-facing GenAI app"
           - href: l17.qmd
             text: "L17: retrieval, memory and agent patterns in the cloud"
+          - href: l18.qmd
+            text: "L18: planning and bounded agents in the cloud"
           - href: midterm-review.qmd
             text: "Midterm review"
       - text: Tutorials
