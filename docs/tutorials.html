@@ -364,10 +364,15 @@ ul.task-list li input[type="checkbox"] {
 <section id="b5-t1" class="level3">
 <h3 class="anchored" data-anchor-id="b5-t1">B5T1: Course MCP and prompt evaluation</h3>
 <ul>
-<li><strong>What you do:</strong> You connect a coding assistant to the course MCP server and use the course knowledge base to check facts in your project proposal. Then you call the course LLM gateway with the same token, evaluate a prompt on held-out cases with Inspect, read and name the failures, let GEPA rewrite the prompt, evaluate again and price the session in CAD.</li>
+<li><strong>What you do:</strong> You connect a coding assistant to the course MCP (Model Context Protocol) server and use the course knowledge base to check facts in your project proposal. Then you call the course LLM gateway with the same token and use Inspect, an evaluation tool, to score a prompt on held-out cases (questions kept apart from the ones used to write the prompt). You read and name the failures. Then GEPA, a prompt optimizer, rewrites the prompt. Last, you evaluate the new prompt and work out what the session cost in Canadian dollars (CAD).</li>
 <li><strong>Supports:</strong> L15 to L17 (calling a model, evaluating its answers, the course LLM gateway) and your project proposal.</li>
-<li><strong>Before the tutorial:</strong> install <a href="https://docs.astral.sh/uv/getting-started/installation/">uv</a>, find your token in the issue “Your course MCP tokens” in your team repository, and clone the tutorial repository and your team repository (<a href="https://github.com/cpsc436c-2026w1/b5-t1-mcp-evals#before-you-start">before you start</a>).</li>
-<li><strong>Materials:</strong> the <a href="https://github.com/cpsc436c-2026w1/b5-t1-mcp-evals">B5T1 repository</a> (short link <code>ilm.wiki/436c/b5t1</code>): part A in <code>mcp/</code>, part B in <code>evals-gepa/</code>.</li>
+<li><strong>Before the tutorial:</strong>
+<ol type="1">
+<li>Install <a href="https://docs.astral.sh/uv/getting-started/installation/">uv</a>, a Python package manager.</li>
+<li>Find your token in the issue “Your course MCP tokens” in your team repository.</li>
+<li>Clone the tutorial repository and your team repository, as in <a href="https://github.com/cpsc436c-2026w1/b5-t1-mcp-evals#before-you-start">before you start</a>.</li>
+</ol></li>
+<li><strong>Materials:</strong> Use the <a href="https://github.com/cpsc436c-2026w1/b5-t1-mcp-evals">B5T1 repository</a> (short link <code>ilm.wiki/436c/b5t1</code>). Part A is in <code>mcp/</code>, and part B is in <code>evals-gepa/</code>.</li>
 </ul>
 
 
