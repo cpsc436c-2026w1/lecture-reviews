@@ -73,3 +73,18 @@ A Glue session bills until it stops, even after you close the browser tab. End e
 - **Materials:** the [B3T2 repository](https://github.com/cpsc436c-2026w1/b3-t2-glue-rides): the steps, one SQL
   file per step with what to predict, the Glue job and the setup script.
 
+## Block 5 {#block-5}
+
+### B5T1: Course MCP and prompt evaluation {#b5-t1}
+
+- **What you do:** You connect a coding assistant to the course MCP server and use the course knowledge base to
+  check facts in your project proposal. Then you call the course LLM gateway with the same token, evaluate a prompt
+  on held-out cases with Inspect, read and name the failures, let GEPA rewrite the prompt, evaluate again and price
+  the session in CAD.
+- **Supports:** L15 to L17 (calling a model, evaluating its answers, the course LLM gateway) and your project
+  proposal.
+- **Before the tutorial:** install [uv](https://docs.astral.sh/uv/getting-started/installation/), find your token
+  in the issue "Your course MCP tokens" in your team repository, and clone the tutorial repository and your team
+  repository ([before you start](https://github.com/cpsc436c-2026w1/b5-t1-mcp-evals#before-you-start)).
+- **Materials:** the [B5T1 repository](https://github.com/cpsc436c-2026w1/b5-t1-mcp-evals) (short link
+  `ilm.wiki/436c/b5t1`): part A in `mcp/`, part B in `evals-gepa/`.

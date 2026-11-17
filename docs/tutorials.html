@@ -191,6 +191,10 @@ ul.task-list li input[type="checkbox"] {
     <a class="dropdown-item" href="./tutorials.html#b3-t1">
  <span class="dropdown-text">B3T1: Lakehouse/Athena+Glue</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#b5-t1">
+ <span class="dropdown-text">B5T1: Course MCP and prompt evaluation</span></a>
+  </li>  
     </ul>
   </li>
   <li class="nav-item dropdown ">
@@ -267,6 +271,10 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#b3-t1" id="toc-b3-t1" class="nav-link" data-scroll-target="#b3-t1">B3T1: Lakehouse/Athena+Glue</a></li>
   <li><a href="#b3-t2" id="toc-b3-t2" class="nav-link" data-scroll-target="#b3-t2">B3T2: Lakehouse/Glue build and maintain</a></li>
+  </ul></li>
+  <li><a href="#block-5" id="toc-block-5" class="nav-link" data-scroll-target="#block-5">Block 5</a>
+  <ul class="collapse">
+  <li><a href="#b5-t1" id="toc-b5-t1" class="nav-link" data-scroll-target="#b5-t1">B5T1: Course MCP and prompt evaluation</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -348,6 +356,18 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>Supports:</strong> L10 and L11 (Iceberg maintenance: compaction, snapshots and <code>VACUUM</code>), and the build and maintain tasks in A3.</li>
 <li><strong>Before the tutorial:</strong> B3T1’s one-time setup, and the <a href="https://github.com/cpsc436c-2026w1/l7-spark-glue#1-set-up-your-account-once">B2T2 setup</a>, which creates your bucket and Glue role. Then run the repository’s <a href="https://github.com/cpsc436c-2026w1/b3-t2-glue-rides#2-set-up-the-job-once">step 2</a> in CloudShell.</li>
 <li><strong>Materials:</strong> the <a href="https://github.com/cpsc436c-2026w1/b3-t2-glue-rides">B3T2 repository</a>: the steps, one SQL file per step with what to predict, the Glue job and the setup script.</li>
+</ul>
+</section>
+</section>
+<section id="block-5" class="level2">
+<h2 class="anchored" data-anchor-id="block-5">Block 5</h2>
+<section id="b5-t1" class="level3">
+<h3 class="anchored" data-anchor-id="b5-t1">B5T1: Course MCP and prompt evaluation</h3>
+<ul>
+<li><strong>What you do:</strong> You connect a coding assistant to the course MCP server and use the course knowledge base to check facts in your project proposal. Then you call the course LLM gateway with the same token, evaluate a prompt on held-out cases with Inspect, read and name the failures, let GEPA rewrite the prompt, evaluate again and price the session in CAD.</li>
+<li><strong>Supports:</strong> L15 to L17 (calling a model, evaluating its answers, the course LLM gateway) and your project proposal.</li>
+<li><strong>Before the tutorial:</strong> install <a href="https://docs.astral.sh/uv/getting-started/installation/">uv</a>, find your token in the issue “Your course MCP tokens” in your team repository, and clone the tutorial repository and your team repository (<a href="https://github.com/cpsc436c-2026w1/b5-t1-mcp-evals#before-you-start">before you start</a>).</li>
+<li><strong>Materials:</strong> the <a href="https://github.com/cpsc436c-2026w1/b5-t1-mcp-evals">B5T1 repository</a> (short link <code>ilm.wiki/436c/b5t1</code>): part A in <code>mcp/</code>, part B in <code>evals-gepa/</code>.</li>
 </ul>
 
 

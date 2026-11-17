@@ -53,6 +53,8 @@ website:
             text: "B2T2 part B: Spark/Glue, slow queries and their fixes"
           - href: tutorials.qmd#b3-t1
             text: "B3T1: Lakehouse/Athena+Glue"
+          - href: tutorials.qmd#b5-t1
+            text: "B5T1: Course MCP and prompt evaluation"
       - text: Project
         menu:
           - href: project-start.qmd
