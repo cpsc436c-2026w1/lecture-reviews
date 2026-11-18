@@ -288,8 +288,8 @@ yet. The [proposal example](project-case-example.qmd) shows all seven sections f
 2. **Job stories.** Start with one concrete example of use, and say who the users are: are they technical, and will
    they roughly understand where the numbers come from? Then write one job story per user, numbered JS01, JS02 …, as
    "When …, I want …, so that …", with how often and how much: for example "every day by 07:00", "within a second".
-   Choose 1 or 2 to focus on, by number, and say which needs each stands for, for example operational or
-   analytical. They decide what users see, your first slice, and the scenarios other teams will test.
+   Choose 1 or 2 to focus on, for example JS01 and JS03, and say whether each stands for operational or analytical
+   needs. They decide what users see, your first slice, and the scenarios other teams will test.
 3. **Project shape and extensions.** Name them, and say in one or two sentences why they fit your case.
 4. **Data and workflows.** Name your dataset and the subset your system works with: which part of the original data
    (years, places, topics), with its size in rows and GB. Choose the subset by exploring the original data, for
