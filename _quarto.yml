@@ -71,6 +71,8 @@ website:
             text: Project setup
           - href: project-case-example.qmd
             text: Proposal example
+          - href: project-mcp-scenarios.qmd
+            text: "Course server with your assistant"
       - text: Assignments
         menu:
           - href: https://cpsc436c-2026w1.github.io/a1-starter/
