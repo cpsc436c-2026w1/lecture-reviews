@@ -571,16 +571,107 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="mcp-setup" class="level2" data-number="6">
 <h2 data-number="6" class="anchored" data-anchor-id="mcp-setup"><span class="header-section-number">6</span> MCP Setup</h2>
-<p>If you use an assistant, connect it to two MCP servers:</p>
-<ul>
-<li>Course MCP Knowledge Base</li>
-<li>AWS Knowledge MCP</li>
-</ul>
-<p>You can find both in the <code>.mcp.json</code> example.</p>
-<p>Set the environment variable for the course MCP server. Your own token is in the issue “Your course MCP tokens” in your <code>team_NN</code> repository. Use only your own, and put this line in your shell profile, not in a file in the repository:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">KB_MCP_TOKEN</span><span class="op">=&lt;</span>TOKEN_FROM_INSTRUCTOR<span class="op">&gt;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<section id="course-llm-gateway" class="level3" data-number="6.1">
-<h3 data-number="6.1" class="anchored" data-anchor-id="course-llm-gateway"><span class="header-section-number">6.1</span> Course LLM gateway</h3>
+<p>If you use a coding assistant, connect it to two MCP servers: the course server <code>436c</code> and <code>aws-knowledge</code> (AWS documentation). Your team repository has the configuration for both. The B5T1 tutorial walks through the same steps with checks and exercises: <a href="https://github.com/cpsc436c-2026w1/b5-t1-mcp-evals/tree/main/mcp">B5T1, part A</a>.</p>
+<section id="install-and-sign-in" class="level3" data-number="6.1">
+<h3 data-number="6.1" class="anchored" data-anchor-id="install-and-sign-in"><span class="header-section-number">6.1</span> Install and sign in</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Assistant</th>
+<th>Install</th>
+<th>Sign in</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Claude Code</td>
+<td><a href="https://code.claude.com/docs/en/setup">Set up Claude Code</a></td>
+<td>run <code>claude</code> in a terminal and follow the prompt</td>
+</tr>
+<tr class="even">
+<td>Kiro IDE</td>
+<td><a href="https://kiro.dev/docs/getting-started/installation/">Kiro installation</a>, IDE tab</td>
+<td>open Kiro and sign in with Google, GitHub or AWS Builder ID (<a href="https://kiro.dev/docs/getting-started/authentication/">Kiro authentication</a>)</td>
+</tr>
+<tr class="odd">
+<td>Kiro CLI</td>
+<td><a href="https://kiro.dev/docs/getting-started/installation/">Kiro installation</a>, CLI tab</td>
+<td>run <code>kiro-cli login</code> and sign in in your browser. The Kiro CLI does nothing until you sign in: every command stops with <code>You are not logged in</code></td>
+</tr>
+</tbody>
+</table>
+<p>Students can register with <a href="#getting-started-with-kiro">Kiro for Students</a>.</p>
+</section>
+<section id="set-your-token" class="level3" data-number="6.2">
+<h3 data-number="6.2" class="anchored" data-anchor-id="set-your-token"><span class="header-section-number">6.2</span> Set your token</h3>
+<p>Your token is in the issue “Your course MCP tokens” in your team repository: use the one next to your name. Set it in the terminal where you will start your assistant:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">KB_MCP_TOKEN</span><span class="op">=</span><span class="st">'paste-your-token-here'</span>          <span class="co"># macOS or Linux</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="va">$env</span><span class="op">:</span><span class="va">KB_MCP_TOKEN</span> <span class="op">=</span> <span class="st">'paste-your-token-here'</span>          <span class="co"># Windows PowerShell</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>If you start your assistant from an app icon (the Kiro IDE, VS Code), make the setting permanent: add the <code>export</code> line to <code>~/.zshrc</code> (macOS) or <code>~/.bashrc</code> (Linux), or run <code>setx KB_MCP_TOKEN "paste-your-token-here"</code> once in PowerShell (Windows). Then quit and reopen the app. Never put the token in a file in the repository.</p>
+</section>
+<section id="copy-the-configuration" class="level3" data-number="6.3">
+<h3 data-number="6.3" class="anchored" data-anchor-id="copy-the-configuration"><span class="header-section-number">6.3</span> Copy the configuration</h3>
+<p>At the root of your team repository, copy the example for your assistant:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Assistant</th>
+<th>macOS or Linux</th>
+<th>Windows PowerShell</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Claude Code</td>
+<td><code>cp .mcp.json.example .mcp.json</code></td>
+<td><code>Copy-Item .mcp.json.example .mcp.json</code></td>
+</tr>
+<tr class="even">
+<td>Kiro IDE or Kiro CLI</td>
+<td><code>cp .kiro/settings/mcp.json.example .kiro/settings/mcp.json</code></td>
+<td><code>Copy-Item .kiro\settings\mcp.json.example .kiro\settings\mcp.json</code></td>
+</tr>
+</tbody>
+</table>
+<p>Run <code>git status</code>: neither copied file appears, because git ignores both. Kiro does not read <code>.mcp.json</code>; it reads <code>.kiro/settings/mcp.json</code>, or <code>~/.kiro/settings/mcp.json</code> for all your folders (<a href="https://kiro.dev/docs/mcp/configuration/#configuration-locations">Kiro MCP configuration</a>).</p>
+</section>
+<section id="start-your-assistant-and-check-the-connection" class="level3" data-number="6.4">
+<h3 data-number="6.4" class="anchored" data-anchor-id="start-your-assistant-and-check-the-connection"><span class="header-section-number">6.4</span> Start your assistant and check the connection</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Assistant</th>
+<th>Start</th>
+<th>Check</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Claude Code</td>
+<td>in the terminal where the token is set, at the repository root, run <code>claude</code>; approve the servers when asked</td>
+<td>type <code>/mcp</code>: <code>436c</code> and <code>aws-knowledge</code> are connected, each with its number of tools (<a href="https://code.claude.com/docs/en/mcp">Claude Code MCP</a>)</td>
+</tr>
+<tr class="even">
+<td>Kiro IDE</td>
+<td>open your repository folder and trust it when asked (<a href="https://kiro.dev/docs/permissions/#workspace-trust">workspace trust</a>). If Kiro warns that <code>KB_MCP_TOKEN</code> is not approved, add it under Settings → <strong>Mcp Approved Env Vars</strong> (<a href="https://kiro.dev/docs/mcp/configuration/#environment-variables">environment variables</a>)</td>
+<td>the Kiro icon on the left bar opens the Kiro panel; its <strong>MCP Servers</strong> section shows <code>436c</code> and <code>aws-knowledge</code> with their status. No such section: Settings, search “MCP”, turn on MCP support. Errors: the Output tab, <strong>Kiro - MCP Logs</strong> (<a href="https://kiro.dev/docs/mcp/#troubleshooting">Kiro MCP</a>)</td>
+</tr>
+<tr class="odd">
+<td>Kiro CLI</td>
+<td>in the terminal where the token is set, at the repository root, run <code>kiro-cli chat</code>; choose <strong>Trust, continue</strong> (<a href="https://kiro.dev/docs/permissions/#trust-a-workspace-in-kiro-cli">trust a workspace</a>)</td>
+<td>the CLI has no panel: type <code>/mcp</code> in the chat (<a href="https://kiro.dev/docs/reference/slash-commands/#mcp">slash commands</a>). <code>kiro-cli mcp list</code> only lists the servers in your files; it does not show whether they connect</td>
+</tr>
+</tbody>
+</table>
+<p>If <code>436c</code> is missing or failed, check that the token is set in the terminal or app that started the assistant. Do not put the token in the configuration file.</p>
+</section>
+<section id="course-llm-gateway" class="level3" data-number="6.5">
+<h3 data-number="6.5" class="anchored" data-anchor-id="course-llm-gateway"><span class="header-section-number">6.5</span> Course LLM gateway</h3>
 <p>The same token is your key for the course LLM gateway, which serves the course’s models (L16, L17). Its address is:</p>
 <pre class="text"><code>https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1</code></pre>
 <p>Different course materials name the token and the address differently. They are the same two values:</p>
@@ -615,66 +706,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 <p>To run an Inspect eval through the gateway, set the two Inspect names from yours:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">COURSE_GATEWAY_URL</span><span class="op">=</span>https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PROXY_BASE_URL</span><span class="op">=</span><span class="va">$COURSE_GATEWAY_URL</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PROXY_API_KEY</span><span class="op">=</span><span class="va">$KB_MCP_TOKEN</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">COURSE_GATEWAY_URL</span><span class="op">=</span>https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PROXY_BASE_URL</span><span class="op">=</span><span class="va">$COURSE_GATEWAY_URL</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PROXY_API_KEY</span><span class="op">=</span><span class="va">$KB_MCP_TOKEN</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
-<section id="ai-tool-setup" class="level3" data-number="6.2">
-<h3 data-number="6.2" class="anchored" data-anchor-id="ai-tool-setup"><span class="header-section-number">6.2</span> AI Tool Setup</h3>
-<section id="claude-code-setup" class="level4" data-number="6.2.1">
-<h4 data-number="6.2.1" class="anchored" data-anchor-id="claude-code-setup"><span class="header-section-number">6.2.1</span> Claude Code Setup</h4>
-<ol type="1">
-<li>Install Claude Code and sign in: <a href="https://code.claude.com/docs/en/quickstart">Claude Code quickstart</a>. Claude Code runs on your own Claude account or API key.</li>
-<li>Copy <code>.mcp.json.example</code> to <code>.mcp.json</code> in the repo root. Claude Code reads it directly. <code>.mcp.json</code> is ignored by git, so your token stays on your machine.</li>
-</ol>
-<p>Docs: <a href="https://code.claude.com/docs/en/mcp">Connect Claude Code to tools via MCP</a></p>
-<ul>
-<li>See <em>Installing MCP servers → Option 1: Add a remote HTTP server</em> for <code>claude mcp add --transport http …</code>.</li>
-<li>See <em>MCP installation scopes → Project scope (<code>.mcp.json</code>)</em>. Claude Code reads the project’s <code>.mcp.json</code> in the repo root directly.</li>
-</ul>
-</section>
-<section id="kiro-cli-setup" class="level4" data-number="6.2.2">
-<h4 data-number="6.2.2" class="anchored" data-anchor-id="kiro-cli-setup"><span class="header-section-number">6.2.2</span> Kiro CLI Setup</h4>
-<ol type="1">
-<li>Register with <a href="#getting-started-with-kiro">Kiro for Students</a>, then install the Kiro CLI or IDE: <a href="https://kiro.dev/docs/cli/">Kiro CLI docs</a>.</li>
-<li>Copy <code>.kiro/settings/mcp.json.example</code> to <code>.kiro/settings/mcp.json</code>. It holds the same two servers.</li>
-</ol>
-<p>Docs:</p>
-<ul>
-<li><a href="https://kiro.dev/docs/cli/mcp/">Kiro CLI: MCP overview</a></li>
-<li><a href="https://kiro.dev/docs/cli/mcp/configuration/">Kiro CLI: MCP configuration</a></li>
-</ul>
-<blockquote class="blockquote">
-<p>Kiro does not read <code>.mcp.json</code>. It reads <code>.kiro/settings/mcp.json</code> in the project, or <code>~/.kiro/settings/mcp.json</code> globally. Add servers with <code>kiro-cli mcp add</code> or by editing that file, which uses the same top-level <code>mcpServers</code> object. Remote servers take a <code>url</code> and optional <code>headers</code>.</p>
-</blockquote>
-</section>
-</section>
-<section id="testing-mcp-server-connection-tools" class="level3" data-number="6.3">
-<h3 data-number="6.3" class="anchored" data-anchor-id="testing-mcp-server-connection-tools"><span class="header-section-number">6.3</span> Testing MCP Server Connection &amp; Tools</h3>
+<section id="testing-mcp-server-connection-tools" class="level3" data-number="6.6">
+<h3 data-number="6.6" class="anchored" data-anchor-id="testing-mcp-server-connection-tools"><span class="header-section-number">6.6</span> Testing MCP Server Connection &amp; Tools</h3>
 <p>Your <code>AGENTS.md</code> already tells your assistant when to use these sources. To make it more reliable, you could add explicit rules, for example: “If the task involves AWS costs, always check current pricing via the AWS Knowledge MCP server.”</p>
 <p>Generally, you can specifically ask an agent to use an MCP server and tool in a plain-language prompt. <strong>However, it’s also worth learning how to see which tools an MCP server exposes and how to tell the agent to call them directly.</strong></p>
-<section id="claude-code-call-a-specific-mcp-tool" class="level4" data-number="6.3.1">
-<h4 data-number="6.3.1" class="anchored" data-anchor-id="claude-code-call-a-specific-mcp-tool"><span class="header-section-number">6.3.1</span> Claude Code: call a specific MCP tool</h4>
+<section id="claude-code-call-a-specific-mcp-tool" class="level4" data-number="6.6.1">
+<h4 data-number="6.6.1" class="anchored" data-anchor-id="claude-code-call-a-specific-mcp-tool"><span class="header-section-number">6.6.1</span> Claude Code: call a specific MCP tool</h4>
 <p>You can check if you are connected and what tools are available:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> mcp list          <span class="co"># should show aws-knowledge: ✓ Connected</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span>                   <span class="co"># then run /mcp to see the tool names</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> mcp list          <span class="co"># should show aws-knowledge: ✓ Connected</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span>                   <span class="co"># then run /mcp to see the tool names</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Run Claude Code headlessly and approve the AWS Knowledge server’s tools in advance:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> <span class="at">-p</span> <span class="st">"Use the aws-knowledge aws___search_documentation tool to find S3 bucket naming rules. Cite sources."</span> <span class="dt">\</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--allowedTools</span> <span class="st">"mcp__aws-knowledge"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> <span class="at">-p</span> <span class="st">"Use the aws-knowledge aws___search_documentation tool to find S3 bucket naming rules. Cite sources."</span> <span class="dt">\</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--allowedTools</span> <span class="st">"mcp__aws-knowledge"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>-p</code> runs a single prompt non-interactively and prints the response.</li>
 <li>Tools are named <code>mcp__&lt;server&gt;__&lt;tool&gt;</code>. <code>--allowedTools "mcp__aws-knowledge"</code> approves every tool from this server without asking. It does not stop the assistant from trying other tools.</li>
 <li>To allow a single tool, use its full name exactly as <code>/mcp</code> shows it, for example <code>mcp__aws-knowledge__search_documentation</code>. Some versions of the server add a prefix to tool names, so copy the name rather than guessing it.</li>
 </ul>
 </section>
-<section id="kiro-cli-call-a-specific-mcp-tool" class="level4" data-number="6.3.2">
-<h4 data-number="6.3.2" class="anchored" data-anchor-id="kiro-cli-call-a-specific-mcp-tool"><span class="header-section-number">6.3.2</span> Kiro CLI: call a specific MCP tool</h4>
+<section id="kiro-cli-call-a-specific-mcp-tool" class="level4" data-number="6.6.2">
+<h4 data-number="6.6.2" class="anchored" data-anchor-id="kiro-cli-call-a-specific-mcp-tool"><span class="header-section-number">6.6.2</span> Kiro CLI: call a specific MCP tool</h4>
 <p>You can check if you are connected and what tools are available:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">kiro-cli</span> mcp status      <span class="co"># or start kiro-cli and run /mcp or /tools</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">kiro-cli</span> chat            <span class="co"># then run /mcp to see the servers, /tools to see the tool names</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Run Kiro CLI headlessly and approve only the AWS Knowledge search tool:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">kiro-cli</span> chat <span class="at">--no-interactive</span> <span class="at">--require-mcp-startup</span> <span class="dt">\</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--trust-tools</span><span class="op">=</span>@aws-knowledge/aws___search_documentation <span class="dt">\</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Use the aws-knowledge aws___search_documentation tool to find S3 bucket naming rules. Cite sources."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">kiro-cli</span> chat <span class="at">--no-interactive</span> <span class="at">--require-mcp-startup</span> <span class="dt">\</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--trust-tools</span><span class="op">=</span>@aws-knowledge/aws___search_documentation <span class="dt">\</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Use the aws-knowledge aws___search_documentation tool to find S3 bucket naming rules. Cite sources."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><code>--no-interactive</code> runs without a chat session and prints the first response.</li>
 <li><code>--trust-tools</code> approves the listed tools up front. The <code>@</code> prefix marks a tool as coming from an MCP server rather than a built-in tool (like <code>read</code> or <code>shell</code>): <code>@aws-knowledge/aws___search_documentation</code> means the <code>aws___search_documentation</code> tool from the server named <code>aws-knowledge</code> in <code>mcp.json</code>. Use <code>@aws-knowledge</code> alone to trust all of that server’s tools. Run <code>/tools</code> in an interactive session to see the exact names.</li>

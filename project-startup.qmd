@@ -150,19 +150,60 @@ agreement table.
 
 ## MCP Setup
 
-If you use an assistant, connect it to two MCP servers:
+If you use a coding assistant, connect it to two MCP servers: the course server `436c` and `aws-knowledge` (AWS
+documentation). Your team repository has the configuration for both. The B5T1 tutorial walks through the same steps
+with checks and exercises: [B5T1, part A](https://github.com/cpsc436c-2026w1/b5-t1-mcp-evals/tree/main/mcp).
 
-- Course MCP Knowledge Base
-- AWS Knowledge MCP
+### Install and sign in
 
-You can find both in the `.mcp.json` example.
+| Assistant | Install | Sign in |
+|---|---|---|
+| Claude Code | [Set up Claude Code](https://code.claude.com/docs/en/setup) | run `claude` in a terminal and follow the prompt |
+| Kiro IDE | [Kiro installation](https://kiro.dev/docs/getting-started/installation/), IDE tab | open Kiro and sign in with Google, GitHub or AWS Builder ID ([Kiro authentication](https://kiro.dev/docs/getting-started/authentication/)) |
+| Kiro CLI | [Kiro installation](https://kiro.dev/docs/getting-started/installation/), CLI tab | run `kiro-cli login` and sign in in your browser. The Kiro CLI does nothing until you sign in: every command stops with `You are not logged in` |
 
-Set the environment variable for the course MCP server. Your own token is in the issue "Your course MCP tokens" in
-your `team_NN` repository. Use only your own, and put this line in your shell profile, not in a file in the repository:
+Students can register with [Kiro for Students](#getting-started-with-kiro).
+
+### Set your token
+
+Your token is in the issue "Your course MCP tokens" in your team repository: use the one next to your name. Set it
+in the terminal where you will start your assistant:
 
 ```bash
-export KB_MCP_TOKEN=<TOKEN_FROM_INSTRUCTOR>
+export KB_MCP_TOKEN='paste-your-token-here'          # macOS or Linux
 ```
+
+```powershell
+$env:KB_MCP_TOKEN = 'paste-your-token-here'          # Windows PowerShell
+```
+
+If you start your assistant from an app icon (the Kiro IDE, VS Code), make the setting permanent: add the `export`
+line to `~/.zshrc` (macOS) or `~/.bashrc` (Linux), or run `setx KB_MCP_TOKEN "paste-your-token-here"` once in
+PowerShell (Windows). Then quit and reopen the app. Never put the token in a file in the repository.
+
+### Copy the configuration
+
+At the root of your team repository, copy the example for your assistant:
+
+| Assistant | macOS or Linux | Windows PowerShell |
+|---|---|---|
+| Claude Code | `cp .mcp.json.example .mcp.json` | `Copy-Item .mcp.json.example .mcp.json` |
+| Kiro IDE or Kiro CLI | `cp .kiro/settings/mcp.json.example .kiro/settings/mcp.json` | `Copy-Item .kiro\settings\mcp.json.example .kiro\settings\mcp.json` |
+
+Run `git status`: neither copied file appears, because git ignores both. Kiro does not read `.mcp.json`; it reads
+`.kiro/settings/mcp.json`, or `~/.kiro/settings/mcp.json` for all your folders
+([Kiro MCP configuration](https://kiro.dev/docs/mcp/configuration/#configuration-locations)).
+
+### Start your assistant and check the connection
+
+| Assistant | Start | Check |
+|---|---|---|
+| Claude Code | in the terminal where the token is set, at the repository root, run `claude`; approve the servers when asked | type `/mcp`: `436c` and `aws-knowledge` are connected, each with its number of tools ([Claude Code MCP](https://code.claude.com/docs/en/mcp)) |
+| Kiro IDE | open your repository folder and trust it when asked ([workspace trust](https://kiro.dev/docs/permissions/#workspace-trust)). If Kiro warns that `KB_MCP_TOKEN` is not approved, add it under Settings → **Mcp Approved Env Vars** ([environment variables](https://kiro.dev/docs/mcp/configuration/#environment-variables)) | the Kiro icon on the left bar opens the Kiro panel; its **MCP Servers** section shows `436c` and `aws-knowledge` with their status. No such section: Settings, search "MCP", turn on MCP support. Errors: the Output tab, **Kiro - MCP Logs** ([Kiro MCP](https://kiro.dev/docs/mcp/#troubleshooting)) |
+| Kiro CLI | in the terminal where the token is set, at the repository root, run `kiro-cli chat`; choose **Trust, continue** ([trust a workspace](https://kiro.dev/docs/permissions/#trust-a-workspace-in-kiro-cli)) | the CLI has no panel: type `/mcp` in the chat ([slash commands](https://kiro.dev/docs/reference/slash-commands/#mcp)). `kiro-cli mcp list` only lists the servers in your files; it does not show whether they connect |
+
+If `436c` is missing or failed, check that the token is set in the terminal or app that started the assistant. Do
+not put the token in the configuration file.
 
 ### Course LLM gateway
 
@@ -186,36 +227,6 @@ export COURSE_GATEWAY_URL=https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca
 export PROXY_BASE_URL=$COURSE_GATEWAY_URL
 export PROXY_API_KEY=$KB_MCP_TOKEN
 ```
-
-### AI Tool Setup
-
-#### Claude Code Setup
-
-1. Install Claude Code and sign in: [Claude Code quickstart](https://code.claude.com/docs/en/quickstart). Claude Code
-   runs on your own Claude account or API key.
-2. Copy `.mcp.json.example` to `.mcp.json` in the repo root. Claude Code reads it directly. `.mcp.json` is ignored by
-   git, so your token stays on your machine.
-
-Docs: [Connect Claude Code to tools via MCP](https://code.claude.com/docs/en/mcp)
-
-- See *Installing MCP servers → Option 1: Add a remote HTTP server* for `claude mcp add --transport http …`.
-- See *MCP installation scopes → Project scope (`.mcp.json`)*. Claude Code reads the project's `.mcp.json` in the repo
-  root directly.
-
-#### Kiro CLI Setup
-
-1. Register with [Kiro for Students](#getting-started-with-kiro), then install the Kiro CLI or IDE:
-   [Kiro CLI docs](https://kiro.dev/docs/cli/).
-2. Copy `.kiro/settings/mcp.json.example` to `.kiro/settings/mcp.json`. It holds the same two servers.
-
-Docs:
-
-- [Kiro CLI: MCP overview](https://kiro.dev/docs/cli/mcp/)
-- [Kiro CLI: MCP configuration](https://kiro.dev/docs/cli/mcp/configuration/)
-
-> Kiro does not read `.mcp.json`. It reads `.kiro/settings/mcp.json` in the project, or `~/.kiro/settings/mcp.json`
-globally. Add servers with `kiro-cli mcp add` or by editing that file, which uses the same top-level `mcpServers`
-object. Remote servers take a `url` and optional `headers`.
 
 ### Testing MCP Server Connection & Tools
 
@@ -249,7 +260,7 @@ claude -p "Use the aws-knowledge aws___search_documentation tool to find S3 buck
 You can check if you are connected and what tools are available:
 
 ```bash
-kiro-cli mcp status      # or start kiro-cli and run /mcp or /tools
+kiro-cli chat            # then run /mcp to see the servers, /tools to see the tool names
 ```
 
 Run Kiro CLI headlessly and approve only the AWS Knowledge search tool:
