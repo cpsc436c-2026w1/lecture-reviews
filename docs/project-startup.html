@@ -266,6 +266,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">Proposal example</span></a>
   </li>  
         <li>
+    <a class="dropdown-item" href="./project-checkpoint1.html">
+ <span class="dropdown-text">Checkpoint 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-behave.html">
+ <span class="dropdown-text">Behave for your project</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="./project-mcp-scenarios.html">
  <span class="dropdown-text">Course server with your assistant</span></a>
   </li>  
@@ -356,7 +364,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="files-in-your-repository" class="level2" data-number="2">
 <h2 data-number="2" class="anchored" data-anchor-id="files-in-your-repository"><span class="header-section-number">2</span> Files in your repository</h2>
-<p>The pull request “Course files: team rules and templates” brings <code>AGENTS.md</code>, <code>CONTRIBUTING.md</code>, <code>experiments/TEMPLATE.md</code>, the <code>docs/</code> templates for the proposal, requirements, design and tasks, an example architecture sketch, the resource list <code>docs/resources.md</code>, <code>scripts/teardown.sh</code>, and the MCP configuration examples. The spec checker <code>tools/spec_check.py</code> arrives with the course files for checkpoint 1, when you write requirements.</p>
+<p>The pull request “Course files: team rules and templates” brings <code>AGENTS.md</code>, <code>CONTRIBUTING.md</code>, <code>experiments/TEMPLATE.md</code>, the <code>docs/</code> templates for the proposal, requirements, design and tasks, an example architecture sketch, the resource list <code>docs/resources.md</code>, <code>scripts/teardown.sh</code>, and the MCP configuration examples. <del>The spec checker <code>tools/spec_check.py</code> arrives with the course files for checkpoint 1, when you write requirements.</del> <span class="chg">For Checkpoint 1 the check is a dry run, <code>uvx behave@1.3.3 --dry-run</code>: see the <a href="./project-checkpoint1.html">Checkpoint 1 page</a>.</span></p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 17%">
@@ -756,7 +764,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul></li>
 <li><strong>Permission to run <code>gh</code>.</strong> In Kiro CLI, trust the shell tool for the session, for example <code>kiro-cli chat --trust-tools=read,write,shell</code>. In Claude Code, allow <code>gh</code> commands when it asks.</li>
 </ol>
-<p>Test it at checkpoint 1, once your requirements and first tasks exist. Add one S row to <code>docs/tasks.md</code> with an empty Issue cell, and prompt:</p>
+<p>Test it at <del>checkpoint 1</del> <span class="chg">Checkpoint 2</span>, once your requirements and first build tasks exist. Add one S row to <code>docs/tasks.md</code> with an empty Issue cell, and prompt:</p>
 <blockquote class="blockquote">
 <p>Read AGENTS.md. Sync docs/tasks.md to the project board.</p>
 </blockquote>

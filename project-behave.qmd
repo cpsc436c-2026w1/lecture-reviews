@@ -1,0 +1,772 @@
+---
+title: "Behave for your project"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+---
+
+```{=html}
+<style>pre, pre code { white-space: pre; overflow-x: auto; }</style>
+```
+
+behave is a Python tool that runs tests written as plain-text examples. In your project, each example shows one
+requirement or one constraint (RF code) of your system with data and a known answer. This page takes you from a
+first draft to tests that run against your system on AWS. You need only the level that your checkpoint asks for.
+
+| Level | When you need it | What you do |
+|---|---|---|
+| [Level 0](#level-0) | Checkpoint 1 | Write draft rules and examples, and check them with a dry run. You do not write code. |
+| [Level 1](#level-1) | Checkpoint 2 (proposed) | Write the Python function behind each step, and run the examples. |
+| [Level 2](#level-2) | Later (proposed) | Use ready steps from the course kit for the simulator, DuckDB queries and evals (scores of a model's answers on cases with known answers). |
+| [Level 3](#level-3) | Later (proposed) | Run chosen examples on AWS, and make an eval a gate: an example that fails when the eval's score is below a threshold you chose. |
+
+: {tbl-colwidths="[14,22,64]"}
+
+Levels 1 to 3 are proposed and may change before Checkpoint 2.
+
+The examples on this page come from the rides example of the [Checkpoint 1](project-checkpoint1.qmd) page: a
+ride-hailing app in New York whose trip events (a trip is requested, accepted, completed) reach the system of a
+team t00. The whole example is the repository [cp1-example](https://github.com/cpsc436c-2026w1/cp1-example), tag
+`monday`. Run the Level 0, Level 2 and Level 3 commands in a terminal at the root of your repository. The Level 1
+example has a folder of its own, and its steps say where to work. The outputs on this page come from behave 1.3.3,
+and every command pins that version (`uvx behave@1.3.3`) because older versions do not read `Rule:`: behave 1.2.6
+stops with a `ParserError` at the first `Rule:` line.
+
+## Level 0 (Checkpoint 1): draft rules and examples without code {#level-0}
+
+At this level you write files in **Gherkin**, the plain-text format that behave reads, and check that behave can
+read them, before any Python code exists. Each file is a **feature**: its name ends in `.feature`. In it:
+
+- a **rule** (`Rule:`) states one requirement, and carries its code as a tag;
+- an **example** (`Example:`) under a rule shows the rule with data and an answer that you know before the system
+  runs. `Example:` is another word for `Scenario:`, and behave's output says "scenario";
+- an example is written as **steps**: lines that start with `Given`, `When`, `Then`, `And` or `But`. The `Given`
+  sets up the data and the state before, the `When` is the event or the question, and the `Then` is what must be
+  true after ([behave: Given, When, Then](https://behave.readthedocs.io/en/latest/gherkin/#given-when-then-and-but)).
+
+`Examples:` with an s is a different thing: the table of a `Scenario Outline`.
+
+### Folder layout
+
+behave looks for a folder named `features/` at the root of your repository, and inside it for a folder named
+`steps/` ([behave: feature testing layout](https://behave.readthedocs.io/en/latest/gherkin/#feature-testing-layout)).
+The `steps/` folder holds Python files at Level 1. At Level 0 it holds one empty file, so that git keeps the folder.
+
+1. Create both folders and the empty file:
+
+   ```default
+   mkdir -p features/steps
+   touch features/steps/.gitkeep
+   ```
+
+2. Check the result with `ls -a features features/steps`. You should see `steps` in the first list and `.gitkeep`
+   in the second.
+
+When your feature files are written, the layout of the rides example is:
+
+```default
+features/
+├── js01_trips_per_zone.feature     serves JS01
+├── js01_yesterdays_trips.feature   serves JS01
+├── js01_count_questions.feature    serves JS01, with the assistant
+├── trip_assignment.feature         serves JS02 and JS03
+└── steps/
+    └── .gitkeep                    empty at Level 0
+```
+
+### Job stories and features
+
+A job story can need more than one feature, and one feature can serve more than one job story:
+
+- **By default, write one feature for each focus job story**, named for what the user gets, and tag it with the
+  story's id (`@JS01`).
+- **Split a story into two features** when the user gets two different things from it. Each feature's description
+  says which part of the story it covers. In the example, the analyst of JS01 gets the trips requested in each
+  zone and, each morning, yesterday's completed trips: two features.
+- **Share a feature between two stories** when both users read the same thing. It carries both tags
+  (`@JS02 @JS03`), and a requirement that both stories share has its rule once, in that feature. In the example,
+  the driver (JS02) and the rider (JS03) read the same assignment of a trip to a driver.
+- **A story tag on a feature says that every rule in it serves that story.** When one rule serves one more story,
+  put that story's tag on the rule.
+
+A feature named "Constraints", or after a code, does not name anything a user gets. Put each RF code's rule in the
+feature of the job story that the constraint is about.
+
+### One rule for each code
+
+Each R code of a focus story in `docs/requirements.md`, and each RF code whose check is `examples tagged`, gets one
+`Rule:` in one feature, tagged with the code:
+`@R020` for your own requirement R020, `@RF010` for the constraint RF010 of your Feedback 1 issue. Under the rule
+goes at least one `Example:`. RQ codes, and RF codes whose check starts with `read:`, do not get a rule.
+
+1. Create `features/js01_trips_per_zone.feature`, or use a file name that fits your story. You should see the file
+   in `features/`.
+2. Put the story's tag, `Feature:` with a name, and a sentence on what part of the story the feature covers. behave
+   does not run this text: it is there for the person who reads the file.
+3. Add one rule with its code tag, and one example under it, as shown below, and save the file. Indent the lines
+   as shown, with spaces. The table's columns are fields of a trip request: `event_id` is one id for one event,
+   `trip_id` is one id for one trip, `pickup_zone_id` is the zone the rider is in, `event_time` is when the rider
+   asked, and `received_time` is when the event reached the system.
+
+```gherkin
+@JS01
+Feature: Trips requested in each zone
+  Covers the first part of JS01 (operations analyst): the number of trips requested in each pickup zone for each
+  5-minute period. A period holds the requests with an event time from its start up to, and not including, its end.
+
+  @R020
+  Rule: If a request is received after its period ended, it is added to the stored count of the period of its event time
+
+    Example: Request received 7 minutes late
+      Given only these trip requests are received:
+        | event_id  | trip_id | pickup_zone_id | event_time           | received_time        |
+        | ev-000011 | t-0011  | 161            | 2026-11-23T09:01:10Z | 2026-11-23T09:01:11Z |
+        | ev-000012 | t-0012  | 161            | 2026-11-23T09:04:00Z | 2026-11-23T09:11:00Z |
+      When the time is 2026-11-23T09:12:00Z
+      Then zone 161 has 2 trips requested between 09:00 and 09:05
+```
+
+The rule is the requirement R020 of `docs/requirements.md` in plain words. The example's answer, 2, follows from its
+table: request ev-000012 has an event time of 09:04, inside the period from 09:00 to 09:05, and was received
+7 minutes later, at 09:11. The `When` is 60 s after that receipt, because R020 asks for the late request to be
+counted within 60 s.
+
+### Tags
+
+`@JS01`, `@R020` and `@RF010` are **tags**: labels that start with `@`, on the line above a feature, a rule or an
+example. A tag reaches everything under it: the examples of a rule carry the rule's tag, and every example of a
+feature carries the feature's tag. To dry-run only the examples of one code, name its tag:
+`uvx behave@1.3.3 --dry-run --tags=R020` ([behave: tag expressions](https://behave.readthedocs.io/en/latest/tag_expressions/)).
+
+When one of your own requirements is how you meet an RF code, write one rule with both tags. In the example, R080
+(refuse the second accept of a trip) meets RF030 (two drivers accept the same trip at the same moment), so its
+rule is tagged `@R080 @RF030`.
+
+`@RF010` above a rule is a tag: a label that `--tags` selects and reports show. `@given` above a Python function
+(Level 1) is a decorator: it makes the function a step.
+
+behave gives special meaning to only a few tags: `@wip` when you run `behave --wip`
+([behave: works in progress](https://behave.readthedocs.io/en/latest/tutorial/#works-in-progress)), and tags that
+start with `@fixture.` or active tags such as `@use.with_`, but only when `features/environment.py` sets them up
+([behave: tags in Python](https://behave.readthedocs.io/en/latest/gherkin/#accessing-tag-information-in-python),
+[behave: active tags](https://behave.readthedocs.io/en/latest/new_and_noteworthy_v1.2.5/#active-tags)). Requirement
+codes such as `@R010` and `@RF010` are plain labels, and so are `@eval` and `@live` at this level.
+
+### From an EARS line to a rule and its examples {#ears}
+
+Each R line of `docs/requirements.md` is written in [EARS](https://alistairmavin.com/ears/) form: an optional
+opening such as `WHEN <trigger>`, then `THE SYSTEM SHALL` and what the system does. The form says where each part
+goes in the example:
+
+| EARS form | In the example |
+|---|---|
+| `WHEN <trigger> THE SYSTEM SHALL <response>` | the trigger is the `When`, the response is the `Then`, and the `Given` holds the data before |
+| `WHILE <state> THE SYSTEM SHALL <response>` | the state is in the `Given` (the data) and the time of the `When`; the response is the `Then`. An example shows one moment of the state |
+| `IF <problem> THEN THE SYSTEM SHALL <response>` | the problem is an injected fault in the `Given` (the same `event_id` twice, a late `received_time`); when the problem is the request itself, such as a value out of range, it is the `When` |
+| `THE SYSTEM SHALL <response>` | the rule's sentence is the requirement; choose two examples that differ in something that could break it |
+| `WHERE <feature> THE SYSTEM SHALL <response>` | a tag on the feature that names the option, such as `@assistant` |
+| the number after `\|` | a number in the `Then` ("within 60 s"), or a time in the `When` chosen so that the answer must already hold |
+
+: {tbl-colwidths="[34,66]"}
+
+The answer of an example (2 trips) is not a requirement; the number from the R line (within 60 s) is. The times
+in an example are data: nobody waits for them.
+
+### Data in an example
+
+An example gets its data in one of two ways:
+
+- **A table inside the example**, for a few hand-picked events. Its columns are the fields of the event, as the
+  event fields of the `## Data` section of your `docs/design.md` list them, and the first row holds their names. Use it
+  when 2 or 3 events show the rule, as in the R020 example above. The word "only" in
+  `Given only these trip requests are received` says that the table holds all the requests of the example.
+- **A simulated data set**, for the cases where the number of events matters, such as a whole hour or a whole
+  file: events or files that your team will generate from a real data set, so that a test knows every event that
+  was sent. Name it by its id and name: `Given the simulated data set SIM01 "rush-hour"`. At Checkpoint 1 the data
+  set is a bullet of words in the `## Data` section; its example is read by the dry run like any other.
+
+```gherkin
+    Example: One simulated hour with 4 requests delivered twice
+      Given the simulated data set SIM01 "rush-hour"
+      When the counts are read at 2026-11-23T10:11:00Z
+      Then every zone and period shows the count computed from the data set's record of events
+```
+
+Put the data of each example in the example itself, not in a `Background`: a reader then sees the data and the
+answer together.
+
+### How to write a good example
+
+#### Describe what the system must do, not what a person clicks
+
+An example stays true when you change a page or rename a button. Write the data in the `Given`, the one event or
+question in the `When`, and the result that a user or another system can observe in the `Then`
+([behave: Then](https://behave.readthedocs.io/en/latest/gherkin/#then)).
+
+This example describes clicks, and its `Then` does not have anything that a test can compare:
+
+```gherkin
+    Example: Check the counts
+      Given I open the dashboard and click "Refresh"
+      When I wait for the page to load
+      Then the counts look right
+```
+
+This example describes the same requirement as behaviour:
+
+```gherkin
+    Example: One request delivered twice
+      Given only these trip requests are received:
+        | event_id  | trip_id | pickup_zone_id | event_time           | received_time        |
+        | ev-000101 | t-0101  | 161            | 2026-11-23T09:11:00Z | 2026-11-23T09:11:01Z |
+        | ev-000102 | t-0102  | 161            | 2026-11-23T09:12:30Z | 2026-11-23T09:12:31Z |
+        | ev-000101 | t-0101  | 161            | 2026-11-23T09:11:00Z | 2026-11-23T09:12:40Z |
+      When the counts are read at 2026-11-23T09:16:00Z
+      Then zone 161 shows 2 trips requested between 09:10 and 09:15
+```
+
+#### Show one behaviour in each example
+
+Test one behaviour in each example, as the behave documentation recommends
+([behave: scenarios](https://behave.readthedocs.io/en/latest/gherkin/#scenarios)): when the example fails, its name
+tells you what broke. If an example checks two unrelated outcomes, split it into two examples, under the rules they
+show.
+
+#### Put a number or a fixed answer in the Then
+
+The `Then` compares what the system produced with an answer that is known before the run. You chose the data, so
+you know the answer: the table above holds two different `event_id` values, so 2 must be counted.
+
+| Then that a test cannot check | Then with a number or a fixed answer |
+|---|---|
+| `Then the counts look right` | `Then zone 161 shows 2 trips requested between 09:10 and 09:15` |
+| `Then the quiet zone is handled` | `Then zone 48 shows no data between 09:25 and 09:30` |
+| `Then the late request is handled` | `Then zone 161 has 2 trips requested between 09:00 and 09:05` |
+
+: {tbl-colwidths="[36,64]"}
+
+### Requirements on model answers
+
+A model's answer can differ between runs, so one example with a fixed reply does not show a requirement on it. An
+**eval** runs the model's part of your system on a set of cases with known answers and gives a score. The rule gets
+one **gate example**: an example tagged `@eval` that names the eval of your `## Evals` table in
+`docs/requirements.md` and its threshold, and fails when the score is below the threshold. The gate has only a
+`Then`: the cases are the eval's. Beside it go ordinary examples, each with the rows of one query and the reply
+that the rule allows, such as a reply that says there is no data when the query returns 0 rows.
+
+```gherkin
+@JS01 @assistant
+Feature: Questions about trip counts in plain language
+  Covers JS01 (operations analyst) in a system that includes the assistant, our extension.
+
+  @R060
+  Rule: Where the system includes the assistant, a reply gives the count the question asks for and states only counts that are in the rows its query returned
+
+    Example: Zone and period without rows
+      Given the query for zone 48 between 09:25 and 09:30 returns 0 rows
+      When the analyst asks "How many trips were requested in zone 48 between 09:25 and 09:30?"
+      Then the reply says there is no data
+      And the reply does not state a count
+
+    @eval
+    Example: Eval of count answers
+      Then the eval "count-answers" scores at least 0.8
+```
+
+### Dry run and how to read its output {#dry-run}
+
+A **dry run** makes behave read every feature file and look for the code of every step, without running a step
+([behave: command-line arguments](https://behave.readthedocs.io/en/latest/behave/#command-line-arguments), `--dry-run`).
+`uvx` runs behave without adding it to your project.
+
+1. At the root of your repository, run:
+
+   ```default
+   uvx behave@1.3.3 --dry-run
+   ```
+
+2. Read the output from the top. If your file holds only the R020 rule and its example, you should see:
+
+```default
+USING RUNNER: behave.runner:Runner
+@JS01
+Feature: Trips requested in each zone # features/js01_trips_per_zone.feature:2
+  Covers the first part of JS01 (operations analyst): the number of trips requested in each pickup zone for each
+  5-minute period. A period holds the requests with an event time from its start up to, and not including, its end.
+    Example: Request received 7 minutes late                      # features/js01_trips_per_zone.feature:9
+      Given only these trip requests are received:                # None
+        | event_id  | trip_id | pickup_zone_id | event_time           | received_time        |
+        | ev-000011 | t-0011  | 161            | 2026-11-23T09:01:10Z | 2026-11-23T09:01:11Z |
+        | ev-000012 | t-0012  | 161            | 2026-11-23T09:04:00Z | 2026-11-23T09:11:00Z |
+      When the time is 2026-11-23T09:12:00Z                       # None
+      Then zone 161 has 2 trips requested between 09:00 and 09:05 # None
+
+
+You can implement step definitions for undefined steps with these snippets:
+
+from behave.api.pending_step import StepNotImplementedError
+@given(u'only these trip requests are received:')
+def step_impl(context):
+    raise StepNotImplementedError(u'Given only these trip requests are received:')
+
+
+@when(u'the time is 2026-11-23T09:12:00Z')
+def step_impl(context):
+    raise StepNotImplementedError(u'When the time is 2026-11-23T09:12:00Z')
+
+
+@then(u'zone 161 has 2 trips requested between 09:00 and 09:05')
+def step_impl(context):
+    raise StepNotImplementedError(u'Then zone 161 has 2 trips requested between 09:00 and 09:05')
+
+
+
+Errored scenarios:
+  features/js01_trips_per_zone.feature:9  Request received 7 minutes late
+
+0 features passed, 0 failed, 1 error, 0 skipped
+0 rules passed, 0 failed, 1 error, 0 skipped
+0 scenarios passed, 0 failed, 1 error, 0 skipped
+0 steps passed, 0 failed, 0 skipped, 3 undefined
+Took 0min 0.000s
+```
+
+| Part of the output | What it tells you |
+|---|---|
+| Feature, example and steps, each with a file name and a line number | behave read the file. Check that every example you wrote is listed. The dry run does not print the `Rule:` lines or their tags. |
+| `# None` after a step | behave did not find code for this step. At Level 0 every step has `# None`. |
+| Snippets under `You can implement step definitions` | A code snippet for each step without code. You write these functions at Level 1. |
+| `Errored scenarios` and `1 error` | An example with a step without code is marked as errored. |
+| `1 error` in the `rules` line | A rule with an errored example is counted as errored. |
+| `3 undefined` | The number of steps without code: the three steps of the example. A table belongs to the step above it. |
+
+: {tbl-colwidths="[42,58]"}
+
+For a draft, this is the result you want: every example is listed and errored, and every step is undefined,
+because the steps do not have code yet. The command's exit code is 1 for the same reason. Check that the `rules`
+count matches your `Rule:` lines. The `scenarios` count includes each `Example:` or `Scenario:` line and each data
+row of a `Scenario Outline:`. To count the lines, run `grep -hE "^ *(Example|Scenario):" features/*.feature | wc -l`.
+
+To see the list without the snippets, add `--no-snippets`:
+
+```default
+uvx behave@1.3.3 --dry-run --no-snippets
+```
+
+For the rides example, four features with 17 examples, the last lines are:
+
+```default
+0 features passed, 0 failed, 4 error, 0 skipped
+0 rules passed, 0 failed, 13 error, 0 skipped
+0 scenarios passed, 0 failed, 19 error, 0 skipped
+0 steps passed, 0 failed, 0 skipped, 72 undefined
+Took 0min 0.000s
+```
+
+Three results mean that the draft needs a fix:
+
+| What you see | What it means | What to do |
+|---|---|---|
+| `ConfigError: No steps directory in '.../features'` | The folder `features/steps/` is missing. | Create it as in [Folder layout](#folder-layout). |
+| `ParserError: Failed to parse ".../features/js01_trips_per_zone.feature":` and `Parser failure in state=steps at line 14: "Whn the time is 2026-11-23T09:12:00Z"` | A line is not Gherkin. behave stops before it lists an example. | Fix the line that the message names. Here `When` is misspelled. |
+| An example lists fewer steps than you wrote, and the `undefined` count is lower than your number of steps | The first step of that example has a misspelled keyword, such as `Givn`. behave reads the line as free text and does not report an error. | Compare the steps listed under each example with your file. |
+
+: {tbl-colwidths="[40,30,30]"}
+
+### Features of the rides example {#whole-example}
+
+The rides example has three job stories and the four features of the [folder layout](#folder-layout) above, with
+13 rules and 17 examples. JS01 is served by three features. "One driver for each trip" serves JS02 and JS03, so
+its rules are written once, and its rule for R080 carries the constraint RF030 as a second tag. Part of its
+`docs/requirements.md` and of its `features/js01_trips_per_zone.feature` is on the
+[Checkpoint 1](project-checkpoint1.qmd#requirements) page.
+
+Here is part of `features/trip_assignment.feature`: a rule with two codes, and an example in which two drivers
+accept the same trip and both accepts are sent before either driver has an answer:
+
+```gherkin
+@JS02 @JS03
+Feature: One driver for each trip
+  Covers JS02 (driver): whether the trip I accepted is mine.
+  Covers JS03 (rider): which driver is coming.
+  A table holds the only accepts of its example. An accept is one request to our API. A simulated data set is named by its id and described in
+  docs/design.md, section Data.
+
+  # (rule R070 is left out here)
+
+  @R080 @RF030
+  Rule: If a driver accepts a trip that is already assigned, the accept is refused and the trip stays with its driver
+
+    Example: Two drivers accept at the same time
+      Given trip t-0303 is requested
+      When these accepts are sent together, each before the other has an answer:
+        | event_id  | trip_id | driver_id | event_time           |
+        | ev-000311 | t-0303  | d-0046    | 2026-11-23T09:20:05Z |
+        | ev-000312 | t-0303  | d-0131    | 2026-11-23T09:20:04Z |
+      Then trip t-0303 is assigned to exactly one of drivers d-0046 and d-0131
+      And 1 accept is refused
+```
+
+All four feature files are in the `features/` folder of [cp1-example](https://github.com/cpsc436c-2026w1/cp1-example)
+(tag `monday`).
+
+## Level 1 (Checkpoint 2, proposed): a first step function {#level-1}
+
+At this level you write the Python code that makes each step do something. A **step function** is a Python
+function that behave calls when it reaches a step with a matching text. Build the example below once in an empty
+folder outside your repository, then do the same for your own scenarios.
+
+The example tests one small function, `count_requests`, with a scenario of four steps. To stay short, it puts the
+tag `@RF010` on a `Scenario:` without a `Rule:`; in your repository, your examples stay under the rules of their
+codes. The example has these files:
+
+```default
+behave-first-step/
+├── rides.py                     the code under test
+└── features/
+    ├── request_counts.feature   the scenario
+    ├── environment.py           setup and teardown
+    └── steps/
+        └── request_steps.py     the step functions
+```
+
+### Code under test and its scenario
+
+1. In a terminal, move to the folder that holds your repository's folder (`cd ..` from the root of your
+   repository). Create the example folder there and move into it:
+
+   ```default
+   mkdir -p behave-first-step/features/steps
+   cd behave-first-step
+   pwd
+   ```
+
+   You should see a path that ends in `/behave-first-step`. Run every command of this level in this folder.
+
+2. Create `rides.py` with the code below. The function reads a file with one trip request on each line and counts
+   the requests of each pickup zone. A request that arrives twice has the same `event_id` both times, and the
+   function skips an `event_id` it has already seen. After you save the file, run `ls rides.py`. You should see
+   `rides.py` listed.
+
+   ```python
+   import json
+
+
+   def count_requests(path):
+       seen = set()
+       counts = {}
+       for line in open(path):
+           request = json.loads(line)
+           if request["event_id"] in seen:
+               continue
+           seen.add(request["event_id"])
+           zone = request["pickup_zone_id"]
+           counts[zone] = counts.get(zone, 0) + 1
+       return counts
+   ```
+
+3. Create `features/request_counts.feature` with the scenario below. After you save it, run
+   `ls features/request_counts.feature`. You should see the file listed.
+
+   ```gherkin
+   @JS01
+   Feature: Trips requested in each zone
+     When demand moves between zones, I want the number of trips requested in each
+     pickup zone, so that I can send free drivers where the requests are.
+
+     @RF010
+     Scenario: A request that arrives twice is counted once
+       Given riders in zone 161 request 6 trips
+       And the simulator delivers 2 of the requests a second time
+       When the requests are counted
+       Then zone 161 has 6 trips requested
+   ```
+
+   A step that starts with `And` continues the kind of step above it
+   ([behave: And, But](https://behave.readthedocs.io/en/latest/gherkin/#and-but)). Here the `And` line is a second `Given`.
+
+4. Run `uvx behave@1.3.3 --dry-run --no-snippets`. You should see the four steps with `# None`, and the last lines:
+
+   ```default
+   0 scenarios passed, 0 failed, 1 error, 0 skipped
+   0 steps passed, 0 failed, 0 skipped, 4 undefined
+   ```
+
+### Setup and teardown in environment.py
+
+Some work belongs to every scenario and to none of its steps: creating an empty folder or table before the
+scenario, and removing it after. behave reads a file `features/environment.py` and calls the functions in it
+that have fixed names, called **hooks**: `before_scenario` runs before each scenario and `after_scenario` runs
+after it. There are also `before_all`, `after_all`, `before_feature` and `after_feature`
+([behave: environmental controls](https://behave.readthedocs.io/en/latest/tutorial/#environmental-controls)).
+
+Every hook and every step function receives `context` as its first argument. **`context`** is an object on which
+you store what a later step needs, as attributes: `context.requests_file = ...`. behave empties it of the values
+of a scenario when the scenario ends, so one scenario does not see the data of another
+([behave: context](https://behave.readthedocs.io/en/latest/tutorial/#context)).
+
+5. Create `features/environment.py` with the two hooks below. After you save it, run `ls features/environment.py`.
+   You should see the file listed.
+
+   ```python
+   import tempfile
+   from pathlib import Path
+
+
+   def before_scenario(context, scenario):
+       # Setup: every scenario gets an empty folder of its own for the requests file.
+       context.folder = tempfile.TemporaryDirectory()
+       context.requests_file = Path(context.folder.name) / "requests.jsonl"
+
+
+   def after_scenario(context, scenario):
+       # Teardown: runs after the scenario, also when a step failed.
+       context.folder.cleanup()
+   ```
+
+### Step functions with parameters
+
+A step function has a decorator, `@given`, `@when` or `@then`, with the text of the step. A part of the text in
+curly brackets is a **parameter**: behave takes the value from the scenario's line and passes it to the function
+as an argument. `{name}` gives text, and `{n:d}` gives a whole number
+([behave: step parameters](https://behave.readthedocs.io/en/latest/tutorial/#step-parameters)). One function then
+serves every scenario that uses the same sentence with other values.
+
+6. Create `features/steps/request_steps.py` with the code below. The file name is your choice: behave loads every
+   `.py` file in `features/steps/`
+   ([behave: Python step implementations](https://behave.readthedocs.io/en/latest/tutorial/#python-step-implementations)).
+   After you save it, run `ls features/steps/request_steps.py`. You should see the file listed.
+
+   ```python
+   import json
+
+   from behave import given, then, when
+
+   from rides import count_requests
+
+
+   @given("riders in zone {zone:d} request {n:d} trips")
+   def step_riders_request(context, zone, n):
+       context.requests = [
+           {"event_id": f"ev-{i:06d}", "pickup_zone_id": zone} for i in range(n)
+       ]
+       _write(context)
+
+
+   @given("the simulator delivers {n:d} of the requests a second time")
+   def step_delivered_twice(context, n):
+       context.requests += context.requests[:n]
+       _write(context)
+
+
+   @when("the requests are counted")
+   def step_count(context):
+       context.counts = count_requests(context.requests_file)
+
+
+   @then("zone {zone:d} has {n:d} trips requested")
+   def step_check_count(context, zone, n):
+       actual = context.counts[zone]
+       assert actual == n, f"zone {zone}: expected {n}, actual {actual}"
+
+
+   def _write(context):
+       lines = [json.dumps(request) for request in context.requests]
+       context.requests_file.write_text("\n".join(lines) + "\n")
+   ```
+
+   Read the four functions against the four steps of the scenario:
+
+   | Step in the scenario | Function | What it does |
+   |---|---|---|
+   | `Given riders in zone 161 request 6 trips` | `step_riders_request(context, 161, 6)` | Writes 6 requests into the file that the setup named. |
+   | `And the simulator delivers 2 of the requests a second time` | `step_delivered_twice(context, 2)` | Adds the first 2 requests to the file again: the injected fault. |
+   | `When the requests are counted` | `step_count(context)` | Calls the code under test and keeps its result in `context.counts`. |
+   | `Then zone 161 has 6 trips requested` | `step_check_count(context, 161, 6)` | Compares the result with the number in the step. A failed `assert` fails the step. |
+
+   : {tbl-colwidths="[36,32,32]"}
+
+### Run the scenario
+
+7. Run behave without `--dry-run`:
+
+   ```default
+   uvx behave@1.3.3
+   ```
+
+   You should see each step followed by the file and the line of its function, and all four steps passed:
+
+   ```default
+     @RF010
+     Scenario: A request that arrives twice is counted once       # features/request_counts.feature:7
+       Given riders in zone 161 request 6 trips                   # features/steps/request_steps.py:8
+       And the simulator delivers 2 of the requests a second time # features/steps/request_steps.py:16
+       When the requests are counted                              # features/steps/request_steps.py:22
+       Then zone 161 has 6 trips requested                        # features/steps/request_steps.py:27
+
+   1 feature passed, 0 failed, 0 skipped
+   1 scenario passed, 0 failed, 0 skipped
+   4 steps passed, 0 failed, 0 skipped
+   ```
+
+8. Check that the scenario can fail. In `rides.py`, replace the line `if request["event_id"] in seen:` with
+   `if False:`, so that the function counts every line, and run `uvx behave@1.3.3` again. You should see the `Then` step
+   fail with both numbers:
+
+   ```default
+       Then zone 161 has 6 trips requested                        # features/steps/request_steps.py:27
+         ASSERT FAILED: zone 161: expected 6, actual 8
+
+   Failing scenarios:
+     features/request_counts.feature:7  A request that arrives twice is counted once
+
+   0 features passed, 1 failed, 0 skipped
+   0 scenarios passed, 1 failed, 0 skipped
+   3 steps passed, 1 failed, 0 skipped
+   ```
+
+   The message names the zone, the expected number and the actual number, because the `assert` in the `Then`
+   function has a message. Write one for every `assert`.
+
+9. Put the line `if request["event_id"] in seen:` back and run `uvx behave@1.3.3` once more. You should see
+   `1 scenario passed, 0 failed, 0 skipped`.
+
+### From the example to your repository
+
+In your repository, the snippets that the dry run prints are the starting point:
+
+1. Copy the snippets into a Python file in `features/steps/`.
+2. Add `from behave import given, when, then` at the top of the file.
+3. Replace each `raise` line with code. Where two steps differ only in a value, write one function with a
+   parameter.
+4. Run `uvx behave@1.3.3 --dry-run --no-snippets`. You should see the file and the line of a function after each step
+   that has code, in place of `# None`.
+
+To run the scenarios of one code, name its tag: `uvx behave@1.3.3 --tags=RF010`
+([behave: tag expressions](https://behave.readthedocs.io/en/latest/tag_expressions/)).
+
+If your step code imports packages that your project installs with uv, run behave inside the project with
+`uv add --dev behave` once and then `uv run behave`.
+
+### Step functions in l19-events
+
+In [`l19-events`](https://github.com/cpsc436c-2026w1/l19-events), open
+[`features/steps/steps.py`](https://github.com/cpsc436c-2026w1/l19-events/blob/main/features/steps/steps.py) and
+[`features/environment.py`](https://github.com/cpsc436c-2026w1/l19-events/blob/main/features/environment.py). The
+`Given` functions read the files that the simulator wrote, the `When` functions call the code under test, and the
+`Then` functions compare the result with the simulator's known answer.
+
+## Level 2 (later, proposed): steps from the course kit {#level-2}
+
+A course kit with ready steps for the simulator, DuckDB queries and evals comes with Checkpoint 2. With the kit,
+many of your scenarios do not need step code of your own: you write a step in the kit's wording, and the kit's
+function runs it.
+
+What you do at this level:
+
+1. After you have set up the kit that comes with Checkpoint 2 in your repository, list the steps that already have
+   code, before you write a new step function. At the root of your repository, run:
+
+   ```default
+   uvx behave@1.3.3 --steps-catalog
+   ```
+
+   You should see one line for each step text, with its parameters in curly brackets
+   ([behave: command-line arguments](https://behave.readthedocs.io/en/latest/behave/#command-line-arguments),
+   `--steps-catalog`). In the Level 1 example folder, the same command lists:
+
+   ```default
+   Given riders in zone {zone:d} request {n:d} trips
+
+   Given the simulator delivers {n:d} of the requests a second time
+
+   When the requests are counted
+
+   Then zone {zone:d} has {n:d} trips requested
+   ```
+
+2. Where a listed step says what your scenario needs, change your scenario's line to that wording. Run
+   `uvx behave@1.3.3 --dry-run --no-snippets`. You should see the file and the line of the step's function after that
+   line, in place of `# None`.
+3. For a step that the list does not cover, write a step function as at Level 1, and run the dry run again. You
+   should see the new step with the line of your function.
+
+### Simulator faults in l19-events
+
+In [`l19-events`](https://github.com/cpsc436c-2026w1/l19-events), open
+[`events/README.md`](https://github.com/cpsc436c-2026w1/l19-events/blob/main/events/README.md): it lists the
+injected faults that the simulator writes and the file with the known answers that the `Then` steps compare with.
+
+## Level 3 (later, proposed): live cloud runs and an eval as a gate {#level-3}
+
+### Live cloud runs behind a tag
+
+The scenarios of Levels 0 to 2 run on your laptop on simulated data. A scenario that calls your deployed system on
+AWS is slower and spends money, so it runs only when you ask for it. The tag `@live` marks such a scenario, and
+a settings file leaves the tag out of a normal run.
+
+1. Put the live scenarios in a feature file of their own, with `@live` beside the story's tag, as shown below.
+   After you save it, check its first line. You should see both `@JS01` and `@live`.
+
+   ```gherkin
+   @JS01 @live
+   Feature: Trips requested in each zone, on AWS
+
+     @RF010
+     Scenario: A request that arrives twice is counted once in the deployed table
+       Given the counting pipeline is deployed in my AWS account
+       When 6 trip requests for zone 161 are written to the stream and 2 of them a second time
+       Then the counts table has 6 trips requested for zone 161
+   ```
+
+2. Create a file `behave.ini` at the root of your repository with the two lines below
+   ([behave: configuration files](https://behave.readthedocs.io/en/latest/behave/#configuration-files)). After you
+   save it, run `cat behave.ini`. You should see the line `default_tags = not @live`.
+
+   ```default
+   [behave]
+   default_tags = not @live
+   ```
+
+3. Run `uvx behave@1.3.3`. You should see the live scenario skipped. With this feature beside the Level 1 example, the
+   last lines are:
+
+   ```default
+   1 feature passed, 0 failed, 1 skipped
+   1 scenario passed, 0 failed, 1 skipped
+   4 steps passed, 0 failed, 3 skipped
+   ```
+
+4. When your system is deployed and the live steps have code, run only the live scenarios, at the root of your
+   repository:
+
+   ```default
+   uvx behave@1.3.3 --tags=live
+   ```
+
+   You should see the steps of the `@live` scenarios run, and the other scenarios counted as skipped in the last
+   lines.
+
+A live scenario creates data in your account. Remove it in `after_scenario`, as the teardown at Level 1 does.
+
+In your repository, a code keeps one rule: a live example can sit under the rule of its code instead, with `@live`
+on the rule, as the rule of RF040 in `features/js01_yesterdays_trips.feature` of the rides example.
+
+### Eval as a gate
+
+A part of your system that calls a language model can give a different answer on each run, so a `Then` with one
+fixed answer does not test it. An eval runs that part on a set of cases with known answers and gives a score.
+A **gate** is a check that fails when the score is below a threshold you chose. The gate is the `@eval` example
+under the requirement's rule, as at [Level 0](#level-0): at this level it reads the score of a saved eval run and
+compares it with the threshold in its `Then`.
+
+### Live runs and gates in l19-events and recipes
+
+- Live runs: in [`l19-events`](https://github.com/cpsc436c-2026w1/l19-events), open
+  [`behave.ini`](https://github.com/cpsc436c-2026w1/l19-events/blob/main/behave.ini) and
+  [`features/js01_live.feature`](https://github.com/cpsc436c-2026w1/l19-events/blob/main/features/js01_live.feature).
+- Eval as a gate: in the public [recipes](https://github.com/cpsc436c-2026w1/recipes), open
+  [`agent-agentcore/features/eval.feature`](https://github.com/cpsc436c-2026w1/recipes/blob/main/agent-agentcore/features/eval.feature).
+  In `l19-events`, open
+  [`features/js02_eval.feature`](https://github.com/cpsc436c-2026w1/l19-events/blob/main/features/js02_eval.feature).

@@ -29,8 +29,9 @@ on campus, or over the [UBC VPN](https://it.ubc.ca/services/email-voice-internet
 The pull request "Course files: team rules and templates" brings `AGENTS.md`, `CONTRIBUTING.md`,
 `experiments/TEMPLATE.md`, the `docs/` templates for the proposal, requirements, design and tasks, an example
 architecture sketch, the resource list `docs/resources.md`, `scripts/teardown.sh`, and the MCP configuration
-examples. The spec checker `tools/spec_check.py` arrives with the course files for checkpoint 1, when you write
-requirements.
+examples. ~~The spec checker `tools/spec_check.py` arrives with the course files for checkpoint 1, when you write
+requirements.~~ [For Checkpoint 1 the check is a dry run, `uvx behave@1.3.3 --dry-run`: see the
+[Checkpoint 1 page](project-checkpoint1.qmd).]{.chg}
 
 | File | What it is | Where to use it |
 |------|------------|-----------------|
@@ -291,7 +292,7 @@ citing the R lines it serves) and your GitHub Project board. The "Tasks and the 
 3. **Permission to run `gh`.** In Kiro CLI, trust the shell tool for the session, for example
    `kiro-cli chat --trust-tools=read,write,shell`. In Claude Code, allow `gh` commands when it asks.
 
-Test it at checkpoint 1, once your requirements and first tasks exist. Add one S row to `docs/tasks.md` with an empty Issue cell, and prompt:
+Test it at ~~checkpoint 1~~ [Checkpoint 2]{.chg}, once your requirements and first build tasks exist. Add one S row to `docs/tasks.md` with an empty Issue cell, and prompt:
 
 > Read AGENTS.md. Sync docs/tasks.md to the project board.
 

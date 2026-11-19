@@ -84,11 +84,20 @@ A Glue session bills until it stops, even after you close the browser tab. End e
   Last, you evaluate the new prompt and work out what the session cost in Canadian dollars (CAD).
 - **Supports:** L15 to L17 (calling a model, evaluating its answers, the course LLM gateway) and your project
   proposal.
-- **Before the tutorial:**
+- **Before the tutorial:** do these at home, so the tutorial time goes to the exercises.
   1. Install [uv](https://docs.astral.sh/uv/getting-started/installation/), a Python package manager.
-  2. Find your token in the issue "Your course MCP tokens" in your team repository.
-  3. Clone the tutorial repository and your team repository, as in
-     [before you start](https://github.com/cpsc436c-2026w1/b5-t1-mcp-evals#before-you-start).
+  2. In a terminal on your laptop, clone the tutorial repository with the command in its
+     [before the tutorial](https://github.com/cpsc436c-2026w1/b5-t1-mcp-evals#before-the-tutorial) steps, and clone
+     your team repository. Check that your team repository contains `docs/proposal.md`.
+  3. Install one coding assistant: Claude Code ([setup](https://code.claude.com/docs/en/setup)), the Kiro IDE or
+     the Kiro CLI ([Kiro installation](https://kiro.dev/docs/getting-started/installation/), IDE tab or CLI tab).
+  4. Sign in. For Claude Code, run `claude` in a terminal. For the Kiro IDE, open Kiro. For the Kiro CLI, run
+     `kiro-cli login` in a terminal; the Kiro CLI does nothing until you sign in. Kiro accepts Google, GitHub or AWS
+     Builder ID ([Kiro authentication](https://kiro.dev/docs/getting-started/authentication/)).
+  5. On GitHub, open the issue "Your course MCP tokens" in your team repository and copy the token next to your
+     name. Set it as the environment variable `KB_MCP_TOKEN`, as
+     [part A, section 2](https://github.com/cpsc436c-2026w1/b5-t1-mcp-evals/blob/main/mcp/README.md#2-set-up-once)
+     shows.
 - **Materials:** Use the [B5T1 repository](https://github.com/cpsc436c-2026w1/b5-t1-mcp-evals) (short link
   `ilm.wiki/436c/b5t1`). Part A is in `mcp/`, and part B is in `evals-gepa/`.
 - **Check your assistant's connection:** after part A's own check, ask your assistant these two things.
@@ -104,3 +113,23 @@ A Glue session bills until it stops, even after you close the browser tab. End e
 
   The wording of the replies changes from run to run. Your model applies the lens; the course MCP server only
   provides it.
+- **Where your assistant shows the connection:** in Claude Code, type `/mcp` in the chat. In the Kiro IDE, open the
+  Kiro panel from the activity bar on the left and find its MCP Servers section. The Kiro CLI has no panel: type
+  `/mcp` in a `kiro-cli chat` session. Each lists `436c` and `aws-knowledge` with their connection status.
+- **Ask the course server:** keep using the assistant you connected in part A. These questions do not ask it to
+  read your team's files. Ask each separately and check for a course server tool call in each reply.
+  1. "What is our AWS budget for the term, and how much can we spend on model calls now? Check with the course
+     server." A good reply says 30 USD per group lease for the term and about 5 USD of model calls per team for
+     now, more on request for production use, and names the course page for each.
+  2. "Which models can our app call through the course LLM gateway, and what is the most output tokens one request
+     may ask for? Check with the course server." A good reply names `qwen3.8-27b` and `qwen3.6-35b-a3b` for chat
+     and `qwen3-embedding-0.6b` for embeddings, and 16,384 output tokens for one request. It may add the request
+     limit: 120 requests a minute per key.
+  3. "We're thinking of adding retrieval (RAG) to our app. What should we check or read before we decide? Check
+     with the course server." A good reply names the course readings on retrieval, the course code you can reuse
+     and the course LLM gateway's limits, each with its course page.
+  4. "What can the course server do for us? List what's available now and what comes later. Check with the course
+     server." A good reply lists the server's tools, the current milestone, and the course checks open now and
+     those that open later.
+
+  If a reply has no tool call, ask again: "Check with the course server and show me the tool result you used."

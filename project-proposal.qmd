@@ -146,7 +146,7 @@ your team. Change them to fit how your team works.
   : {tbl-colwidths="[30,70]"}
 
   Adapt it with your team's choices. If you do not use an assistant, keep the file for the day you do. Keeping
-  `docs/tasks.md`, your requirements and the board linked comes at checkpoint 1; the
+  `docs/tasks.md`, your requirements and the board linked comes at ~~checkpoint 1~~ [Checkpoint 2]{.chg}; the
   [setup page](project-startup.qmd#connecting-tasks-requirements-and-the-board) shows how.
 
 ## Project board {#board}

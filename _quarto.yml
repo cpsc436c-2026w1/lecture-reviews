@@ -71,6 +71,10 @@ website:
             text: Project setup
           - href: project-case-example.qmd
             text: Proposal example
+          - href: project-checkpoint1.qmd
+            text: "Checkpoint 1"
+          - href: project-behave.qmd
+            text: "Behave for your project"
           - href: project-mcp-scenarios.qmd
             text: "Course server with your assistant"
       - text: Assignments

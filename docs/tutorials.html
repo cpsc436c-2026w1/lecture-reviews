@@ -231,6 +231,14 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Proposal example</span></a>
   </li>  
         <li>
+    <a class="dropdown-item" href="./project-checkpoint1.html">
+ <span class="dropdown-text">Checkpoint 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-behave.html">
+ <span class="dropdown-text">Behave for your project</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="./project-mcp-scenarios.html">
  <span class="dropdown-text">Course server with your assistant</span></a>
   </li>  
@@ -374,11 +382,13 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li><strong>What you do:</strong> You connect a coding assistant to the course MCP (Model Context Protocol) server and use the course knowledge base to check facts in your project proposal. Then you call the course LLM gateway with the same token and use Inspect, an evaluation tool, to score a prompt on held-out cases (questions kept apart from the ones used to write the prompt). You read and name the failures. Then GEPA, a prompt optimizer, rewrites the prompt. Last, you evaluate the new prompt and work out what the session cost in Canadian dollars (CAD).</li>
 <li><strong>Supports:</strong> L15 to L17 (calling a model, evaluating its answers, the course LLM gateway) and your project proposal.</li>
-<li><strong>Before the tutorial:</strong>
+<li><strong>Before the tutorial:</strong> do these at home, so the tutorial time goes to the exercises.
 <ol type="1">
 <li>Install <a href="https://docs.astral.sh/uv/getting-started/installation/">uv</a>, a Python package manager.</li>
-<li>Find your token in the issue “Your course MCP tokens” in your team repository.</li>
-<li>Clone the tutorial repository and your team repository, as in <a href="https://github.com/cpsc436c-2026w1/b5-t1-mcp-evals#before-you-start">before you start</a>.</li>
+<li>In a terminal on your laptop, clone the tutorial repository with the command in its <a href="https://github.com/cpsc436c-2026w1/b5-t1-mcp-evals#before-the-tutorial">before the tutorial</a> steps, and clone your team repository. Check that your team repository contains <code>docs/proposal.md</code>.</li>
+<li>Install one coding assistant: Claude Code (<a href="https://code.claude.com/docs/en/setup">setup</a>), the Kiro IDE or the Kiro CLI (<a href="https://kiro.dev/docs/getting-started/installation/">Kiro installation</a>, IDE tab or CLI tab).</li>
+<li>Sign in. For Claude Code, run <code>claude</code> in a terminal. For the Kiro IDE, open Kiro. For the Kiro CLI, run <code>kiro-cli login</code> in a terminal; the Kiro CLI does nothing until you sign in. Kiro accepts Google, GitHub or AWS Builder ID (<a href="https://kiro.dev/docs/getting-started/authentication/">Kiro authentication</a>).</li>
+<li>On GitHub, open the issue “Your course MCP tokens” in your team repository and copy the token next to your name. Set it as the environment variable <code>KB_MCP_TOKEN</code>, as <a href="https://github.com/cpsc436c-2026w1/b5-t1-mcp-evals/blob/main/mcp/README.md#2-set-up-once">part A, section 2</a> shows.</li>
 </ol></li>
 <li><strong>Materials:</strong> Use the <a href="https://github.com/cpsc436c-2026w1/b5-t1-mcp-evals">B5T1 repository</a> (short link <code>ilm.wiki/436c/b5t1</code>). Part A is in <code>mcp/</code>, and part B is in <code>evals-gepa/</code>.</li>
 <li><strong>Check your assistant’s connection:</strong> after part A’s own check, ask your assistant these two things.
@@ -387,6 +397,15 @@ ul.task-list li input[type="checkbox"] {
 <li>“Use the course MCP server: read the practice lens and run its lens pass on <code>docs/proposal.md</code>.” A working reply is a table with the lens’s two questions (how often each job story happens and how fast its answer is needed; where each number in the data answers comes from), each classified as stated, partial or absent with a quoted line, and then two or three suggestions.</li>
 </ol>
 The wording of the replies changes from run to run. Your model applies the lens; the course MCP server only provides it.</li>
+<li><strong>Where your assistant shows the connection:</strong> in Claude Code, type <code>/mcp</code> in the chat. In the Kiro IDE, open the Kiro panel from the activity bar on the left and find its MCP Servers section. The Kiro CLI has no panel: type <code>/mcp</code> in a <code>kiro-cli chat</code> session. Each lists <code>436c</code> and <code>aws-knowledge</code> with their connection status.</li>
+<li><strong>Ask the course server:</strong> keep using the assistant you connected in part A. These questions do not ask it to read your team’s files. Ask each separately and check for a course server tool call in each reply.
+<ol type="1">
+<li>“What is our AWS budget for the term, and how much can we spend on model calls now? Check with the course server.” A good reply says 30 USD per group lease for the term and about 5 USD of model calls per team for now, more on request for production use, and names the course page for each.</li>
+<li>“Which models can our app call through the course LLM gateway, and what is the most output tokens one request may ask for? Check with the course server.” A good reply names <code>qwen3.8-27b</code> and <code>qwen3.6-35b-a3b</code> for chat and <code>qwen3-embedding-0.6b</code> for embeddings, and 16,384 output tokens for one request. It may add the request limit: 120 requests a minute per key.</li>
+<li>“We’re thinking of adding retrieval (RAG) to our app. What should we check or read before we decide? Check with the course server.” A good reply names the course readings on retrieval, the course code you can reuse and the course LLM gateway’s limits, each with its course page.</li>
+<li>“What can the course server do for us? List what’s available now and what comes later. Check with the course server.” A good reply lists the server’s tools, the current milestone, and the course checks open now and those that open later.</li>
+</ol>
+If a reply has no tool call, ask again: “Check with the course server and show me the tool result you used.”</li>
 </ul>
 
 
