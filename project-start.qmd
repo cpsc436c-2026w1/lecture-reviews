@@ -49,7 +49,7 @@ The milestones are:
 | [Project clinic]{.chg} | [Thu Dec 3, in class]{.chg} | [I expect every team member to attend unless unresolvable conflicts prevent you. We discuss and debug your project. We will also ask a couple of light questions about your team's project: your design, your requirements and scenarios. 1% participation for attending; your answers count toward the project grade. All team members should be well-versed in the design, requirements and implementation plans]{.chg} | [attendance]{.chg} |
 | Final hand-in and report | Tue Dec 15 EoD | ~~Measurements anyone can re-run; the report on the course's five questions, with authors per section; the sandbox torn down~~ [Final docs and runnable code and tests]{.chg} | tag `final` |
 | ~~Testing and presentation~~ [Presentation]{.chg} | [Thu Dec 17]{.chg} | ~~Other teams use your system and report issues; you answer them. A 5-minute presentation with questions~~ [A 5-7 minute video with all team members]{.chg} | [the video]{.chg} |
-| Peer evaluation | | Brief evaluation of your teammates and project experience | announced later |
+| Peer evaluation | [Sat Dec 19]{.chg} | Brief evaluation of your teammates and project experience[, and a course reflection]{.chg} | announced later |
 
 : {tbl-colwidths="[22,14,44,20]"}
 
