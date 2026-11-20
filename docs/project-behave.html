@@ -413,7 +413,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 <p>Levels 1 to 3 are proposed and may change before Checkpoint 2.</p>
-<p>The examples on this page come from the rides example of the <a href="./project-checkpoint1.html">Checkpoint 1</a> page: a ride-hailing app in New York whose trip events (a trip is requested, accepted, completed) reach the system of a team t00. The whole example is the repository <a href="https://github.com/cpsc436c-2026w1/cp1-example">cp1-example</a>, tag <code>monday</code>. Run the Level 0, Level 2 and Level 3 commands in a terminal at the root of your repository. The Level 1 example has a folder of its own, and its steps say where to work. The outputs on this page come from behave 1.3.3, and every command pins that version (<code>uvx behave@1.3.3</code>) because older versions do not read <code>Rule:</code>: behave 1.2.6 stops with a <code>ParserError</code> at the first <code>Rule:</code> line.</p>
+<p>The examples on this page come from the rides example of the <a href="./project-checkpoint1.html">Checkpoint 1</a> page: a ride-hailing app in New York whose trip events (a trip is requested, accepted, completed) reach the system of a team t00. The whole example is the repository <a href="https://github.com/cpsc436c-2026w1/cp1-example">cp1-example</a>, tag <code>cp1</code>. Run the Level 0, Level 2 and Level 3 commands in a terminal at the root of your repository. The Level 1 example has a folder of its own, and its steps say where to work. The outputs on this page come from behave 1.3.3, and every command pins that version (<code>uvx behave@1.3.3</code>) because older versions do not read <code>Rule:</code>: behave 1.2.6 stops with a <code>ParserError</code> at the first <code>Rule:</code> line.</p>
 <section id="level-0" class="level2">
 <h2 class="anchored" data-anchor-id="level-0">Level 0 (Checkpoint 1): draft rules and examples without code</h2>
 <p>At this level you write files in <strong>Gherkin</strong>, the plain-text format that behave reads, and check that behave can read them, before any Python code exists. Each file is a <strong>feature</strong>: its name ends in <code>.feature</code>. In it:</p>
@@ -475,7 +475,7 @@ Feature: Trips requested in each zone
         | ev-000012 | t-0012  | 161            | 2026-11-23T09:04:00Z | 2026-11-23T09:11:00Z |
       When the time is 2026-11-23T09:12:00Z
       Then zone 161 has 2 trips requested between 09:00 and 09:05</code></pre>
-<p>The rule is the requirement R020 of <code>docs/requirements.md</code> in plain words. The example’s answer, 2, follows from its table: request ev-000012 has an event time of 09:04, inside the period from 09:00 to 09:05, and was received 7 minutes later, at 09:11. The <code>When</code> is 60 s after that receipt, because R020 asks for the late request to be counted within 60 s.</p>
+<p>The rule is the requirement R020 of <code>docs/requirements.md</code> in plain words. The example’s answer, 2, follows from its table: request ev-000012 has an event time of 09:04, inside the period from 09:00 to 09:05, and was received 7 minutes later, at 09:11. The <code>When</code> is 60 s after that receipt, because R020’s target is data latency under 60 s at p95 for a late request; one example checks one such request.</p>
 </section>
 <section id="tags" class="level3">
 <h3 class="anchored" data-anchor-id="tags">Tags</h3>
@@ -520,12 +520,12 @@ Feature: Trips requested in each zone
 <td>a tag on the feature that names the option, such as <code>@assistant</code></td>
 </tr>
 <tr class="even">
-<td>the number after <code>\|</code></td>
-<td>a number in the <code>Then</code> (“within 60 s”), or a time in the <code>When</code> chosen so that the answer must already hold</td>
+<td>the target after <code>\|</code> (data latency under 60 s at p95)</td>
+<td>one case of it in the <code>Then</code> (“within 60 s”), or a time in the <code>When</code> chosen so that the answer must already hold; the percentile needs many cases</td>
 </tr>
 </tbody>
 </table>
-<p>The answer of an example (2 trips) is not a requirement; the number from the R line (within 60 s) is. The times in an example are data: nobody waits for them.</p>
+<p>The answer of an example (2 trips) is not a requirement; the target from the R line (data latency under 60 s at p95) is. The times in an example are data: nobody waits for them.</p>
 </section>
 <section id="data-in-an-example" class="level3">
 <h3 class="anchored" data-anchor-id="data-in-an-example">Data in an example</h3>
@@ -768,7 +768,7 @@ Feature: One driver for each trip
         | ev-000312 | t-0303  | d-0131    | 2026-11-23T09:20:04Z |
       Then trip t-0303 is assigned to exactly one of drivers d-0046 and d-0131
       And 1 accept is refused</code></pre>
-<p>All four feature files are in the <code>features/</code> folder of <a href="https://github.com/cpsc436c-2026w1/cp1-example">cp1-example</a> (tag <code>monday</code>).</p>
+<p>All four feature files are in the <code>features/</code> folder of <a href="https://github.com/cpsc436c-2026w1/cp1-example">cp1-example</a> (tag <code>cp1</code>).</p>
 </section>
 </section>
 <section id="level-1" class="level2">

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Behave for your project – CPSC 436C companion</title>
+<title>Checkpoint 1: requirements and scenarios – CPSC 436C companion</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -314,16 +314,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul class="collapse">
   <li><a href="#checklist" id="toc-checklist" class="nav-link active" data-scroll-target="#checklist">Checklist</a></li>
-  <li><a href="#fixes" id="toc-fixes" class="nav-link" data-scroll-target="#fixes">Make the corrections your issue asks for</a></li>
+  <li><a href="#repo" id="toc-repo" class="nav-link" data-scroll-target="#repo">What changes in your repository</a></li>
+  <li><a href="#fixes" id="toc-fixes" class="nav-link" data-scroll-target="#fixes">Make the corrections I asked for in the proposal feedback issue</a></li>
   <li><a href="#requirements" id="toc-requirements" class="nav-link" data-scroll-target="#requirements">Write docs/requirements.md</a></li>
   <li><a href="#design" id="toc-design" class="nav-link" data-scroll-target="#design">Create docs/design.md</a></li>
   <li><a href="#scenarios" id="toc-scenarios" class="nav-link" data-scroll-target="#scenarios">Draft your scenarios in features/</a></li>
   <li><a href="#dry-run" id="toc-dry-run" class="nav-link" data-scroll-target="#dry-run">Check the scenarios</a></li>
   <li><a href="#hand-in" id="toc-hand-in" class="nav-link" data-scroll-target="#hand-in">Hand in with a pull request and the tag cp1</a></li>
-  <li><a href="#level-0" id="toc-level-0" class="nav-link" data-scroll-target="#level-0">Level 0 (Checkpoint 1): draft rules and examples without code</a></li>
-  <li><a href="#level-1" id="toc-level-1" class="nav-link" data-scroll-target="#level-1">Level 1 (Checkpoint 2, proposed): a first step function</a></li>
-  <li><a href="#level-2" id="toc-level-2" class="nav-link" data-scroll-target="#level-2">Level 2 (later, proposed): steps from the course kit</a></li>
-  <li><a href="#level-3" id="toc-level-3" class="nav-link" data-scroll-target="#level-3">Level 3 (later, proposed): live cloud runs and an eval as a gate</a></li>
   </ul>
 </nav>
 </nav>
@@ -336,7 +333,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Behave for your project</h1>
+<h1 class="title">Checkpoint 1: requirements and scenarios</h1>
 </div>
 
 
@@ -376,15 +373,167 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><a href="#hand-in">Open a pull request from a branch such as <code>cp1-draft</code>, merge it when a teammate approves it, tag the merged commit on <code>main</code> as <code>cp1</code> and push the tag</a>.</li>
 </ol>
 <p>The minimum for Monday is small: 1 or 2 focus job stories with 3 to 6 requirements each, the RF and RQ codes of your issue, your design with sections 4 and 5 of your proposal moved in, its list of planned resources and its <code>## Data</code> section, and at least one example for each rule.</p>
-<p>The examples on this page come from a Checkpoint 1 hand-in that we wrote for a team t00 on the rides case of the lectures: a ride-hailing app in New York that sends trip events (a trip is requested, accepted, completed). Its data is built on public New York trip records. The whole hand-in is the repository <a href="https://github.com/cpsc436c-2026w1/cp1-example">cp1-example</a>, tag <code>monday</code>: open its <code>docs/</code> and <code>features/</code> folders when you want to see a part of this page in full.</p>
+<p>The examples on this page come from a Checkpoint 1 hand-in that we wrote for a team t00 on the rides case of the lectures: a ride-hailing app in New York that sends trip events (a trip is requested, accepted, completed). Its data is built on public New York trip records. The whole hand-in is the repository <a href="https://github.com/cpsc436c-2026w1/cp1-example">cp1-example</a>, tag <code>cp1</code>: open its <code>docs/</code> and <code>features/</code> folders when you want to see a part of this page in full.</p>
+</section>
+<section id="repo" class="level2">
+<h2 class="anchored" data-anchor-id="repo">What changes in your repository</h2>
+<p>The <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp1">example repository at tag <code>cp1</code>, the tag you hand in</a> is a whole Checkpoint 1 hand-in, written for the rides case. Each file name below links to it in that state.</p>
+<style>
+.repo-tab { width: 100%; border-collapse: collapse; font-size: 0.9em; margin: 0.6em 0 0.3em; }
+.repo-tab td { padding: 0.18em 0.5em; vertical-align: top; border-bottom: 1px solid #eee; }
+.repo-tab td.t { font-family: SFMono-Regular, Menlo, Consolas, monospace; white-space: nowrap; font-size: 0.92em; }
+.repo-tab td.t a { color: #1f4e8c; text-decoration: underline; }
+.repo-tab .add, .repo-legend .add { background: #d9f2df; color: #14532d; font-weight: 600; padding: 0 0.35em; border-radius: 3px; white-space: nowrap; }
+.repo-tab .fill, .repo-legend .fill { background: #fff1c2; color: #6b4b00; font-weight: 600; padding: 0 0.35em; border-radius: 3px; white-space: nowrap; }
+.repo-tab .chg, .repo-legend .chg { background: #fde2e1; color: #8a1c14; font-weight: 600; padding: 0 0.35em; border-radius: 3px; white-space: nowrap; }
+</style>
+
+<table class="repo-tab caption-top table">
+<tbody>
+<tr class="odd">
+<td class="t">your-repository/</td>
+<td><span class="add">add</span></td>
+<td>tag <code>cp1</code> on <code>main</code>, after your pull request is merged</td>
+</tr>
+<tr class="even">
+<td class="t">├── docs/</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td class="t">│&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp1/docs/proposal.md">proposal.md</a></td>
+<td><span class="chg">change</span></td>
+<td>the corrections asked for by <strong>Fix:</strong> requests</td>
+</tr>
+<tr class="even">
+<td class="t">│&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp1/docs/requirements.md">requirements.md</a></td>
+<td><span class="fill">fill in</span></td>
+<td>job stories, requirements in EARS, a row for every RF and RQ</td>
+</tr>
+<tr class="odd">
+<td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp1/docs/design.md">design.md</a></td>
+<td><span class="fill">fill in</span></td>
+<td>sketch, workflows, planned resources, Data</td>
+</tr>
+<tr class="even">
+<td class="t">└── features/</td>
+<td></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td class="t">&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp1/features/js01_trips_per_zone.feature">js01_trips_per_zone.feature</a></td>
+<td><span class="add">add</span></td>
+<td>demo scenarios: rules tagged with codes, examples (one file per focus job story)</td>
+</tr>
+<tr class="even">
+<td class="t">&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp1/features/js01_yesterdays_trips.feature">js01_yesterdays_trips.feature</a></td>
+<td><span class="add">add</span></td>
+<td></td>
+</tr>
+<tr class="odd">
+<td class="t">&nbsp;&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp1/features/steps">steps/.gitkeep</a></td>
+<td><span class="add">add</span></td>
+<td>empty for now: step code comes at Checkpoint 2</td>
+</tr>
+</tbody>
+</table>
+
+<p class="repo-legend"><span class="add">add</span> a new file or tag &nbsp; <span class="fill">fill in</span> a course template you already have &nbsp; <span class="chg">change</span> a file you wrote</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 46%">
+<col style="width: 28%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>Kiro keeps the same thing in</th>
+<th>Codes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>docs/requirements.md</code></td>
+<td><code>requirements.md</code>: stories with acceptance criteria in EARS</td>
+<td>defines JS01, R010, RF010, RQ010 once</td>
+</tr>
+<tr class="even">
+<td><code>docs/design.md</code></td>
+<td><code>design.md</code>: architecture</td>
+<td>uses the codes each resource and data set serves</td>
+</tr>
+<tr class="odd">
+<td><code>features/*.feature</code></td>
+<td>—</td>
+<td>tags: <code>@JS01</code> on a feature, <code>@R010</code> or <code>@RF010</code> on a rule</td>
+</tr>
+</tbody>
+</table>
+<p><strong><code>docs/</code> says what you build, <code>features/</code> says how you show it.</strong></p>
 </section>
 <section id="fixes" class="level2">
-<h2 class="anchored" data-anchor-id="fixes">Make the corrections your issue asks for</h2>
-<p>Your <code>staff-feedback</code> issue lists constraints (RF010, RF020 …) and requests (RQ010, RQ020 …). The text of some RQs starts with <code>Fix:</code>, such as <code>RQ010. Fix: …</code>. Each of them asks for a correction to your proposal: make it in <code>docs/proposal.md</code> by Monday. Every other RQ gets a short note on Monday, and its answer is due at Checkpoint 2 (see <a href="#codes">Codes of your issue</a>).</p>
+<h2 class="anchored" data-anchor-id="fixes">Make the corrections I asked for in the proposal feedback issue</h2>
+<div class="callout callout-style-default callout-note callout-titled" title="Useful slides: From Feedback to Checkpoint 1: triage">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Useful slides: From Feedback to Checkpoint 1: triage
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/l19/l19s-01.png" class="img-fluid figure-img" alt="L19 slide: From Feedback to Checkpoint 1: triage"></p>
+<figcaption>From Feedback to Checkpoint 1: triage</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>In your <code>staff-feedback</code> issue, among the constraints (RF010, RF020 …) and requests (RQ010, RQ020 …), some RQs start with <strong>Fix:</strong>. Each of them asks for a correction to your <code>docs/proposal.md</code> that you complete for Checkpoint 1.</p>
+<p>We discuss what to do with all other RQs and RFs in the <a href="#codes">next step</a>. Briefly: for each other RQ, you give me a short response in Checkpoint 1 on how you would reply to it; the actual solution waits until Checkpoint 2.</p>
 <p>If something in the issue does not match what your proposal says, reply in the issue.</p>
 </section>
 <section id="requirements" class="level2">
 <h2 class="anchored" data-anchor-id="requirements">Write docs/requirements.md</h2>
+<div class="callout callout-style-default callout-note callout-titled" title="Useful slides: How EARS writes a requirement, Guiding questions turn a job story into requirements, What can go wrong">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Useful slides: How EARS writes a requirement, Guiding questions turn a job story into requirements, What can go wrong
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/l19/l19-st2.png" class="img-fluid figure-img" alt="L19 slide: How EARS writes a requirement"></p>
+<figcaption>How EARS writes a requirement</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/l19/l19-st2q.png" class="img-fluid figure-img" alt="L19 slide: Guiding questions turn a job story into requirements"></p>
+<figcaption>Guiding questions turn a job story into requirements</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/l19/l19-st2w.png" class="img-fluid figure-img" alt="L19 slide: What can go wrong"></p>
+<figcaption>What can go wrong</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
 <p>The file has a heading for each job story, your own requirements under each focus story, and one table for the codes of your issue.</p>
 <section id="job-stories-and-requirements" class="level3">
 <h3 class="anchored" data-anchor-id="job-stories-and-requirements">Job stories and requirements</h3>
@@ -456,6 +605,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="codes" class="level3">
 <h3 class="anchored" data-anchor-id="codes">Put every RF and RQ from feedback into docs/requirements.md</h3>
+<div class="callout callout-style-default callout-note callout-titled" title="Useful slides: Every RF and RQ into docs/requirements.md">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Useful slides: Every RF and RQ into docs/requirements.md
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/l19/l19-st1.png" class="img-fluid figure-img" alt="L19 slide: Every RF and RQ into docs/requirements.md"></p>
+<figcaption>Every RF and RQ into docs/requirements.md</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
 <p>In a section <code>## Constraints and requests</code>, add one row for every RF and RQ code of your issue, with its code and its wording. RF and RQ codes keep the numbers of your issue.</p>
 <ul>
 <li>For an <strong>RF</strong> code, say what you will do and how it is checked. For an RF that a test can check, the check starts with <code>BDD:</code> and links the feature file whose rule carries the code. For an RF we can’t test, such as the tags on your resources, the check starts with <code>read:</code>.</li>
@@ -474,6 +644,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="evals" class="level3">
 <h3 class="anchored" data-anchor-id="evals">Requirements on model answers</h3>
+<div class="callout callout-style-default callout-note callout-titled" title="Useful slides: Eval in words">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Useful slides: Eval in words
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/l19/l19-st6e.png" class="img-fluid figure-img" alt="L19 slide: Eval in words"></p>
+<figcaption>Eval in words</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
 <p>If your system includes a model, its answer can differ between runs, so one example with a fixed reply does not show the requirement. Describe an <strong>eval</strong> in words in a section <code>## Evals</code>: a set of cases with known answers that the model’s part of your system is run on, and the score it gets. Give the requirement it is for, the cases, what counts as correct, and a threshold that the number of cases can reach: with 6 cases, a score of at least 0.8 means at least 5 of 6 correct, and 0.9 would ask for all 6.</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Eval <span class="pp">|</span> For <span class="pp">|</span> Cases <span class="pp">|</span> What counts as correct <span class="pp">|</span> Threshold <span class="pp">|</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|---|---|</span></span>
@@ -490,6 +681,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="design" class="level2">
 <h2 class="anchored" data-anchor-id="design">Create docs/design.md</h2>
+<div class="callout callout-style-default callout-note callout-titled" title="Useful slides: docs/design.md lists each planned resource">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Useful slides: docs/design.md lists each planned resource
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/l19/l19-st7.png" class="img-fluid figure-img" alt="L19 slide: docs/design.md lists each planned resource"></p>
+<figcaption>docs/design.md lists each planned resource</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
 <p>Write <code>docs/design.md</code> from sections of your proposal: the course does not give a template for it.</p>
 <ol type="1">
 <li><p>Move sections 4 (data and workflows) and 5 (the sketch) of your proposal into <code>docs/design.md</code>, and clean them up where your feedback asks. The sketch image moves with section 5: link it from <code>docs/design.md</code>. Leave a line in <code>docs/proposal.md</code> that points to the new file.</p></li>
@@ -503,6 +715,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 <section id="data" class="level3">
 <h3 class="anchored" data-anchor-id="data">Data section</h3>
+<div class="callout callout-style-default callout-note callout-titled" title="Useful slides: Simulated data and the real data subset, One line of fields for each kind of event">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Useful slides: Simulated data and the real data subset, One line of fields for each kind of event
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/l19/l19-data.png" class="img-fluid figure-img" alt="L19 slide: Simulated data and the real data subset"></p>
+<figcaption>Simulated data and the real data subset</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/l19/l19-st3.png" class="img-fluid figure-img" alt="L19 slide: One line of fields for each kind of event"></p>
+<figcaption>One line of fields for each kind of event</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
 <p>The <code>## Data</code> section has two parts:</p>
 <ol type="1">
 <li><code>### Our data</code>: 3 or 4 sentences on the real data set your system is built on: the subset you use (rows, size, time range), where it comes from, and what the system uses it for. Give each data set an id, such as DS01, and mark each number <em>measured</em> (you ran a query), <em>given</em> (a page of the source states it) or <em>our choice</em>.</li>
@@ -538,6 +777,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="scenarios" class="level2">
 <h2 class="anchored" data-anchor-id="scenarios">Draft your scenarios in features/</h2>
+<div class="callout callout-style-default callout-note callout-titled" title="Useful slides: Example Mapping cards, One rule, three example cards, Cards become a feature file">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Useful slides: Example Mapping cards, One rule, three example cards, Cards become a feature file
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/l19/l19-st4.png" class="img-fluid figure-img" alt="L19 slide: Example Mapping cards"></p>
+<figcaption>Example Mapping cards</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/l19/l19-st4k.png" class="img-fluid figure-img" alt="L19 slide: One rule, three example cards"></p>
+<figcaption>One rule, three example cards</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/l19/l19-st5.png" class="img-fluid figure-img" alt="L19 slide: Cards become a feature file"></p>
+<figcaption>Cards become a feature file</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
 <p>BDD test scenarios are your demos of the system’s behaviour: <code>Given</code> the data, <code>When</code> something happens, <code>Then</code> the answer you know before the system runs.</p>
 <p>Write the scenarios in Gherkin, in a folder <code>features/</code> in your repository:</p>
 <ol type="1">
@@ -609,6 +881,33 @@ Feature: Questions about trip counts in plain language
 </section>
 <section id="dry-run" class="level2">
 <h2 class="anchored" data-anchor-id="dry-run">Check the scenarios</h2>
+<div class="callout callout-style-default callout-note callout-titled" title="Useful slides: Dry run before the pull request and the tag, Traceability check">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Useful slides: Dry run before the pull request and the tag, Traceability check
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/l19/l19-st8.png" class="img-fluid figure-img" alt="L19 slide: Dry run before the pull request and the tag"></p>
+<figcaption>Dry run before the pull request and the tag</figcaption>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/l19/l19-trace.png" class="img-fluid figure-img" alt="L19 slide: Traceability check"></p>
+<figcaption>Traceability check</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
 <ol type="1">
 <li><p>behave looks for step code in a folder <code>features/steps/</code>, even on a dry run. Create the folder with an empty file in it, so that git keeps it:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>mkdir -p features/steps</span>
@@ -629,6 +928,27 @@ Feature: Questions about trip counts in plain language
 </section>
 <section id="hand-in" class="level2">
 <h2 class="anchored" data-anchor-id="hand-in">Hand in with a pull request and the tag cp1</h2>
+<div class="callout callout-style-default callout-note callout-titled" title="Useful slides: Checkpoint 1 hand-in">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Useful slides: Checkpoint 1 hand-in
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/l19/l19s-40.png" class="img-fluid figure-img" alt="L19 slide: Checkpoint 1 hand-in"></p>
+<figcaption>Checkpoint 1 hand-in</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
 <p>Your team hands in through a pull request, under the rules of your <code>AGENTS.md</code> and <code>CONTRIBUTING.md</code>: no direct pushes to <code>main</code>, one approval from someone other than the author, and no squash merge.</p>
 <ol type="1">
 <li><p>Commit <code>docs/</code> and <code>features/</code> on a branch such as <code>cp1-draft</code>, and push the branch:</p>
@@ -649,666 +969,6 @@ Feature: Questions about trip counts in plain language
 <p>At Checkpoint 2, the steps of your examples get code, and staff run them against your system. The answers to the RQs whose text does not start with <code>Fix:</code> are due then too.</p>
 
 
-<style>pre, pre code { white-space: pre; overflow-x: auto; }</style>
-<p>behave is a Python tool that runs tests written as plain-text examples. In your project, each example shows one requirement or one constraint (RF code) of your system with data and a known answer. This page takes you from a first draft to tests that run against your system on AWS. You need only the level that your checkpoint asks for.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 14%">
-<col style="width: 22%">
-<col style="width: 64%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Level</th>
-<th>When you need it</th>
-<th>What you do</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><a href="#level-0">Level 0</a></td>
-<td>Checkpoint 1</td>
-<td>Write draft rules and examples, and check them with a dry run. You do not write code.</td>
-</tr>
-<tr class="even">
-<td><a href="#level-1">Level 1</a></td>
-<td>Checkpoint 2 (proposed)</td>
-<td>Write the Python function behind each step, and run the examples.</td>
-</tr>
-<tr class="odd">
-<td><a href="#level-2">Level 2</a></td>
-<td>Later (proposed)</td>
-<td>Use ready steps from the course kit for the simulator, DuckDB queries and evals (scores of a model’s answers on cases with known answers).</td>
-</tr>
-<tr class="even">
-<td><a href="#level-3">Level 3</a></td>
-<td>Later (proposed)</td>
-<td>Run chosen examples on AWS, and make an eval a gate: an example that fails when the eval’s score is below a threshold you chose.</td>
-</tr>
-</tbody>
-</table>
-<p>Levels 1 to 3 are proposed and may change before Checkpoint 2.</p>
-<p>The examples on this page come from the rides example of the <a href="./project-checkpoint1.html">Checkpoint 1</a> page: a ride-hailing app in New York whose trip events (a trip is requested, accepted, completed) reach the system of a team t00. The whole example is the repository <a href="https://github.com/cpsc436c-2026w1/cp1-example">cp1-example</a>, tag <code>monday</code>. Run the Level 0, Level 2 and Level 3 commands in a terminal at the root of your repository. The Level 1 example has a folder of its own, and its steps say where to work. The outputs on this page come from behave 1.3.3, and every command pins that version (<code>uvx behave@1.3.3</code>) because older versions do not read <code>Rule:</code>: behave 1.2.6 stops with a <code>ParserError</code> at the first <code>Rule:</code> line.</p>
-</section>
-<section id="level-0" class="level2">
-<h2 class="anchored" data-anchor-id="level-0">Level 0 (Checkpoint 1): draft rules and examples without code</h2>
-<p>At this level you write files in <strong>Gherkin</strong>, the plain-text format that behave reads, and check that behave can read them, before any Python code exists. Each file is a <strong>feature</strong>: its name ends in <code>.feature</code>. In it:</p>
-<ul>
-<li>a <strong>rule</strong> (<code>Rule:</code>) states one requirement, and carries its code as a tag;</li>
-<li>an <strong>example</strong> (<code>Example:</code>) under a rule shows the rule with data and an answer that you know before the system runs. <code>Example:</code> is another word for <code>Scenario:</code>, and behave’s output says “scenario”;</li>
-<li>an example is written as <strong>steps</strong>: lines that start with <code>Given</code>, <code>When</code>, <code>Then</code>, <code>And</code> or <code>But</code>. The <code>Given</code> sets up the data and the state before, the <code>When</code> is the event or the question, and the <code>Then</code> is what must be true after (<a href="https://behave.readthedocs.io/en/latest/gherkin/#given-when-then-and-but">behave: Given, When, Then</a>).</li>
-</ul>
-<p><code>Examples:</code> with an s is a different thing: the table of a <code>Scenario Outline</code>.</p>
-<section id="folder-layout" class="level3">
-<h3 class="anchored" data-anchor-id="folder-layout">Folder layout</h3>
-<p>behave looks for a folder named <code>features/</code> at the root of your repository, and inside it for a folder named <code>steps/</code> (<a href="https://behave.readthedocs.io/en/latest/gherkin/#feature-testing-layout">behave: feature testing layout</a>). The <code>steps/</code> folder holds Python files at Level 1. At Level 0 it holds one empty file, so that git keeps the folder.</p>
-<ol type="1">
-<li><p>Create both folders and the empty file:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>mkdir -p features/steps</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>touch features/steps/.gitkeep</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p>Check the result with <code>ls -a features features/steps</code>. You should see <code>steps</code> in the first list and <code>.gitkeep</code> in the second.</p></li>
-</ol>
-<p>When your feature files are written, the layout of the rides example is:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>features/</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>├── js01_trips_per_zone.feature     serves JS01</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>├── js01_yesterdays_trips.feature   serves JS01</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>├── js01_count_questions.feature    serves JS01, with the assistant</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>├── trip_assignment.feature         serves JS02 and JS03</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>└── steps/</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    └── .gitkeep                    empty at Level 0</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</section>
-<section id="job-stories-and-features" class="level3">
-<h3 class="anchored" data-anchor-id="job-stories-and-features">Job stories and features</h3>
-<p>A job story can need more than one feature, and one feature can serve more than one job story:</p>
-<ul>
-<li><strong>By default, write one feature for each focus job story</strong>, named for what the user gets, and tag it with the story’s id (<code>@JS01</code>).</li>
-<li><strong>Split a story into two features</strong> when the user gets two different things from it. Each feature’s description says which part of the story it covers. In the example, the analyst of JS01 gets the trips requested in each zone and, each morning, yesterday’s completed trips: two features.</li>
-<li><strong>Share a feature between two stories</strong> when both users read the same thing. It carries both tags (<code>@JS02 @JS03</code>), and a requirement that both stories share has its rule once, in that feature. In the example, the driver (JS02) and the rider (JS03) read the same assignment of a trip to a driver.</li>
-<li><strong>A story tag on a feature says that every rule in it serves that story.</strong> When one rule serves one more story, put that story’s tag on the rule.</li>
-</ul>
-<p>A feature named “Constraints”, or after a code, does not name anything a user gets. Put each RF code’s rule in the feature of the job story that the constraint is about.</p>
-</section>
-<section id="one-rule-for-each-code" class="level3">
-<h3 class="anchored" data-anchor-id="one-rule-for-each-code">One rule for each code</h3>
-<p>Each R code of a focus story in <code>docs/requirements.md</code>, and each RF code whose check is <code>examples tagged</code>, gets one <code>Rule:</code> in one feature, tagged with the code: <code>@R020</code> for your own requirement R020, <code>@RF010</code> for the constraint RF010 of your Feedback 1 issue. Under the rule goes at least one <code>Example:</code>. RQ codes, and RF codes whose check starts with <code>read:</code>, do not get a rule.</p>
-<ol type="1">
-<li>Create <code>features/js01_trips_per_zone.feature</code>, or use a file name that fits your story. You should see the file in <code>features/</code>.</li>
-<li>Put the story’s tag, <code>Feature:</code> with a name, and a sentence on what part of the story the feature covers. behave does not run this text: it is there for the person who reads the file.</li>
-<li>Add one rule with its code tag, and one example under it, as shown below, and save the file. Indent the lines as shown, with spaces. The table’s columns are fields of a trip request: <code>event_id</code> is one id for one event, <code>trip_id</code> is one id for one trip, <code>pickup_zone_id</code> is the zone the rider is in, <code>event_time</code> is when the rider asked, and <code>received_time</code> is when the event reached the system.</li>
-</ol>
-<pre class="gherkin"><code>@JS01
-Feature: Trips requested in each zone
-  Covers the first part of JS01 (operations analyst): the number of trips requested in each pickup zone for each
-  5-minute period. A period holds the requests with an event time from its start up to, and not including, its end.
-
-  @R020
-  Rule: If a request is received after its period ended, it is added to the stored count of the period of its event time
-
-    Example: Request received 7 minutes late
-      Given only these trip requests are received:
-        | event_id  | trip_id | pickup_zone_id | event_time           | received_time        |
-        | ev-000011 | t-0011  | 161            | 2026-11-23T09:01:10Z | 2026-11-23T09:01:11Z |
-        | ev-000012 | t-0012  | 161            | 2026-11-23T09:04:00Z | 2026-11-23T09:11:00Z |
-      When the time is 2026-11-23T09:12:00Z
-      Then zone 161 has 2 trips requested between 09:00 and 09:05</code></pre>
-<p>The rule is the requirement R020 of <code>docs/requirements.md</code> in plain words. The example’s answer, 2, follows from its table: request ev-000012 has an event time of 09:04, inside the period from 09:00 to 09:05, and was received 7 minutes later, at 09:11. The <code>When</code> is 60 s after that receipt, because R020’s target is data latency under 60 s at p95 for a late request; one example checks one such request.</p>
-</section>
-<section id="tags" class="level3">
-<h3 class="anchored" data-anchor-id="tags">Tags</h3>
-<p><code>@JS01</code>, <code>@R020</code> and <code>@RF010</code> are <strong>tags</strong>: labels that start with <code>@</code>, on the line above a feature, a rule or an example. A tag reaches everything under it: the examples of a rule carry the rule’s tag, and every example of a feature carries the feature’s tag. To dry-run only the examples of one code, name its tag: <code>uvx behave@1.3.3 --dry-run --tags=R020</code> (<a href="https://behave.readthedocs.io/en/latest/tag_expressions/">behave: tag expressions</a>).</p>
-<p>When one of your own requirements is how you meet an RF code, write one rule with both tags. In the example, R080 (refuse the second accept of a trip) meets RF030 (two drivers accept the same trip at the same moment), so its rule is tagged <code>@R080 @RF030</code>.</p>
-<p><code>@RF010</code> above a rule is a tag: a label that <code>--tags</code> selects and reports show. <code>@given</code> above a Python function (Level 1) is a decorator: it makes the function a step.</p>
-<p>behave gives special meaning to only a few tags: <code>@wip</code> when you run <code>behave --wip</code> (<a href="https://behave.readthedocs.io/en/latest/tutorial/#works-in-progress">behave: works in progress</a>), and tags that start with <code>@fixture.</code> or active tags such as <code>@use.with_</code>, but only when <code>features/environment.py</code> sets them up (<a href="https://behave.readthedocs.io/en/latest/gherkin/#accessing-tag-information-in-python">behave: tags in Python</a>, <a href="https://behave.readthedocs.io/en/latest/new_and_noteworthy_v1.2.5/#active-tags">behave: active tags</a>). Requirement codes such as <code>@R010</code> and <code>@RF010</code> are plain labels, and so are <code>@eval</code> and <code>@live</code> at this level.</p>
-</section>
-<section id="ears" class="level3">
-<h3 class="anchored" data-anchor-id="ears">From an EARS line to a rule and its examples</h3>
-<p>Each R line of <code>docs/requirements.md</code> is written in <a href="https://alistairmavin.com/ears/">EARS</a> form: an optional opening such as <code>WHEN &lt;trigger&gt;</code>, then <code>THE SYSTEM SHALL</code> and what the system does. The form says where each part goes in the example:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 34%">
-<col style="width: 66%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>EARS form</th>
-<th>In the example</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>WHEN &lt;trigger&gt; THE SYSTEM SHALL &lt;response&gt;</code></td>
-<td>the trigger is the <code>When</code>, the response is the <code>Then</code>, and the <code>Given</code> holds the data before</td>
-</tr>
-<tr class="even">
-<td><code>WHILE &lt;state&gt; THE SYSTEM SHALL &lt;response&gt;</code></td>
-<td>the state is in the <code>Given</code> (the data) and the time of the <code>When</code>; the response is the <code>Then</code>. An example shows one moment of the state</td>
-</tr>
-<tr class="odd">
-<td><code>IF &lt;problem&gt; THEN THE SYSTEM SHALL &lt;response&gt;</code></td>
-<td>the problem is an injected fault in the <code>Given</code> (the same <code>event_id</code> twice, a late <code>received_time</code>); when the problem is the request itself, such as a value out of range, it is the <code>When</code></td>
-</tr>
-<tr class="even">
-<td><code>THE SYSTEM SHALL &lt;response&gt;</code></td>
-<td>the rule’s sentence is the requirement; choose two examples that differ in something that could break it</td>
-</tr>
-<tr class="odd">
-<td><code>WHERE &lt;feature&gt; THE SYSTEM SHALL &lt;response&gt;</code></td>
-<td>a tag on the feature that names the option, such as <code>@assistant</code></td>
-</tr>
-<tr class="even">
-<td>the target after <code>\|</code> (data latency under 60 s at p95)</td>
-<td>one case of it in the <code>Then</code> (“within 60 s”), or a time in the <code>When</code> chosen so that the answer must already hold; the percentile needs many cases</td>
-</tr>
-</tbody>
-</table>
-<p>The answer of an example (2 trips) is not a requirement; the target from the R line (data latency under 60 s at p95) is. The times in an example are data: nobody waits for them.</p>
-</section>
-<section id="data-in-an-example" class="level3">
-<h3 class="anchored" data-anchor-id="data-in-an-example">Data in an example</h3>
-<p>An example gets its data in one of two ways:</p>
-<ul>
-<li><strong>A table inside the example</strong>, for a few hand-picked events. Its columns are the fields of the event, as the event fields of the <code>## Data</code> section of your <code>docs/design.md</code> list them, and the first row holds their names. Use it when 2 or 3 events show the rule, as in the R020 example above. The word “only” in <code>Given only these trip requests are received</code> says that the table holds all the requests of the example.</li>
-<li><strong>A simulated data set</strong>, for the cases where the number of events matters, such as a whole hour or a whole file: events or files that your team will generate from a real data set, so that a test knows every event that was sent. Name it by its id and name: <code>Given the simulated data set SIM01 "rush-hour"</code>. At Checkpoint 1 the data set is a bullet of words in the <code>## Data</code> section; its example is read by the dry run like any other.</li>
-</ul>
-<pre class="gherkin"><code>    Example: One simulated hour with 4 requests delivered twice
-      Given the simulated data set SIM01 "rush-hour"
-      When the counts are read at 2026-11-23T10:11:00Z
-      Then every zone and period shows the count computed from the data set's record of events</code></pre>
-<p>Put the data of each example in the example itself, not in a <code>Background</code>: a reader then sees the data and the answer together.</p>
-</section>
-<section id="how-to-write-a-good-example" class="level3">
-<h3 class="anchored" data-anchor-id="how-to-write-a-good-example">How to write a good example</h3>
-<section id="describe-what-the-system-must-do-not-what-a-person-clicks" class="level4">
-<h4 class="anchored" data-anchor-id="describe-what-the-system-must-do-not-what-a-person-clicks">Describe what the system must do, not what a person clicks</h4>
-<p>An example stays true when you change a page or rename a button. Write the data in the <code>Given</code>, the one event or question in the <code>When</code>, and the result that a user or another system can observe in the <code>Then</code> (<a href="https://behave.readthedocs.io/en/latest/gherkin/#then">behave: Then</a>).</p>
-<p>This example describes clicks, and its <code>Then</code> does not have anything that a test can compare:</p>
-<pre class="gherkin"><code>    Example: Check the counts
-      Given I open the dashboard and click "Refresh"
-      When I wait for the page to load
-      Then the counts look right</code></pre>
-<p>This example describes the same requirement as behaviour:</p>
-<pre class="gherkin"><code>    Example: One request delivered twice
-      Given only these trip requests are received:
-        | event_id  | trip_id | pickup_zone_id | event_time           | received_time        |
-        | ev-000101 | t-0101  | 161            | 2026-11-23T09:11:00Z | 2026-11-23T09:11:01Z |
-        | ev-000102 | t-0102  | 161            | 2026-11-23T09:12:30Z | 2026-11-23T09:12:31Z |
-        | ev-000101 | t-0101  | 161            | 2026-11-23T09:11:00Z | 2026-11-23T09:12:40Z |
-      When the counts are read at 2026-11-23T09:16:00Z
-      Then zone 161 shows 2 trips requested between 09:10 and 09:15</code></pre>
-</section>
-<section id="show-one-behaviour-in-each-example" class="level4">
-<h4 class="anchored" data-anchor-id="show-one-behaviour-in-each-example">Show one behaviour in each example</h4>
-<p>Test one behaviour in each example, as the behave documentation recommends (<a href="https://behave.readthedocs.io/en/latest/gherkin/#scenarios">behave: scenarios</a>): when the example fails, its name tells you what broke. If an example checks two unrelated outcomes, split it into two examples, under the rules they show.</p>
-</section>
-<section id="put-a-number-or-a-fixed-answer-in-the-then" class="level4">
-<h4 class="anchored" data-anchor-id="put-a-number-or-a-fixed-answer-in-the-then">Put a number or a fixed answer in the Then</h4>
-<p>The <code>Then</code> compares what the system produced with an answer that is known before the run. You chose the data, so you know the answer: the table above holds two different <code>event_id</code> values, so 2 must be counted.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 36%">
-<col style="width: 64%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Then that a test cannot check</th>
-<th>Then with a number or a fixed answer</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>Then the counts look right</code></td>
-<td><code>Then zone 161 shows 2 trips requested between 09:10 and 09:15</code></td>
-</tr>
-<tr class="even">
-<td><code>Then the quiet zone is handled</code></td>
-<td><code>Then zone 48 shows no data between 09:25 and 09:30</code></td>
-</tr>
-<tr class="odd">
-<td><code>Then the late request is handled</code></td>
-<td><code>Then zone 161 has 2 trips requested between 09:00 and 09:05</code></td>
-</tr>
-</tbody>
-</table>
-</section>
-</section>
-<section id="requirements-on-model-answers" class="level3">
-<h3 class="anchored" data-anchor-id="requirements-on-model-answers">Requirements on model answers</h3>
-<p>A model’s answer can differ between runs, so one example with a fixed reply does not show a requirement on it. An <strong>eval</strong> runs the model’s part of your system on a set of cases with known answers and gives a score. The rule gets one <strong>gate example</strong>: an example tagged <code>@eval</code> that names the eval of your <code>## Evals</code> table in <code>docs/requirements.md</code> and its threshold, and fails when the score is below the threshold. The gate has only a <code>Then</code>: the cases are the eval’s. Beside it go ordinary examples, each with the rows of one query and the reply that the rule allows, such as a reply that says there is no data when the query returns 0 rows.</p>
-<pre class="gherkin"><code>@JS01 @assistant
-Feature: Questions about trip counts in plain language
-  Covers JS01 (operations analyst) in a system that includes the assistant, our extension.
-
-  @R060
-  Rule: Where the system includes the assistant, a reply gives the count the question asks for and states only counts that are in the rows its query returned
-
-    Example: Zone and period without rows
-      Given the query for zone 48 between 09:25 and 09:30 returns 0 rows
-      When the analyst asks "How many trips were requested in zone 48 between 09:25 and 09:30?"
-      Then the reply says there is no data
-      And the reply does not state a count
-
-    @eval
-    Example: Eval of count answers
-      Then the eval "count-answers" scores at least 0.8</code></pre>
-</section>
-<section id="dry-run" class="level3">
-<h3 class="anchored" data-anchor-id="dry-run">Dry run and how to read its output</h3>
-<p>A <strong>dry run</strong> makes behave read every feature file and look for the code of every step, without running a step (<a href="https://behave.readthedocs.io/en/latest/behave/#command-line-arguments">behave: command-line arguments</a>, <code>--dry-run</code>). <code>uvx</code> runs behave without adding it to your project.</p>
-<ol type="1">
-<li><p>At the root of your repository, run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>uvx behave@1.3.3 --dry-run</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p>Read the output from the top. If your file holds only the R020 rule and its example, you should see:</p></li>
-</ol>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>USING RUNNER: behave.runner:Runner</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>@JS01</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>Feature: Trips requested in each zone # features/js01_trips_per_zone.feature:2</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  Covers the first part of JS01 (operations analyst): the number of trips requested in each pickup zone for each</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  5-minute period. A period holds the requests with an event time from its start up to, and not including, its end.</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    Example: Request received 7 minutes late                      # features/js01_trips_per_zone.feature:9</span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>      Given only these trip requests are received:                # None</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>        | event_id  | trip_id | pickup_zone_id | event_time           | received_time        |</span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>        | ev-000011 | t-0011  | 161            | 2026-11-23T09:01:10Z | 2026-11-23T09:01:11Z |</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>        | ev-000012 | t-0012  | 161            | 2026-11-23T09:04:00Z | 2026-11-23T09:11:00Z |</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>      When the time is 2026-11-23T09:12:00Z                       # None</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>      Then zone 161 has 2 trips requested between 09:00 and 09:05 # None</span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>You can implement step definitions for undefined steps with these snippets:</span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>from behave.api.pending_step import StepNotImplementedError</span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>@given(u'only these trip requests are received:')</span>
-<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>def step_impl(context):</span>
-<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>    raise StepNotImplementedError(u'Given only these trip requests are received:')</span>
-<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>@when(u'the time is 2026-11-23T09:12:00Z')</span>
-<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>def step_impl(context):</span>
-<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>    raise StepNotImplementedError(u'When the time is 2026-11-23T09:12:00Z')</span>
-<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>@then(u'zone 161 has 2 trips requested between 09:00 and 09:05')</span>
-<span id="cb23-29"><a href="#cb23-29" aria-hidden="true" tabindex="-1"></a>def step_impl(context):</span>
-<span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a>    raise StepNotImplementedError(u'Then zone 161 has 2 trips requested between 09:00 and 09:05')</span>
-<span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a>Errored scenarios:</span>
-<span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>  features/js01_trips_per_zone.feature:9  Request received 7 minutes late</span>
-<span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-37"><a href="#cb23-37" aria-hidden="true" tabindex="-1"></a>0 features passed, 0 failed, 1 error, 0 skipped</span>
-<span id="cb23-38"><a href="#cb23-38" aria-hidden="true" tabindex="-1"></a>0 rules passed, 0 failed, 1 error, 0 skipped</span>
-<span id="cb23-39"><a href="#cb23-39" aria-hidden="true" tabindex="-1"></a>0 scenarios passed, 0 failed, 1 error, 0 skipped</span>
-<span id="cb23-40"><a href="#cb23-40" aria-hidden="true" tabindex="-1"></a>0 steps passed, 0 failed, 0 skipped, 3 undefined</span>
-<span id="cb23-41"><a href="#cb23-41" aria-hidden="true" tabindex="-1"></a>Took 0min 0.000s</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 42%">
-<col style="width: 57%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Part of the output</th>
-<th>What it tells you</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Feature, example and steps, each with a file name and a line number</td>
-<td>behave read the file. Check that every example you wrote is listed. The dry run does not print the <code>Rule:</code> lines or their tags.</td>
-</tr>
-<tr class="even">
-<td><code># None</code> after a step</td>
-<td>behave did not find code for this step. At Level 0 every step has <code># None</code>.</td>
-</tr>
-<tr class="odd">
-<td>Snippets under <code>You can implement step definitions</code></td>
-<td>A code snippet for each step without code. You write these functions at Level 1.</td>
-</tr>
-<tr class="even">
-<td><code>Errored scenarios</code> and <code>1 error</code></td>
-<td>An example with a step without code is marked as errored.</td>
-</tr>
-<tr class="odd">
-<td><code>1 error</code> in the <code>rules</code> line</td>
-<td>A rule with an errored example is counted as errored.</td>
-</tr>
-<tr class="even">
-<td><code>3 undefined</code></td>
-<td>The number of steps without code: the three steps of the example. A table belongs to the step above it.</td>
-</tr>
-</tbody>
-</table>
-<p>For a draft, this is the result you want: every example is listed and errored, and every step is undefined, because the steps do not have code yet. The command’s exit code is 1 for the same reason. Check that the <code>rules</code> count matches your <code>Rule:</code> lines. The <code>scenarios</code> count includes each <code>Example:</code> or <code>Scenario:</code> line and each data row of a <code>Scenario Outline:</code>. To count the lines, run <code>grep -hE "^ *(Example|Scenario):" features/*.feature | wc -l</code>.</p>
-<p>To see the list without the snippets, add <code>--no-snippets</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>uvx behave@1.3.3 --dry-run --no-snippets</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>For the rides example, four features with 17 examples, the last lines are:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>0 features passed, 0 failed, 4 error, 0 skipped</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>0 rules passed, 0 failed, 13 error, 0 skipped</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>0 scenarios passed, 0 failed, 19 error, 0 skipped</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>0 steps passed, 0 failed, 0 skipped, 72 undefined</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>Took 0min 0.000s</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Three results mean that the draft needs a fix:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 40%">
-<col style="width: 30%">
-<col style="width: 30%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>What you see</th>
-<th>What it means</th>
-<th>What to do</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>ConfigError: No steps directory in '.../features'</code></td>
-<td>The folder <code>features/steps/</code> is missing.</td>
-<td>Create it as in <a href="#folder-layout">Folder layout</a>.</td>
-</tr>
-<tr class="even">
-<td><code>ParserError: Failed to parse ".../features/js01_trips_per_zone.feature":</code> and <code>Parser failure in state=steps at line 14: "Whn the time is 2026-11-23T09:12:00Z"</code></td>
-<td>A line is not Gherkin. behave stops before it lists an example.</td>
-<td>Fix the line that the message names. Here <code>When</code> is misspelled.</td>
-</tr>
-<tr class="odd">
-<td>An example lists fewer steps than you wrote, and the <code>undefined</code> count is lower than your number of steps</td>
-<td>The first step of that example has a misspelled keyword, such as <code>Givn</code>. behave reads the line as free text and does not report an error.</td>
-<td>Compare the steps listed under each example with your file.</td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="whole-example" class="level3">
-<h3 class="anchored" data-anchor-id="whole-example">Features of the rides example</h3>
-<p>The rides example has three job stories and the four features of the <a href="#folder-layout">folder layout</a> above, with 13 rules and 17 examples. JS01 is served by three features. “One driver for each trip” serves JS02 and JS03, so its rules are written once, and its rule for R080 carries the constraint RF030 as a second tag. Part of its <code>docs/requirements.md</code> and of its <code>features/js01_trips_per_zone.feature</code> is on the <a href="./project-checkpoint1.html#requirements">Checkpoint 1</a> page.</p>
-<p>Here is part of <code>features/trip_assignment.feature</code>: a rule with two codes, and an example in which two drivers accept the same trip and both accepts are sent before either driver has an answer:</p>
-<pre class="gherkin"><code>@JS02 @JS03
-Feature: One driver for each trip
-  Covers JS02 (driver): whether the trip I accepted is mine.
-  Covers JS03 (rider): which driver is coming.
-  A table holds the only accepts of its example. An accept is one request to our API. A simulated data set is named by its id and described in
-  docs/design.md, section Data.
-
-  # (rule R070 is left out here)
-
-  @R080 @RF030
-  Rule: If a driver accepts a trip that is already assigned, the accept is refused and the trip stays with its driver
-
-    Example: Two drivers accept at the same time
-      Given trip t-0303 is requested
-      When these accepts are sent together, each before the other has an answer:
-        | event_id  | trip_id | driver_id | event_time           |
-        | ev-000311 | t-0303  | d-0046    | 2026-11-23T09:20:05Z |
-        | ev-000312 | t-0303  | d-0131    | 2026-11-23T09:20:04Z |
-      Then trip t-0303 is assigned to exactly one of drivers d-0046 and d-0131
-      And 1 accept is refused</code></pre>
-<p>All four feature files are in the <code>features/</code> folder of <a href="https://github.com/cpsc436c-2026w1/cp1-example">cp1-example</a> (tag <code>monday</code>).</p>
-</section>
-</section>
-<section id="level-1" class="level2">
-<h2 class="anchored" data-anchor-id="level-1">Level 1 (Checkpoint 2, proposed): a first step function</h2>
-<p>At this level you write the Python code that makes each step do something. A <strong>step function</strong> is a Python function that behave calls when it reaches a step with a matching text. Build the example below once in an empty folder outside your repository, then do the same for your own scenarios.</p>
-<p>The example tests one small function, <code>count_requests</code>, with a scenario of four steps. To stay short, it puts the tag <code>@RF010</code> on a <code>Scenario:</code> without a <code>Rule:</code>; in your repository, your examples stay under the rules of their codes. The example has these files:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>behave-first-step/</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>├── rides.py                     the code under test</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>└── features/</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    ├── request_counts.feature   the scenario</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    ├── environment.py           setup and teardown</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    └── steps/</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>        └── request_steps.py     the step functions</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<section id="code-under-test-and-its-scenario" class="level3">
-<h3 class="anchored" data-anchor-id="code-under-test-and-its-scenario">Code under test and its scenario</h3>
-<ol type="1">
-<li><p>In a terminal, move to the folder that holds your repository’s folder (<code>cd ..</code> from the root of your repository). Create the example folder there and move into it:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>mkdir -p behave-first-step/features/steps</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>cd behave-first-step</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>pwd</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>You should see a path that ends in <code>/behave-first-step</code>. Run every command of this level in this folder.</p></li>
-<li><p>Create <code>rides.py</code> with the code below. The function reads a file with one trip request on each line and counts the requests of each pickup zone. A request that arrives twice has the same <code>event_id</code> both times, and the function skips an <code>event_id</code> it has already seen. After you save the file, run <code>ls rides.py</code>. You should see <code>rides.py</code> listed.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> count_requests(path):</span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    seen <span class="op">=</span> <span class="bu">set</span>()</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    counts <span class="op">=</span> {}</span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> line <span class="kw">in</span> <span class="bu">open</span>(path):</span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>        request <span class="op">=</span> json.loads(line)</span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> request[<span class="st">"event_id"</span>] <span class="kw">in</span> seen:</span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>        seen.add(request[<span class="st">"event_id"</span>])</span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>        zone <span class="op">=</span> request[<span class="st">"pickup_zone_id"</span>]</span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>        counts[zone] <span class="op">=</span> counts.get(zone, <span class="dv">0</span>) <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> counts</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p>Create <code>features/request_counts.feature</code> with the scenario below. After you save it, run <code>ls features/request_counts.feature</code>. You should see the file listed.</p>
-<pre class="gherkin"><code>@JS01
-Feature: Trips requested in each zone
-  When demand moves between zones, I want the number of trips requested in each
-  pickup zone, so that I can send free drivers where the requests are.
-
-  @RF010
-  Scenario: A request that arrives twice is counted once
-    Given riders in zone 161 request 6 trips
-    And the simulator delivers 2 of the requests a second time
-    When the requests are counted
-    Then zone 161 has 6 trips requested</code></pre>
-<p>A step that starts with <code>And</code> continues the kind of step above it (<a href="https://behave.readthedocs.io/en/latest/gherkin/#and-but">behave: And, But</a>). Here the <code>And</code> line is a second <code>Given</code>.</p></li>
-<li><p>Run <code>uvx behave@1.3.3 --dry-run --no-snippets</code>. You should see the four steps with <code># None</code>, and the last lines:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>0 scenarios passed, 0 failed, 1 error, 0 skipped</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>0 steps passed, 0 failed, 0 skipped, 4 undefined</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
-</ol>
-</section>
-<section id="setup-and-teardown-in-environment.py" class="level3">
-<h3 class="anchored" data-anchor-id="setup-and-teardown-in-environment.py">Setup and teardown in environment.py</h3>
-<p>Some work belongs to every scenario and to none of its steps: creating an empty folder or table before the scenario, and removing it after. behave reads a file <code>features/environment.py</code> and calls the functions in it that have fixed names, called <strong>hooks</strong>: <code>before_scenario</code> runs before each scenario and <code>after_scenario</code> runs after it. There are also <code>before_all</code>, <code>after_all</code>, <code>before_feature</code> and <code>after_feature</code> (<a href="https://behave.readthedocs.io/en/latest/tutorial/#environmental-controls">behave: environmental controls</a>).</p>
-<p>Every hook and every step function receives <code>context</code> as its first argument. <strong><code>context</code></strong> is an object on which you store what a later step needs, as attributes: <code>context.requests_file = ...</code>. behave empties it of the values of a scenario when the scenario ends, so one scenario does not see the data of another (<a href="https://behave.readthedocs.io/en/latest/tutorial/#context">behave: context</a>).</p>
-<ol start="5" type="1">
-<li><p>Create <code>features/environment.py</code> with the two hooks below. After you save it, run <code>ls features/environment.py</code>. You should see the file listed.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tempfile</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pathlib <span class="im">import</span> Path</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> before_scenario(context, scenario):</span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Setup: every scenario gets an empty folder of its own for the requests file.</span></span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    context.folder <span class="op">=</span> tempfile.TemporaryDirectory()</span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    context.requests_file <span class="op">=</span> Path(context.folder.name) <span class="op">/</span> <span class="st">"requests.jsonl"</span></span>
-<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> after_scenario(context, scenario):</span>
-<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Teardown: runs after the scenario, also when a step failed.</span></span>
-<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>    context.folder.cleanup()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
-</ol>
-</section>
-<section id="step-functions-with-parameters" class="level3">
-<h3 class="anchored" data-anchor-id="step-functions-with-parameters">Step functions with parameters</h3>
-<p>A step function has a decorator, <code>@given</code>, <code>@when</code> or <code>@then</code>, with the text of the step. A part of the text in curly brackets is a <strong>parameter</strong>: behave takes the value from the scenario’s line and passes it to the function as an argument. <code>{name}</code> gives text, and <code>{n:d}</code> gives a whole number (<a href="https://behave.readthedocs.io/en/latest/tutorial/#step-parameters">behave: step parameters</a>). One function then serves every scenario that uses the same sentence with other values.</p>
-<ol start="6" type="1">
-<li><p>Create <code>features/steps/request_steps.py</code> with the code below. The file name is your choice: behave loads every <code>.py</code> file in <code>features/steps/</code> (<a href="https://behave.readthedocs.io/en/latest/tutorial/#python-step-implementations">behave: Python step implementations</a>). After you save it, run <code>ls features/steps/request_steps.py</code>. You should see the file listed.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> behave <span class="im">import</span> given, then, when</span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> rides <span class="im">import</span> count_requests</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="at">@given</span>(<span class="st">"riders in zone </span><span class="sc">{zone:d}</span><span class="st"> request </span><span class="sc">{n:d}</span><span class="st"> trips"</span>)</span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> step_riders_request(context, zone, n):</span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>    context.requests <span class="op">=</span> [</span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"event_id"</span>: <span class="ss">f"ev-</span><span class="sc">{</span>i<span class="sc">:06d}</span><span class="ss">"</span>, <span class="st">"pickup_zone_id"</span>: zone} <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(n)</span>
-<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>    _write(context)</span>
-<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a><span class="at">@given</span>(<span class="st">"the simulator delivers </span><span class="sc">{n:d}</span><span class="st"> of the requests a second time"</span>)</span>
-<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> step_delivered_twice(context, n):</span>
-<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>    context.requests <span class="op">+=</span> context.requests[:n]</span>
-<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>    _write(context)</span>
-<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a><span class="at">@when</span>(<span class="st">"the requests are counted"</span>)</span>
-<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> step_count(context):</span>
-<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>    context.counts <span class="op">=</span> count_requests(context.requests_file)</span>
-<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a><span class="at">@then</span>(<span class="st">"zone </span><span class="sc">{zone:d}</span><span class="st"> has </span><span class="sc">{n:d}</span><span class="st"> trips requested"</span>)</span>
-<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> step_check_count(context, zone, n):</span>
-<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a>    actual <span class="op">=</span> context.counts[zone]</span>
-<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">assert</span> actual <span class="op">==</span> n, <span class="ss">f"zone </span><span class="sc">{</span>zone<span class="sc">}</span><span class="ss">: expected </span><span class="sc">{</span>n<span class="sc">}</span><span class="ss">, actual </span><span class="sc">{</span>actual<span class="sc">}</span><span class="ss">"</span></span>
-<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-33"><a href="#cb33-33" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _write(context):</span>
-<span id="cb33-34"><a href="#cb33-34" aria-hidden="true" tabindex="-1"></a>    lines <span class="op">=</span> [json.dumps(request) <span class="cf">for</span> request <span class="kw">in</span> context.requests]</span>
-<span id="cb33-35"><a href="#cb33-35" aria-hidden="true" tabindex="-1"></a>    context.requests_file.write_text(<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>.join(lines) <span class="op">+</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Read the four functions against the four steps of the scenario:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 36%">
-<col style="width: 32%">
-<col style="width: 32%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Step in the scenario</th>
-<th>Function</th>
-<th>What it does</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><code>Given riders in zone 161 request 6 trips</code></td>
-<td><code>step_riders_request(context, 161, 6)</code></td>
-<td>Writes 6 requests into the file that the setup named.</td>
-</tr>
-<tr class="even">
-<td><code>And the simulator delivers 2 of the requests a second time</code></td>
-<td><code>step_delivered_twice(context, 2)</code></td>
-<td>Adds the first 2 requests to the file again: the injected fault.</td>
-</tr>
-<tr class="odd">
-<td><code>When the requests are counted</code></td>
-<td><code>step_count(context)</code></td>
-<td>Calls the code under test and keeps its result in <code>context.counts</code>.</td>
-</tr>
-<tr class="even">
-<td><code>Then zone 161 has 6 trips requested</code></td>
-<td><code>step_check_count(context, 161, 6)</code></td>
-<td>Compares the result with the number in the step. A failed <code>assert</code> fails the step.</td>
-</tr>
-</tbody>
-</table></li>
-</ol>
-</section>
-<section id="run-the-scenario" class="level3">
-<h3 class="anchored" data-anchor-id="run-the-scenario">Run the scenario</h3>
-<ol start="7" type="1">
-<li><p>Run behave without <code>--dry-run</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>uvx behave@1.3.3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>You should see each step followed by the file and the line of its function, and all four steps passed:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>  @RF010</span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  Scenario: A request that arrives twice is counted once       # features/request_counts.feature:7</span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    Given riders in zone 161 request 6 trips                   # features/steps/request_steps.py:8</span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    And the simulator delivers 2 of the requests a second time # features/steps/request_steps.py:16</span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    When the requests are counted                              # features/steps/request_steps.py:22</span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    Then zone 161 has 6 trips requested                        # features/steps/request_steps.py:27</span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>1 feature passed, 0 failed, 0 skipped</span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>1 scenario passed, 0 failed, 0 skipped</span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>4 steps passed, 0 failed, 0 skipped</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p>Check that the scenario can fail. In <code>rides.py</code>, replace the line <code>if request["event_id"] in seen:</code> with <code>if False:</code>, so that the function counts every line, and run <code>uvx behave@1.3.3</code> again. You should see the <code>Then</code> step fail with both numbers:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>    Then zone 161 has 6 trips requested                        # features/steps/request_steps.py:27</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>      ASSERT FAILED: zone 161: expected 6, actual 8</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>Failing scenarios:</span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  features/request_counts.feature:7  A request that arrives twice is counted once</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>0 features passed, 1 failed, 0 skipped</span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>0 scenarios passed, 1 failed, 0 skipped</span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>3 steps passed, 1 failed, 0 skipped</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>The message names the zone, the expected number and the actual number, because the <code>assert</code> in the <code>Then</code> function has a message. Write one for every <code>assert</code>.</p></li>
-<li><p>Put the line <code>if request["event_id"] in seen:</code> back and run <code>uvx behave@1.3.3</code> once more. You should see <code>1 scenario passed, 0 failed, 0 skipped</code>.</p></li>
-</ol>
-</section>
-<section id="from-the-example-to-your-repository" class="level3">
-<h3 class="anchored" data-anchor-id="from-the-example-to-your-repository">From the example to your repository</h3>
-<p>In your repository, the snippets that the dry run prints are the starting point:</p>
-<ol type="1">
-<li>Copy the snippets into a Python file in <code>features/steps/</code>.</li>
-<li>Add <code>from behave import given, when, then</code> at the top of the file.</li>
-<li>Replace each <code>raise</code> line with code. Where two steps differ only in a value, write one function with a parameter.</li>
-<li>Run <code>uvx behave@1.3.3 --dry-run --no-snippets</code>. You should see the file and the line of a function after each step that has code, in place of <code># None</code>.</li>
-</ol>
-<p>To run the scenarios of one code, name its tag: <code>uvx behave@1.3.3 --tags=RF010</code> (<a href="https://behave.readthedocs.io/en/latest/tag_expressions/">behave: tag expressions</a>).</p>
-<p>If your step code imports packages that your project installs with uv, run behave inside the project with <code>uv add --dev behave</code> once and then <code>uv run behave</code>.</p>
-</section>
-<section id="step-functions-in-l19-events" class="level3">
-<h3 class="anchored" data-anchor-id="step-functions-in-l19-events">Step functions in l19-events</h3>
-<p>In <a href="https://github.com/cpsc436c-2026w1/l19-events"><code>l19-events</code></a>, open <a href="https://github.com/cpsc436c-2026w1/l19-events/blob/main/features/steps/steps.py"><code>features/steps/steps.py</code></a> and <a href="https://github.com/cpsc436c-2026w1/l19-events/blob/main/features/environment.py"><code>features/environment.py</code></a>. The <code>Given</code> functions read the files that the simulator wrote, the <code>When</code> functions call the code under test, and the <code>Then</code> functions compare the result with the simulator’s known answer.</p>
-</section>
-</section>
-<section id="level-2" class="level2">
-<h2 class="anchored" data-anchor-id="level-2">Level 2 (later, proposed): steps from the course kit</h2>
-<p>A course kit with ready steps for the simulator, DuckDB queries and evals comes with Checkpoint 2. With the kit, many of your scenarios do not need step code of your own: you write a step in the kit’s wording, and the kit’s function runs it.</p>
-<p>What you do at this level:</p>
-<ol type="1">
-<li><p>After you have set up the kit that comes with Checkpoint 2 in your repository, list the steps that already have code, before you write a new step function. At the root of your repository, run:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>uvx behave@1.3.3 --steps-catalog</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>You should see one line for each step text, with its parameters in curly brackets (<a href="https://behave.readthedocs.io/en/latest/behave/#command-line-arguments">behave: command-line arguments</a>, <code>--steps-catalog</code>). In the Level 1 example folder, the same command lists:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>Given riders in zone {zone:d} request {n:d} trips</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>Given the simulator delivers {n:d} of the requests a second time</span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>When the requests are counted</span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>Then zone {zone:d} has {n:d} trips requested</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p>Where a listed step says what your scenario needs, change your scenario’s line to that wording. Run <code>uvx behave@1.3.3 --dry-run --no-snippets</code>. You should see the file and the line of the step’s function after that line, in place of <code># None</code>.</p></li>
-<li><p>For a step that the list does not cover, write a step function as at Level 1, and run the dry run again. You should see the new step with the line of your function.</p></li>
-</ol>
-<section id="simulator-faults-in-l19-events" class="level3">
-<h3 class="anchored" data-anchor-id="simulator-faults-in-l19-events">Simulator faults in l19-events</h3>
-<p>In <a href="https://github.com/cpsc436c-2026w1/l19-events"><code>l19-events</code></a>, open <a href="https://github.com/cpsc436c-2026w1/l19-events/blob/main/events/README.md"><code>events/README.md</code></a>: it lists the injected faults that the simulator writes and the file with the known answers that the <code>Then</code> steps compare with.</p>
-</section>
-</section>
-<section id="level-3" class="level2">
-<h2 class="anchored" data-anchor-id="level-3">Level 3 (later, proposed): live cloud runs and an eval as a gate</h2>
-<section id="live-cloud-runs-behind-a-tag" class="level3">
-<h3 class="anchored" data-anchor-id="live-cloud-runs-behind-a-tag">Live cloud runs behind a tag</h3>
-<p>The scenarios of Levels 0 to 2 run on your laptop on simulated data. A scenario that calls your deployed system on AWS is slower and spends money, so it runs only when you ask for it. The tag <code>@live</code> marks such a scenario, and a settings file leaves the tag out of a normal run.</p>
-<ol type="1">
-<li><p>Put the live scenarios in a feature file of their own, with <code>@live</code> beside the story’s tag, as shown below. After you save it, check its first line. You should see both <code>@JS01</code> and <code>@live</code>.</p>
-<pre class="gherkin"><code>@JS01 @live
-Feature: Trips requested in each zone, on AWS
-
-  @RF010
-  Scenario: A request that arrives twice is counted once in the deployed table
-    Given the counting pipeline is deployed in my AWS account
-    When 6 trip requests for zone 161 are written to the stream and 2 of them a second time
-    Then the counts table has 6 trips requested for zone 161</code></pre></li>
-<li><p>Create a file <code>behave.ini</code> at the root of your repository with the two lines below (<a href="https://behave.readthedocs.io/en/latest/behave/#configuration-files">behave: configuration files</a>). After you save it, run <code>cat behave.ini</code>. You should see the line <code>default_tags = not @live</code>.</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>[behave]</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>default_tags = not @live</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p>Run <code>uvx behave@1.3.3</code>. You should see the live scenario skipped. With this feature beside the Level 1 example, the last lines are:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>1 feature passed, 0 failed, 1 skipped</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>1 scenario passed, 0 failed, 1 skipped</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>4 steps passed, 0 failed, 3 skipped</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
-<li><p>When your system is deployed and the live steps have code, run only the live scenarios, at the root of your repository:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>uvx behave@1.3.3 --tags=live</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>You should see the steps of the <code>@live</code> scenarios run, and the other scenarios counted as skipped in the last lines.</p></li>
-</ol>
-<p>A live scenario creates data in your account. Remove it in <code>after_scenario</code>, as the teardown at Level 1 does.</p>
-<p>In your repository, a code keeps one rule: a live example can sit under the rule of its code instead, with <code>@live</code> on the rule, as the rule of RF040 in <code>features/js01_yesterdays_trips.feature</code> of the rides example.</p>
-</section>
-<section id="eval-as-a-gate" class="level3">
-<h3 class="anchored" data-anchor-id="eval-as-a-gate">Eval as a gate</h3>
-<p>A part of your system that calls a language model can give a different answer on each run, so a <code>Then</code> with one fixed answer does not test it. An eval runs that part on a set of cases with known answers and gives a score. A <strong>gate</strong> is a check that fails when the score is below a threshold you chose. The gate is the <code>@eval</code> example under the requirement’s rule, as at <a href="#level-0">Level 0</a>: at this level it reads the score of a saved eval run and compares it with the threshold in its <code>Then</code>.</p>
-</section>
-<section id="live-runs-and-gates-in-l19-events-and-recipes" class="level3">
-<h3 class="anchored" data-anchor-id="live-runs-and-gates-in-l19-events-and-recipes">Live runs and gates in l19-events and recipes</h3>
-<ul>
-<li>Live runs: in <a href="https://github.com/cpsc436c-2026w1/l19-events"><code>l19-events</code></a>, open <a href="https://github.com/cpsc436c-2026w1/l19-events/blob/main/behave.ini"><code>behave.ini</code></a> and <a href="https://github.com/cpsc436c-2026w1/l19-events/blob/main/features/js01_live.feature"><code>features/js01_live.feature</code></a>.</li>
-<li>Eval as a gate: in the public <a href="https://github.com/cpsc436c-2026w1/recipes">recipes</a>, open <a href="https://github.com/cpsc436c-2026w1/recipes/blob/main/agent-agentcore/features/eval.feature"><code>agent-agentcore/features/eval.feature</code></a>. In <code>l19-events</code>, open <a href="https://github.com/cpsc436c-2026w1/l19-events/blob/main/features/js02_eval.feature"><code>features/js02_eval.feature</code></a>.</li>
-</ul>
-</section>
 </section>
 
 </main> <!-- /main -->
