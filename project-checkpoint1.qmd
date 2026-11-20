@@ -57,26 +57,29 @@ folders when you want to see a part of this page in full.
 ## What changes in your repository {#repo}
 
 The [example repository at tag `monday`](https://github.com/cpsc436c-2026w1/cp1-example/tree/monday) is a whole Checkpoint 1 hand-in, written for the rides
-case. Each file below links to it in that state.
+case. Each file name below links to it in that state.
 
 ```{=html}
 <style>
-.repo-tree { font-size: 0.86em; line-height: 1.45; background: #fafafa; border: 1px solid #ddd; border-radius: 4px; padding: 0.8em 1em; overflow-x: auto; }
-.repo-tree a { color: #1f4e8c; }
-.repo-tree .cm { color: #5a6470; }
-.repo-tree .add, .repo-legend .add { background: #d9f2df; color: #14532d; font-weight: 600; padding: 0 0.3em; border-radius: 3px; }
-.repo-tree .fill, .repo-legend .fill { background: #fff1c2; color: #6b4b00; font-weight: 600; padding: 0 0.3em; border-radius: 3px; }
-.repo-tree .chg, .repo-legend .chg { background: #fde2e1; color: #8a1c14; font-weight: 600; padding: 0 0.3em; border-radius: 3px; }
+.repo-tab { width: 100%; border-collapse: collapse; font-size: 0.9em; margin: 0.6em 0 0.3em; }
+.repo-tab td { padding: 0.18em 0.5em; vertical-align: top; border-bottom: 1px solid #eee; }
+.repo-tab td.t { font-family: SFMono-Regular, Menlo, Consolas, monospace; white-space: nowrap; font-size: 0.92em; }
+.repo-tab td.t a { color: #1f4e8c; text-decoration: underline; }
+.repo-tab .add, .repo-legend .add { background: #d9f2df; color: #14532d; font-weight: 600; padding: 0 0.35em; border-radius: 3px; white-space: nowrap; }
+.repo-tab .fill, .repo-legend .fill { background: #fff1c2; color: #6b4b00; font-weight: 600; padding: 0 0.35em; border-radius: 3px; white-space: nowrap; }
+.repo-tab .chg, .repo-legend .chg { background: #fde2e1; color: #8a1c14; font-weight: 600; padding: 0 0.35em; border-radius: 3px; white-space: nowrap; }
 </style>
-<pre class="repo-tree"><code>your-repository/                      <span class="add">add</span> <span class="cm">tag cp1 on main, after your pull request is merged</span>
-├── docs/
-│   ├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/monday/docs/proposal.md">proposal.md</a>                   <span class="chg">change</span> <span class="cm">the corrections asked for by Fix: requests</span>
-│   ├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/monday/docs/requirements.md">requirements.md</a>               <span class="fill">fill in</span> <span class="cm">job stories, requirements in EARS, a row for every RF and RQ</span>
-│   └── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/monday/docs/design.md">design.md</a>                     <span class="fill">fill in</span> <span class="cm">sketch, workflows, planned resources, Data</span>
-└── features/
-    ├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/monday/features/js01_trips_per_zone.feature">js01_trips_per_zone.feature</a>   <span class="add">add</span> <span class="cm">demo scenarios: rules tagged with codes, examples</span>
-    ├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/monday/features/js01_yesterdays_trips.feature">js01_yesterdays_trips.feature</a>
-    └── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/monday/features/steps">steps/.gitkeep</a>                <span class="add">add</span> <span class="cm">empty for now: step code comes at Checkpoint 2</span></code></pre>
+<table class="repo-tab">
+<tr><td class="t">your-repository/</td><td><span class="add">add</span></td><td>tag <code>cp1</code> on <code>main</code>, after your pull request is merged</td></tr>
+<tr><td class="t">├── docs/</td><td></td><td></td></tr>
+<tr><td class="t">│&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/monday/docs/proposal.md">proposal.md</a></td><td><span class="chg">change</span></td><td>the corrections asked for by <b>Fix:</b> requests</td></tr>
+<tr><td class="t">│&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/monday/docs/requirements.md">requirements.md</a></td><td><span class="fill">fill in</span></td><td>job stories, requirements in EARS, a row for every RF and RQ</td></tr>
+<tr><td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/monday/docs/design.md">design.md</a></td><td><span class="fill">fill in</span></td><td>sketch, workflows, planned resources, Data</td></tr>
+<tr><td class="t">└── features/</td><td></td><td></td></tr>
+<tr><td class="t">&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/monday/features/js01_trips_per_zone.feature">js01_trips_per_zone.feature</a></td><td><span class="add">add</span></td><td>demo scenarios: rules tagged with codes, examples (one file per focus job story)</td></tr>
+<tr><td class="t">&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/monday/features/js01_yesterdays_trips.feature">js01_yesterdays_trips.feature</a></td><td><span class="add">add</span></td><td></td></tr>
+<tr><td class="t">&nbsp;&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/monday/features/steps">steps/.gitkeep</a></td><td><span class="add">add</span></td><td>empty for now: step code comes at Checkpoint 2</td></tr>
+</table>
 <p class="repo-legend"><span class="add">add</span> a new file or tag &nbsp; <span class="fill">fill in</span> a course template you already have &nbsp; <span class="chg">change</span> a file you wrote</p>
 ```
 
