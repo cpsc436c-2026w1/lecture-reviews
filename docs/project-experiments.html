@@ -407,7 +407,7 @@ ul.task-list li input[type="checkbox"] {
 <ul>
 <li>Same for both alternatives: the same assistant code and system prompt, temperature 0, the same Athena query tool, the same product subset.</li>
 <li>Test cases: 40 questions, 10 of each type, in <code>experiments/food-qa/questions.jsonl</code>. Each line holds the question, its type and the expected answer: a product list, a count, or “not in the data”. The answers to the first three types are computed once by SQL over the product subset. The fourth type asks about something the subset does not hold, such as a store’s stock today.</li>
-<li>Cases from failures: when a team member, or another team during testing, reports a wrong answer, check it against the product subset, record its expected answer, and add it to <code>questions.jsonl</code> unless the case is already there. Run both alternatives again on the expanded file before comparing them.</li>
+<li>Cases from failures: when a team member <del>, or another team during testing,</del> reports a wrong answer, check it against the product subset, record its expected answer, and add it to <code>questions.jsonl</code> unless the case is already there. Run both alternatives again on the expanded file before comparing them.</li>
 </ul>
 <p><strong>5. Prediction.</strong> Qwen 3.8 27B has the higher accuracy, about 85% against 75%. Qwen 3.6 35B-A3B answers faster and stays within the latency guardrail with more room. Token use may differ despite the shared prompt and tool, and Qwen 3.8 27B costs more at equal token counts. Source: L17 for the request path, L18 for the model gateway’s prices.</p>
 <p><strong>6. Method.</strong></p>

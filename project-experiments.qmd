@@ -92,7 +92,7 @@ behind the same assistant code.
   question, its type and the expected answer: a product list, a count, or "not in the data". The answers to the
   first three types are computed once by SQL over the product subset. The fourth type asks about something the
   subset does not hold, such as a store's stock today.
-- Cases from failures: when a team member, or another team during testing, reports a wrong answer, check it
+- Cases from failures: when a team member ~~, or another team during testing,~~ reports a wrong answer, check it
   against the product subset, record its expected answer, and add it to `questions.jsonl` unless the case is already
   there. Run both alternatives again on the expanded file before comparing them.
 
