@@ -56,6 +56,12 @@ folders when you want to see a part of this page in full.
 
 ## Make the corrections your issue asks for {#fixes}
 
+::: {.callout-note collapse="true" title="Slides from L19: From Feedback to Checkpoint 1: triage"}
+![From Feedback to Checkpoint 1: triage](img/l19/l19s-01.png){fig-alt="L19 slide: From Feedback to Checkpoint 1: triage"}
+
+In the deck: [From Feedback to Checkpoint 1: triage](https://pages.github.ubc.ca/ilm/436c-syllabus-preview/slides/l19.html#/l19s-01)
+:::
+
 Your `staff-feedback` issue lists constraints (RF010, RF020 …) and requests (RQ010, RQ020 …). The text of some RQs
 starts with `Fix:`, such as `RQ010. Fix: …`. Each of them asks for a correction to your proposal: make it in `docs/proposal.md`
 by Monday. Every other RQ gets a short note on Monday, and its answer is due at Checkpoint 2 (see
@@ -64,6 +70,16 @@ by Monday. Every other RQ gets a short note on Monday, and its answer is due at 
 If something in the issue does not match what your proposal says, reply in the issue.
 
 ## Write docs/requirements.md {#requirements}
+
+::: {.callout-note collapse="true" title="Slides from L19: How EARS writes a requirement, Guiding questions turn a job story into requirements, What can go wrong"}
+![How EARS writes a requirement](img/l19/l19-st2.png){fig-alt="L19 slide: How EARS writes a requirement"}
+
+![Guiding questions turn a job story into requirements](img/l19/l19-st2q.png){fig-alt="L19 slide: Guiding questions turn a job story into requirements"}
+
+![What can go wrong](img/l19/l19-st2w.png){fig-alt="L19 slide: What can go wrong"}
+
+In the deck: [How EARS writes a requirement](https://pages.github.ubc.ca/ilm/436c-syllabus-preview/slides/l19.html#/l19-st2) · [Guiding questions turn a job story into requirements](https://pages.github.ubc.ca/ilm/436c-syllabus-preview/slides/l19.html#/l19-st2q) · [What can go wrong](https://pages.github.ubc.ca/ilm/436c-syllabus-preview/slides/l19.html#/l19-st2w)
+:::
 
 The file has a heading for each job story, your own requirements under each focus story, and one table for the codes
 of your issue.
@@ -121,6 +137,12 @@ in one table, so that I can send free drivers where the requests are and check y
 
 ### Put every RF and RQ from feedback into docs/requirements.md {#codes}
 
+::: {.callout-note collapse="true" title="Slides from L19: Every RF and RQ into docs/requirements.md"}
+![Every RF and RQ into docs/requirements.md](img/l19/l19-st1.png){fig-alt="L19 slide: Every RF and RQ into docs/requirements.md"}
+
+In the deck: [Every RF and RQ into docs/requirements.md](https://pages.github.ubc.ca/ilm/436c-syllabus-preview/slides/l19.html#/l19-st1)
+:::
+
 In a section `## Constraints and requests`, add one row for every RF and RQ code of your issue, with its code and
 its wording. RF and RQ codes keep the numbers of your issue.
 
@@ -151,6 +173,12 @@ you can leave that column out.
 
 ### Requirements on model answers {#evals}
 
+::: {.callout-note collapse="true" title="Slides from L19: Eval in words"}
+![Eval in words](img/l19/l19-st6e.png){fig-alt="L19 slide: Eval in words"}
+
+In the deck: [Eval in words](https://pages.github.ubc.ca/ilm/436c-syllabus-preview/slides/l19.html#/l19-st6e)
+:::
+
 If your system includes a model, its answer can differ between runs, so one example with a fixed reply does not
 show the requirement. Describe an **eval** in words in a section `## Evals`: a set of cases with known answers that
 the model's part of your system is run on, and the score it gets. Give the requirement it is for, the cases, what
@@ -177,6 +205,12 @@ the question with an id (Q010, Q020 …), who would answer it, what you assume, 
 
 ## Create docs/design.md {#design}
 
+::: {.callout-note collapse="true" title="Slides from L19: docs/design.md lists each planned resource"}
+![docs/design.md lists each planned resource](img/l19/l19-st7.png){fig-alt="L19 slide: docs/design.md lists each planned resource"}
+
+In the deck: [docs/design.md lists each planned resource](https://pages.github.ubc.ca/ilm/436c-syllabus-preview/slides/l19.html#/l19-st7)
+:::
+
 Write `docs/design.md` from sections of your proposal: the course does not give a template for it.
 
 1. Move sections 4 (data and workflows) and 5 (the sketch) of your proposal into `docs/design.md`, and clean them up where your feedback asks. The sketch
@@ -198,6 +232,14 @@ Write `docs/design.md` from sections of your proposal: the course does not give 
 3. Add a section `## Data`, described [below](#data), including the simulated data your scenarios need.
 
 ### Data section {#data}
+
+::: {.callout-note collapse="true" title="Slides from L19: Simulated data and the real data subset, One line of fields for each kind of event"}
+![Simulated data and the real data subset](img/l19/l19-data.png){fig-alt="L19 slide: Simulated data and the real data subset"}
+
+![One line of fields for each kind of event](img/l19/l19-st3.png){fig-alt="L19 slide: One line of fields for each kind of event"}
+
+In the deck: [Simulated data and the real data subset](https://pages.github.ubc.ca/ilm/436c-syllabus-preview/slides/l19.html#/l19-data) · [One line of fields for each kind of event](https://pages.github.ubc.ca/ilm/436c-syllabus-preview/slides/l19.html#/l19-st3)
+:::
 
 The `## Data` section has two parts:
 
@@ -250,6 +292,16 @@ The id links the bullet, the folder `sim/data/SIM01/` at Checkpoint 2, and the `
 it.
 
 ## Draft your scenarios in features/ {#scenarios}
+
+::: {.callout-note collapse="true" title="Slides from L19: Example Mapping cards, One rule, three example cards, Cards become a feature file"}
+![Example Mapping cards](img/l19/l19-st4.png){fig-alt="L19 slide: Example Mapping cards"}
+
+![One rule, three example cards](img/l19/l19-st4k.png){fig-alt="L19 slide: One rule, three example cards"}
+
+![Cards become a feature file](img/l19/l19-st5.png){fig-alt="L19 slide: Cards become a feature file"}
+
+In the deck: [Example Mapping cards](https://pages.github.ubc.ca/ilm/436c-syllabus-preview/slides/l19.html#/l19-st4) · [One rule, three example cards](https://pages.github.ubc.ca/ilm/436c-syllabus-preview/slides/l19.html#/l19-st4k) · [Cards become a feature file](https://pages.github.ubc.ca/ilm/436c-syllabus-preview/slides/l19.html#/l19-st5)
+:::
 
 BDD test scenarios are your demos of the system's behaviour: `Given` the data, `When` something happens, `Then` the answer you know before the system runs.
 
@@ -349,6 +401,14 @@ examples, and how to read the dry run's output.
 
 ## Check the scenarios {#dry-run}
 
+::: {.callout-note collapse="true" title="Slides from L19: Dry run before the pull request and the tag, Traceability check"}
+![Dry run before the pull request and the tag](img/l19/l19-st8.png){fig-alt="L19 slide: Dry run before the pull request and the tag"}
+
+![Traceability check](img/l19/l19-trace.png){fig-alt="L19 slide: Traceability check"}
+
+In the deck: [Dry run before the pull request and the tag](https://pages.github.ubc.ca/ilm/436c-syllabus-preview/slides/l19.html#/l19-st8) · [Traceability check](https://pages.github.ubc.ca/ilm/436c-syllabus-preview/slides/l19.html#/l19-trace)
+:::
+
 1. behave looks for step code in a folder `features/steps/`, even on a dry run. Create the folder with an empty
    file in it, so that git keeps it:
 
@@ -385,6 +445,12 @@ code yet, and the command ends with exit code 1 for the same reason. Check that 
    rule for each requirement of a focus story and for each RF that a test can check, tagged with its code.
 
 ## Hand in with a pull request and the tag cp1 {#hand-in}
+
+::: {.callout-note collapse="true" title="Slides from L19: Checkpoint 1 hand-in"}
+![Checkpoint 1 hand-in](img/l19/l19s-40.png){fig-alt="L19 slide: Checkpoint 1 hand-in"}
+
+In the deck: [Checkpoint 1 hand-in](https://pages.github.ubc.ca/ilm/436c-syllabus-preview/slides/l19.html#/l19s-40)
+:::
 
 Your team hands in through a pull request, under the rules of your `AGENTS.md` and `CONTRIBUTING.md`: no direct
 pushes to `main`, one approval from someone other than the author, and no squash merge.
