@@ -54,6 +54,35 @@ is built on public New York trip records. The whole hand-in is the repository
 [cp1-example](https://github.com/cpsc436c-2026w1/cp1-example), tag `monday`: open its `docs/` and `features/`
 folders when you want to see a part of this page in full.
 
+## What changes in your repository {#repo}
+
+```{=html}
+<style>
+.repo-tree { font-size: 0.86em; line-height: 1.45; background: #fafafa; border: 1px solid #ddd; border-radius: 4px; padding: 0.8em 1em; overflow-x: auto; }
+.repo-tree .add  { background: #d9f2df; color: #14532d; font-weight: 600; }
+.repo-tree .fill { background: #fff1c2; color: #6b4b00; font-weight: 600; }
+.repo-tree .chg  { background: #fde2e1; color: #8a1c14; font-weight: 600; }
+.repo-tree .note { color: #5a6470; }
+.repo-legend span { padding: 0.05em 0.4em; border-radius: 3px; font-weight: 600; }
+</style>
+<pre class="repo-tree"><code>your-team-repository/
+├── AGENTS.md                         <span class="note">from the course files: keep</span>
+├── docs/
+│   ├── proposal.md                   <span class="chg">change</span> <span class="note">make the corrections your Fix: requests ask for</span>
+│   ├── requirements.md               <span class="fill">fill in</span> <span class="note">job stories, EARS requirements, a row for every RF and RQ, Evals, Assumptions</span>
+│   ├── design.md                     <span class="fill">fill in</span> <span class="note">sketch, workflows, resources, Data (sections 4 and 5 of your proposal move here)</span>
+│   └── tasks.md                      <span class="note">not for Checkpoint 1</span>
+└── features/
+    ├── &lt;what the user gets&gt;.feature  <span class="add">add</span> <span class="note">one per focus job story: rules tagged with codes, examples</span>
+    └── steps/.gitkeep                <span class="add">add</span> <span class="note">empty: step code comes at Checkpoint 2</span>
+
+tag cp1 on main                       <span class="add">add</span> <span class="note">after your pull request is merged</span></code></pre>
+<p class="repo-legend"><span class="add" style="background:#d9f2df;color:#14532d">add</span> a new file &nbsp; <span class="fill" style="background:#fff1c2;color:#6b4b00">fill in</span> a course template &nbsp; <span class="chg" style="background:#fde2e1;color:#8a1c14">change</span> a file you have</p>
+```
+
+The example repository's tag `monday` is this state, filled in for the rides case:
+[cp1-example](https://github.com/cpsc436c-2026w1/cp1-example/tree/monday).
+
 ## Make the corrections I asked for in the proposal feedback issue {#fixes}
 
 ::: {.callout-note collapse="true" title="Useful slides: From Feedback to Checkpoint 1: triage"}
