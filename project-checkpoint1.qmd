@@ -51,71 +51,19 @@ your issue, your design with sections 4 and 5 of your proposal moved in, its lis
 The examples on this page come from a Checkpoint 1 hand-in that we wrote for a team t00 on the rides case of the
 lectures: a ride-hailing app in New York that sends trip events (a trip is requested, accepted, completed). Its data
 is built on public New York trip records. The whole hand-in is the repository
-[cp1-example](https://github.com/cpsc436c-2026w1/cp1-example), tag `cp1`: open its `docs/` and `features/`
+[cp1-example](https://github.com/cpsc436c-2026w1/cp1-example), tag `monday`: open its `docs/` and `features/`
 folders when you want to see a part of this page in full.
 
-## What changes in your repository {#repo}
+## Make the corrections your issue asks for {#fixes}
 
-The [example repository at tag `cp1`, the tag you hand in](https://github.com/cpsc436c-2026w1/cp1-example/tree/cp1) is a whole Checkpoint 1 hand-in, written for the rides
-case. Each file name below links to it in that state.
-
-```{=html}
-<style>
-.repo-tab { width: 100%; border-collapse: collapse; font-size: 0.9em; margin: 0.6em 0 0.3em; }
-.repo-tab td { padding: 0.18em 0.5em; vertical-align: top; border-bottom: 1px solid #eee; }
-.repo-tab td.t { font-family: SFMono-Regular, Menlo, Consolas, monospace; white-space: nowrap; font-size: 0.92em; }
-.repo-tab td.t a { color: #1f4e8c; text-decoration: underline; }
-.repo-tab .add, .repo-legend .add { background: #d9f2df; color: #14532d; font-weight: 600; padding: 0 0.35em; border-radius: 3px; white-space: nowrap; }
-.repo-tab .fill, .repo-legend .fill { background: #fff1c2; color: #6b4b00; font-weight: 600; padding: 0 0.35em; border-radius: 3px; white-space: nowrap; }
-.repo-tab .chg, .repo-legend .chg { background: #fde2e1; color: #8a1c14; font-weight: 600; padding: 0 0.35em; border-radius: 3px; white-space: nowrap; }
-</style>
-<table class="repo-tab">
-<tr><td class="t">your-repository/</td><td><span class="add">add</span></td><td>tag <code>cp1</code> on <code>main</code>, after your pull request is merged</td></tr>
-<tr><td class="t">├── docs/</td><td></td><td></td></tr>
-<tr><td class="t">│&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp1/docs/proposal.md">proposal.md</a></td><td><span class="chg">change</span></td><td>the corrections asked for by <b>Fix:</b> requests</td></tr>
-<tr><td class="t">│&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp1/docs/requirements.md">requirements.md</a></td><td><span class="fill">fill in</span></td><td>job stories, requirements in EARS, a row for every RF and RQ</td></tr>
-<tr><td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp1/docs/design.md">design.md</a></td><td><span class="fill">fill in</span></td><td>sketch, workflows, planned resources, Data</td></tr>
-<tr><td class="t">└── features/</td><td></td><td></td></tr>
-<tr><td class="t">&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp1/features/js01_trips_per_zone.feature">js01_trips_per_zone.feature</a></td><td><span class="add">add</span></td><td>demo scenarios: rules tagged with codes, examples (one file per focus job story)</td></tr>
-<tr><td class="t">&nbsp;&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp1/features/js01_yesterdays_trips.feature">js01_yesterdays_trips.feature</a></td><td><span class="add">add</span></td><td></td></tr>
-<tr><td class="t">&nbsp;&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp1/features/steps">steps/.gitkeep</a></td><td><span class="add">add</span></td><td>empty for now: step code comes at Checkpoint 2</td></tr>
-</table>
-<p class="repo-legend"><span class="add">add</span> a new file or tag &nbsp; <span class="fill">fill in</span> a course template you already have &nbsp; <span class="chg">change</span> a file you wrote</p>
-```
-
-| File | Kiro keeps the same thing in | Codes in it |
-|---|---|---|
-| `docs/requirements.md` | `requirements.md`: stories with acceptance criteria in EARS | defines JS01, R010, RF010, RQ010 once |
-| `docs/design.md` | `design.md`: architecture | uses the codes each resource and data set serves |
-| `features/*.feature` | — | tags: `@JS01` on a feature, `@R010` or `@RF010` on a rule |
-
-: {tbl-colwidths="[26,46,28]"}
-
-**`docs/` says what you build, `features/` says how you show it.**
-
-## Make the corrections I asked for in the proposal feedback issue {#fixes}
-
-::: {.callout-note collapse="true" title="Useful slides: From Feedback to Checkpoint 1: triage"}
-![From Feedback to Checkpoint 1: triage](img/l19/l19s-01.png){fig-alt="L19 slide: From Feedback to Checkpoint 1: triage"}
-:::
-
-In your `staff-feedback` issue, among the constraints (RF010, RF020 …) and requests (RQ010, RQ020 …), some RQs
-start with **Fix:**. Each of them asks for a correction to your `docs/proposal.md` that you complete for Checkpoint 1.
-
-We discuss what to do with all other RQs and RFs in the [next step](#codes). Briefly: for each other RQ, you give me
-a short response in Checkpoint 1 on how you would reply to it; the actual solution waits until Checkpoint 2.
+Your `staff-feedback` issue lists constraints (RF010, RF020 …) and requests (RQ010, RQ020 …). The text of some RQs
+starts with `Fix:`, such as `RQ010. Fix: …`. Each of them asks for a correction to your proposal: make it in `docs/proposal.md`
+by Monday. Every other RQ gets a short note on Monday, and its answer is due at Checkpoint 2 (see
+[Codes of your issue](#codes)).
 
 If something in the issue does not match what your proposal says, reply in the issue.
 
 ## Write docs/requirements.md {#requirements}
-
-::: {.callout-note collapse="true" title="Useful slides: How EARS writes a requirement, Guiding questions turn a job story into requirements, What can go wrong"}
-![How EARS writes a requirement](img/l19/l19-st2.png){fig-alt="L19 slide: How EARS writes a requirement"}
-
-![Guiding questions turn a job story into requirements](img/l19/l19-st2q.png){fig-alt="L19 slide: Guiding questions turn a job story into requirements"}
-
-![What can go wrong](img/l19/l19-st2w.png){fig-alt="L19 slide: What can go wrong"}
-:::
 
 The file has a heading for each job story, your own requirements under each focus story, and one table for the codes
 of your issue.
@@ -173,10 +121,6 @@ in one table, so that I can send free drivers where the requests are and check y
 
 ### Put every RF and RQ from feedback into docs/requirements.md {#codes}
 
-::: {.callout-note collapse="true" title="Useful slides: Every RF and RQ into docs/requirements.md"}
-![Every RF and RQ into docs/requirements.md](img/l19/l19-st1.png){fig-alt="L19 slide: Every RF and RQ into docs/requirements.md"}
-:::
-
 In a section `## Constraints and requests`, add one row for every RF and RQ code of your issue, with its code and
 its wording. RF and RQ codes keep the numbers of your issue.
 
@@ -207,10 +151,6 @@ you can leave that column out.
 
 ### Requirements on model answers {#evals}
 
-::: {.callout-note collapse="true" title="Useful slides: Eval in words"}
-![Eval in words](img/l19/l19-st6e.png){fig-alt="L19 slide: Eval in words"}
-:::
-
 If your system includes a model, its answer can differ between runs, so one example with a fixed reply does not
 show the requirement. Describe an **eval** in words in a section `## Evals`: a set of cases with known answers that
 the model's part of your system is run on, and the score it gets. Give the requirement it is for, the cases, what
@@ -237,10 +177,6 @@ the question with an id (Q010, Q020 …), who would answer it, what you assume, 
 
 ## Create docs/design.md {#design}
 
-::: {.callout-note collapse="true" title="Useful slides: docs/design.md lists each planned resource"}
-![docs/design.md lists each planned resource](img/l19/l19-st7.png){fig-alt="L19 slide: docs/design.md lists each planned resource"}
-:::
-
 Write `docs/design.md` from sections of your proposal: the course does not give a template for it.
 
 1. Move sections 4 (data and workflows) and 5 (the sketch) of your proposal into `docs/design.md`, and clean them up where your feedback asks. The sketch
@@ -262,12 +198,6 @@ Write `docs/design.md` from sections of your proposal: the course does not give 
 3. Add a section `## Data`, described [below](#data), including the simulated data your scenarios need.
 
 ### Data section {#data}
-
-::: {.callout-note collapse="true" title="Useful slides: Simulated data and the real data subset, One line of fields for each kind of event"}
-![Simulated data and the real data subset](img/l19/l19-data.png){fig-alt="L19 slide: Simulated data and the real data subset"}
-
-![One line of fields for each kind of event](img/l19/l19-st3.png){fig-alt="L19 slide: One line of fields for each kind of event"}
-:::
 
 The `## Data` section has two parts:
 
@@ -320,14 +250,6 @@ The id links the bullet, the folder `sim/data/SIM01/` at Checkpoint 2, and the `
 it.
 
 ## Draft your scenarios in features/ {#scenarios}
-
-::: {.callout-note collapse="true" title="Useful slides: Example Mapping cards, One rule, three example cards, Cards become a feature file"}
-![Example Mapping cards](img/l19/l19-st4.png){fig-alt="L19 slide: Example Mapping cards"}
-
-![One rule, three example cards](img/l19/l19-st4k.png){fig-alt="L19 slide: One rule, three example cards"}
-
-![Cards become a feature file](img/l19/l19-st5.png){fig-alt="L19 slide: Cards become a feature file"}
-:::
 
 BDD test scenarios are your demos of the system's behaviour: `Given` the data, `When` something happens, `Then` the answer you know before the system runs.
 
@@ -427,12 +349,6 @@ examples, and how to read the dry run's output.
 
 ## Check the scenarios {#dry-run}
 
-::: {.callout-note collapse="true" title="Useful slides: Dry run before the pull request and the tag, Traceability check"}
-![Dry run before the pull request and the tag](img/l19/l19-st8.png){fig-alt="L19 slide: Dry run before the pull request and the tag"}
-
-![Traceability check](img/l19/l19-trace.png){fig-alt="L19 slide: Traceability check"}
-:::
-
 1. behave looks for step code in a folder `features/steps/`, even on a dry run. Create the folder with an empty
    file in it, so that git keeps it:
 
@@ -469,10 +385,6 @@ code yet, and the command ends with exit code 1 for the same reason. Check that 
    rule for each requirement of a focus story and for each RF that a test can check, tagged with its code.
 
 ## Hand in with a pull request and the tag cp1 {#hand-in}
-
-::: {.callout-note collapse="true" title="Useful slides: Checkpoint 1 hand-in"}
-![Checkpoint 1 hand-in](img/l19/l19s-40.png){fig-alt="L19 slide: Checkpoint 1 hand-in"}
-:::
 
 Your team hands in through a pull request, under the rules of your `AGENTS.md` and `CONTRIBUTING.md`: no direct
 pushes to `main`, one approval from someone other than the author, and no squash merge.
