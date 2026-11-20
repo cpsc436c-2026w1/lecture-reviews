@@ -54,22 +54,23 @@ is built on public New York trip records. The whole hand-in is the repository
 [cp1-example](https://github.com/cpsc436c-2026w1/cp1-example), tag `monday`: open its `docs/` and `features/`
 folders when you want to see a part of this page in full.
 
-## Make the corrections your issue asks for {#fixes}
+## Make the corrections I asked for in the proposal feedback issue {#fixes}
 
-::: {.callout-note collapse="true" title="Slides from L19: From Feedback to Checkpoint 1: triage"}
+::: {.callout-note collapse="true" title="Useful slides: From Feedback to Checkpoint 1: triage"}
 ![From Feedback to Checkpoint 1: triage](img/l19/l19s-01.png){fig-alt="L19 slide: From Feedback to Checkpoint 1: triage"}
 :::
 
-Your `staff-feedback` issue lists constraints (RF010, RF020 …) and requests (RQ010, RQ020 …). The text of some RQs
-starts with `Fix:`, such as `RQ010. Fix: …`. Each of them asks for a correction to your proposal: make it in `docs/proposal.md`
-by Monday. Every other RQ gets a short note on Monday, and its answer is due at Checkpoint 2 (see
-[Codes of your issue](#codes)).
+In your `staff-feedback` issue, among the constraints (RF010, RF020 …) and requests (RQ010, RQ020 …), some RQs
+start with **Fix:**. Each of them asks for a correction to your `docs/proposal.md` that you complete for Checkpoint 1.
+
+We discuss what to do with all other RQs and RFs in the [next step](#codes). Briefly: for each other RQ, you give me
+a short response in Checkpoint 1 on how you would reply to it; the actual solution waits until Checkpoint 2.
 
 If something in the issue does not match what your proposal says, reply in the issue.
 
 ## Write docs/requirements.md {#requirements}
 
-::: {.callout-note collapse="true" title="Slides from L19: How EARS writes a requirement, Guiding questions turn a job story into requirements, What can go wrong"}
+::: {.callout-note collapse="true" title="Useful slides: How EARS writes a requirement, Guiding questions turn a job story into requirements, What can go wrong"}
 ![How EARS writes a requirement](img/l19/l19-st2.png){fig-alt="L19 slide: How EARS writes a requirement"}
 
 ![Guiding questions turn a job story into requirements](img/l19/l19-st2q.png){fig-alt="L19 slide: Guiding questions turn a job story into requirements"}
@@ -133,7 +134,7 @@ in one table, so that I can send free drivers where the requests are and check y
 
 ### Put every RF and RQ from feedback into docs/requirements.md {#codes}
 
-::: {.callout-note collapse="true" title="Slides from L19: Every RF and RQ into docs/requirements.md"}
+::: {.callout-note collapse="true" title="Useful slides: Every RF and RQ into docs/requirements.md"}
 ![Every RF and RQ into docs/requirements.md](img/l19/l19-st1.png){fig-alt="L19 slide: Every RF and RQ into docs/requirements.md"}
 :::
 
@@ -167,7 +168,7 @@ you can leave that column out.
 
 ### Requirements on model answers {#evals}
 
-::: {.callout-note collapse="true" title="Slides from L19: Eval in words"}
+::: {.callout-note collapse="true" title="Useful slides: Eval in words"}
 ![Eval in words](img/l19/l19-st6e.png){fig-alt="L19 slide: Eval in words"}
 :::
 
@@ -197,7 +198,7 @@ the question with an id (Q010, Q020 …), who would answer it, what you assume, 
 
 ## Create docs/design.md {#design}
 
-::: {.callout-note collapse="true" title="Slides from L19: docs/design.md lists each planned resource"}
+::: {.callout-note collapse="true" title="Useful slides: docs/design.md lists each planned resource"}
 ![docs/design.md lists each planned resource](img/l19/l19-st7.png){fig-alt="L19 slide: docs/design.md lists each planned resource"}
 :::
 
@@ -223,7 +224,7 @@ Write `docs/design.md` from sections of your proposal: the course does not give 
 
 ### Data section {#data}
 
-::: {.callout-note collapse="true" title="Slides from L19: Simulated data and the real data subset, One line of fields for each kind of event"}
+::: {.callout-note collapse="true" title="Useful slides: Simulated data and the real data subset, One line of fields for each kind of event"}
 ![Simulated data and the real data subset](img/l19/l19-data.png){fig-alt="L19 slide: Simulated data and the real data subset"}
 
 ![One line of fields for each kind of event](img/l19/l19-st3.png){fig-alt="L19 slide: One line of fields for each kind of event"}
@@ -281,7 +282,7 @@ it.
 
 ## Draft your scenarios in features/ {#scenarios}
 
-::: {.callout-note collapse="true" title="Slides from L19: Example Mapping cards, One rule, three example cards, Cards become a feature file"}
+::: {.callout-note collapse="true" title="Useful slides: Example Mapping cards, One rule, three example cards, Cards become a feature file"}
 ![Example Mapping cards](img/l19/l19-st4.png){fig-alt="L19 slide: Example Mapping cards"}
 
 ![One rule, three example cards](img/l19/l19-st4k.png){fig-alt="L19 slide: One rule, three example cards"}
@@ -387,7 +388,7 @@ examples, and how to read the dry run's output.
 
 ## Check the scenarios {#dry-run}
 
-::: {.callout-note collapse="true" title="Slides from L19: Dry run before the pull request and the tag, Traceability check"}
+::: {.callout-note collapse="true" title="Useful slides: Dry run before the pull request and the tag, Traceability check"}
 ![Dry run before the pull request and the tag](img/l19/l19-st8.png){fig-alt="L19 slide: Dry run before the pull request and the tag"}
 
 ![Traceability check](img/l19/l19-trace.png){fig-alt="L19 slide: Traceability check"}
@@ -430,7 +431,7 @@ code yet, and the command ends with exit code 1 for the same reason. Check that 
 
 ## Hand in with a pull request and the tag cp1 {#hand-in}
 
-::: {.callout-note collapse="true" title="Slides from L19: Checkpoint 1 hand-in"}
+::: {.callout-note collapse="true" title="Useful slides: Checkpoint 1 hand-in"}
 ![Checkpoint 1 hand-in](img/l19/l19s-40.png){fig-alt="L19 slide: Checkpoint 1 hand-in"}
 :::
 
