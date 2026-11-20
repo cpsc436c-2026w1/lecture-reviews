@@ -129,8 +129,8 @@ Feature: Trips requested in each zone
 
 The rule is the requirement R020 of `docs/requirements.md` in plain words. The example's answer, 2, follows from its
 table: request ev-000012 has an event time of 09:04, inside the period from 09:00 to 09:05, and was received
-7 minutes later, at 09:11. The `When` is 60 s after that receipt, because R020 asks for the late request to be
-counted within 60 s.
+7 minutes later, at 09:11. The `When` is 60 s after that receipt, because R020's target is data latency under 60 s at p95 for a late
+request; one example checks one such request.
 
 ### Tags
 
@@ -166,11 +166,11 @@ goes in the example:
 | `IF <problem> THEN THE SYSTEM SHALL <response>` | the problem is an injected fault in the `Given` (the same `event_id` twice, a late `received_time`); when the problem is the request itself, such as a value out of range, it is the `When` |
 | `THE SYSTEM SHALL <response>` | the rule's sentence is the requirement; choose two examples that differ in something that could break it |
 | `WHERE <feature> THE SYSTEM SHALL <response>` | a tag on the feature that names the option, such as `@assistant` |
-| the number after `\|` | a number in the `Then` ("within 60 s"), or a time in the `When` chosen so that the answer must already hold |
+| the target after `\|` (data latency under 60 s at p95) | one case of it in the `Then` ("within 60 s"), or a time in the `When` chosen so that the answer must already hold; the percentile needs many cases |
 
 : {tbl-colwidths="[34,66]"}
 
-The answer of an example (2 trips) is not a requirement; the number from the R line (within 60 s) is. The times
+The answer of an example (2 trips) is not a requirement; the target from the R line (data latency under 60 s at p95) is. The times
 in an example are data: nobody waits for them.
 
 ### Data in an example

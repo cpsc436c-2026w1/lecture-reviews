@@ -113,8 +113,8 @@ When demand moves between zones during the morning rush (about 840 requests an h
 number of trips requested in each pickup zone for each 5-minute period, and each morning yesterday's completed trips
 in one table, so that I can send free drivers where the requests are and check yesterday's fares.
 
-- **R010** WHEN a 5-minute period ends THE SYSTEM SHALL store one count of requested trips for each pickup zone that had a request in the period | within 60 s of the period's end, from the requests received by then (SLO) · BDD: [js01_trips_per_zone.feature](../features/js01_trips_per_zone.feature)
-- **R020** IF a request is received after its period ended THEN THE SYSTEM SHALL add it to the stored count of the period of its event time, and store a count of 1 if its zone does not have a count for that period yet | a request received up to 10 minutes after its event time is in the count within 60 s of its receipt (SLO) · BDD: [js01_trips_per_zone.feature](../features/js01_trips_per_zone.feature)
+- **R010** WHEN a 5-minute period ends THE SYSTEM SHALL store one count of requested trips for each pickup zone that had a request in the period | data latency under 60 s at p95, from the period's end to the stored count of the requests received by then (SLO) · BDD: [js01_trips_per_zone.feature](../features/js01_trips_per_zone.feature)
+- **R020** IF a request is received after its period ended THEN THE SYSTEM SHALL add it to the stored count of the period of its event time, and store a count of 1 if its zone does not have a count for that period yet | for a request received up to 10 minutes after its event time, data latency under 60 s at p95, from its receipt to the corrected count (SLO) · BDD: [js01_trips_per_zone.feature](../features/js01_trips_per_zone.feature)
 - **R030** THE SYSTEM SHALL show every count with its zone and the start and end of its period · BDD: [js01_trips_per_zone.feature](../features/js01_trips_per_zone.feature)
 - **R060** WHERE the system includes the assistant, WHEN the analyst asks about trip counts in plain language THE SYSTEM SHALL answer with the count the question asks for and state only counts that are in the rows its query returned | eval `count-answers` scores at least 0.8, which is 5 of its 6 cases correct (SLO) · BDD: [js01_count_questions.feature](../features/js01_count_questions.feature)
 ```
@@ -315,7 +315,7 @@ Feature: Trips requested in each zone
     # Question (Q010): does a trip that the rider cancels still count as requested?
 ```
 
-The `Then` checks the number that the requirement gives: R010 asks for the count within 60 s of the period's end.
+The `Then` checks one case of the requirement's target: R010 asks for data latency under 60 s at p95 after the period's end, so one example checks that its count is there within 60 s. The percentile is over many periods, which a single example cannot show.
 The times in an example are data; nobody waits for them. A line that starts with `#` is a comment, which behave
 does not read: `# Question (Q010)` puts the open question of your `## Assumptions` table beside the rule that
 depends on it.
