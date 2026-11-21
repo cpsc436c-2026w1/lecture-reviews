@@ -171,12 +171,20 @@ Windows: `if (Test-Path .codex\config.toml) { $env:CODEX_HOME = "$PWD\.codex"; (
 If a Codex names command prints an error (such as `JSONDecodeError`) instead of names, Codex could not read that
 configuration: stop and ask a TA.
 
+A folder file that git tracks belongs to the whole team: never change it. Check each folder file you found with
+`git ls-files --error-unmatch <file>` (it prints the name when git tracks the file). For a tracked file:
+
+- If `grep -c 's436c-' <file>` prints a number above 0, a token is written in the team's repository. Stop, tell the
+  student the file name (not its contents), and ask them to tell a TA: that token has to be replaced.
+- Otherwise leave the file as it is. Its `436c` entry reads the token from `KB_MCP_TOKEN`, so it works in that folder
+  once Step 4 is done. Look only at the user configuration in what follows.
+
 If neither `436c` nor `aws-knowledge` is printed anywhere, go on to Step 3. If either is, do not look at its settings.
 Tell the student: "I will replace your existing 436c and aws-knowledge entries with the course settings." Name the
 files or folder where you found them, and ask yes or no.
 
 - **No:** stop the setup and suggest the student asks a TA.
-- **Yes:** remove both names wherever you found them, with the commands below, then list the names again to see that
+- **Yes:** remove both names from the user configuration and from folder files that git does not track, with the commands below, then list the names again to see that
   they are gone, and do Step 3. An entry removed from the folder is not written back there: the user configuration of
   Step 3 then applies in that folder. After Step 5, Step 6 checks the result.
 
