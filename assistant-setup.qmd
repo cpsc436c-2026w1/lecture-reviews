@@ -1,0 +1,267 @@
+---
+title: "Set up the course MCP servers and the course LLM gateway"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+---
+
+This page sets up your coding assistant for the course: it connects the assistant to the course MCP server `436c`
+and to the AWS Knowledge MCP server `aws-knowledge`, and it gives your own code the address and key of the course
+LLM gateway. The settings go in your user configuration on your laptop, so they work in every folder and the token
+never lands in a repository.
+
+**For you, the student.** Start your assistant in a terminal and give it this user message:
+
+```text
+Run curl -sL https://ilm.wiki/436c/setup
+and follow the page it prints to set me up.
+```
+
+The assistant asks you to set your token, writes its configuration, asks you to restart it, and then runs the
+checks. Your token is in the issue "Your course MCP tokens" in your team repository, next to your name. You set it
+yourself in a terminal; you do not paste it into the chat.
+
+The rest of this page is written for the assistant.
+
+## Rules for the assistant
+
+1. Never ask the student to paste the token into this chat, and never print it. Check only that it is set.
+2. Never write the token into an assistant's configuration file or into a repository. Every configuration below
+   reads it from the environment variable `KB_MCP_TOKEN`, which the student sets in Step 2.
+3. Write user-level configuration, in the student's home folder. Never write a configuration file inside a git
+   repository.
+4. Add to an existing configuration file: keep every server and setting already in it. If the file has a server
+   named `436c` or `aws-knowledge` with other values, show the student both versions and ask before replacing it.
+5. Do the steps in order and tell the student what each command does before running it.
+
+## Values
+
+| Value | Setting |
+|---|---|
+| Course MCP server `436c` | `https://kb-cloud-students.fly.dev/mcp`, header `Authorization: Bearer <token>` |
+| AWS Knowledge MCP server `aws-knowledge` | `https://knowledge-mcp.global.api.aws`, no token |
+| Course LLM gateway, base URL | `https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1` |
+| Token | environment variable `KB_MCP_TOKEN`; the same token is the API key for the course LLM gateway |
+
+## Step 1: find out which assistant you are
+
+Find out which assistant and operating system the student uses: Claude Code, Kiro IDE, Kiro CLI, Codex, or GitHub
+Copilot (in VS Code or the Copilot CLI); macOS, Linux or Windows. If you are not sure, ask the student.
+
+## Step 2: the student sets the token
+
+Ask the student to copy their token from the issue "Your course MCP tokens" in their team repository and to make
+the setting permanent, so that an assistant started from an app icon also sees it. Give the student the commands
+for their system and ask them to run them in their own terminal, replacing `paste-your-token-here` and keeping the
+quotes.
+
+macOS (zsh):
+
+```bash
+echo "export KB_MCP_TOKEN='paste-your-token-here'" \
+  >> ~/.zshrc
+```
+
+Linux (bash):
+
+```bash
+echo "export KB_MCP_TOKEN='paste-your-token-here'" \
+  >> ~/.bashrc
+```
+
+Windows PowerShell:
+
+```powershell
+setx KB_MCP_TOKEN "paste-your-token-here"
+```
+
+The setting applies to terminals and apps opened after it. Ask the student to open a new terminal and run the check
+for their system, which prints `set` without printing the token:
+
+```bash
+test -n "$KB_MCP_TOKEN" && echo set
+```
+
+```powershell
+if ($env:KB_MCP_TOKEN) { "set" }
+```
+
+## Step 3: write the configuration for your assistant
+
+Write only the section for the student's assistant. On Windows, `~` is the user's home folder, `%USERPROFILE%`.
+
+### Claude Code
+
+Run these two commands. Keep the single quotes around the header: they make Claude Code store the text
+`${KB_MCP_TOKEN}` and read the token when it starts, instead of storing the token itself.
+
+```bash
+claude mcp add --transport http --scope user \
+  436c https://kb-cloud-students.fly.dev/mcp \
+  --header 'Authorization: Bearer ${KB_MCP_TOKEN}'
+```
+
+```bash
+claude mcp add --transport http --scope user \
+  aws-knowledge https://knowledge-mcp.global.api.aws
+```
+
+In PowerShell, run each command on one line, with the same single quotes. Both servers go into `~/.claude.json`,
+for all the student's folders ([Claude Code MCP](https://code.claude.com/docs/en/mcp)). If the team repository
+already has a `.mcp.json` copied from `.mcp.json.example`, it names the same two servers and can stay.
+
+### Kiro IDE and Kiro CLI
+
+Both read `~/.kiro/settings/mcp.json`
+([Kiro MCP configuration](https://kiro.dev/docs/mcp/configuration/#configuration-locations)). Add these two
+servers under `mcpServers`:
+
+```json
+{
+  "mcpServers": {
+    "436c": {
+      "url": "https://kb-cloud-students.fly.dev/mcp",
+      "headers": {
+        "Authorization": "Bearer ${KB_MCP_TOKEN}"
+      }
+    },
+    "aws-knowledge": {
+      "url": "https://knowledge-mcp.global.api.aws"
+    }
+  }
+}
+```
+
+In the Kiro IDE, the student also adds `KB_MCP_TOKEN` to the approved variables: open Settings, search for
+**Mcp Approved Env Vars** and add `KB_MCP_TOKEN`. Kiro expands only approved variables
+([Kiro environment variables](https://kiro.dev/docs/mcp/configuration/#environment-variables)).
+
+### Codex
+
+Add these tables to `~/.codex/config.toml`
+([Codex MCP](https://learn.chatgpt.com/docs/extend/mcp?surface=cli)):
+
+```toml
+[mcp_servers.436c]
+url = "https://kb-cloud-students.fly.dev/mcp"
+bearer_token_env_var = "KB_MCP_TOKEN"
+
+[mcp_servers.aws-knowledge]
+url = "https://knowledge-mcp.global.api.aws"
+```
+
+### GitHub Copilot (VS Code or Copilot CLI)
+
+Add these two servers under `mcpServers` in `~/.copilot/mcp-config.json`
+([VS Code MCP configuration](https://code.visualstudio.com/docs/agents/reference/mcp-configuration)):
+
+```json
+{
+  "mcpServers": {
+    "436c": {
+      "type": "http",
+      "url": "https://kb-cloud-students.fly.dev/mcp",
+      "headers": {
+        "Authorization": "Bearer ${KB_MCP_TOKEN}"
+      },
+      "tools": ["*"]
+    },
+    "aws-knowledge": {
+      "type": "http",
+      "url": "https://knowledge-mcp.global.api.aws",
+      "tools": ["*"]
+    }
+  }
+}
+```
+
+### Course LLM gateway, for the student's code
+
+Course code and Inspect read the gateway from these variables. Give the student the lines for their system to add
+after the token line from Step 2:
+
+macOS (zsh; on Linux, use `~/.bashrc`):
+
+```bash
+cat >> ~/.zshrc <<'EOF'
+export COURSE_GATEWAY_URL=https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1
+export PROXY_BASE_URL=$COURSE_GATEWAY_URL
+export PROXY_API_KEY=$KB_MCP_TOKEN
+EOF
+```
+
+Windows PowerShell, after the token is set and in a new terminal:
+
+```powershell
+setx COURSE_GATEWAY_URL "https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1"
+setx PROXY_BASE_URL "https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1"
+setx PROXY_API_KEY "$env:KB_MCP_TOKEN"
+```
+
+Do not set `OPENAI_API_KEY` or `OPENAI_BASE_URL` for the whole user account: other tools on the laptop read them.
+Set them only in the project's own code or its untracked `.env` file.
+
+## Step 4: the student restarts the assistant
+
+An assistant reads its MCP configuration and the environment when it starts. Ask the student to:
+
+1. Quit the assistant fully.
+2. Open a new terminal, or reopen the app, so it reads the token setting.
+3. Start the assistant again: `claude`, `kiro-cli chat` or `codex` in the new terminal, or open the Kiro IDE or
+   VS Code.
+4. Give it this user message:
+
+   ```text
+   Run curl -sL https://ilm.wiki/436c/setup
+   and do Step 5 of the page it prints.
+   ```
+
+## Step 5: check both servers and the gateway
+
+1. **Course MCP server.** Call the `cpsc436c_start_here` tool of the server `436c` and show the student the tool
+   result. Then list the tools of `436c`. The list includes `cpsc436c_search`, `cpsc436c_read`, `cpsc436c_list`
+   and `cpsc436c_start_here`; the older names `query_kb`, `get_kb_doc` and `list_kb_topics` do the same.
+2. **AWS Knowledge MCP server.** List the tools of `aws-knowledge`. The list includes a documentation search tool.
+3. **Where the student sees the connection:**
+
+   | Assistant | Where |
+   |---|---|
+   | Claude Code | `claude mcp list` in a terminal shows `436c` and `aws-knowledge` as `✔ Connected`; `/mcp` in the chat shows their tools |
+   | Kiro IDE | Kiro panel (Kiro icon on the left bar), section **MCP Servers** |
+   | Kiro CLI | `/mcp` in a `kiro-cli chat` session; `kiro-cli mcp list` shows only the servers in the files, not whether they connect |
+   | Codex | `/mcp` in the `codex` chat; `codex mcp list` in a terminal |
+   | Copilot | VS Code: command **MCP: List Servers**; Copilot CLI: `/mcp` |
+
+4. **Course LLM gateway.** Run the command for the student's system. It asks for the list of models and does not
+   call a model.
+
+   ```bash
+   curl -s \
+     -H "Authorization: Bearer $KB_MCP_TOKEN" \
+     "$COURSE_GATEWAY_URL/models"
+   ```
+
+   ```powershell
+   curl.exe -s `
+     -H "Authorization: Bearer $env:KB_MCP_TOKEN" `
+     "$env:COURSE_GATEWAY_URL/models"
+   ```
+
+   The reply lists `qwen3.8-27b`, `qwen3.6-35b-a3b` and `qwen3-embedding-0.6b`.
+
+Tell the student which checks passed. If all passed, the setup is done.
+
+## If a check fails
+
+| What you see | What to do |
+|---|---|
+| `436c` failed with `HTTP 401` or `invalid_token`; the gateway replies `missing or malformed API key` | The token did not reach the assistant, or it is not the student's current token. Check Step 2 with the check command. Ask the student to copy the token again from "Your course MCP tokens", with no spaces around it, then to repeat Step 4. The server's message about clearing authentication and re-registering does not apply: the course server uses this token only |
+| Claude Code warns `Missing environment variables: KB_MCP_TOKEN` | The assistant was started before the token was set. Repeat Step 4 |
+| Kiro warns that `KB_MCP_TOKEN` is not approved | Add it under **Mcp Approved Env Vars** (Step 3, Kiro), then restart Kiro |
+| Kiro CLI: `/mcp` lists neither server, but `kiro-cli mcp list` shows them | The agent in the chat may not include the MCP files. In its agent configuration, `includeMcpJson` must be `true` ([Kiro agent configuration](https://kiro.dev/docs/custom-agents/configuration-reference/)). Ask a TA if it is |
+| `aws-knowledge` fails as well | The laptop cannot reach the internet from the assistant. Try without the VPN, or ask a TA about the network |
+| `could not resolve host` for `ilm.wiki` | Use the page's address instead: `https://raw.githubusercontent.com/cpsc436c-2026w1/lecture-reviews/main/assistant-setup.qmd` |
+
+If a fix does not work, stop and ask the student to show the output to a TA. Do not put the token into a
+configuration file to make a check pass.
