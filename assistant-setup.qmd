@@ -14,7 +14,7 @@ never lands in a repository.
 **For you, the student.** Start your assistant in a terminal and give it this user message:
 
 ```text
-Run curl -sL https://ilm.wiki/436c/setup
+Run curl -sL https://ilm.wiki/436c/mcp-setup
 and follow the page it prints to set me up.
 ```
 
@@ -214,7 +214,7 @@ An assistant reads its MCP configuration and the environment when it starts. Ask
 4. Give it this user message:
 
    ```text
-   Run curl -sL https://ilm.wiki/436c/setup
+   Run curl -sL https://ilm.wiki/436c/mcp-setup
    and do Step 6 of the page it prints.
    ```
 
