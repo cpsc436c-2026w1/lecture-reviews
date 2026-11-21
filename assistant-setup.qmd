@@ -109,21 +109,22 @@ values hidden, or says the server is not there. Run it exactly as written: the h
 | Claude Code | the Claude Code commands below, for `436c` and for `aws-knowledge` | `No MCP server named "436c"` |
 | Codex CLI | `codex mcp get 436c` and `codex mcp get aws-knowledge` (header values print as `*****`) | `Error: No MCP server named '436c' found.` |
 | Copilot CLI | `copilot mcp get 436c` and `copilot mcp get aws-knowledge` (header values print as `***`) | `Error: Server "436c" not found.` |
-| VS Code with Copilot | `copilot mcp get` as above if the Copilot CLI is installed; otherwise the VS Code commands below | `No such file or directory`, or neither name printed |
-| Kiro CLI, Kiro IDE | `grep -n -e '"436c"' -e '"aws-knowledge"' -e '"url"' ~/.kiro/settings/mcp.json` | `No such file or directory`, or neither name printed |
+| VS Code with Copilot | `copilot mcp get` as above if the Copilot CLI is installed; otherwise the file command below with `~/.copilot/mcp-config.json` | `No such file or directory`, or neither name printed |
+| Kiro CLI, Kiro IDE | the file command below with `~/.kiro/settings/mcp.json` | `No such file or directory`, or neither name printed |
 
 `claude mcp get` prints header values as they are, so pipe it through the filter that hides every header value
-other than a `${…}` variable. Claude Code, macOS or Linux (your terminal):
+other than a `${…}` variable, and anything after a `?` in the URL. Claude Code, macOS or Linux (your terminal):
 
 ```bash
 claude mcp get 436c 2>&1 \
-  | sed -E '/^    [^ ].*: /{/\$\{[A-Za-z_][A-Za-z0-9_]*\}$/!s/^(    [^:]+: ).*/\1<hidden>/;}'
+  | sed -E -e '/^    [^ ].*: /{/\$\{[A-Za-z_][A-Za-z0-9_]*\}$/!s/^(    [^:]+: ).*/\1<hidden>/;}' \
+      -e 's/^(  URL: [^?]*)\?.*/\1?<hidden>/'
 ```
 
 Claude Code, Windows (your PowerShell terminal; checked against the docs, not run):
 
 ```powershell
-claude mcp get 436c 2>&1 | ForEach-Object { $l = "$_"; if ($l -match '^    \S.*: ' -and $l -notmatch '\$\{\w+\}$') { $l -replace '^(    [^:]+: ).*', '$1<hidden>' } else { $l } }
+claude mcp get 436c 2>&1 | ForEach-Object { $l = "$_" -replace '^(  URL: [^?]*)\?.*', '$1?<hidden>'; if ($l -match '^    \S.*: ' -and $l -notmatch '\$\{\w+\}$') { $l -replace '^(    [^:]+: ).*', '$1<hidden>' } else { $l } }
 ```
 
 Run each again with `aws-knowledge` in place of `436c`. An entry for `436c` without `Headers:` may use a header
@@ -131,24 +132,28 @@ script: `grep -o '"headersHelper": *"[^"]*"' ~/.claude.json` (Windows:
 `Select-String -Path "$HOME\.claude.json" -Pattern '"headersHelper": *"[^"]*"' | ForEach-Object { $_.Matches.Value }`)
 prints `sh ~/.claude/436c-mcp-headers.sh` for the script of this page.
 
-VS Code without the Copilot CLI: read only the matching lines of `~/.copilot/mcp-config.json`, with the header value
-hidden. macOS or Linux (your terminal):
+The file command, for a JSON configuration file (VS Code without the Copilot CLI, Kiro, a folder's `.mcp.json`).
+It prints only the matched pieces, never a whole line: the names `"436c"` and `"aws-knowledge"`, each `"url"` up to
+any `?`, and `"Authorization": "Bearer ${KB_MCP_TOKEN}"` when the header has that value. An `"Authorization"` printed
+alone means the header holds some other value, which the command does not print. Set `f` to the file first.
+macOS or Linux (your terminal):
 
 ```bash
-grep -n -e '"436c"' -e '"aws-knowledge"' -e '"url"' -e '"Authorization"' ~/.copilot/mcp-config.json \
-  | sed -E '/"Authorization"/{/"Bearer \$\{KB_MCP_TOKEN\}"/!s/("Authorization": *).*/\1<hidden>/;}'
+f=~/.copilot/mcp-config.json
+grep -n -o -e '"436c"' -e '"aws-knowledge"' -e '"url": *"[^"?]*' \
+  -e '"Authorization": *"Bearer \${KB_MCP_TOKEN}"' -e '"Authorization"' "$f"
 ```
 
 Windows (your PowerShell terminal; checked against the docs, not run):
 
 ```powershell
-Select-String -Path "$HOME\.copilot\mcp-config.json" -Pattern '"436c"','"aws-knowledge"','"url"','"Authorization"' | ForEach-Object { "$($_.LineNumber): " + ($_.Line -replace '("Authorization":\s*)(?!"Bearer \$\{KB_MCP_TOKEN\}").*', '$1<hidden>') }
+$f = "$HOME\.copilot\mcp-config.json"; Select-String -Path $f -AllMatches -Pattern '"436c"|"aws-knowledge"|"url": *"[^"?]*|"Authorization": *"Bearer \$\{KB_MCP_TOKEN\}"|"Authorization"' | ForEach-Object { $n = $_.LineNumber; $_.Matches | ForEach-Object { "${n}: $($_.Value)" } }
 ```
 
 Also look for a `.mcp.json` (Claude Code, Copilot), `.codex/config.toml` (Codex) or `.kiro/settings/mcp.json` (Kiro)
-in the folder the student works in, with the same kind of command (for `.mcp.json`, the VS Code command with the
-file name changed; for Codex, `grep -n '^\[mcp_servers' .codex/config.toml`). `claude mcp get` does not show a
-folder's `.mcp.json` entry until the student has approved it, so read that file. A server of the same name in the
+in the folder the student works in: the file command with `f=.mcp.json` or `f=.kiro/settings/mcp.json`, and for
+Codex `grep -n '^\[mcp_servers' .codex/config.toml`. `claude mcp get` may not show a folder's `.mcp.json` entry that
+the student has not approved, so read that file. A server of the same name in the
 folder takes precedence over the user configuration there. If it has the URL of this page and `${KB_MCP_TOKEN}` (or the header script) for its token,
 keep it. Otherwise tell the student and ask whether you may change that entry to the values of this page. If they
 agree, change it and run this step's command again to see that the folder's entry now has those values. If they want
@@ -296,16 +301,16 @@ Each prints `Added server "…"`. They write `~/.copilot/mcp-config.json`. To re
 `copilot mcp remove 436c`. `copilot mcp get` hides the header as `***`, so check the file itself:
 
 ```bash
-grep -F 'Bearer ${KB_MCP_TOKEN}' ~/.copilot/mcp-config.json
+grep -o -F 'Bearer ${KB_MCP_TOKEN}' ~/.copilot/mcp-config.json
 ```
 
-Windows (PowerShell):
+Windows (PowerShell; checked against the docs, not run):
 
 ```powershell
-Select-String -Path "$HOME\.copilot\mcp-config.json" -SimpleMatch 'Bearer ${KB_MCP_TOKEN}' | ForEach-Object { $_.Line.Trim() }
+Select-String -Path "$HOME\.copilot\mcp-config.json" -SimpleMatch 'Bearer ${KB_MCP_TOKEN}' | ForEach-Object { $_.Matches.Value }
 ```
 
-It prints the header line. If it prints nothing, remove the entry and add it again with the single quotes.
+It prints `Bearer ${KB_MCP_TOKEN}`, the matched text only. If it prints nothing, remove the entry and add it again with the single quotes.
 
 ### VS Code with GitHub Copilot
 
@@ -388,11 +393,13 @@ macOS or Linux (zsh or bash), in the student's new terminal:
     */zsh) rc=~/.zshrc ;;
     *) rc=~/.bashrc ;;
   esac
-  t=; line=; where=
+  t=; line=; where=; made=
   if command -v security >/dev/null 2>&1; then
     echo "macOS asks twice for the token (password data): paste it each time, then press Enter"
-    security add-generic-password -U -s 436c-mcp -a "$USER" -w
-    t=$(security find-generic-password -s 436c-mcp -w 2>/dev/null)
+    if security add-generic-password -U -s 436c-mcp -a "$USER" -w; then
+      made=yes
+      t=$(security find-generic-password -s 436c-mcp -w 2>/dev/null)
+    fi
   else
     printf 'Paste your token, then press Enter: '
     read -rs t
@@ -404,7 +411,7 @@ macOS or Linux (zsh or bash), in the student's new terminal:
     *) t= ;;
   esac
   if [ -z "$t" ]; then
-    command -v security >/dev/null 2>&1 && security delete-generic-password -s 436c-mcp >/dev/null 2>&1
+    [ -n "$made" ] && security delete-generic-password -s 436c-mcp >/dev/null 2>&1
     echo "check failed: a course token starts with s436c- and has 38 characters. Nothing saved; run the block again"
   else
     echo "check passed"
@@ -428,7 +435,7 @@ macOS or Linux (zsh or bash), in the student's new terminal:
     eval "$line"
     echo "stored in $where; saved, ${#KB_MCP_TOKEN} characters"
   fi
-  unset t line where tmp
+  unset t line where tmp made
 }
 ```
 
@@ -478,7 +485,7 @@ test -n "$KB_MCP_TOKEN" \
   || echo "not set"
 ```
 
-Windows (PowerShell), in the restarted terminal application:
+Windows (PowerShell), in the restarted terminal application; checked against the docs, not run:
 
 ```powershell
 if ($env:KB_MCP_TOKEN) { "set, $($env:KB_MCP_TOKEN.Length) characters" } else { "not set" }
@@ -526,7 +533,7 @@ Do the checks in order and stop at the first failure.
 
    | Assistant | What to run | Works when |
    |---|---|---|
-   | Claude Code | `claude mcp list` in your terminal; on macOS and Linux also `grep -c 's436c-' ~/.claude.json`; on Windows `(Select-String -Path "$HOME\.claude.json" -SimpleMatch 's436c-').Count` | `436c: … (HTTP) - ✔ Connected` and `aws-knowledge: … - ✔ Connected`; the `grep` prints `0`, meaning the file holds no token (its exit status 1 is expected) |
+   | Claude Code | `claude mcp list` in your terminal; on macOS and Linux also `grep -c 's436c-' ~/.claude.json`; on Windows `(Select-String -Path "$HOME\.claude.json" -SimpleMatch 's436c-').Count` (checked against the docs, not run) | `436c: … (HTTP) - ✔ Connected` and `aws-knowledge: … - ✔ Connected`; the `grep` prints `0`, meaning the file holds no token (its exit status 1 is expected) |
    | Codex CLI | the student types `/mcp` in the chat | both servers listed with tools |
    | Copilot CLI | the student types `/mcp show 436c` in the chat | the server is running and lists tools |
    | VS Code with Copilot | the student runs **Chat: Open Customizations**, then **MCP Servers** | both servers running |
@@ -554,7 +561,7 @@ Do the checks in order and stop at the first failure.
      https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1/models
    ```
 
-   Windows (PowerShell; the backtick continues the line):
+   Windows (PowerShell; the backtick continues the line; checked against the docs, not run):
 
    ```powershell
    curl.exe -sS -w "`nHTTP %{http_code}`n" `
@@ -702,7 +709,7 @@ again with step 2.
 | Gateway replies `HTTP 429` | The key's rate limit was reached; wait a minute and run the check again |
 | Claude Code: `436c` fails with `Dynamic Client Registration rejected (HTTP 404)` | The header script found no token: neither the keychain entry nor `KB_MCP_TOKEN`. Run the block of Step 4 again, then Step 5 |
 | macOS shows a dialog about the keychain item `436c-mcp` | Not seen in our checks (not run on macOS). The student shows a TA before choosing |
-| The Step 2 command (Claude Code on Windows) or the Copilot file check shows `<hidden>` or a token instead of `${KB_MCP_TOKEN}` | Remove the entry, add it again with the single quotes, and ask the student to get a new token from a TA, since the old one was written to a file |
+| The Step 2 command (Claude Code on Windows) shows `<hidden>`, or the Copilot file check shows a token or nothing, instead of `${KB_MCP_TOKEN}` | Remove the entry, add it again with the single quotes, and ask the student to get a new token from a TA, since the old one was written to a file |
 | A server is missing from the list, or the assistant does not list the course tools or the AWS Knowledge tools | The assistant read its configuration before Step 3. Repeat Step 5 |
 | Kiro IDE warns that `KB_MCP_TOKEN` is not approved | Add it under **Mcp Approved Env Vars** (Step 3, Kiro), then restart Kiro |
 | Kiro CLI: `/mcp` lists neither server | Check that `~/.kiro/settings/mcp.json` is valid JSON with both entries, then restart `kiro-cli chat`. If they still do not appear, show a TA |
