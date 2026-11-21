@@ -254,7 +254,7 @@ claude -p "Use the aws-knowledge aws___search_documentation tool to find S3 buck
 - `-p` runs a single prompt non-interactively and prints the response.
 - Tools are named `mcp__<server>__<tool>`. `--allowedTools "mcp__aws-knowledge"` approves every tool from this server
   without asking. It does not stop the assistant from trying other tools.
-- To allow a single tool, use its full name exactly as `/mcp` shows it, for example `mcp__aws-knowledge__search_documentation`. Some versions of the server add a prefix to tool names, so copy the name rather than guessing it.
+- To allow a single tool, use its full name exactly as `/mcp` shows it, for example `mcp__aws-knowledge__aws___search_documentation`. Copy the name from `/mcp` rather than guessing it.
 
 #### Kiro CLI: call a specific MCP tool
 
@@ -320,15 +320,15 @@ You can test if you configured your MCP and `AGENTS.md` correctly by running thi
 Run it with your own token, never another member's. The course MCP server records each call under your token;
 you hand in nothing for it.
 
-**It passes when** the assistant calls `get_kb_doc` on `436c-student/index.md` without you giving it the path, and then
+**It passes when** the assistant calls `cpsc436c_start_here` (or `get_kb_doc` on `436c-student/index.md`, an older name that still works) without you giving it the path, and then
 summarizes the course pages the start page lists. The path comes from `AGENTS.md`, so a pass shows that the assistant
 read the file and that it can reach the course server.
 
 **If it fails:**
 
-- *It does not call `get_kb_doc` at all:* the course server is not connected. Check that `.mcp.json` (Claude Code) or
+- *It does not call a course tool at all:* the course server is not connected. Check that `.mcp.json` (Claude Code) or
   `.kiro/settings/mcp.json` (Kiro) exists, and that your token is set in your shell.
-- *It calls the tool but the call errors:* check the server URL and the token. Your token is in the issue "Your course MCP tokens" in your course repository.
+- *It calls the tool but the call errors:* check the server URL and the token. Your token is in the issue "Your course MCP tokens" in your team repository.
 - *It asks you for the path, or guesses another one:* it did not read `AGENTS.md`. Check that the file is in the repo
   root and that you started the assistant from that folder.
 
