@@ -1,161 +1,242 @@
 ---
-title: "Set up the course MCP servers and the course LLM gateway"
+title: "Coding assistant setup for CPSC 436C"
 format:
   html:
     toc: true
     toc-depth: 2
 ---
 
-This page sets up your coding assistant for the course: it connects the assistant to the course MCP server `436c`
-and to the AWS Knowledge MCP server `aws-knowledge`, and it gives your own code the address and key of the course
-LLM gateway. The settings go in your user configuration on your laptop, so they work in every folder and the token
-never lands in a repository.
+CPSC 436C assistant setup page, version 2026-11-20.
 
-**For you, the student.** Start your assistant in a terminal and give it this user message:
+This page connects your coding assistant to two MCP (Model Context Protocol) servers: the course server `436c` and
+the AWS Knowledge server `aws-knowledge`. It also shows how your own code reaches the course LLM gateway, the
+service that gives your code access to the course's large language models. Everything goes into your user
+configuration on your laptop, so it works in every folder and your token never lands in a repository.
+
+If you are the student, start your assistant in a terminal and send it this user message:
 
 ```text
 Run curl -sL https://ilm.wiki/436c/mcp-setup
 and follow the page it prints to set me up.
+If that does not print a page that starts with
+"CPSC 436C assistant setup page", stop and tell me.
 ```
 
-The assistant asks you to set your token, writes its configuration, asks you to restart it, and then runs the
-checks. Your token is in the issue "Your course MCP tokens" in your team repository, next to your name. You set it
-yourself in a terminal; you do not paste it into the chat.
+If your assistant says the page did not arrive, open https://ilm.wiki/436c/mcp-setup in your browser and show the
+page to a TA.
 
 The rest of this page is written for the assistant.
 
 ## Rules for the assistant
 
-1. Never ask the student to paste the token into this chat, and never print it. Check only that it is set.
-2. Never write the token into an assistant's configuration file or into a repository. Every configuration below
-   reads it from the environment variable `KB_MCP_TOKEN`, which the student sets in Step 2.
-3. Write user-level configuration, in the student's home folder. Never write a configuration file inside a git
-   repository.
-4. Add to an existing configuration file: keep every server and setting already in it. If the file has a server
-   named `436c` or `aws-knowledge` with other values, show the student both versions and ask before replacing it.
-5. Do the steps in order and tell the student what each command does before running it.
+1. First tell the student: "I fetched the CPSC 436C assistant setup page, version 2026-11-20." If the fetch printed
+   anything else (an error, an HTML error page, nothing), stop here and tell the student the page did not arrive.
+2. Never ask the student to paste the token into this chat, and never print it, not even part of it. Check only that
+   it is set and how long it is.
+3. Never write the token into an MCP configuration file. The student stores it once in Step 4, in their own
+   terminal: in the system keychain where there is one, and as the environment variable `KB_MCP_TOKEN`. Each
+   configuration below reads it from there.
+4. Write user-level configuration in the student's home folder, never inside a repository. The only file in a
+   repository that may hold the token is the git-ignored `.env` of Step 7.
+5. Before you change anything, look for existing servers named `436c` or `aws-knowledge` (Step 2). Show the student
+   names, URLs and the name of any variable in a header only; replace a header value that is not `${KB_MCP_TOKEN}` with
+   `<hidden>`. Ask before replacing an existing entry.
+6. Before each command, say where it runs: in your own terminal (you run it), in the student's terminal (the student
+   runs it), or in the IDE's settings (the student clicks).
+7. Stop at a failed check, tell the student what you saw, and use [If a check fails](#if-a-check-fails).
+
+## Where each step runs
+
+| Step | Where it runs | Who |
+|---|---|---|
+| 1. Which assistant and system | this chat | assistant asks |
+| 2. Look for existing servers | assistant's terminal | assistant |
+| 3. Write the configuration | assistant's terminal; Kiro IDE settings | assistant; student for Kiro IDE |
+| 4. Set the token | a new terminal of the student's own | student |
+| 5. Restart the assistant | the student's new terminal | student |
+| 6. Check | assistant's terminal and this chat | assistant |
+| 7. Course LLM gateway in your code | the team repository | assistant, then student |
 
 ## Values
 
 | Value | Setting |
 |---|---|
-| Course MCP server `436c` | `https://kb-cloud-students.fly.dev/mcp`, header `Authorization: Bearer <token>` |
-| AWS Knowledge MCP server `aws-knowledge` | `https://knowledge-mcp.global.api.aws`, no token |
-| Course LLM gateway, base URL | `https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1` |
-| Token | environment variable `KB_MCP_TOKEN`; the same token is the API key for the course LLM gateway |
+| Course server `436c` | `https://kb-cloud-students.fly.dev/mcp`, header `Authorization: Bearer <token>` |
+| AWS Knowledge server `aws-knowledge` | `https://knowledge-mcp.global.api.aws`, no token |
+| Course LLM gateway base URL | `https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1` |
+| Token | variable `KB_MCP_TOKEN`, 38 characters, starts with `s436c-`; the same token is the gateway's API key |
 
-## Step 1: find out which assistant you are
+The student's token is in the issue "Your course MCP tokens" in their team repository, next to their name.
 
-Find out which assistant and operating system the student uses: Claude Code, Kiro IDE, Kiro CLI, Codex, or GitHub
-Copilot (in VS Code or the Copilot CLI); macOS, Linux or Windows. If you are not sure, ask the student.
+## Status of each path
 
-## Step 2: the student sets the token
+Each assistant's section says how it was checked:
 
-Ask the student to copy their token from the issue "Your course MCP tokens" in their team repository and to make
-the setting permanent, so that an assistant started from an app icon also sees it. Give the student the commands
-for their system and ask them to run them in their own terminal, replacing `paste-your-token-here` and keeping the
-quotes.
+- **Run on 2026-11-20:** the commands were run on Linux in an empty home folder with a course token, and the output
+  shown is what appeared.
+- **Checked against the vendor's docs, not run:** the step follows the vendor's documentation; a TA confirms it on
+  the first student laptop with the check named in the section.
 
-macOS (zsh):
+| Assistant | Status |
+|---|---|
+| Claude Code | Run on 2026-11-20, configuration and connection, with the Linux keyring and with the variable; macOS keychain checked against the docs, not run |
+| Codex CLI | Configuration run on 2026-11-20; connection checked against the vendor's docs, not run (needs a sign-in) |
+| GitHub Copilot CLI | Configuration run on 2026-11-20; connection checked against the vendor's docs, not run (needs a sign-in) |
+| VS Code with GitHub Copilot | Checked against the vendor's docs, not run |
+| Kiro CLI | Checked against the vendor's docs, not run (every `kiro-cli mcp` command needs a sign-in) |
+| Kiro IDE | Checked against the vendor's docs, not run |
+| Token on Linux (keyring, or the profile without one), bash | Run on 2026-11-20 |
+| Token on macOS (keychain), zsh | Checked against the docs, not run |
+| Token on Windows (user environment), PowerShell | Checked against the docs, not run |
 
-```bash
-echo "export KB_MCP_TOKEN='paste-your-token-here'" \
-  >> ~/.zshrc
-```
+## Step 1: which assistant and system
 
-Linux (bash):
+Ask the student which assistant they use (Claude Code, Codex CLI, GitHub Copilot CLI, VS Code with GitHub Copilot,
+Kiro CLI or Kiro IDE) and which system (macOS, Linux or Windows). If you know which assistant you are, say so and
+ask only about the system. Use only the section for that assistant in Step 3.
 
-```bash
-echo "export KB_MCP_TOKEN='paste-your-token-here'" \
-  >> ~/.bashrc
-```
+## Step 2: look for existing servers
 
-Windows PowerShell:
+In your own terminal, run the command for the student's assistant. It prints the configuration, with headers hidden
+by the tool, or says the server is not there.
 
-```powershell
-setx KB_MCP_TOKEN "paste-your-token-here"
-```
+| Assistant | Command | Not there yet |
+|---|---|---|
+| Claude Code | `claude mcp get 436c` and `claude mcp get aws-knowledge` | `No MCP server named "436c"` |
+| Codex CLI | `codex mcp get 436c` and `codex mcp get aws-knowledge` | `Error: No MCP server named '436c' found.` |
+| Copilot CLI, VS Code | `copilot mcp get 436c` and `copilot mcp get aws-knowledge`, or read `~/.copilot/mcp-config.json` | `Error: Server "436c" not found.` |
+| Kiro CLI, Kiro IDE | read `~/.kiro/settings/mcp.json` | the file or the entry is missing |
 
-The setting applies to terminals and apps opened after it. Ask the student to open a new terminal and run the check
-for their system, which prints `set` without printing the token:
+Also look for a `.mcp.json` (Claude Code, Copilot), `.codex/config.toml` (Codex) or `.kiro/settings/mcp.json` (Kiro)
+in the folder the student works in. A server of the same name there takes precedence over the user configuration
+for that folder. Tell the student, and ask whether to keep it; if they keep it, it must have the same URL and
+`${KB_MCP_TOKEN}` in its header.
 
-```bash
-test -n "$KB_MCP_TOKEN" && echo set
-```
+If a server exists with the values on this page, keep it and say so. If it has other values, show both versions with
+header values hidden (Rule 5) and ask before you replace it.
 
-```powershell
-if ($env:KB_MCP_TOKEN) { "set" }
-```
+## Step 3: write the configuration
 
-## Step 3: write the configuration for your assistant
-
-Write only the section for the student's assistant. On Windows, `~` is the user's home folder, `%USERPROFILE%`.
+Use only the section for the student's assistant. On Windows, run the commands in PowerShell: the single quotes keep
+`${KB_MCP_TOKEN}` as text there too, and `~` means the home folder `$HOME`.
 
 ### Claude Code
 
-Run these two commands. Keep the single quotes around the header: they make Claude Code store the text
-`${KB_MCP_TOKEN}` and read the token when it starts, instead of storing the token itself.
+Status: run on 2026-11-20 (Claude Code 2.1.328) on Linux, with the system keyring and with the variable alone. The
+macOS keychain lookup is checked against the docs, not run. TA check on a Mac: `claude mcp list` shows `436c` as
+`✔ Connected`.
+
+On macOS and Linux, Claude Code gets the header from a small script that it runs at each connection, its
+`headersHelper` ([Claude Code MCP docs](https://code.claude.com/docs/en/mcp)). The script reads the token from the
+system keychain, so Claude Code finds it however it was started; without a keychain entry it uses `KB_MCP_TOKEN`.
+The script holds no token.
+
+1. Create the file `~/.claude/436c-mcp-headers.sh` with this content (create the folder `~/.claude` if it is
+   missing):
+
+   ```sh
+   #!/bin/sh
+   # Prints the Authorization header for the course server 436c.
+   if command -v security >/dev/null 2>&1; then
+     t=$(security find-generic-password -s 436c-mcp -w 2>/dev/null)
+   elif command -v secret-tool >/dev/null 2>&1; then
+     t=$(secret-tool lookup service 436c-mcp 2>/dev/null)
+   fi
+   [ -n "$t" ] || t=$KB_MCP_TOKEN
+   [ -n "$t" ] || exit 1
+   printf '{"Authorization": "Bearer %s"}\n' "$t"
+   ```
+
+2. In your own terminal, add both servers:
+
+   ```bash
+   claude mcp add-json --scope user 436c \
+     '{"type": "http",
+       "url": "https://kb-cloud-students.fly.dev/mcp",
+       "headersHelper": "sh ~/.claude/436c-mcp-headers.sh"}'
+   ```
+
+   ```bash
+   claude mcp add --transport http --scope user \
+     aws-knowledge https://knowledge-mcp.global.api.aws
+   ```
+
+   They print `Added http MCP server 436c to user config` and `Added HTTP MCP server aws-knowledge … to user
+   config`, in `~/.claude.json`. Adding a name that exists prints `MCP server 436c already exists in user config`;
+   to replace it, first run `claude mcp remove 436c -s user`.
+
+On Windows, there is no keychain reader to run, so the header reads the variable instead. Run this in PowerShell
+in place of the `add-json` command; the single quotes keep `${KB_MCP_TOKEN}` as text:
+
+```powershell
+claude mcp add --transport http --scope user 436c https://kb-cloud-students.fly.dev/mcp --header 'Authorization: Bearer ${KB_MCP_TOKEN}'
+```
+
+On Windows, `claude mcp get 436c` then shows `Authorization: Bearer ${KB_MCP_TOKEN}`; anything else means the quotes
+were lost: remove the entry and add it again.
+
+### Codex CLI
+
+Status: configuration run on 2026-11-20 (codex-cli 0.171.0). Connection checked against the
+[Codex MCP docs](https://learn.chatgpt.com/docs/extend/mcp?surface=cli), not run. TA check: `/mcp` in a `codex`
+session lists `436c` and `aws-knowledge` with their tools.
+
+In your own terminal, run these two commands. `codex mcp add` replaces an entry of the same name without asking, so
+do Step 2 first.
 
 ```bash
-claude mcp add --transport http --scope user \
-  436c https://kb-cloud-students.fly.dev/mcp \
+codex mcp add 436c \
+  --url https://kb-cloud-students.fly.dev/mcp \
+  --bearer-token-env-var KB_MCP_TOKEN
+```
+
+```bash
+codex mcp add aws-knowledge \
+  --url https://knowledge-mcp.global.api.aws
+```
+
+Each prints `Added global MCP server '…'.` The second also prints `MCP server may or may not require login`; ignore
+it, because `aws-knowledge` needs no login. They write `~/.codex/config.toml`. Check with `codex mcp list`: the row
+for `436c` shows `KB_MCP_TOKEN` and `Bearer token`. This list does not connect to the servers; Step 6 does.
+
+### GitHub Copilot CLI
+
+Status: configuration run on 2026-11-20 (Copilot CLI 1.0.114). Connection checked against the
+[Copilot CLI MCP docs](https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-mcp-servers),
+not run. TA check: `/mcp show 436c` in a `copilot` session shows the server running with its tools.
+
+In your own terminal, run these two commands, with the single quotes:
+
+```bash
+copilot mcp add --transport http 436c \
+  https://kb-cloud-students.fly.dev/mcp \
   --header 'Authorization: Bearer ${KB_MCP_TOKEN}'
 ```
 
 ```bash
-claude mcp add --transport http --scope user \
-  aws-knowledge https://knowledge-mcp.global.api.aws
+copilot mcp add --transport http aws-knowledge \
+  https://knowledge-mcp.global.api.aws
 ```
 
-In PowerShell, run each command on one line, with the same single quotes. Both servers go into `~/.claude.json`,
-for all the student's folders ([Claude Code MCP](https://code.claude.com/docs/en/mcp)). If the team repository
-already has a `.mcp.json` copied from `.mcp.json.example`, it can stay: it names the same two servers with the same
-settings.
+Each prints `Added server "…"`. They write `~/.copilot/mcp-config.json`. To replace an entry, first run
+`copilot mcp remove 436c`. `copilot mcp get` hides the header as `***`, so check the file itself:
 
-### Kiro IDE and Kiro CLI
-
-Both read `~/.kiro/settings/mcp.json`
-([Kiro MCP configuration](https://kiro.dev/docs/mcp/configuration/#configuration-locations)). Add these two
-servers under `mcpServers`:
-
-```json
-{
-  "mcpServers": {
-    "436c": {
-      "url": "https://kb-cloud-students.fly.dev/mcp",
-      "headers": {
-        "Authorization": "Bearer ${KB_MCP_TOKEN}"
-      }
-    },
-    "aws-knowledge": {
-      "url": "https://knowledge-mcp.global.api.aws"
-    }
-  }
-}
+```bash
+grep -F 'Bearer ${KB_MCP_TOKEN}' ~/.copilot/mcp-config.json
 ```
 
-In the Kiro IDE, the student also adds `KB_MCP_TOKEN` to the approved variables: open Settings, search for
-**Mcp Approved Env Vars** and add `KB_MCP_TOKEN`. Kiro expands only approved variables
-([Kiro environment variables](https://kiro.dev/docs/mcp/configuration/#environment-variables)).
+It prints the header line. If it prints nothing, remove the entry and add it again with the single quotes.
 
-### Codex
+### VS Code with GitHub Copilot
 
-Add these tables to `~/.codex/config.toml`
-([Codex MCP](https://learn.chatgpt.com/docs/extend/mcp?surface=cli)):
+Status: checked against the
+[VS Code MCP configuration reference](https://code.visualstudio.com/docs/copilot/reference/mcp-configuration), not
+run. TA check: in VS Code, the command **Chat: Open Customizations**, then **MCP Servers**, lists `436c` and
+`aws-knowledge` as running.
 
-```toml
-[mcp_servers.436c]
-url = "https://kb-cloud-students.fly.dev/mcp"
-bearer_token_env_var = "KB_MCP_TOKEN"
-
-[mcp_servers.aws-knowledge]
-url = "https://knowledge-mcp.global.api.aws"
-```
-
-### GitHub Copilot (VS Code or Copilot CLI)
-
-Add these two servers under `mcpServers` in `~/.copilot/mcp-config.json`
-([VS Code MCP configuration](https://code.visualstudio.com/docs/agents/reference/mcp-configuration)):
+Copilot in VS Code reads the same user file as the Copilot CLI, `~/.copilot/mcp-config.json`. If the Copilot CLI is
+installed, use the commands of the previous section. Otherwise edit the file yourself: create it if it is missing,
+and add these two entries under `mcpServers`, keeping every other entry:
 
 ```json
 {
@@ -177,92 +258,262 @@ Add these two servers under `mcpServers` in `~/.copilot/mcp-config.json`
 }
 ```
 
-## Step 4: set the course LLM gateway for the student's code
+Write `${KB_MCP_TOKEN}` with the braces: VS Code treats a bare `$KB_MCP_TOKEN` as text. Do not use the profile
+`mcp.json` or `.vscode/mcp.json`: Copilot does not read them directly.
 
-Do this step for every assistant. Course code and Inspect read the gateway from these variables. Give the student
-the lines for their system to run in their own terminal:
+### Kiro CLI and Kiro IDE
 
-macOS (zsh; on Linux, use `~/.bashrc`):
+Status: checked against the [Kiro MCP configuration docs](https://kiro.dev/docs/mcp/configuration/), not run. TA
+check: Kiro CLI, `/mcp` in a `kiro-cli chat` session lists both servers as loaded; Kiro IDE, the **MCP Servers**
+section of the Kiro panel shows both as connected.
+
+Both read `~/.kiro/settings/mcp.json`. `kiro-cli mcp add` cannot set a header, so edit the file yourself: create it
+if it is missing (with the folder `~/.kiro/settings`), and add these two entries under `mcpServers`, keeping every
+other entry:
+
+```json
+{
+  "mcpServers": {
+    "436c": {
+      "url": "https://kb-cloud-students.fly.dev/mcp",
+      "headers": {
+        "Authorization": "Bearer ${KB_MCP_TOKEN}"
+      }
+    },
+    "aws-knowledge": {
+      "url": "https://knowledge-mcp.global.api.aws"
+    }
+  }
+}
+```
+
+Kiro IDE only: ask the student to approve the variable. Kiro IDE expands only approved variables. When Kiro shows a
+security warning that lists `KB_MCP_TOKEN`, the student approves it. Without the warning, the student opens Kiro's
+settings, searches for **Mcp Approved Env Vars** and adds `KB_MCP_TOKEN`.
+
+## Step 4: the student sets the token
+
+Skip this step if the student has set the token before: ask them to open a new terminal and run the check at the end
+of this step. If it prints `set, 38 characters`, go to Step 5.
+
+Ask the student to copy their token from the issue "Your course MCP tokens" and to open a **new terminal window of
+their own**, outside this chat. Give them the block for their system to paste there. Tell them the prompt does not
+show what they paste, and they press Enter once after pasting the token.
+
+macOS or Linux (zsh or bash):
 
 ```bash
-cat >> ~/.zshrc <<'EOF'
-export COURSE_GATEWAY_URL=https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1
-export PROXY_BASE_URL=$COURSE_GATEWAY_URL
-export PROXY_API_KEY=$KB_MCP_TOKEN
-EOF
+{
+  case "$SHELL" in
+    */zsh) rc=~/.zshrc ;;
+    *) rc=~/.bashrc ;;
+  esac
+  printf 'Paste your token, then press Enter: '
+  read -rs KB_MCP_TOKEN
+  echo
+  if command -v security >/dev/null 2>&1 \
+    && security add-generic-password -U -s 436c-mcp -a "$USER" -w "$KB_MCP_TOKEN"; then
+    line='export KB_MCP_TOKEN="$(security find-generic-password -s 436c-mcp -w 2>/dev/null)"'
+    echo "stored in the macOS keychain"
+  elif command -v secret-tool >/dev/null 2>&1 \
+    && printf '%s' "$KB_MCP_TOKEN" | secret-tool store --label="CPSC 436C MCP token" service 436c-mcp 2>/dev/null; then
+    line='export KB_MCP_TOKEN="$(secret-tool lookup service 436c-mcp 2>/dev/null)"'
+    echo "stored in the system keyring"
+  else
+    line="export KB_MCP_TOKEN='$KB_MCP_TOKEN'"
+    echo "no keyring found: stored in $rc"
+  fi
+  touch "$rc"
+  grep -v 'KB_MCP_TOKEN=' "$rc" > "$rc.new"
+  mv "$rc.new" "$rc"
+  echo "$line" >> "$rc"
+  eval "$line"
+  echo "saved, ${#KB_MCP_TOKEN} characters"
+}
 ```
 
-Windows PowerShell, after the token is set and in a new terminal:
+The block stores the token in the macOS keychain, or in the Linux system keyring when there is one, and adds a line
+to the shell profile (`~/.zshrc` or `~/.bashrc`) that looks it up when a terminal opens. Where there is no keyring
+(a Linux server, WSL), it prints `no keyring found` and the profile line holds the token itself: then do not share
+that file or a screenshot of it. Each run replaces the earlier line. The token is typed at a silent prompt, so it
+does not appear on the screen or in the shell's history. Run on 2026-11-20 in bash on Linux, with a keyring and
+without one; the macOS keychain branch and zsh are checked against the docs, not run.
+
+Windows (PowerShell):
 
 ```powershell
-setx COURSE_GATEWAY_URL "https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1"
-setx PROXY_BASE_URL "https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1"
-setx PROXY_API_KEY "$env:KB_MCP_TOKEN"
+& {
+  $s = Read-Host "Paste your token, then press Enter" -AsSecureString
+  $t = [System.Net.NetworkCredential]::new("", $s).Password
+  [Environment]::SetEnvironmentVariable("KB_MCP_TOKEN", $t, "User")
+  "saved, $($t.Length) characters"
+}
 ```
 
-Do not set `OPENAI_API_KEY` or `OPENAI_BASE_URL` for the whole user account: other tools on the laptop read them.
-Set them only in the project's own code or its untracked `.env` file.
+This saves the token in the user's environment, where apps started afterwards find it. Windows Credential Manager
+has no built-in command that reads a token back, so the user environment holds it. Checked against the PowerShell
+docs, not run.
+
+Both print `saved, 38 characters`. Another number means the paste took too little or too much: run the block again.
+
+Then the student opens one more new terminal and runs the check for their system. It prints the length, never the
+token.
+
+```bash
+test -n "$KB_MCP_TOKEN" \
+  && echo "set, ${#KB_MCP_TOKEN} characters" \
+  || echo "not set"
+```
+
+```powershell
+if ($env:KB_MCP_TOKEN) { "set, $($env:KB_MCP_TOKEN.Length) characters" } else { "not set" }
+```
+
+`set, 38 characters` means the setting works. `not set` means stop: see [If a check fails](#if-a-check-fails).
 
 ## Step 5: the student restarts the assistant
 
 An assistant reads its MCP configuration and the environment when it starts. Ask the student to:
 
-1. Quit the assistant fully.
-2. Open a new terminal, or reopen the app, so it reads the token setting.
-3. Start the assistant again: `claude`, `kiro-cli chat` or `codex` in the new terminal, or open the Kiro IDE or
-   VS Code.
-4. Give it this user message:
+1. Quit you fully (close the chat session, or quit the IDE).
+2. In the new terminal from Step 4, start the assistant again:
+
+   | Assistant | Start it with |
+   |---|---|
+   | Claude Code | `claude` |
+   | Codex CLI | `codex` |
+   | Copilot CLI | `copilot` |
+   | Kiro CLI | `kiro-cli chat` |
+   | VS Code with Copilot | `code .` in the terminal, or the app icon |
+   | Kiro IDE | the app icon; if Step 6 then fails with 401, quit it and start it with `kiro .` in the terminal |
+
+3. Send it this user message:
 
    ```text
    Run curl -sL https://ilm.wiki/436c/mcp-setup
    and do Step 6 of the page it prints.
    ```
 
-## Step 6: check both servers and the gateway
+An app started from an icon may not see the shell profile. VS Code reads it at start
+([VS Code FAQ](https://code.visualstudio.com/docs/supporting/faq)); for Kiro IDE this is not documented. On macOS
+and Linux, starting the app from the terminal always passes the token on. On Windows, the user environment of Step 4
+reaches apps started afterwards.
 
-1. **Course MCP server.** Call the `cpsc436c_start_here` tool of the server `436c` and show the student the tool
-   result. Then list the tools of `436c`. The list includes `cpsc436c_search`, `cpsc436c_read`, `cpsc436c_list`
-   and `cpsc436c_start_here`; the older names `query_kb`, `get_kb_doc` and `list_kb_topics` do the same.
-2. **AWS Knowledge MCP server.** List the tools of `aws-knowledge`. The list includes a documentation search tool.
-3. **Where the student sees the connection:**
+## Step 6: check
 
-   | Assistant | Where |
-   |---|---|
-   | Claude Code | `claude mcp list` in a terminal shows `436c` and `aws-knowledge` as `✔ Connected`; `/mcp` in the chat shows their tools |
-   | Kiro IDE | Kiro panel (Kiro icon on the left bar), section **MCP Servers** |
-   | Kiro CLI | `/mcp` in a `kiro-cli chat` session; `kiro-cli mcp list` shows only the servers in the files, not whether they connect |
-   | Codex | `/mcp` in the `codex` chat; `codex mcp list` in a terminal |
-   | Copilot | VS Code: command **Chat: Open Customizations**, then **MCP Servers** |
+Do the checks in order and stop at the first failure.
 
-4. **Course LLM gateway.** Run the command for the student's system. It asks for the list of models and does not
-   call a model.
+1. **Token.** In your own terminal, run the check of Step 4 for the student's system. Expect `set, 38 characters`.
+   `not set` means you were not started from the terminal of Step 4: repeat Step 5.
+2. **Connection.** Use the student's assistant:
+
+   | Assistant | What to run | Works when |
+   |---|---|---|
+   | Claude Code | `claude mcp list` in your terminal, then `grep -c 's436c-' ~/.claude.json` | `436c: … (HTTP) - ✔ Connected` and `aws-knowledge: … - ✔ Connected`; the `grep` prints `0` (no token in the file) |
+   | Codex CLI | the student types `/mcp` in the chat | both servers listed with tools |
+   | Copilot CLI | the student types `/mcp show 436c` in the chat | the server is running and lists tools |
+   | VS Code with Copilot | the student runs **Chat: Open Customizations**, then **MCP Servers** | both servers running |
+   | Kiro CLI | the student types `/mcp` in the chat | both servers loaded |
+   | Kiro IDE | the student opens the Kiro panel, section **MCP Servers** | both servers connected |
+
+3. **Course server tools.** Call the tool `cpsc436c_start_here` of the server `436c` (Claude Code names it
+   `mcp__436c__cpsc436c_start_here`). The assistant may ask the student to allow the call; they allow it. The tool
+   result starts with a `catalog_version` and names the current milestone; show it to the student. The server's
+   tools include `cpsc436c_start_here`, `cpsc436c_search`, `cpsc436c_read` and `cpsc436c_list`.
+4. **AWS Knowledge tools.** The tools of `aws-knowledge` include `aws___search_documentation` and
+   `aws___read_documentation`.
+5. **Course LLM gateway.** In your own terminal, run the command for the system. It asks for the list of models and
+   does not call a model.
 
    ```bash
-   curl -s \
+   curl -sS -w '\nHTTP %{http_code}\n' \
      -H "Authorization: Bearer $KB_MCP_TOKEN" \
      https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1/models
    ```
 
    ```powershell
-   curl.exe -s `
+   curl.exe -sS -w "`nHTTP %{http_code}`n" `
      -H "Authorization: Bearer $env:KB_MCP_TOKEN" `
      https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1/models
    ```
 
-   The reply lists `qwen3.8-27b`, `qwen3.6-35b-a3b` and `qwen3-embedding-0.6b`.
+   It works when the last line is `HTTP 200` and the list includes `qwen3.8-27b`. Run on 2026-11-20.
 
-Tell the student which checks passed. If all passed, the setup is done.
+Tell the student which checks passed. When all pass, the assistant setup is done; do Step 7 if the student's code
+will call the gateway.
+
+## Step 7: course LLM gateway in your code
+
+Your code reads the token from `KB_MCP_TOKEN` and the base URL from `COURSE_GATEWAY_URL`. Started from a terminal of
+Step 4, it already has `KB_MCP_TOKEN`. For scripts started any other way, keep both in a `.env` file in the team
+repository. Run on 2026-11-20 in a test repository.
+
+1. **Assistant, in your terminal, in the team repository:** check that git ignores `.env` before anything is written:
+
+   ```bash
+   git check-ignore -v .env
+   ```
+
+   It prints a line that ends in `.env`. If it prints nothing, add the line `.env` to `.gitignore`, tell the student
+   you did, and run the check again. Do not go on until it prints the line.
+
+2. **Student, in their terminal, in the team repository:** write the file from the variable, so the token is not
+   pasted again:
+
+   ```bash
+   printf 'KB_MCP_TOKEN=%s\nCOURSE_GATEWAY_URL=%s\n' \
+     "$KB_MCP_TOKEN" \
+     https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1 \
+     > .env
+   ```
+
+   On Windows, the student creates `.env` in their editor with the same two lines, `KB_MCP_TOKEN=` followed by the
+   token and `COURSE_GATEWAY_URL=` followed by the base URL.
+
+3. **Assistant:** run `git status --short`. The list does not include `.env`. Do not open or print `.env`.
+
+4. **Code** reads both values from the environment, for example in Python:
+
+   ```python
+   import os
+   from openai import OpenAI
+
+   client = OpenAI(
+       base_url=os.environ["COURSE_GATEWAY_URL"],
+       api_key=os.environ["KB_MCP_TOKEN"],
+   )
+   ```
+
+5. **Run** it with the file:
+
+   ```bash
+   uv run --env-file .env python your_script.py
+   ```
+
+MCP clients do not read `.env`: the assistant's servers keep using the variable of Step 4. A new token means updating
+both places: run the block of Step 4 again (it replaces the keychain entry and the profile line) and write `.env`
+again with step 2.
 
 ## If a check fails
 
 | What you see | What to do |
 |---|---|
-| `436c` failed with `HTTP 401` or `invalid_token`; the gateway replies `missing or malformed API key` | The token did not reach the assistant, or it is not the student's current token. Ask the student to copy the token again from "Your course MCP tokens" and to set it again as in Step 2: in `~/.zshrc` or `~/.bashrc`, replace the old `export KB_MCP_TOKEN` line in their editor; on Windows, run `setx KB_MCP_TOKEN` and `setx PROXY_API_KEY` again with the new token. Then repeat Step 5. The server's message about clearing authentication and re-registering does not apply: the course server uses this token only |
-| Claude Code warns `Missing environment variables: KB_MCP_TOKEN` | The assistant was started before the token was set. Repeat Step 5 |
-| Kiro warns that `KB_MCP_TOKEN` is not approved | Add it under **Mcp Approved Env Vars** (Step 3, Kiro), then restart Kiro |
-| Kiro CLI: `/mcp` lists neither server, but `kiro-cli mcp list` shows them | The agent in the chat may not include the MCP files. In its agent configuration, `includeMcpJson` must be `true` ([Kiro agent configuration](https://kiro.dev/docs/custom-agents/configuration-reference/)). Ask a TA if it is |
-| `aws-knowledge` fails as well | The laptop cannot reach the internet from the assistant. Try without the VPN, or ask a TA about the network |
-| `could not resolve host` for `ilm.wiki` | Use the page's address instead: `https://raw.githubusercontent.com/cpsc436c-2026w1/lecture-reviews/main/assistant-setup.qmd` |
+| The fetch printed an error, an HTML page or nothing | Stop. The student opens https://ilm.wiki/436c/mcp-setup in a browser and shows a TA |
+| `not set` in Step 4 or Step 6 | Step 4: the block did not save the token; run it again in a new terminal. Step 6: the assistant was not started from that terminal; repeat Step 5 |
+| `saved, N characters` with N other than 38 | The paste was incomplete or included extra text. Run the block of Step 4 again |
+| Claude Code: `Missing environment variables: KB_MCP_TOKEN` | The assistant started without the token. Repeat Step 5 |
+| `436c` fails with `HTTP 401` or `invalid_token`; the gateway replies `HTTP 401` with `unknown API key` | The token is set but wrong or out of date. The student copies it again from "Your course MCP tokens" and runs the block of Step 4 again, then Step 5. Ignore the server's advice about clearing authentication: the course server uses this token only |
+| Gateway replies `HTTP 401` with `missing or malformed API key` | The command ran without the token. Do check 1 of Step 6 |
+| Gateway replies `HTTP 429` | The key's rate limit was reached; wait a minute and run the check again |
+| Claude Code: `436c` fails with `Dynamic Client Registration rejected (HTTP 404)` | The header script found no token: neither the keychain entry nor `KB_MCP_TOKEN`. Run the block of Step 4 again, then Step 5 |
+| macOS shows a dialog asking to allow access to the keychain item `436c-mcp` | Choose **Always Allow** |
+| `claude mcp get 436c` (Windows) or the Copilot file shows a token instead of `${KB_MCP_TOKEN}` | Remove the entry, add it again with the single quotes, and ask the student to get a new token from a TA, since the old one was written to a file |
+| A server is missing from the list, or the assistant has no course tools | The assistant read its configuration before Step 3. Repeat Step 5 |
+| Kiro IDE warns that `KB_MCP_TOKEN` is not approved | Add it under **Mcp Approved Env Vars** (Step 3, Kiro), then restart Kiro |
+| Kiro CLI: `/mcp` lists neither server | Check that `~/.kiro/settings/mcp.json` is valid JSON with both entries, then restart `kiro-cli chat`. If they still do not appear, show a TA |
+| Kiro IDE or VS Code started from the icon fails with 401, the terminal check says `set` | The app did not see the shell profile. Quit it and start it from the terminal: `kiro .` or `code .` |
+| Only `436c` fails, `aws-knowledge` works, not a 401 | The network blocks the course server; try without the VPN, or show a TA |
+| Both servers fail | The assistant cannot reach the internet; try without the VPN, or show a TA |
 
-If a fix does not work, stop and ask the student to show the output to a TA. Do not put the token into a
+If a fix does not work, stop and ask the student to show the output to a TA. Never put the token into an MCP
 configuration file to make a check pass.
