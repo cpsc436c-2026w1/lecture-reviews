@@ -733,7 +733,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><code>-p</code> runs a single prompt non-interactively and prints the response.</li>
 <li>Tools are named <code>mcp__&lt;server&gt;__&lt;tool&gt;</code>. <code>--allowedTools "mcp__aws-knowledge"</code> approves every tool from this server without asking. It does not stop the assistant from trying other tools.</li>
-<li>To allow a single tool, use its full name exactly as <code>/mcp</code> shows it, for example <code>mcp__aws-knowledge__search_documentation</code>. Some versions of the server add a prefix to tool names, so copy the name rather than guessing it.</li>
+<li>To allow a single tool, use its full name exactly as <code>/mcp</code> shows it, for example <code>mcp__aws-knowledge__aws___search_documentation</code>. Copy the name from <code>/mcp</code> rather than guessing it.</li>
 </ul>
 </section>
 <section id="kiro-cli-call-a-specific-mcp-tool" class="level4" data-number="6.6.2">
@@ -788,11 +788,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Watch which tools it calls.</p></li>
 </ol>
 <p>Run it with your own token, never another member’s. The course MCP server records each call under your token; you hand in nothing for it.</p>
-<p><strong>It passes when</strong> the assistant calls <code>get_kb_doc</code> on <code>436c-student/index.md</code> without you giving it the path, and then summarizes the course pages the start page lists. The path comes from <code>AGENTS.md</code>, so a pass shows that the assistant read the file and that it can reach the course server.</p>
+<p><strong>It passes when</strong> the assistant calls <code>cpsc436c_start_here</code> (or <code>get_kb_doc</code> on <code>436c-student/index.md</code>, an older name that still works) without you giving it the path, and then summarizes the course pages the start page lists. The path comes from <code>AGENTS.md</code>, so a pass shows that the assistant read the file and that it can reach the course server.</p>
 <p><strong>If it fails:</strong></p>
 <ul>
-<li><em>It does not call <code>get_kb_doc</code> at all:</em> the course server is not connected. Check that <code>.mcp.json</code> (Claude Code) or <code>.kiro/settings/mcp.json</code> (Kiro) exists, and that your token is set in your shell.</li>
-<li><em>It calls the tool but the call errors:</em> check the server URL and the token. Your token is in the issue “Your course MCP tokens” in your course repository.</li>
+<li><em>It does not call a course tool at all:</em> the course server is not connected. Check that <code>.mcp.json</code> (Claude Code) or <code>.kiro/settings/mcp.json</code> (Kiro) exists, and that your token is set in your shell.</li>
+<li><em>It calls the tool but the call errors:</em> check the server URL and the token. Your token is in the issue “Your course MCP tokens” in your team repository.</li>
 <li><em>It asks you for the path, or guesses another one:</em> it did not read <code>AGENTS.md</code>. Check that the file is in the repo root and that you started the assistant from that folder.</li>
 </ul>
 

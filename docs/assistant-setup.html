@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.20">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Coding assistant setup for CPSC 436C – CPSC 436C companion</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-17888a1159294d3eb470f19f6f52f5a5.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-9b4f01e8f4456798517379425c73b574.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">CPSC 436C companion</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lecture-reviews" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Lecture reviews</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-lecture-reviews">    
+        <li>
+    <a class="dropdown-item" href="./index.html">
+ <span class="dropdown-text">All reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l1.html">
+ <span class="dropdown-text">L1: the four resources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l2.html">
+ <span class="dropdown-text">L2: EC2, S3 and Lambda</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l3.html">
+ <span class="dropdown-text">L3: cost models and what starts a function</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l4.html">
+ <span class="dropdown-text">L4: scaling up and out</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l5.html">
+ <span class="dropdown-text">L5: Spark on a cluster</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./w2-l6.html">
+ <span class="dropdown-text">L6: how Spark runs a query</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l10.html">
+ <span class="dropdown-text">L10: lakes, lakehouses and query engines</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l11.html">
+ <span class="dropdown-text">L11: assembling the lakehouse in Athena and Glue</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l12.html">
+ <span class="dropdown-text">L12: DynamoDB as OLTP storage, distributed database problems and properties</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l13.html">
+ <span class="dropdown-text">L13: netsplit and CAP, data latency (freshness)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l14.html">
+ <span class="dropdown-text">L14: message brokers, delivery guarantees and event-time windows</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l15.html">
+ <span class="dropdown-text">L15: generative AI in a data app</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l16.html">
+ <span class="dropdown-text">L16: principles of cloud design for a user-facing GenAI app</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l17.html">
+ <span class="dropdown-text">L17: retrieval, memory and agent patterns in the cloud</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l18.html">
+ <span class="dropdown-text">L18: planning and bounded agents in the cloud</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./midterm-review.html">
+ <span class="dropdown-text">Midterm review</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutorials" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tutorials</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tutorials">    
+        <li>
+    <a class="dropdown-item" href="./tutorials.html">
+ <span class="dropdown-text">All tutorials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#emr-cluster">
+ <span class="dropdown-text">B2T1: Cluster/EMR</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#glue-part-a">
+ <span class="dropdown-text">B2T2 part A: Spark/Glue, how Spark reads files</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#glue-part-b">
+ <span class="dropdown-text">B2T2 part B: Spark/Glue, slow queries and their fixes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#b3-t1">
+ <span class="dropdown-text">B3T1: Lakehouse/Athena+Glue</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#b5-t1">
+ <span class="dropdown-text">B5T1: Course MCP and prompt evaluation</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-project" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Project</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-project">    
+        <li>
+    <a class="dropdown-item" href="./project-start.html">
+ <span class="dropdown-text">Course project</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-proposal.html">
+ <span class="dropdown-text">Setup and proposal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-datasets.html">
+ <span class="dropdown-text">Project datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-experiments.html">
+ <span class="dropdown-text">Experiment examples</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-startup.html">
+ <span class="dropdown-text">Project setup</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-case-example.html">
+ <span class="dropdown-text">Proposal example</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-checkpoint1.html">
+ <span class="dropdown-text">Checkpoint 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-behave.html">
+ <span class="dropdown-text">Behave for your project</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-mcp-scenarios.html">
+ <span class="dropdown-text">Course server with your assistant</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-assignments" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Assignments</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-assignments">    
+        <li>
+    <a class="dropdown-item" href="https://cpsc436c-2026w1.github.io/a1-starter/">
+ <span class="dropdown-text">A1 starter</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://cpsc436c-2026w1.github.io/a2-starter/">
+ <span class="dropdown-text">A2 starter</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://cpsc436c-2026w1.github.io/a3-starter/">
+ <span class="dropdown-text">A3 starter</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#rules-for-the-assistant" id="toc-rules-for-the-assistant" class="nav-link active" data-scroll-target="#rules-for-the-assistant">Rules for the assistant</a></li>
+  <li><a href="#where-each-step-runs" id="toc-where-each-step-runs" class="nav-link" data-scroll-target="#where-each-step-runs">Where each step runs</a></li>
+  <li><a href="#values" id="toc-values" class="nav-link" data-scroll-target="#values">Values</a></li>
+  <li><a href="#status-of-each-path" id="toc-status-of-each-path" class="nav-link" data-scroll-target="#status-of-each-path">Status of each path</a></li>
+  <li><a href="#step-1-which-assistant-and-system" id="toc-step-1-which-assistant-and-system" class="nav-link" data-scroll-target="#step-1-which-assistant-and-system">Step 1: which assistant and system</a></li>
+  <li><a href="#step-2-look-for-existing-servers" id="toc-step-2-look-for-existing-servers" class="nav-link" data-scroll-target="#step-2-look-for-existing-servers">Step 2: look for existing servers</a></li>
+  <li><a href="#step-3-write-the-configuration" id="toc-step-3-write-the-configuration" class="nav-link" data-scroll-target="#step-3-write-the-configuration">Step 3: write the configuration</a></li>
+  <li><a href="#step-4-the-student-sets-the-token" id="toc-step-4-the-student-sets-the-token" class="nav-link" data-scroll-target="#step-4-the-student-sets-the-token">Step 4: the student sets the token</a></li>
+  <li><a href="#step-5-the-student-restarts-the-assistant" id="toc-step-5-the-student-restarts-the-assistant" class="nav-link" data-scroll-target="#step-5-the-student-restarts-the-assistant">Step 5: the student restarts the assistant</a></li>
+  <li><a href="#step-6-check" id="toc-step-6-check" class="nav-link" data-scroll-target="#step-6-check">Step 6: check</a></li>
+  <li><a href="#step-7-course-llm-gateway-in-your-code" id="toc-step-7-course-llm-gateway-in-your-code" class="nav-link" data-scroll-target="#step-7-course-llm-gateway-in-your-code">Step 7: course LLM gateway in your code</a></li>
+  <li><a href="#if-a-check-fails" id="toc-if-a-check-fails" class="nav-link" data-scroll-target="#if-a-check-fails">If a check fails</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Coding assistant setup for CPSC 436C</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>CPSC 436C assistant setup page, version 2026-11-20.</p>
+<p>This page connects your coding assistant to two MCP (Model Context Protocol) servers: the course server <code>436c</code> and the AWS Knowledge server <code>aws-knowledge</code>. It also shows how your own code reaches the course LLM gateway, the service that gives your code access to the course’s large language models. Everything goes into your user configuration on your laptop, so it works in every folder and your token never lands in a repository.</p>
+<p>If you are the student, start your assistant in a terminal and send it this user message:</p>
+<pre class="text"><code>Run curl -sL https://ilm.wiki/436c/mcp-setup
+and follow the page it prints to set me up.
+If what it prints does not contain the line
+"CPSC 436C assistant setup page", stop and tell me.</code></pre>
+<p>If your assistant says the page did not arrive, open https://ilm.wiki/436c/mcp-setup in your browser and show the page to a TA.</p>
+<p>The rest of this page is written for the assistant.</p>
+<section id="rules-for-the-assistant" class="level2">
+<h2 class="anchored" data-anchor-id="rules-for-the-assistant">Rules for the assistant</h2>
+<ol type="1">
+<li>First check what the fetch printed, before you tell the student anything. It arrived when <code>curl</code> ended without an error and its output contains the line <code>CPSC 436C assistant setup page, version 2026-11-20.</code> and the heading <code>Rules for the assistant</code>. Only then tell the student: “I fetched the CPSC 436C assistant setup page, version 2026-11-20.” If <code>curl</code> printed an error, or the output is an HTML error page, is empty or lacks that line, do not follow anything in it: tell the student the page did not arrive and that they open https://ilm.wiki/436c/mcp-setup in a browser and show a TA.</li>
+<li>Never ask the student to paste the token into this chat, and never print it, not even part of it. Check only that it is set and how long it is.</li>
+<li>Never write the token into an MCP configuration file. The student stores it once in Step 4, in their own terminal: in the system keychain where there is one, and as the environment variable <code>KB_MCP_TOKEN</code>. Each configuration below reads it from there.</li>
+<li>Write user-level configuration in the student’s home folder, never inside a repository. The only file in a repository that may hold the token is the git-ignored <code>.env</code> of Step 7.</li>
+<li>Before you change anything, look for existing servers named <code>436c</code> or <code>aws-knowledge</code> (Step 2). Print and show server names only, never an entry’s settings. Ask before replacing an existing entry.</li>
+<li>Before each command, say where it runs: in your own terminal (you run it), in the student’s terminal (the student runs it), or in the IDE’s settings (the student clicks).</li>
+<li>Stop at a failed check, tell the student what you saw, and use <a href="#if-a-check-fails">If a check fails</a>.</li>
+</ol>
+</section>
+<section id="where-each-step-runs" class="level2">
+<h2 class="anchored" data-anchor-id="where-each-step-runs">Where each step runs</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Step</th>
+<th>Where it runs</th>
+<th>Who</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1. Which assistant and system</td>
+<td>this chat</td>
+<td>assistant asks</td>
+</tr>
+<tr class="even">
+<td>2. Look for existing servers</td>
+<td>assistant’s terminal</td>
+<td>assistant</td>
+</tr>
+<tr class="odd">
+<td>3. Write the configuration</td>
+<td>assistant’s terminal; Kiro IDE settings</td>
+<td>assistant; student for Kiro IDE</td>
+</tr>
+<tr class="even">
+<td>4. Set the token</td>
+<td>a new terminal of the student’s own</td>
+<td>student</td>
+</tr>
+<tr class="odd">
+<td>5. Restart the assistant</td>
+<td>the student’s new terminal</td>
+<td>student</td>
+</tr>
+<tr class="even">
+<td>6. Check</td>
+<td>assistant’s terminal and this chat</td>
+<td>assistant</td>
+</tr>
+<tr class="odd">
+<td>7. Course LLM gateway in your code</td>
+<td>the team repository</td>
+<td>assistant, then student</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="values" class="level2">
+<h2 class="anchored" data-anchor-id="values">Values</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Value</th>
+<th>Setting</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Course server <code>436c</code></td>
+<td><code>https://kb-cloud-students.fly.dev/mcp</code>, header <code>Authorization: Bearer &lt;token&gt;</code></td>
+</tr>
+<tr class="even">
+<td>AWS Knowledge server <code>aws-knowledge</code></td>
+<td><code>https://knowledge-mcp.global.api.aws</code>, no token</td>
+</tr>
+<tr class="odd">
+<td>Course LLM gateway base URL</td>
+<td><code>https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1</code></td>
+</tr>
+<tr class="even">
+<td>Token</td>
+<td>variable <code>KB_MCP_TOKEN</code>, 38 characters, starts with <code>s436c-</code>; the same token is the gateway’s API key</td>
+</tr>
+</tbody>
+</table>
+<p>The student’s token is in the issue “Your course MCP tokens” in their team repository, next to their name.</p>
+</section>
+<section id="status-of-each-path" class="level2">
+<h2 class="anchored" data-anchor-id="status-of-each-path">Status of each path</h2>
+<p>Each assistant’s section says how it was checked:</p>
+<ul>
+<li><strong>Run on 2026-11-20:</strong> the commands were run on Linux in an empty home folder with a course token, and the output shown is what appeared.</li>
+<li><strong>Checked against the vendor’s docs, not run:</strong> the step follows the vendor’s documentation; a TA confirms it on the first student laptop with the check named in the section.</li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Assistant</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Claude Code</td>
+<td>Run on 2026-11-20, configuration and connection, with the Linux keyring and with the variable; macOS keychain checked against the docs, not run</td>
+</tr>
+<tr class="even">
+<td>Codex CLI</td>
+<td>Configuration run on 2026-11-20; connection checked against the vendor’s docs, not run (needs a sign-in)</td>
+</tr>
+<tr class="odd">
+<td>GitHub Copilot CLI</td>
+<td>Configuration run on 2026-11-20; connection checked against the vendor’s docs, not run (needs a sign-in)</td>
+</tr>
+<tr class="even">
+<td>VS Code with GitHub Copilot</td>
+<td>Checked against the vendor’s docs, not run</td>
+</tr>
+<tr class="odd">
+<td>Kiro CLI</td>
+<td>Checked against the vendor’s docs, not run (every <code>kiro-cli mcp</code> command needs a sign-in)</td>
+</tr>
+<tr class="even">
+<td>Kiro IDE</td>
+<td>Checked against the vendor’s docs, not run</td>
+</tr>
+<tr class="odd">
+<td>Token on Linux (keyring, or the profile without one), bash</td>
+<td>Run on 2026-11-20</td>
+</tr>
+<tr class="even">
+<td>Token on macOS (keychain), zsh</td>
+<td>Checked against the docs, not run</td>
+</tr>
+<tr class="odd">
+<td>Token on Windows (user environment), PowerShell</td>
+<td>Checked against the docs, not run</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="step-1-which-assistant-and-system" class="level2">
+<h2 class="anchored" data-anchor-id="step-1-which-assistant-and-system">Step 1: which assistant and system</h2>
+<p>Ask the student which assistant they use (Claude Code, Codex CLI, GitHub Copilot CLI, VS Code with GitHub Copilot, Kiro CLI or Kiro IDE) and which system (macOS, Linux or Windows). If you know which assistant you are, say so and ask only about the system. Use only the section for that assistant in Step 3.</p>
+</section>
+<section id="step-2-look-for-existing-servers" class="level2">
+<h2 class="anchored" data-anchor-id="step-2-look-for-existing-servers">Step 2: look for existing servers</h2>
+<p>In your own terminal, list only the names of the servers the student’s assistant already has. Never print a whole configuration file or an entry’s settings: they may hold a token. Do not run <code>claude mcp get</code>, because it prints header values as they are.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Assistant</th>
+<th>Names command</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Claude Code</td>
+<td>the Claude Code command below</td>
+</tr>
+<tr class="even">
+<td>Codex CLI</td>
+<td>the Codex command below</td>
+</tr>
+<tr class="odd">
+<td>Copilot CLI, VS Code with Copilot</td>
+<td>the JSON command below with <code>~/.copilot/mcp-config.json</code></td>
+</tr>
+<tr class="even">
+<td>Kiro CLI, Kiro IDE</td>
+<td>the JSON command below with <code>~/.kiro/settings/mcp.json</code></td>
+</tr>
+</tbody>
+</table>
+<p>Claude Code, macOS or Linux (your terminal). <code>claude mcp list</code> prints one line per server, its name first; the command keeps the name only:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">names</span><span class="op">=</span><span class="va">$(</span><span class="ex">claude</span> mcp list <span class="dv">2</span><span class="op">&gt;</span>/dev/null<span class="va">)</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">printf</span> <span class="st">'%s\n'</span> <span class="st">"</span><span class="va">$names</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">sed</span> <span class="at">-n</span> <span class="at">-E</span> <span class="st">'s/^([A-Za-z0-9_.-]+): .*/\1/p'</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"name listing failed: stop and ask a TA"</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Windows (your PowerShell terminal; checked against the docs, not run):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(-not</span> <span class="op">(</span><span class="fu">Get-Command</span> claude <span class="op">-</span>ErrorAction SilentlyContinue<span class="op">))</span> <span class="op">{</span> <span class="st">"name listing failed: stop and ask a TA"</span> <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span> <span class="va">$rows</span> <span class="op">=</span> claude mcp list <span class="dv">2</span><span class="op">&gt;</span><span class="va">$null</span><span class="op">;</span> <span class="cf">if</span> <span class="op">(</span><span class="va">$LASTEXITCODE</span> <span class="op">-ne</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span> <span class="st">"name listing failed: stop and ask a TA"</span> <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span> <span class="va">$rows</span> <span class="op">|</span> <span class="fu">ForEach-Object</span> <span class="op">{</span> <span class="cf">if</span> <span class="op">(</span><span class="st">"</span><span class="va">$_</span><span class="st">"</span> <span class="op">-match</span> <span class="st">'^([A-Za-z0-9_.-]+): '</span><span class="op">)</span> <span class="op">{</span> <span class="va">$Matches</span><span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">}</span> <span class="op">}</span> <span class="op">}</span> <span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Codex CLI, macOS or Linux (your terminal):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">codex</span> mcp list <span class="at">--json</span> <span class="dv">2</span><span class="op">&gt;</span>/dev/null <span class="kw">|</span> <span class="ex">python3</span> <span class="at">-c</span> <span class="st">'import json,sys; [print(s["name"]) for s in json.load(sys.stdin)]'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Windows (your PowerShell terminal; checked against the docs, not run):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">(</span>codex mcp list <span class="op">--</span>json <span class="dv">2</span><span class="op">&gt;</span><span class="va">$null</span> <span class="op">|</span> <span class="fu">ConvertFrom-Json</span><span class="op">).</span><span class="fu">name</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The JSON command prints the keys of <code>mcpServers</code> and <code>servers</code> and nothing else. Set <code>f</code> to the file first.</p>
+<p>macOS or Linux (your terminal):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="va">f</span><span class="op">=</span>~/.copilot/mcp-config.json</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-f</span> <span class="st">"</span><span class="va">$f</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="ex">python3</span> <span class="at">-c</span> <span class="st">'import json,sys; d=json.load(open(sys.argv[1])); [print(n) for k in ("mcpServers","servers") for n in (d.get(k) or {})]'</span> <span class="st">"</span><span class="va">$f</span><span class="st">"</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"no file"</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Windows (your PowerShell terminal; checked against the docs, not run):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="va">$f</span> <span class="op">=</span> <span class="st">"</span><span class="va">$HOME</span><span class="st">\.copilot\mcp-config.json"</span><span class="op">;</span> <span class="cf">if</span> <span class="op">(</span><span class="fu">Test-Path</span> <span class="va">$f</span><span class="op">)</span> <span class="op">{</span> <span class="va">$d</span> <span class="op">=</span> <span class="fu">Get-Content</span> <span class="va">$f</span> <span class="op">-</span>Raw <span class="op">|</span> <span class="fu">ConvertFrom-Json</span><span class="op">;</span> <span class="va">$d</span><span class="op">.</span><span class="fu">mcpServers</span><span class="op">.</span><span class="fu">PSObject</span><span class="op">.</span><span class="fu">Properties</span><span class="op">.</span><span class="fu">Name</span><span class="op">;</span> <span class="va">$d</span><span class="op">.</span><span class="fu">servers</span><span class="op">.</span><span class="fu">PSObject</span><span class="op">.</span><span class="fu">Properties</span><span class="op">.</span><span class="fu">Name</span> <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span> <span class="st">"no file"</span> <span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Then look in the folder the student works in, since a server of the same name there takes precedence over the user configuration in that folder: <code>.mcp.json</code> (Claude Code, Copilot) and <code>.kiro/settings/mcp.json</code> (Kiro) with the JSON command, and <code>.codex/config.toml</code> (Codex) with this command, which reads that file through Codex itself (macOS or Linux):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">[</span> <span class="ot">-f</span> .codex/config.toml <span class="bu">]</span> <span class="kw">&amp;&amp;</span> <span class="va">CODEX_HOME</span><span class="op">=</span><span class="st">"</span><span class="va">$PWD</span><span class="st">/.codex"</span> <span class="ex">codex</span> mcp list <span class="at">--json</span> <span class="dv">2</span><span class="op">&gt;</span>/dev/null <span class="dt">\</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">|</span> <span class="ex">python3</span> <span class="at">-c</span> <span class="st">'import json,sys; [print(s["name"]) for s in json.load(sys.stdin)]'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Windows: <code>if (Test-Path .codex\config.toml) { $env:CODEX_HOME = "$PWD\.codex"; (codex mcp list --json 2&gt;$null | ConvertFrom-Json).name; Remove-Item Env:CODEX_HOME }</code> (checked against the docs, not run).</p>
+<p>If a Codex names command prints an error (such as <code>JSONDecodeError</code>) instead of names, Codex could not read that configuration: stop and ask a TA.</p>
+<p>A folder file that git tracks belongs to the whole team: never change it. Check each folder file you found with <code>git ls-files --error-unmatch &lt;file&gt;</code> (it prints the name when git tracks the file). For a tracked file:</p>
+<ul>
+<li>If <code>grep -c 's436c-' &lt;file&gt;</code> prints a number above 0, a token is written in the team’s repository. Stop, tell the student the file name (not its contents), and ask them to tell a TA: that token has to be replaced.</li>
+<li>Otherwise leave the file as it is and look only at the user configuration in what follows. Its <code>436c</code> entry may override the user entry in that folder, so Step 6’s checks run in that team folder too. If the course server fails there while it works in the home folder, tell the student which tracked file overrides it (the name only) and ask them to raise it with their team or a TA. Do not edit the file.</li>
+</ul>
+<p>If neither <code>436c</code> nor <code>aws-knowledge</code> is printed anywhere, go on to Step 3. If either is, do not look at its settings. Tell the student: “I will replace your existing 436c and aws-knowledge entries with the course settings.” Name the files or folder where you found them, and ask yes or no.</p>
+<ul>
+<li><strong>No:</strong> stop the setup and suggest the student asks a TA.</li>
+<li><strong>Yes:</strong> remove both names from the user configuration and from folder files that git does not track, with the commands below, then list the names again to see that they are gone, and do Step 3. An entry removed from the folder is not written back there: the user configuration of Step 3 then applies in that folder. After Step 5, Step 6 checks the result.</li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Where</th>
+<th>Remove <code>436c</code> (then the same with <code>aws-knowledge</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Claude Code</td>
+<td><code>claude mcp remove 436c</code>. If it says the server exists in more than one scope, run each <code>claude mcp remove 436c -s …</code> command it prints</td>
+</tr>
+<tr class="even">
+<td>Codex CLI</td>
+<td><code>codex mcp remove 436c</code></td>
+</tr>
+<tr class="odd">
+<td>Codex, the folder’s <code>.codex/config.toml</code></td>
+<td><code>CODEX_HOME="$PWD/.codex" codex mcp remove 436c</code> (Windows: set <code>$env:CODEX_HOME</code> as above first, and remove it after)</td>
+</tr>
+<tr class="even">
+<td>Copilot CLI</td>
+<td><code>copilot mcp remove 436c</code></td>
+</tr>
+<tr class="odd">
+<td>A JSON file (VS Code, Kiro, a folder’s <code>.mcp.json</code> or <code>.kiro/settings/mcp.json</code>)</td>
+<td>the JSON removal below</td>
+</tr>
+</tbody>
+</table>
+<p>Codex rewrites the folder’s <code>.codex/config.toml</code> with mode 600 and may add an empty folder <code>.codex/mcp-oauth-locks</code>, which git does not track. Both are expected.</p>
+<p>The JSON removal deletes the keys <code>436c</code> and <code>aws-knowledge</code> from <code>mcpServers</code> and <code>servers</code>, keeps every other key, and writes the same file in place, so its mode stays. If the file cannot be read as JSON, it changes nothing and prints the error: stop and ask a TA. On Windows, if serialization warns or fails, do not write the file; stop and ask a TA. Set <code>f</code> to the file first.</p>
+<p>macOS or Linux (your terminal):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="va">f</span><span class="op">=</span>~/.copilot/mcp-config.json</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-</span> <span class="st">"</span><span class="va">$f</span><span class="st">"</span> <span class="op">&lt;&lt;'PY'</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="st">import json, sys</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="st">f = sys.argv[1]</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="st">d = json.load(open(f))</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="st">for k in ("mcpServers", "servers"):</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="st">    if isinstance(d.get(k), dict):</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="st">        for n in ("436c", "aws-knowledge"):</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="st">            d[k].pop(n, None)</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="st">s = json.dumps(d, indent=2) + "\n"</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="st">with open(f, "r+") as fh:</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="st">    fh.seek(0); fh.write(s); fh.truncate()</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="st">print("removed")</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="op">PY</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Windows (your PowerShell terminal; checked against the docs, not run). Use PowerShell 7.1 or newer; older versions can silently truncate nested settings. If it is unavailable, or serialization warns or fails, do not write the file; stop and ask a TA.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span><span class="va">$PSVersionTable</span><span class="op">.</span><span class="fu">PSVersion</span> <span class="op">-lt</span> <span class="op">[</span>version<span class="op">]</span><span class="st">'7.1'</span><span class="op">)</span> <span class="op">{</span> <span class="cf">throw</span> <span class="st">'PowerShell 7.1+ required for safe JSON removal; stop and ask a TA'</span> <span class="op">};</span> <span class="va">$f</span> <span class="op">=</span> <span class="st">"</span><span class="va">$HOME</span><span class="st">\.copilot\mcp-config.json"</span><span class="op">;</span> <span class="va">$d</span> <span class="op">=</span> <span class="fu">Get-Content</span> <span class="va">$f</span> <span class="op">-</span>Raw <span class="op">|</span> <span class="fu">ConvertFrom-Json</span><span class="op">;</span> <span class="cf">foreach</span> <span class="op">(</span><span class="va">$k</span> <span class="kw">in</span> <span class="st">'mcpServers'</span><span class="op">,</span> <span class="st">'servers'</span><span class="op">)</span> <span class="op">{</span> <span class="cf">if</span> <span class="op">(</span><span class="va">$d</span><span class="op">.</span><span class="va">$k</span><span class="op">)</span> <span class="op">{</span> <span class="va">$d</span><span class="op">.</span><span class="va">$k</span><span class="op">.</span><span class="fu">PSObject</span><span class="op">.</span><span class="fu">Properties</span><span class="op">.</span><span class="fu">Remove</span><span class="op">(</span><span class="st">'436c'</span><span class="op">);</span> <span class="va">$d</span><span class="op">.</span><span class="va">$k</span><span class="op">.</span><span class="fu">PSObject</span><span class="op">.</span><span class="fu">Properties</span><span class="op">.</span><span class="fu">Remove</span><span class="op">(</span><span class="st">'aws-knowledge'</span><span class="op">)</span> <span class="op">}</span> <span class="op">};</span> <span class="op">[</span>IO<span class="op">.</span><span class="fu">File</span><span class="op">]::</span>WriteAllText<span class="op">(</span><span class="va">$f</span><span class="op">,</span> <span class="op">(</span><span class="va">$d</span> <span class="op">|</span> <span class="fu">ConvertTo-Json</span> <span class="op">-</span>Depth <span class="dv">100</span> <span class="op">-</span>WarningAction Stop<span class="op">));</span> <span class="st">"removed"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="step-3-write-the-configuration" class="level2">
+<h2 class="anchored" data-anchor-id="step-3-write-the-configuration">Step 3: write the configuration</h2>
+<p>Use only the section for the student’s assistant. The multi-line commands are for bash or zsh on macOS and Linux. On Windows, use the single-line block labelled Windows (PowerShell) instead: PowerShell does not continue a line with <code>\</code>. The single quotes keep <code>${KB_MCP_TOKEN}</code> as text there too, and <code>~</code> means the home folder <code>$HOME</code>. The Windows blocks are checked against the docs, not run.</p>
+<section id="claude-code" class="level3">
+<h3 class="anchored" data-anchor-id="claude-code">Claude Code</h3>
+<p>Status: run on 2026-11-20 (Claude Code 2.1.328) on Linux, with the system keyring and with the variable alone. The macOS keychain lookup is checked against the docs, not run. TA check on a Mac: <code>claude mcp list</code> shows <code>436c</code> as <code>✔ Connected</code>.</p>
+<p>On macOS and Linux, Claude Code gets the header from a small script that it runs at each connection, its <code>headersHelper</code> (<a href="https://code.claude.com/docs/en/mcp">Claude Code MCP docs</a>). The script reads the token from the system keychain, so Claude Code finds it however it was started; without a keychain entry it uses <code>KB_MCP_TOKEN</code>. The script holds no token.</p>
+<ol type="1">
+<li><p>Create the file <code>~/.claude/436c-mcp-headers.sh</code> with this content (create the folder <code>~/.claude</code> if it is missing):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/sh</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Prints the Authorization header for the course server 436c.</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">command</span> <span class="at">-v</span> security <span class="op">&gt;</span>/dev/null <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="va">t</span><span class="op">=</span><span class="va">$(</span><span class="ex">security</span> find-generic-password <span class="at">-s</span> 436c-mcp <span class="at">-w</span> <span class="dv">2</span><span class="op">&gt;</span>/dev/null<span class="va">)</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="cf">elif</span> <span class="bu">command</span> <span class="at">-v</span> secret-tool <span class="op">&gt;</span>/dev/null <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="va">t</span><span class="op">=</span><span class="va">$(</span><span class="ex">secret-tool</span> lookup service 436c-mcp <span class="dv">2</span><span class="op">&gt;</span>/dev/null<span class="va">)</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="bu">[</span> <span class="ot">-n</span> <span class="st">"</span><span class="va">$t</span><span class="st">"</span> <span class="bu">]</span> <span class="kw">||</span> <span class="va">t</span><span class="op">=</span><span class="va">$KB_MCP_TOKEN</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="bu">[</span> <span class="ot">-n</span> <span class="st">"</span><span class="va">$t</span><span class="st">"</span> <span class="bu">]</span> <span class="kw">||</span> <span class="bu">exit</span> 1</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'{"Authorization": "Bearer %s"}\n'</span> <span class="st">"</span><span class="va">$t</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p>In your own terminal, add both servers:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> mcp add-json <span class="at">--scope</span> user 436c <span class="dt">\</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">'{"type": "http",</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="st">    "url": "https://kb-cloud-students.fly.dev/mcp",</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="st">    "headersHelper": "sh ~/.claude/436c-mcp-headers.sh"}'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span> mcp add <span class="at">--transport</span> http <span class="at">--scope</span> user <span class="dt">\</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  aws-knowledge https://knowledge-mcp.global.api.aws</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>They print <code>Added http MCP server 436c to user config</code> and <code>Added HTTP MCP server aws-knowledge … to user config</code>, in <code>~/.claude.json</code>. Adding a name that exists prints <code>MCP server 436c already exists in user config</code>; to replace it, first run <code>claude mcp remove 436c -s user</code>.</p></li>
+</ol>
+<p>On Windows, there is no keychain reader to run, so the header reads the variable instead. Skip the script and run these two commands in your PowerShell terminal in place of the two above; the single quotes keep <code>${KB_MCP_TOKEN}</code> as text.</p>
+<p>Windows (PowerShell):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>claude mcp add <span class="op">--</span>transport http <span class="op">--</span>scope user 436c https<span class="op">://</span>kb-cloud-students<span class="op">.</span><span class="fu">fly</span><span class="op">.</span><span class="fu">dev</span><span class="op">/</span>mcp <span class="op">--</span>header <span class="st">'Authorization: Bearer ${KB_MCP_TOKEN}'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>claude mcp add <span class="op">--</span>transport http <span class="op">--</span>scope user aws-knowledge https<span class="op">://</span>knowledge-mcp<span class="op">.</span><span class="fu">global</span><span class="op">.</span><span class="fu">api</span><span class="op">.</span><span class="fu">aws</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>On Windows, check only <code>436c</code>: <code>$d = Get-Content "$HOME\.claude.json" -Raw | ConvertFrom-Json; if ($d.mcpServers.'436c'.headers.Authorization -ceq 'Bearer ${KB_MCP_TOKEN}') { '1' } else { '0' }</code> (checked against the docs, not run). <code>1</code> means its header contains the variable literally; <code>0</code> means stop, remove that entry and add it again.</p>
+</section>
+<section id="codex-cli" class="level3">
+<h3 class="anchored" data-anchor-id="codex-cli">Codex CLI</h3>
+<p>Status: configuration run on 2026-11-20 (codex-cli 0.171.0). Connection checked against the <a href="https://learn.chatgpt.com/docs/extend/mcp?surface=cli">Codex MCP docs</a>, not run. TA check: <code>/mcp</code> in a <code>codex</code> session lists <code>436c</code> and <code>aws-knowledge</code> with their tools.</p>
+<p>In your own terminal, run these two commands. <code>codex mcp add</code> replaces an entry of the same name without asking, so do Step 2 first.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">codex</span> mcp add 436c <span class="dt">\</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--url</span> https://kb-cloud-students.fly.dev/mcp <span class="dt">\</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--bearer-token-env-var</span> KB_MCP_TOKEN</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">codex</span> mcp add aws-knowledge <span class="dt">\</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">--url</span> https://knowledge-mcp.global.api.aws</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Windows (PowerShell), the same two commands:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>codex mcp add 436c <span class="op">--</span>url https<span class="op">://</span>kb-cloud-students<span class="op">.</span><span class="fu">fly</span><span class="op">.</span><span class="fu">dev</span><span class="op">/</span>mcp <span class="op">--</span>bearer-token-env-var KB_MCP_TOKEN</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>codex mcp add aws-knowledge <span class="op">--</span>url https<span class="op">://</span>knowledge-mcp<span class="op">.</span><span class="fu">global</span><span class="op">.</span><span class="fu">api</span><span class="op">.</span><span class="fu">aws</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Each prints <code>Added global MCP server '…'.</code> The second also prints <code>MCP server may or may not require login</code>; ignore it, because <code>aws-knowledge</code> needs no login. They write <code>~/.codex/config.toml</code>. Check with <code>codex mcp list</code>: the row for <code>436c</code> shows <code>KB_MCP_TOKEN</code> and <code>Bearer token</code>. This list does not connect to the servers; Step 6 does.</p>
+</section>
+<section id="github-copilot-cli" class="level3">
+<h3 class="anchored" data-anchor-id="github-copilot-cli">GitHub Copilot CLI</h3>
+<p>Status: configuration run on 2026-11-20 (Copilot CLI 1.0.114). Connection checked against the <a href="https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/add-mcp-servers">Copilot CLI MCP docs</a>, not run. TA check: <code>/mcp show 436c</code> in a <code>copilot</code> session shows the server running with its tools.</p>
+<p>In your own terminal, run these two commands, with the single quotes:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">copilot</span> mcp add <span class="at">--transport</span> http 436c <span class="dt">\</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  https://kb-cloud-students.fly.dev/mcp <span class="dt">\</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--header</span> <span class="st">'Authorization: Bearer ${KB_MCP_TOKEN}'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">copilot</span> mcp add <span class="at">--transport</span> http aws-knowledge <span class="dt">\</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  https://knowledge-mcp.global.api.aws</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Windows (PowerShell), the same two commands:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>copilot mcp add <span class="op">--</span>transport http 436c https<span class="op">://</span>kb-cloud-students<span class="op">.</span><span class="fu">fly</span><span class="op">.</span><span class="fu">dev</span><span class="op">/</span>mcp <span class="op">--</span>header <span class="st">'Authorization: Bearer ${KB_MCP_TOKEN}'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>copilot mcp add <span class="op">--</span>transport http aws-knowledge https<span class="op">://</span>knowledge-mcp<span class="op">.</span><span class="fu">global</span><span class="op">.</span><span class="fu">api</span><span class="op">.</span><span class="fu">aws</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Each prints <code>Added server "…"</code>. They write <code>~/.copilot/mcp-config.json</code>. To replace an entry, first run <code>copilot mcp remove 436c</code>. <code>copilot mcp get</code> hides the header as <code>***</code>, so check the file itself:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-o</span> <span class="at">-F</span> <span class="st">'Bearer ${KB_MCP_TOKEN}'</span> ~/.copilot/mcp-config.json</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Windows (PowerShell; checked against the docs, not run):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">Select-String</span> <span class="op">-</span>Path <span class="st">"</span><span class="va">$HOME</span><span class="st">\.copilot\mcp-config.json"</span> <span class="op">-</span>AllMatches <span class="op">-</span>Pattern <span class="st">'Bearer \$\{KB_MCP_TOKEN\}'</span> <span class="op">|</span> <span class="fu">ForEach-Object</span> <span class="op">{</span> <span class="va">$_</span><span class="op">.</span><span class="fu">Matches</span><span class="op">.</span><span class="fu">Value</span> <span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>It prints <code>Bearer ${KB_MCP_TOKEN}</code>, the matched text only. If it prints nothing, remove the entry and add it again with the single quotes.</p>
+</section>
+<section id="vs-code-with-github-copilot" class="level3">
+<h3 class="anchored" data-anchor-id="vs-code-with-github-copilot">VS Code with GitHub Copilot</h3>
+<p>Status: checked against the <a href="https://code.visualstudio.com/docs/copilot/reference/mcp-configuration">VS Code MCP configuration reference</a>, not run. TA check: in VS Code, the command <strong>Chat: Open Customizations</strong>, then <strong>MCP Servers</strong>, lists <code>436c</code> and <code>aws-knowledge</code> as running.</p>
+<p>Copilot in VS Code reads the same user file as the Copilot CLI, <code>~/.copilot/mcp-config.json</code>. If the Copilot CLI is installed, use the commands of the previous section. Otherwise edit the file yourself: create it if it is missing, and add these two entries under <code>mcpServers</code>, keeping every other entry:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"mcpServers"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"436c"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"http"</span><span class="fu">,</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"url"</span><span class="fu">:</span> <span class="st">"https://kb-cloud-students.fly.dev/mcp"</span><span class="fu">,</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"headers"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"Authorization"</span><span class="fu">:</span> <span class="st">"Bearer ${KB_MCP_TOKEN}"</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">},</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"tools"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"*"</span><span class="ot">]</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"aws-knowledge"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"http"</span><span class="fu">,</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"url"</span><span class="fu">:</span> <span class="st">"https://knowledge-mcp.global.api.aws"</span><span class="fu">,</span></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"tools"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"*"</span><span class="ot">]</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Write <code>${KB_MCP_TOKEN}</code> with the braces: VS Code treats a bare <code>$KB_MCP_TOKEN</code> as text. Do not use the profile <code>mcp.json</code> or <code>.vscode/mcp.json</code>: Copilot does not read them directly.</p>
+</section>
+<section id="kiro-cli-and-kiro-ide" class="level3">
+<h3 class="anchored" data-anchor-id="kiro-cli-and-kiro-ide">Kiro CLI and Kiro IDE</h3>
+<p>Status: checked against the <a href="https://kiro.dev/docs/mcp/configuration/">Kiro MCP configuration docs</a>, not run. TA check: Kiro CLI, <code>/mcp</code> in a <code>kiro-cli chat</code> session lists both servers as loaded; Kiro IDE, the <strong>MCP Servers</strong> section of the Kiro panel shows both as connected.</p>
+<p>Both read <code>~/.kiro/settings/mcp.json</code>. <code>kiro-cli mcp add</code> cannot set a header, so edit the file yourself: create it if it is missing (with the folder <code>~/.kiro/settings</code>), and add these two entries under <code>mcpServers</code>, keeping every other entry:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"mcpServers"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"436c"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"url"</span><span class="fu">:</span> <span class="st">"https://kb-cloud-students.fly.dev/mcp"</span><span class="fu">,</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"headers"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"Authorization"</span><span class="fu">:</span> <span class="st">"Bearer ${KB_MCP_TOKEN}"</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"aws-knowledge"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"url"</span><span class="fu">:</span> <span class="st">"https://knowledge-mcp.global.api.aws"</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Kiro IDE only: ask the student to approve the variable. Kiro IDE expands only approved variables. When Kiro shows a security warning that lists <code>KB_MCP_TOKEN</code>, the student approves it. Without the warning, the student opens Kiro’s settings, searches for <strong>Mcp Approved Env Vars</strong> and adds <code>KB_MCP_TOKEN</code>.</p>
+</section>
+</section>
+<section id="step-4-the-student-sets-the-token" class="level2">
+<h2 class="anchored" data-anchor-id="step-4-the-student-sets-the-token">Step 4: the student sets the token</h2>
+<p>Skip this step if the student has set the token before: ask them to open a new terminal and run the check at the end of this step. If it prints <code>set, 38 characters</code>, go to Step 5.</p>
+<p>Ask the student to copy their token from the issue “Your course MCP tokens” and to open a <strong>new terminal window of their own</strong>, outside this chat. Give them the block for their system to paste there. Tell them the prompt does not show what they paste, and they press Enter once after pasting the token.</p>
+<p>macOS or Linux (zsh or bash), in the student’s new terminal:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">{</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">case</span> <span class="st">"</span><span class="va">$SHELL</span><span class="st">"</span> <span class="kw">in</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="pp">*</span><span class="ss">/zsh</span><span class="kw">)</span> <span class="va">rc</span><span class="op">=</span>~/.zshrc <span class="cf">;;</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="pp">*</span><span class="kw">)</span> <span class="va">rc</span><span class="op">=</span>~/.bashrc <span class="cf">;;</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">esac</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="va">t</span><span class="op">=</span><span class="kw">;</span> <span class="va">line</span><span class="op">=</span><span class="kw">;</span> <span class="va">where</span><span class="op">=</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="bu">printf</span> <span class="st">'Paste your token, then press Enter: '</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="bu">read</span> <span class="at">-rs</span> <span class="va">t</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">case</span> <span class="st">"</span><span class="va">$t</span><span class="st">"</span> <span class="kw">in</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>    <span class="ss">s436c-</span><span class="pp">*</span><span class="ss">[!A-Za-z0-9_-]</span><span class="pp">*</span><span class="kw">)</span> <span class="va">t</span><span class="op">=</span> <span class="cf">;;</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>    <span class="ss">s436c-</span><span class="pp">*</span><span class="kw">)</span> <span class="bu">[</span> <span class="va">${</span><span class="op">#</span><span class="va">t}</span> <span class="ot">-eq</span> 38 <span class="bu">]</span> <span class="kw">||</span> <span class="va">t</span><span class="op">=</span> <span class="cf">;;</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>    <span class="pp">*</span><span class="kw">)</span> <span class="va">t</span><span class="op">=</span> <span class="cf">;;</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">esac</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$t</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">"check failed: a course token starts with s436c- and has 38 characters. Nothing saved; run the block again"</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">"check passed"</span></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">command</span> <span class="at">-v</span> security <span class="op">&gt;</span>/dev/null <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>      <span class="bu">printf</span> <span class="st">'add-generic-password -U -s 436c-mcp -a %s -w %s\n'</span> <span class="st">"</span><span class="va">$USER</span><span class="st">"</span> <span class="st">"</span><span class="va">$t</span><span class="st">"</span> <span class="kw">|</span> <span class="ex">security</span> <span class="at">-i</span> <span class="op">&gt;</span>/dev/null <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span> <span class="bu">[</span> <span class="st">"</span><span class="va">$(</span><span class="ex">security</span> find-generic-password <span class="at">-s</span> 436c-mcp <span class="at">-w</span> <span class="dv">2</span><span class="op">&gt;</span>/dev/null<span class="va">)</span><span class="st">"</span> <span class="ot">=</span> <span class="st">"</span><span class="va">$t</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>        <span class="va">line</span><span class="op">=</span><span class="st">'export KB_MCP_TOKEN="$(security find-generic-password -s 436c-mcp -w 2&gt;/dev/null)"'</span></span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>        <span class="va">where</span><span class="op">=</span><span class="st">"the macOS keychain"</span></span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>      <span class="cf">fi</span></span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> <span class="bu">command</span> <span class="at">-v</span> secret-tool <span class="op">&gt;</span>/dev/null <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="dt">\</span></span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a>      <span class="kw">&amp;&amp;</span> <span class="bu">printf</span> <span class="st">'%s'</span> <span class="st">"</span><span class="va">$t</span><span class="st">"</span> <span class="kw">|</span> <span class="ex">secret-tool</span> store <span class="at">--label</span><span class="op">=</span><span class="st">"CPSC 436C MCP token"</span> service 436c-mcp <span class="dv">2</span><span class="op">&gt;</span>/dev/null<span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a>      <span class="va">line</span><span class="op">=</span><span class="st">'export KB_MCP_TOKEN="$(secret-tool lookup service 436c-mcp 2&gt;/dev/null)"'</span></span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>      <span class="va">where</span><span class="op">=</span><span class="st">"the system keyring"</span></span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a>      <span class="va">line</span><span class="op">=</span><span class="st">"export KB_MCP_TOKEN='</span><span class="va">$t</span><span class="st">'"</span></span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>      <span class="va">where</span><span class="op">=</span><span class="st">"</span><span class="va">$rc</span><span class="st"> (no keyring found)"</span></span>
+<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">fi</span></span>
+<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$line</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a>      <span class="bu">echo</span> <span class="st">"the macOS keychain did not take the token; the profile was not changed. Stop and ask a TA"</span></span>
+<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
+<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a>      <span class="fu">touch</span> <span class="st">"</span><span class="va">$rc</span><span class="st">"</span></span>
+<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a>      <span class="va">tmp</span><span class="op">=</span><span class="va">$(</span><span class="fu">mktemp</span><span class="va">)</span></span>
+<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a>      <span class="fu">grep</span> <span class="at">-v</span> <span class="st">'# cpsc436c setup$'</span> <span class="st">"</span><span class="va">$rc</span><span class="st">"</span> <span class="op">&gt;</span> <span class="st">"</span><span class="va">$tmp</span><span class="st">"</span></span>
+<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a>      <span class="bu">printf</span> <span class="st">'%s  # cpsc436c setup\n'</span> <span class="st">"</span><span class="va">$line</span><span class="st">"</span> <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">$tmp</span><span class="st">"</span></span>
+<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cat</span> <span class="st">"</span><span class="va">$tmp</span><span class="st">"</span> <span class="op">&gt;</span> <span class="st">"</span><span class="va">$rc</span><span class="st">"</span></span>
+<span id="cb28-41"><a href="#cb28-41" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rm</span> <span class="at">-f</span> <span class="st">"</span><span class="va">$tmp</span><span class="st">"</span></span>
+<span id="cb28-42"><a href="#cb28-42" aria-hidden="true" tabindex="-1"></a>      <span class="bu">eval</span> <span class="st">"</span><span class="va">$line</span><span class="st">"</span></span>
+<span id="cb28-43"><a href="#cb28-43" aria-hidden="true" tabindex="-1"></a>      <span class="bu">echo</span> <span class="st">"stored in </span><span class="va">$where</span><span class="st">; saved, </span><span class="va">${</span><span class="op">#</span><span class="va">KB_MCP_TOKEN}</span><span class="st"> characters"</span></span>
+<span id="cb28-44"><a href="#cb28-44" aria-hidden="true" tabindex="-1"></a>    <span class="cf">fi</span></span>
+<span id="cb28-45"><a href="#cb28-45" aria-hidden="true" tabindex="-1"></a>  <span class="cf">fi</span></span>
+<span id="cb28-46"><a href="#cb28-46" aria-hidden="true" tabindex="-1"></a>  <span class="bu">unset</span> <span class="va">t</span> <span class="va">line</span> <span class="va">where</span> <span class="va">tmp</span></span>
+<span id="cb28-47"><a href="#cb28-47" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The block first checks the paste: a course token starts with <code>s436c-</code> and has 38 characters. If the check fails, it prints <code>check failed</code> and changes nothing. It prints pass or fail only, never the token. On macOS it then hands the token to <code>security</code> on standard input, not as a command argument, and reads the keychain entry back; if the entry does not hold the token, it prints <code>the macOS keychain did not take the token</code>, changes neither the profile nor any other keychain entry, and the student asks a TA. Then it stores the token in the macOS keychain, or in the Linux system keyring when there is one, and adds one line to the shell profile, the file a new terminal reads when it opens (<code>~/.zshrc</code> or <code>~/.bashrc</code>). That line looks the token up and ends in <code># cpsc436c setup</code>; each run replaces only that line and keeps the rest of the file and its permissions. Where there is no keyring (a Linux server, WSL), it prints <code>no keyring found</code> and the profile line holds the token itself: then do not share that file or a screenshot of it. The token is typed at a silent prompt, so it does not appear on the screen or in the shell’s history. Run on 2026-11-20 in bash on Linux, with a keyring and without one; the macOS keychain branch and zsh are checked against the docs, not run.</p>
+<p>Windows (PowerShell), in the student’s new PowerShell window:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="op">&amp;</span> <span class="op">{</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">$s</span> <span class="op">=</span> <span class="fu">Read-Host</span> <span class="st">"Paste your token, then press Enter"</span> <span class="op">-</span>AsSecureString</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  <span class="va">$t</span> <span class="op">=</span> <span class="op">[</span>System<span class="op">.</span><span class="fu">Net</span><span class="op">.</span><span class="fu">NetworkCredential</span><span class="op">]::</span>new<span class="op">(</span><span class="st">""</span><span class="op">,</span> <span class="va">$s</span><span class="op">).</span><span class="fu">Password</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span><span class="va">$t</span> <span class="op">-cmatch</span> <span class="st">'^s436c-[A-Za-z0-9_-]{32}$'</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"check passed"</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">[</span>Environment<span class="op">]::</span>SetEnvironmentVariable<span class="op">(</span><span class="st">"KB_MCP_TOKEN"</span><span class="op">,</span> <span class="va">$t</span><span class="op">,</span> <span class="st">"User"</span><span class="op">)</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"saved, </span><span class="op">$(</span><span class="va">$t</span><span class="op">.</span><span class="fu">Length</span><span class="op">)</span><span class="st"> characters"</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"check failed: a course token starts with s436c- and has 38 characters. Nothing saved; run the block again"</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This checks the paste in the same way, then saves the token in the user’s environment, where apps started afterwards find it. Windows Credential Manager does not have a built-in command that reads a token back, so the user environment holds it. Checked against the PowerShell docs, not run.</p>
+<p>Both print <code>check passed</code> and <code>saved, 38 characters</code> when the token is stored. <code>check failed</code> means the paste took too little or too much, and nothing was written: run the block again.</p>
+<p>Then the student opens a new terminal and runs the check for their system. It prints the length, never the token. On Windows, a new tab is not enough: the student closes the terminal application fully (every window), starts it again, and runs the check there.</p>
+<p>macOS or Linux, in the student’s new terminal:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="bu">test</span> <span class="at">-n</span> <span class="st">"</span><span class="va">$KB_MCP_TOKEN</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">&amp;&amp;</span> <span class="bu">echo</span> <span class="st">"set, </span><span class="va">${</span><span class="op">#</span><span class="va">KB_MCP_TOKEN}</span><span class="st"> characters"</span> <span class="dt">\</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">||</span> <span class="bu">echo</span> <span class="st">"not set"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Windows (PowerShell), in the restarted terminal application; checked against the docs, not run:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span><span class="va">$env</span><span class="op">:</span><span class="va">KB_MCP_TOKEN</span><span class="op">)</span> <span class="op">{</span> <span class="st">"set, </span><span class="op">$(</span><span class="va">$env</span><span class="op">:</span><span class="va">KB_MCP_TOKEN</span><span class="op">.</span><span class="fu">Length</span><span class="op">)</span><span class="st"> characters"</span> <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span> <span class="st">"not set"</span> <span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><code>set, 38 characters</code> means the setting works. <code>not set</code> means stop: see <a href="#if-a-check-fails">If a check fails</a>. On Windows, if it still says <code>not set</code> after the terminal application was restarted, the student shows a TA the output of the Windows block above and of this check.</p>
+</section>
+<section id="step-5-the-student-restarts-the-assistant" class="level2">
+<h2 class="anchored" data-anchor-id="step-5-the-student-restarts-the-assistant">Step 5: the student restarts the assistant</h2>
+<p>An assistant reads its MCP configuration and the environment when it starts. Ask the student to:</p>
+<ol type="1">
+<li><p>Quit you fully (close the chat session, or quit the IDE).</p></li>
+<li><p>In the new terminal from Step 4, start the assistant again:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Assistant</th>
+<th>Start it with</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Claude Code</td>
+<td><code>claude</code></td>
+</tr>
+<tr class="even">
+<td>Codex CLI</td>
+<td><code>codex</code></td>
+</tr>
+<tr class="odd">
+<td>Copilot CLI</td>
+<td><code>copilot</code></td>
+</tr>
+<tr class="even">
+<td>Kiro CLI</td>
+<td><code>kiro-cli chat</code></td>
+</tr>
+<tr class="odd">
+<td>VS Code with Copilot</td>
+<td>the app icon</td>
+</tr>
+<tr class="even">
+<td>Kiro IDE</td>
+<td>the app icon</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>Send it this user message:</p>
+<pre class="text"><code>Run curl -sL https://ilm.wiki/436c/mcp-setup
+and do Step 6 of the page it prints.</code></pre></li>
+</ol>
+<p>An app started from an icon may not see the shell profile. VS Code reads it at start (<a href="https://code.visualstudio.com/docs/supporting/faq">VS Code FAQ</a>); for Kiro IDE this is not documented. A command-line assistant started from the terminal of Step 4 always has the token. On Windows, the user environment of Step 4 reaches apps started afterwards.</p>
+</section>
+<section id="step-6-check" class="level2">
+<h2 class="anchored" data-anchor-id="step-6-check">Step 6: check</h2>
+<p>Do the checks in order and stop at the first failure.</p>
+<ol type="1">
+<li><p><strong>Token.</strong> In your own terminal, run the check of Step 4 for the student’s system. Expect <code>set, 38 characters</code>. <code>not set</code> means you were not started from the terminal of Step 4: repeat Step 5.</p></li>
+<li><p><strong>Connection.</strong> Use the student’s assistant:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Assistant</th>
+<th>What to run</th>
+<th>Works when</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Claude Code</td>
+<td><code>claude mcp list</code> in your terminal; on macOS and Linux also <code>grep -c 's436c-' ~/.claude.json</code>; on Windows <code>(Select-String -Path "$HOME\.claude.json" -SimpleMatch 's436c-').Count</code> (checked against the docs, not run)</td>
+<td><code>436c: … (HTTP) - ✔ Connected</code> and <code>aws-knowledge: … - ✔ Connected</code>; the <code>grep</code> prints <code>0</code>, meaning the file holds no token (its exit status 1 is expected)</td>
+</tr>
+<tr class="even">
+<td>Codex CLI</td>
+<td>the student types <code>/mcp</code> in the chat</td>
+<td>both servers listed with tools</td>
+</tr>
+<tr class="odd">
+<td>Copilot CLI</td>
+<td>the student types <code>/mcp show 436c</code> in the chat</td>
+<td>the server is running and lists tools</td>
+</tr>
+<tr class="even">
+<td>VS Code with Copilot</td>
+<td>the student runs <strong>Chat: Open Customizations</strong>, then <strong>MCP Servers</strong></td>
+<td>both servers running</td>
+</tr>
+<tr class="odd">
+<td>Kiro CLI</td>
+<td>the student types <code>/mcp</code> in the chat</td>
+<td>both servers loaded</td>
+</tr>
+<tr class="even">
+<td>Kiro IDE</td>
+<td>the student opens the Kiro panel, section <strong>MCP Servers</strong></td>
+<td>both servers connected</td>
+</tr>
+</tbody>
+</table></li>
+<li><p><strong>Course server tools.</strong> Call the tool <code>cpsc436c_start_here</code> of the server <code>436c</code> (Claude Code names it <code>mcp__436c__cpsc436c_start_here</code>). The assistant may ask the student to allow the call; they allow it. The tool result starts with a <code>catalog_version</code> and names the current milestone; show it to the student. The server’s tools include <code>cpsc436c_start_here</code>, <code>cpsc436c_search</code>, <code>cpsc436c_read</code> and <code>cpsc436c_list</code>.</p></li>
+<li><p><strong>AWS Knowledge tools.</strong> Check that your list of tools from <code>aws-knowledge</code> includes <code>aws___list_regions</code>, <code>aws___search_documentation</code> and <code>aws___read_documentation</code>. Then call <code>aws___list_regions</code> of the server <code>aws-knowledge</code> (Claude Code names it <code>mcp__aws-knowledge__aws___list_regions</code>); it takes no arguments. The assistant may ask the student to allow the call; they allow it. It works when the result lists AWS Regions and includes <code>ca-central-1</code> (Canada (Central)); tell the student it did. If the tools are missing or the call returns an error, stop: see <a href="#if-a-check-fails">If a check fails</a>.</p></li>
+<li><p><strong>Course LLM gateway.</strong> In your own terminal, run the command for the system. It asks for the list of models and does not call a model.</p>
+<p>macOS or Linux:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-sS</span> <span class="at">-w</span> <span class="st">'\nHTTP %{http_code}\n'</span> <span class="dt">\</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">"Authorization: Bearer </span><span class="va">$KB_MCP_TOKEN</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1/models</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Windows (PowerShell; the backtick continues the line; checked against the docs, not run):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">curl</span><span class="op">.</span><span class="fu">exe</span> <span class="op">-</span>sS <span class="op">-</span>w <span class="st">"</span><span class="ch">`n</span><span class="st">HTTP %{http_code}</span><span class="ch">`n</span><span class="st">"</span> `</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>H <span class="st">"Authorization: Bearer </span><span class="va">$env</span><span class="op">:</span><span class="va">KB_MCP_TOKEN</span><span class="st">"</span> `</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  https<span class="op">://</span>oay6tcpsuv4gn5mubtlj7rnbl40gmrlv<span class="op">.</span><span class="fu">lambda</span><span class="op">-</span>url<span class="op">.</span><span class="fu">ca</span><span class="op">-</span>central-1<span class="op">.</span><span class="fu">on</span><span class="op">.</span><span class="fu">aws</span><span class="op">/</span>v1<span class="op">/</span>models</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>It works when the last line is <code>HTTP 200</code> and the list includes <code>qwen3.8-27b</code>. Run on 2026-11-20.</p></li>
+</ol>
+<p>Tell the student which checks passed. When all pass, the assistant setup is done; do Step 7 if the student’s code will call the gateway.</p>
+</section>
+<section id="step-7-course-llm-gateway-in-your-code" class="level2">
+<h2 class="anchored" data-anchor-id="step-7-course-llm-gateway-in-your-code">Step 7: course LLM gateway in your code</h2>
+<p>Your code reads the token from <code>KB_MCP_TOKEN</code> and the base URL from <code>COURSE_GATEWAY_URL</code>. Started from a terminal of Step 4, it already has <code>KB_MCP_TOKEN</code>. For scripts started any other way, keep both in a <code>.env</code> file in the team repository. Run on 2026-11-20 in a test repository.</p>
+<ol type="1">
+<li><p><strong>Assistant, in your terminal, in the top folder of the team repository</strong> (<code>git rev-parse --show-toplevel</code> prints it): before anything is written, check that <code>.env</code> is not tracked by git and that the repository’s own <code>.gitignore</code> ignores it.</p>
+<p>macOS or Linux:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="fu">git</span> ls-files <span class="at">--error-unmatch</span> .env <span class="op">&gt;</span>/dev/null <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"tracked: stop"</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">git</span> check-ignore <span class="at">-v</span> .env <span class="kw">||</span> <span class="bu">echo</span> <span class="st">"not ignored"</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="bu">test</span> <span class="at">-e</span> .env <span class="kw">&amp;&amp;</span> <span class="bu">echo</span> <span class="st">".env exists"</span> <span class="kw">||</span> <span class="bu">echo</span> <span class="st">".env absent"</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Windows (PowerShell; checked against the docs, not run):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>git ls-files <span class="op">--</span>error-unmatch <span class="op">.</span><span class="fu">env</span> <span class="dv">2</span><span class="op">&gt;</span><span class="va">$null</span> <span class="op">|</span> <span class="fu">Out-Null</span><span class="op">;</span> <span class="cf">if</span> <span class="op">(</span><span class="va">$LASTEXITCODE</span> <span class="op">-eq</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span> <span class="st">"tracked: stop"</span> <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span> git check-ignore <span class="op">-</span>v <span class="op">.</span><span class="fu">env</span><span class="op">;</span> <span class="cf">if</span> <span class="op">(</span><span class="va">$LASTEXITCODE</span> <span class="op">-ne</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span> <span class="st">"not ignored"</span> <span class="op">};</span> <span class="cf">if</span> <span class="op">(</span><span class="fu">Test-Path</span> <span class="op">.</span><span class="fu">env</span><span class="op">)</span> <span class="op">{</span> <span class="st">".env exists"</span> <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span> <span class="st">".env absent"</span> <span class="op">}</span> <span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>tracked: stop</code>: <code>.env</code> is already in the repository, and adding it to <code>.gitignore</code> does not take it out. Stop Step 7, do not open or change the file, and ask the student to show a TA.</li>
+<li>A line that starts with <code>.gitignore:</code> and ends in <code>.env</code>: the repository ignores it, for every team member. Go on.</li>
+<li><code>not ignored</code>, or a line that starts with another file (a global ignore file or <code>.git/info/exclude</code> protects only this laptop): add the line <code>.env</code> to the <code>.gitignore</code> in the top folder, tell the student you did and that they commit <code>.gitignore</code>, and run the check again. Do not go on until it prints a line that starts with <code>.gitignore:</code>.</li>
+<li><code>.env exists</code>: the file already holds settings. Tell the student the block of step 2 asks before it changes the two lines <code>KB_MCP_TOKEN</code> and <code>COURSE_GATEWAY_URL</code>, and keeps every other line. Do not open or print it.</li>
+</ul></li>
+<li><p><strong>Student, in their terminal from Step 4, in the top folder of the team repository:</strong> write the two lines from the variable, so the token is not pasted again:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="kw">{</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">"</span><span class="va">$KB_MCP_TOKEN</span><span class="st">"</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">"not set: open a new terminal (Step 4) and run this again"</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">elif</span> <span class="fu">git</span> ls-files <span class="at">--error-unmatch</span> .env <span class="op">&gt;</span>/dev/null <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">||</span> <span class="ot">! </span><span class="fu">git</span> check-ignore <span class="at">-q</span> .env<span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">echo</span> <span class="st">"stop: .env is tracked or not ignored; ask the assistant to do step 1 again"</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    <span class="va">a</span><span class="op">=</span>y</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">[</span> <span class="ot">-e</span> .env <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>      <span class="bu">printf</span> <span class="st">'.env exists. Change only KB_MCP_TOKEN and COURSE_GATEWAY_URL in it? (y/n) '</span></span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>      <span class="bu">read</span> <span class="at">-r</span> <span class="va">a</span></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>      <span class="kw">(</span><span class="bu">umask</span> 077<span class="kw">;</span> <span class="bu">:</span> <span class="op">&gt;</span> .env<span class="kw">)</span></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">fi</span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">[</span> <span class="st">"</span><span class="va">$a</span><span class="st">"</span> <span class="ot">=</span> y <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>      <span class="va">tmp</span><span class="op">=</span><span class="va">$(</span><span class="fu">mktemp</span><span class="va">)</span></span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">grep</span> <span class="at">-v</span> <span class="at">-E</span> <span class="st">'^(export )?(KB_MCP_TOKEN|COURSE_GATEWAY_URL)='</span> .env <span class="op">&gt;</span> <span class="st">"</span><span class="va">$tmp</span><span class="st">"</span></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>      <span class="bu">printf</span> <span class="st">'KB_MCP_TOKEN=%s\nCOURSE_GATEWAY_URL=%s\n'</span> <span class="st">"</span><span class="va">$KB_MCP_TOKEN</span><span class="st">"</span> <span class="dt">\</span></span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>        https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1 <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">$tmp</span><span class="st">"</span></span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cat</span> <span class="st">"</span><span class="va">$tmp</span><span class="st">"</span> <span class="op">&gt;</span> .env</span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rm</span> <span class="at">-f</span> <span class="st">"</span><span class="va">$tmp</span><span class="st">"</span></span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>      <span class="bu">echo</span> <span class="st">"written; other lines kept: </span><span class="va">$(</span><span class="fu">grep</span> <span class="at">-v</span> <span class="at">-c</span> <span class="at">-E</span> <span class="st">'^(export )?(KB_MCP_TOKEN|COURSE_GATEWAY_URL)='</span> .env<span class="va">)</span><span class="st">"</span></span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>      <span class="bu">echo</span> <span class="st">"not changed"</span></span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">fi</span></span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a>  <span class="cf">fi</span></span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>  <span class="bu">unset</span> <span class="va">a</span> <span class="va">tmp</span></span>
+<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>On Windows, the student opens <code>.env</code> in their editor (creating it if it is missing) and adds or changes only two lines, keeping every other line: <code>KB_MCP_TOKEN=</code> followed by the token, and <code>COURSE_GATEWAY_URL=</code> followed by the base URL.</p></li>
+<li><p><strong>Assistant, in your terminal:</strong> check that <code>uv</code> is installed with <code>uv --version</code>. If the command is not found, the student installs uv from <a href="https://docs.astral.sh/uv/getting-started/installation/">the uv installation page</a>, opens a new terminal as in Step 4, and you run <code>uv --version</code> again. Then run <code>git status --short</code>: the list does not include <code>.env</code>. Do not open or print <code>.env</code>. Then check that a script started with the file sees both values:</p>
+<p>macOS or Linux (the variables of Step 4 are removed for this one command, so only <code>.env</code> can set them):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">env</span> <span class="at">-u</span> KB_MCP_TOKEN <span class="at">-u</span> COURSE_GATEWAY_URL uv run <span class="at">--env-file</span> .env python <span class="at">-c</span> <span class="dt">\</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">'import os; print([k + (" set" if os.environ.get(k) else " unset") for k in ("KB_MCP_TOKEN", "COURSE_GATEWAY_URL")])'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Windows (PowerShell; removes both variables for the check and puts them back afterwards; checked against the docs, not run):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="va">$k</span> <span class="op">=</span> <span class="va">$env</span><span class="op">:</span><span class="va">KB_MCP_TOKEN</span><span class="op">;</span> <span class="va">$g</span> <span class="op">=</span> <span class="va">$env</span><span class="op">:</span><span class="va">COURSE_GATEWAY_URL</span><span class="op">;</span> <span class="cf">try</span> <span class="op">{</span> <span class="fu">Remove-Item</span> Env<span class="op">:</span>KB_MCP_TOKEN<span class="op">,</span> Env<span class="op">:</span>COURSE_GATEWAY_URL <span class="op">-</span>ErrorAction SilentlyContinue<span class="op">;</span> uv run <span class="op">--</span>env-file <span class="op">.</span><span class="fu">env</span> python <span class="op">-</span>c <span class="st">'import os; print([k + (</span><span class="ch">''</span><span class="st"> set</span><span class="ch">''</span><span class="st"> if os.environ.get(k) else </span><span class="ch">''</span><span class="st"> unset</span><span class="ch">''</span><span class="st">) for k in (</span><span class="ch">''</span><span class="st">KB_MCP_TOKEN</span><span class="ch">''</span><span class="st">, </span><span class="ch">''</span><span class="st">COURSE_GATEWAY_URL</span><span class="ch">''</span><span class="st">)])'</span> <span class="op">}</span> <span class="cf">finally</span> <span class="op">{</span> <span class="va">$env</span><span class="op">:</span><span class="va">KB_MCP_TOKEN</span> <span class="op">=</span> <span class="va">$k</span><span class="op">;</span> <span class="va">$env</span><span class="op">:</span><span class="va">COURSE_GATEWAY_URL</span> <span class="op">=</span> <span class="va">$g</span> <span class="op">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>It prints <code>['KB_MCP_TOKEN set', 'COURSE_GATEWAY_URL set']</code>. <code>unset</code> means the line is missing from <code>.env</code>: repeat step 2.</p></li>
+<li><p><strong>Code</strong> reads both values from the environment and needs the Python package <code>openai</code>. If the team repository has a <code>pyproject.toml</code>, add the package once with <code>uv add openai</code> (it changes <code>pyproject.toml</code> and <code>uv.lock</code>; the team commits both). Without a <code>pyproject.toml</code>, step 5 adds it for the run with <code>--with openai</code>. For example in Python:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> openai <span class="im">import</span> OpenAI</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>client <span class="op">=</span> OpenAI(</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    base_url<span class="op">=</span>os.environ[<span class="st">"COURSE_GATEWAY_URL"</span>],</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    api_key<span class="op">=</span>os.environ[<span class="st">"KB_MCP_TOKEN"</span>],</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>([m.<span class="bu">id</span> <span class="cf">for</span> m <span class="kw">in</span> client.models.<span class="bu">list</span>()])  <span class="co"># lists the models; does not call one</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p><strong>Run</strong> it with the file. With <code>openai</code> in <code>pyproject.toml</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run <span class="at">--env-file</span> .env python your_script.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Without a <code>pyproject.toml</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="ex">uv</span> run <span class="at">--with</span> openai <span class="at">--env-file</span> .env python your_script.py</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The example prints a list of model names that includes <code>qwen3.8-27b</code>.</p></li>
+</ol>
+<p>MCP clients do not read <code>.env</code>: the assistant’s servers keep using the variable of Step 4. A new token means updating both places: run the block of Step 4 again (it replaces the keychain entry and the profile line) and write <code>.env</code> again with step 2.</p>
+</section>
+<section id="if-a-check-fails" class="level2">
+<h2 class="anchored" data-anchor-id="if-a-check-fails">If a check fails</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>What you see</th>
+<th>What to do</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>The fetch printed an error, an HTML page or nothing</td>
+<td>Stop. The student opens https://ilm.wiki/436c/mcp-setup in a browser and shows a TA</td>
+</tr>
+<tr class="even">
+<td><code>not set</code> in Step 4 or Step 6</td>
+<td>Step 4: the block did not save the token; run it again in a new terminal. Step 6: the assistant was not started from that terminal; repeat Step 5</td>
+</tr>
+<tr class="odd">
+<td><code>check failed</code> in Step 4</td>
+<td>The paste was incomplete or included extra text, and nothing was saved. Run the block of Step 4 again</td>
+</tr>
+<tr class="even">
+<td>Claude Code: <code>Missing environment variables: KB_MCP_TOKEN</code></td>
+<td>The assistant started without the token. Repeat Step 5</td>
+</tr>
+<tr class="odd">
+<td><code>436c</code> fails with <code>HTTP 401</code> or <code>invalid_token</code>; the gateway replies <code>HTTP 401</code> with <code>unknown API key</code></td>
+<td>The token is set but wrong or out of date. The student copies it again from “Your course MCP tokens” and runs the block of Step 4 again, then Step 5. Ignore the server’s advice about clearing authentication: the course server uses this token only</td>
+</tr>
+<tr class="even">
+<td>Gateway replies <code>HTTP 401</code> with <code>missing or malformed API key</code></td>
+<td>The command ran without the token. Do check 1 of Step 6</td>
+</tr>
+<tr class="odd">
+<td>Gateway replies <code>HTTP 429</code></td>
+<td>The key’s rate limit was reached; wait a minute and run the check again</td>
+</tr>
+<tr class="even">
+<td>Claude Code: <code>436c</code> fails with <code>Dynamic Client Registration rejected (HTTP 404)</code></td>
+<td>The header script found no token: neither the keychain entry nor <code>KB_MCP_TOKEN</code>. Run the block of Step 4 again, then Step 5</td>
+</tr>
+<tr class="odd">
+<td>macOS shows a dialog about the keychain item <code>436c-mcp</code></td>
+<td>Not seen in our checks (not run on macOS). The student shows a TA before choosing</td>
+</tr>
+<tr class="even">
+<td>The Claude Code quote check on Windows prints <code>0</code>, or the Copilot file check prints nothing, instead of finding <code>Bearer ${KB_MCP_TOKEN}</code></td>
+<td>Remove the entry, add it again with the single quotes, and ask the student to get a new token from a TA, since the old one was written to a file</td>
+</tr>
+<tr class="odd">
+<td>A server is missing from the list, or the assistant does not list the course tools or the AWS Knowledge tools</td>
+<td>The assistant read its configuration before Step 3. Repeat Step 5</td>
+</tr>
+<tr class="even">
+<td>Kiro IDE warns that <code>KB_MCP_TOKEN</code> is not approved</td>
+<td>Add it under <strong>Mcp Approved Env Vars</strong> (Step 3, Kiro), then restart Kiro</td>
+</tr>
+<tr class="odd">
+<td>Kiro CLI: <code>/mcp</code> lists neither server</td>
+<td>Check that <code>~/.kiro/settings/mcp.json</code> is valid JSON with both entries, then restart <code>kiro-cli chat</code>. If they still do not appear, show a TA</td>
+</tr>
+<tr class="even">
+<td>Kiro IDE or VS Code started from the icon fails with 401, the terminal check says <code>set</code></td>
+<td>The app did not see the shell profile. VS Code: run <strong>Shell Command: Install ‘code’ command in PATH</strong> from the command palette, quit VS Code, then start it with <code>code .</code> in a terminal. Kiro IDE: not verified; show a TA</td>
+</tr>
+<tr class="odd">
+<td>Only <code>436c</code> fails, <code>aws-knowledge</code> works, not a 401</td>
+<td>The network blocks the course server; try without the VPN, or show a TA</td>
+</tr>
+<tr class="even">
+<td>Both servers fail</td>
+<td>The assistant cannot reach the internet; try without the VPN, or show a TA</td>
+</tr>
+</tbody>
+</table>
+<p>If a fix does not work, stop and ask the student to show the output to a TA. Never put the token into an MCP configuration file to make a check pass.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
