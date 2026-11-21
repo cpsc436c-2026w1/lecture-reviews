@@ -569,42 +569,92 @@ Your code reads the token from `KB_MCP_TOKEN` and the base URL from `COURSE_GATE
 Step 4, it already has `KB_MCP_TOKEN`. For scripts started any other way, keep both in a `.env` file in the team
 repository. Run on 2026-11-20 in a test repository.
 
-1. **Assistant, in your terminal, in the team repository:** check that git ignores `.env` before anything is written:
+1. **Assistant, in your terminal, in the top folder of the team repository** (`git rev-parse --show-toplevel` prints
+   it): before anything is written, check that `.env` is not tracked by git and that the repository's own
+   `.gitignore` ignores it.
+
+   macOS or Linux:
 
    ```bash
-   git check-ignore -v .env
+   if git ls-files --error-unmatch .env >/dev/null 2>&1; then
+     echo "tracked: stop"
+   else
+     git check-ignore -v .env || echo "not ignored"
+     test -e .env && echo ".env exists" || echo ".env absent"
+   fi
    ```
 
-   It prints a line that ends in `.env`. If it prints nothing, add the line `.env` to `.gitignore`, tell the student
-   you did, and run the check again. Do not go on until it prints the line.
+   Windows (PowerShell; checked against the docs, not run):
 
-2. **Student, in their terminal, in the team repository:** write the file from the variable, so the token is not
-   pasted again:
+   ```powershell
+   git ls-files --error-unmatch .env 2>$null | Out-Null; if ($LASTEXITCODE -eq 0) { "tracked: stop" } else { git check-ignore -v .env; if ($LASTEXITCODE -ne 0) { "not ignored" }; if (Test-Path .env) { ".env exists" } else { ".env absent" } }
+   ```
+
+   - `tracked: stop`: `.env` is already in the repository, and adding it to `.gitignore` does not take it out.
+     Stop Step 7, do not open or change the file, and ask the student to show a TA.
+   - A line that starts with `.gitignore:` and ends in `.env`: the repository ignores it, for every team member. Go
+     on.
+   - `not ignored`, or a line that starts with another file (a global ignore file or `.git/info/exclude` protects
+     only this laptop): add the line `.env` to the `.gitignore` in the top folder, tell the student you did and
+     that they commit `.gitignore`, and run the check again. Do not go on until it prints a line that starts with
+     `.gitignore:`.
+   - `.env exists`: the file already holds settings. Tell the student the block of step 2 asks before it changes
+     the two lines `KB_MCP_TOKEN` and `COURSE_GATEWAY_URL`, and keeps every other line. Do not open or print it.
+
+2. **Student, in their terminal from Step 4, in the top folder of the team repository:** write the two lines from the
+   variable, so the token is not pasted again:
 
    ```bash
-   test -n "$KB_MCP_TOKEN" \
-     && printf 'KB_MCP_TOKEN=%s\nCOURSE_GATEWAY_URL=%s\n' \
-       "$KB_MCP_TOKEN" \
-       https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1 \
-       > .env \
-     && echo "written" \
-     || echo "not set: open a new terminal (Step 4) and run this again"
+   {
+     if [ -z "$KB_MCP_TOKEN" ]; then
+       echo "not set: open a new terminal (Step 4) and run this again"
+     elif git ls-files --error-unmatch .env >/dev/null 2>&1 || ! git check-ignore -q .env; then
+       echo "stop: .env is tracked or not ignored; ask the assistant to do step 1 again"
+     else
+       a=y
+       if [ -e .env ]; then
+         printf '.env exists. Change only KB_MCP_TOKEN and COURSE_GATEWAY_URL in it? (y/n) '
+         read -r a
+       else
+         (umask 077; : > .env)
+       fi
+       if [ "$a" = y ]; then
+         tmp=$(mktemp)
+         grep -v -E '^(export )?(KB_MCP_TOKEN|COURSE_GATEWAY_URL)=' .env > "$tmp"
+         printf 'KB_MCP_TOKEN=%s\nCOURSE_GATEWAY_URL=%s\n' "$KB_MCP_TOKEN" \
+           https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1 >> "$tmp"
+         cat "$tmp" > .env
+         rm -f "$tmp"
+         echo "written; other lines kept: $(grep -v -c -E '^(export )?(KB_MCP_TOKEN|COURSE_GATEWAY_URL)=' .env)"
+       else
+         echo "not changed"
+       fi
+     fi
+     unset a tmp
+   }
    ```
 
-   On Windows, the student creates `.env` in their editor with the same two lines, `KB_MCP_TOKEN=` followed by the
-   token and `COURSE_GATEWAY_URL=` followed by the base URL.
+   On Windows, the student opens `.env` in their editor (creating it if it is missing) and adds or changes only two
+   lines, keeping every other line: `KB_MCP_TOKEN=` followed by the token, and `COURSE_GATEWAY_URL=` followed by the
+   base URL.
 
-3. **Assistant:** run `git status --short`. The list does not include `.env`. Do not open or print `.env`. Then
-   check that a script started with the file sees the token:
+3. **Assistant, in your terminal:** check that `uv` is installed with `uv --version`. If the command is not found,
+   the student installs uv from [the uv installation page](https://docs.astral.sh/uv/getting-started/installation/),
+   opens a new terminal as in Step 4, and you run `uv --version` again. Then run `git status --short`: the list does
+   not include `.env`. Do not open or print `.env`. Then check that a script started with the file sees both values:
 
    ```bash
    uv run --env-file .env python -c \
-     'import os; print("set" if os.environ.get("KB_MCP_TOKEN") else "unset")'
+     'import os; print([k + (" set" if os.environ.get(k) else " unset") for k in ("KB_MCP_TOKEN", "COURSE_GATEWAY_URL")])'
    ```
 
-   It prints `set`. `unset` means `.env` is missing or empty: repeat step 2.
+   It prints `['KB_MCP_TOKEN set', 'COURSE_GATEWAY_URL set']`. `unset` means the line is missing from `.env`: repeat
+   step 2.
 
-4. **Code** reads both values from the environment, for example in Python:
+4. **Code** reads both values from the environment and needs the Python package `openai`. If the team repository has
+   a `pyproject.toml`, add the package once with `uv add openai` (it changes `pyproject.toml` and `uv.lock`; the team
+   commits both). Without a `pyproject.toml`, step 5 adds it for the run with `--with openai`. For example in
+   Python:
 
    ```python
    import os
@@ -614,13 +664,22 @@ repository. Run on 2026-11-20 in a test repository.
        base_url=os.environ["COURSE_GATEWAY_URL"],
        api_key=os.environ["KB_MCP_TOKEN"],
    )
+   print([m.id for m in client.models.list()])  # lists the models; does not call one
    ```
 
-5. **Run** it with the file:
+5. **Run** it with the file. With `openai` in `pyproject.toml`:
 
    ```bash
    uv run --env-file .env python your_script.py
    ```
+
+   Without a `pyproject.toml`:
+
+   ```bash
+   uv run --with openai --env-file .env python your_script.py
+   ```
+
+   The example prints a list of model names that includes `qwen3.8-27b`.
 
 MCP clients do not read `.env`: the assistant's servers keep using the variable of Step 4. A new token means updating
 both places: run the block of Step 4 again (it replaces the keychain entry and the profile line) and write `.env`
