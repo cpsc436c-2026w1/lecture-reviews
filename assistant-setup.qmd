@@ -380,7 +380,7 @@ Ask the student to copy their token from the issue "Your course MCP tokens" and 
 their own**, outside this chat. Give them the block for their system to paste there. Tell them the prompt does not
 show what they paste, and they press Enter once after pasting the token.
 
-macOS or Linux (zsh or bash):
+macOS or Linux (zsh or bash), in the student's new terminal:
 
 ```bash
 {
@@ -388,55 +388,89 @@ macOS or Linux (zsh or bash):
     */zsh) rc=~/.zshrc ;;
     *) rc=~/.bashrc ;;
   esac
+  t=; line=; where=
   if command -v security >/dev/null 2>&1; then
     echo "macOS asks twice for the token (password data): paste it each time, then press Enter"
     security add-generic-password -U -s 436c-mcp -a "$USER" -w
-    line='export KB_MCP_TOKEN="$(security find-generic-password -s 436c-mcp -w 2>/dev/null)"'
-    echo "stored in the macOS keychain"
-  elif printf 'Paste your token, then press Enter: ' && read -rs KB_MCP_TOKEN && echo \
-    && command -v secret-tool >/dev/null 2>&1 \
-    && printf '%s' "$KB_MCP_TOKEN" | secret-tool store --label="CPSC 436C MCP token" service 436c-mcp 2>/dev/null; then
-    line='export KB_MCP_TOKEN="$(secret-tool lookup service 436c-mcp 2>/dev/null)"'
-    echo "stored in the system keyring"
+    t=$(security find-generic-password -s 436c-mcp -w 2>/dev/null)
   else
-    line="export KB_MCP_TOKEN='$KB_MCP_TOKEN'"
-    echo "no keyring found: stored in $rc"
+    printf 'Paste your token, then press Enter: '
+    read -rs t
+    echo
   fi
-  touch "$rc"
-  grep -v 'KB_MCP_TOKEN=' "$rc" > "$rc.new"
-  mv "$rc.new" "$rc"
-  echo "$line" >> "$rc"
-  eval "$line"
-  echo "saved, ${#KB_MCP_TOKEN} characters"
+  case "$t" in
+    s436c-*[!A-Za-z0-9_-]*) t= ;;
+    s436c-*) [ ${#t} -eq 38 ] || t= ;;
+    *) t= ;;
+  esac
+  if [ -z "$t" ]; then
+    command -v security >/dev/null 2>&1 && security delete-generic-password -s 436c-mcp >/dev/null 2>&1
+    echo "check failed: a course token starts with s436c- and has 38 characters. Nothing saved; run the block again"
+  else
+    echo "check passed"
+    if command -v security >/dev/null 2>&1; then
+      line='export KB_MCP_TOKEN="$(security find-generic-password -s 436c-mcp -w 2>/dev/null)"'
+      where="the macOS keychain"
+    elif command -v secret-tool >/dev/null 2>&1 \
+      && printf '%s' "$t" | secret-tool store --label="CPSC 436C MCP token" service 436c-mcp 2>/dev/null; then
+      line='export KB_MCP_TOKEN="$(secret-tool lookup service 436c-mcp 2>/dev/null)"'
+      where="the system keyring"
+    else
+      line="export KB_MCP_TOKEN='$t'"
+      where="$rc (no keyring found)"
+    fi
+    touch "$rc"
+    tmp=$(mktemp)
+    grep -v '# cpsc436c setup$' "$rc" > "$tmp"
+    printf '%s  # cpsc436c setup\n' "$line" >> "$tmp"
+    cat "$tmp" > "$rc"
+    rm -f "$tmp"
+    eval "$line"
+    echo "stored in $where; saved, ${#KB_MCP_TOKEN} characters"
+  fi
+  unset t line where tmp
 }
 ```
 
-The block stores the token in the macOS keychain, or in the Linux system keyring when there is one, and adds a line
-to the shell profile (`~/.zshrc` or `~/.bashrc`) that looks it up when a terminal opens. Where there is no keyring
-(a Linux server, WSL), it prints `no keyring found` and the profile line holds the token itself: then do not share
-that file or a screenshot of it. Each run replaces the earlier line. The token is typed at a silent prompt, so it
-does not appear on the screen or in the shell's history. Run on 2026-11-20 in bash on Linux, with a keyring and
-without one; the macOS keychain branch and zsh are checked against the docs, not run.
+The block first checks the paste: a course token starts with `s436c-` and has 38 characters. If the check fails, it
+prints `check failed` and changes nothing (on macOS it removes the keychain entry it just made). It prints pass or
+fail only, never the token. Then it stores the token in the macOS keychain, or in the Linux system keyring when
+there is one, and adds one line to the shell profile, the file a new terminal reads when it opens (`~/.zshrc` or
+`~/.bashrc`). That line looks the token up and ends in `# cpsc436c setup`; each run replaces only that line and
+keeps the rest of the file and its permissions. Where there is no keyring (a Linux server, WSL), it prints
+`no keyring found` and the profile line holds the token itself: then do not share that file or a screenshot of it.
+The token is typed at a silent prompt, so it does not appear on the screen or in the shell's history. Run on
+2026-11-20 in bash on Linux, with a keyring and without one; the macOS keychain branch and zsh are checked against
+the docs, not run.
 
-Windows (PowerShell):
+Windows (PowerShell), in the student's new PowerShell window:
 
 ```powershell
 & {
   $s = Read-Host "Paste your token, then press Enter" -AsSecureString
   $t = [System.Net.NetworkCredential]::new("", $s).Password
-  [Environment]::SetEnvironmentVariable("KB_MCP_TOKEN", $t, "User")
-  "saved, $($t.Length) characters"
+  if ($t -cmatch '^s436c-[A-Za-z0-9_-]{32}$') {
+    "check passed"
+    [Environment]::SetEnvironmentVariable("KB_MCP_TOKEN", $t, "User")
+    "saved, $($t.Length) characters"
+  } else {
+    "check failed: a course token starts with s436c- and has 38 characters. Nothing saved; run the block again"
+  }
 }
 ```
 
-This saves the token in the user's environment, where apps started afterwards find it. Windows Credential Manager
-does not have a built-in command that reads a token back, so the user environment holds it. Checked against the PowerShell
-docs, not run.
+This checks the paste in the same way, then saves the token in the user's environment, where apps started
+afterwards find it. Windows Credential Manager does not have a built-in command that reads a token back, so the
+user environment holds it. Checked against the PowerShell docs, not run.
 
-Both print `saved, 38 characters`. Another number means the paste took too little or too much: run the block again.
+Both print `check passed` and `saved, 38 characters` when the token is stored. `check failed` means the paste took
+too little or too much, and nothing was written: run the block again.
 
-Then the student opens one more new terminal and runs the check for their system. It prints the length, never the
-token.
+Then the student opens a new terminal and runs the check for their system. It prints the length, never the token.
+On Windows, a new tab is not enough: the student closes the terminal application fully (every window), starts it
+again, and runs the check there.
+
+macOS or Linux, in the student's new terminal:
 
 ```bash
 test -n "$KB_MCP_TOKEN" \
@@ -444,11 +478,15 @@ test -n "$KB_MCP_TOKEN" \
   || echo "not set"
 ```
 
+Windows (PowerShell), in the restarted terminal application:
+
 ```powershell
 if ($env:KB_MCP_TOKEN) { "set, $($env:KB_MCP_TOKEN.Length) characters" } else { "not set" }
 ```
 
-`set, 38 characters` means the setting works. `not set` means stop: see [If a check fails](#if-a-check-fails).
+`set, 38 characters` means the setting works. `not set` means stop: see [If a check fails](#if-a-check-fails). On
+Windows, if it still says `not set` after the terminal application was restarted, the student shows a TA the output
+of the Windows block above and of this check.
 
 ## Step 5: the student restarts the assistant
 
@@ -594,7 +632,7 @@ again with step 2.
 |---|---|
 | The fetch printed an error, an HTML page or nothing | Stop. The student opens https://ilm.wiki/436c/mcp-setup in a browser and shows a TA |
 | `not set` in Step 4 or Step 6 | Step 4: the block did not save the token; run it again in a new terminal. Step 6: the assistant was not started from that terminal; repeat Step 5 |
-| `saved, N characters` with N other than 38 | The paste was incomplete or included extra text. Run the block of Step 4 again |
+| `check failed` in Step 4 | The paste was incomplete or included extra text, and nothing was saved. Run the block of Step 4 again |
 | Claude Code: `Missing environment variables: KB_MCP_TOKEN` | The assistant started without the token. Repeat Step 5 |
 | `436c` fails with `HTTP 401` or `invalid_token`; the gateway replies `HTTP 401` with `unknown API key` | The token is set but wrong or out of date. The student copies it again from "Your course MCP tokens" and runs the block of Step 4 again, then Step 5. Ignore the server's advice about clearing authentication: the course server uses this token only |
 | Gateway replies `HTTP 401` with `missing or malformed API key` | The command ran without the token. Do check 1 of Step 6 |
