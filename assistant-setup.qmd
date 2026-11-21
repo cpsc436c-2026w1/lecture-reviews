@@ -113,52 +113,92 @@ values hidden, or says the server is not there. Run it exactly as written: the h
 | Kiro CLI, Kiro IDE | the file command below with `~/.kiro/settings/mcp.json` | `No such file or directory`, or neither name printed |
 
 `claude mcp get` prints header values as they are, so pipe it through the filter that hides every header value
-other than a `${…}` variable, and anything after a `?` in the URL. Claude Code, macOS or Linux (your terminal):
+other than `Authorization: Bearer ${KB_MCP_TOKEN}`, and every URL other than the two URLs in Values. Claude Code, macOS or Linux (your terminal):
 
 ```bash
 claude mcp get 436c 2>&1 \
-  | sed -E -e '/^    [^ ].*: /{/\$\{[A-Za-z_][A-Za-z0-9_]*\}$/!s/^(    [^:]+: ).*/\1<hidden>/;}' \
-      -e 's/^(  URL: [^?]*)\?.*/\1?<hidden>/'
+  | sed -E -e '/^    [^ ].*: /{/^    Authorization: Bearer \$\{KB_MCP_TOKEN\}$/!s/^(    [^:]+: ).*/\1<hidden>/;}' \
+      -e '/^  URL: /{/^  URL: https:\/\/(kb-cloud-students\.fly\.dev\/mcp|knowledge-mcp\.global\.api\.aws)$/!s/^(  URL: ).*/\1<hidden>/;}'
 ```
 
 Claude Code, Windows (your PowerShell terminal; checked against the docs, not run):
 
 ```powershell
-claude mcp get 436c 2>&1 | ForEach-Object { $l = "$_" -replace '^(  URL: [^?]*)\?.*', '$1?<hidden>'; if ($l -match '^    \S.*: ' -and $l -notmatch '\$\{\w+\}$') { $l -replace '^(    [^:]+: ).*', '$1<hidden>' } else { $l } }
+claude mcp get 436c 2>&1 | ForEach-Object { $l = "$_"; if ($l -match '^  URL: ' -and $l -cnotmatch '^  URL: https://(kb-cloud-students\.fly\.dev/mcp|knowledge-mcp\.global\.api\.aws)$') { $l = '  URL: <hidden>' }; if ($l -match '^    \S.*: ' -and $l -cnotmatch '^    Authorization: Bearer \$\{KB_MCP_TOKEN\}$') { $l -replace '^(    [^:]+: ).*', '$1<hidden>' } else { $l } }
 ```
 
 Run each again with `aws-knowledge` in place of `436c`. An entry for `436c` without `Headers:` may use a header
-script: `grep -o '"headersHelper": *"[^"]*"' ~/.claude.json` (Windows:
-`Select-String -Path "$HOME\.claude.json" -Pattern '"headersHelper": *"[^"]*"' | ForEach-Object { $_.Matches.Value }`)
-prints `sh ~/.claude/436c-mcp-headers.sh` for the script of this page.
+script: `grep -o -F '"headersHelper": "sh ~/.claude/436c-mcp-headers.sh"' ~/.claude.json` (Windows:
+`Select-String -Path "$HOME\.claude.json" -AllMatches -Pattern '"headersHelper": "sh ~/\.claude/436c-mcp-headers\.sh"' | ForEach-Object { $_.Matches.Value }`)
+prints that setting for the script of this page and nothing for any other script; nothing printed counts as other
+values.
 
 The file command, for a JSON configuration file (VS Code without the Copilot CLI, Kiro, a folder's `.mcp.json`).
-It prints only the matched pieces, never a whole line: the names `"436c"` and `"aws-knowledge"`, each `"url"` up to
-any `?`, and `"Authorization": "Bearer ${KB_MCP_TOKEN}"` when the header has that value. An `"Authorization"` printed
-alone means the header holds some other value, which the command does not print. Set `f` to the file first.
+It prints only the matched pieces, never a whole line: the names `"436c"` and `"aws-knowledge"`; a `"url"` in full
+only when it is one of the two URLs in Values; `"Authorization": "Bearer ${KB_MCP_TOKEN}"` and the `"headersHelper"`
+of this page in full only when they have those values. A `"url"`, `"Authorization"` or `"headersHelper"` printed
+alone means some other value, which the command does not print. Each name's settings are the pieces printed after it
+and before the next name. An entry matches this page only when its pieces are exactly: for `436c`, the full `"url"`
+and one full `"Authorization"` or `"headersHelper"`; for `aws-knowledge`, the full `"url"` alone. Anything else
+counts as other values. Set `f` to the file first.
 macOS or Linux (your terminal):
 
 ```bash
 f=~/.copilot/mcp-config.json
-grep -n -o -e '"436c"' -e '"aws-knowledge"' -e '"url": *"[^"?]*' \
-  -e '"Authorization": *"Bearer \${KB_MCP_TOKEN}"' -e '"Authorization"' "$f"
+grep -n -o -e '"436c"' -e '"aws-knowledge"' \
+  -e '"url": *"https://kb-cloud-students\.fly\.dev/mcp"' -e '"url": *"https://knowledge-mcp\.global\.api\.aws"' -e '"url"' \
+  -e '"Authorization": *"Bearer \${KB_MCP_TOKEN}"' -e '"Authorization"' \
+  -e '"headersHelper": *"sh ~/\.claude/436c-mcp-headers\.sh"' -e '"headersHelper"' "$f"
 ```
 
 Windows (your PowerShell terminal; checked against the docs, not run):
 
 ```powershell
-$f = "$HOME\.copilot\mcp-config.json"; Select-String -Path $f -AllMatches -Pattern '"436c"|"aws-knowledge"|"url": *"[^"?]*|"Authorization": *"Bearer \$\{KB_MCP_TOKEN\}"|"Authorization"' | ForEach-Object { $n = $_.LineNumber; $_.Matches | ForEach-Object { "${n}: $($_.Value)" } }
+$f = "$HOME\.copilot\mcp-config.json"; Select-String -Path $f -AllMatches -Pattern '"436c"|"aws-knowledge"|"url": *"https://kb-cloud-students\.fly\.dev/mcp"|"url": *"https://knowledge-mcp\.global\.api\.aws"|"url"|"Authorization": *"Bearer \$\{KB_MCP_TOKEN\}"|"Authorization"|"headersHelper": *"sh ~/\.claude/436c-mcp-headers\.sh"|"headersHelper"' | ForEach-Object { $n = $_.LineNumber; $_.Matches | ForEach-Object { "${n}: $($_.Value)" } }
 ```
 
 Also look for a `.mcp.json` (Claude Code, Copilot), `.codex/config.toml` (Codex) or `.kiro/settings/mcp.json` (Kiro)
 in the folder the student works in: the file command with `f=.mcp.json` or `f=.kiro/settings/mcp.json`, and for
-Codex `grep -n '^\[mcp_servers' .codex/config.toml`. `claude mcp get` may not show a folder's `.mcp.json` entry that
+Codex the command below. `claude mcp get` may not show a folder's `.mcp.json` entry that
 the student has not approved, so read that file. A server of the same name in the
-folder takes precedence over the user configuration there. If it has the URL of this page and `${KB_MCP_TOKEN}` (or the header script) for its token,
-keep it. Otherwise tell the student and ask whether you may change that entry to the values of this page. If they
+folder takes precedence over the user configuration there. If the file command shows that the entry matches this
+page (above), or the Codex command prints `match` for each setting and `other settings 0`, keep it. Otherwise tell the student and ask whether you may change that entry to the values of this page. If they
 agree, change it and run this step's command again to see that the folder's entry now has those values. If they want
 to keep it as it is, stop the setup for that folder: the assistant would use that entry there, whatever the user
 configuration says. Tell the student so, and offer to go on in another folder.
+
+Codex, a folder's `.codex/config.toml` (your terminal, macOS or Linux). For each name it prints only whether `url`
+and, for `436c`, `bearer_token_env_var` match Values, and how many other settings the entry has; never a value:
+
+```bash
+awk -v u1='"https://kb-cloud-students.fly.dev/mcp"' -v u2='"https://knowledge-mcp.global.api.aws"' '
+  /^[[:space:]]*\[/ {
+    h = $0; gsub(/[[:space:]"]/, "", h); s = ""
+    if (h ~ /^\[mcp_servers\.436c[].]/) s = "436c"
+    else if (h ~ /^\[mcp_servers\.aws-knowledge[].]/) s = "aws-knowledge"
+    if (s != "") { seen[s] = 1; if (h !~ /^\[mcp_servers\.[^.]*\]$/) other[s]++ }
+    next
+  }
+  s == "" && /436c|aws-knowledge/ { form = 1 }
+  s != "" && /^[[:space:]]*[^#[:space:]]/ {
+    k = $0; sub(/=.*/, "", k); gsub(/[[:space:]"]/, "", k)
+    v = $0; sub(/^[^=]*=[[:space:]]*/, "", v); sub(/[[:space:]]+$/, "", v)
+    if (k == "url") url[s] = (v == (s == "436c" ? u1 : u2)) ? "match" : "other"
+    else if (k == "bearer_token_env_var" && s == "436c") tok[s] = (v == "\"KB_MCP_TOKEN\"") ? "match" : "other"
+    else other[s]++
+  }
+  END {
+    split("436c aws-knowledge", n, " ")
+    for (i = 1; i <= 2; i++) {
+      x = n[i]
+      if (!seen[x]) { print x ": not in this file"; continue }
+      r = x ": url " (url[x] ? url[x] : "missing")
+      if (x == "436c") r = r ", bearer_token_env_var " (tok[x] ? tok[x] : "missing")
+      print r ", other settings " other[x] + 0
+    }
+    if (form) print "436c or aws-knowledge also appears outside its own section: counts as other values"
+  }' .codex/config.toml
+```
 
 Do not print a whole configuration file: it may hold another server's token. If a server exists with the values on
 this page, keep it and say so. For Claude Code, an entry whose header is `Bearer ${KB_MCP_TOKEN}` also counts as
@@ -307,7 +347,7 @@ grep -o -F 'Bearer ${KB_MCP_TOKEN}' ~/.copilot/mcp-config.json
 Windows (PowerShell; checked against the docs, not run):
 
 ```powershell
-Select-String -Path "$HOME\.copilot\mcp-config.json" -SimpleMatch 'Bearer ${KB_MCP_TOKEN}' | ForEach-Object { $_.Matches.Value }
+Select-String -Path "$HOME\.copilot\mcp-config.json" -AllMatches -Pattern 'Bearer \$\{KB_MCP_TOKEN\}' | ForEach-Object { $_.Matches.Value }
 ```
 
 It prints `Bearer ${KB_MCP_TOKEN}`, the matched text only. If it prints nothing, remove the entry and add it again with the single quotes.
@@ -393,31 +433,25 @@ macOS or Linux (zsh or bash), in the student's new terminal:
     */zsh) rc=~/.zshrc ;;
     *) rc=~/.bashrc ;;
   esac
-  t=; line=; where=; made=
-  if command -v security >/dev/null 2>&1; then
-    echo "macOS asks twice for the token (password data): paste it each time, then press Enter"
-    if security add-generic-password -U -s 436c-mcp -a "$USER" -w; then
-      made=yes
-      t=$(security find-generic-password -s 436c-mcp -w 2>/dev/null)
-    fi
-  else
-    printf 'Paste your token, then press Enter: '
-    read -rs t
-    echo
-  fi
+  t=; line=; where=
+  printf 'Paste your token, then press Enter: '
+  read -rs t
+  echo
   case "$t" in
     s436c-*[!A-Za-z0-9_-]*) t= ;;
     s436c-*) [ ${#t} -eq 38 ] || t= ;;
     *) t= ;;
   esac
   if [ -z "$t" ]; then
-    [ -n "$made" ] && security delete-generic-password -s 436c-mcp >/dev/null 2>&1
     echo "check failed: a course token starts with s436c- and has 38 characters. Nothing saved; run the block again"
   else
     echo "check passed"
     if command -v security >/dev/null 2>&1; then
-      line='export KB_MCP_TOKEN="$(security find-generic-password -s 436c-mcp -w 2>/dev/null)"'
-      where="the macOS keychain"
+      printf 'add-generic-password -U -s 436c-mcp -a %s -w %s\n' "$USER" "$t" | security -i >/dev/null 2>&1
+      if [ "$(security find-generic-password -s 436c-mcp -w 2>/dev/null)" = "$t" ]; then
+        line='export KB_MCP_TOKEN="$(security find-generic-password -s 436c-mcp -w 2>/dev/null)"'
+        where="the macOS keychain"
+      fi
     elif command -v secret-tool >/dev/null 2>&1 \
       && printf '%s' "$t" | secret-tool store --label="CPSC 436C MCP token" service 436c-mcp 2>/dev/null; then
       line='export KB_MCP_TOKEN="$(secret-tool lookup service 436c-mcp 2>/dev/null)"'
@@ -426,22 +460,28 @@ macOS or Linux (zsh or bash), in the student's new terminal:
       line="export KB_MCP_TOKEN='$t'"
       where="$rc (no keyring found)"
     fi
-    touch "$rc"
-    tmp=$(mktemp)
-    grep -v '# cpsc436c setup$' "$rc" > "$tmp"
-    printf '%s  # cpsc436c setup\n' "$line" >> "$tmp"
-    cat "$tmp" > "$rc"
-    rm -f "$tmp"
-    eval "$line"
-    echo "stored in $where; saved, ${#KB_MCP_TOKEN} characters"
+    if [ -z "$line" ]; then
+      echo "the macOS keychain did not take the token; the profile was not changed. Stop and ask a TA"
+    else
+      touch "$rc"
+      tmp=$(mktemp)
+      grep -v '# cpsc436c setup$' "$rc" > "$tmp"
+      printf '%s  # cpsc436c setup\n' "$line" >> "$tmp"
+      cat "$tmp" > "$rc"
+      rm -f "$tmp"
+      eval "$line"
+      echo "stored in $where; saved, ${#KB_MCP_TOKEN} characters"
+    fi
   fi
-  unset t line where tmp made
+  unset t line where tmp
 }
 ```
 
 The block first checks the paste: a course token starts with `s436c-` and has 38 characters. If the check fails, it
-prints `check failed` and changes nothing (on macOS it removes the keychain entry it just made). It prints pass or
-fail only, never the token. Then it stores the token in the macOS keychain, or in the Linux system keyring when
+prints `check failed` and changes nothing. It prints pass or fail only, never the token. On macOS it then hands the
+token to `security` on standard input, not as a command argument, and reads the keychain entry back; if the entry
+does not hold the token, it prints `the macOS keychain did not take the token`, changes neither the profile nor any
+other keychain entry, and the student asks a TA. Then it stores the token in the macOS keychain, or in the Linux system keyring when
 there is one, and adds one line to the shell profile, the file a new terminal reads when it opens (`~/.zshrc` or
 `~/.bashrc`). That line looks the token up and ends in `# cpsc436c setup`; each run replaces only that line and
 keeps the rest of the file and its permissions. Where there is no keyring (a Linux server, WSL), it prints
@@ -654,9 +694,18 @@ repository. Run on 2026-11-20 in a test repository.
    opens a new terminal as in Step 4, and you run `uv --version` again. Then run `git status --short`: the list does
    not include `.env`. Do not open or print `.env`. Then check that a script started with the file sees both values:
 
+   macOS or Linux (the variables of Step 4 are removed for this one command, so only `.env` can set them):
+
    ```bash
-   uv run --env-file .env python -c \
+   env -u KB_MCP_TOKEN -u COURSE_GATEWAY_URL uv run --env-file .env python -c \
      'import os; print([k + (" set" if os.environ.get(k) else " unset") for k in ("KB_MCP_TOKEN", "COURSE_GATEWAY_URL")])'
+   ```
+
+   Windows (PowerShell; removes both variables for the check and puts them back afterwards; checked against the
+   docs, not run):
+
+   ```powershell
+   $k = $env:KB_MCP_TOKEN; $g = $env:COURSE_GATEWAY_URL; try { Remove-Item Env:KB_MCP_TOKEN, Env:COURSE_GATEWAY_URL -ErrorAction SilentlyContinue; uv run --env-file .env python -c 'import os; print([k + ('' set'' if os.environ.get(k) else '' unset'') for k in (''KB_MCP_TOKEN'', ''COURSE_GATEWAY_URL'')])' } finally { $env:KB_MCP_TOKEN = $k; $env:COURSE_GATEWAY_URL = $g }
    ```
 
    It prints `['KB_MCP_TOKEN set', 'COURSE_GATEWAY_URL set']`. `unset` means the line is missing from `.env`: repeat
