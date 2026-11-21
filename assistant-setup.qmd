@@ -351,7 +351,7 @@ Windows (PowerShell):
 ```
 
 This saves the token in the user's environment, where apps started afterwards find it. Windows Credential Manager
-has no built-in command that reads a token back, so the user environment holds it. Checked against the PowerShell
+does not have a built-in command that reads a token back, so the user environment holds it. Checked against the PowerShell
 docs, not run.
 
 Both print `saved, 38 characters`. Another number means the paste took too little or too much: run the block again.
@@ -508,7 +508,7 @@ again with step 2.
 | Claude Code: `436c` fails with `Dynamic Client Registration rejected (HTTP 404)` | The header script found no token: neither the keychain entry nor `KB_MCP_TOKEN`. Run the block of Step 4 again, then Step 5 |
 | macOS shows a dialog asking to allow access to the keychain item `436c-mcp` | Choose **Always Allow** |
 | `claude mcp get 436c` (Windows) or the Copilot file shows a token instead of `${KB_MCP_TOKEN}` | Remove the entry, add it again with the single quotes, and ask the student to get a new token from a TA, since the old one was written to a file |
-| A server is missing from the list, or the assistant has no course tools | The assistant read its configuration before Step 3. Repeat Step 5 |
+| A server is missing from the list, or the assistant does not list the course tools | The assistant read its configuration before Step 3. Repeat Step 5 |
 | Kiro IDE warns that `KB_MCP_TOKEN` is not approved | Add it under **Mcp Approved Env Vars** (Step 3, Kiro), then restart Kiro |
 | Kiro CLI: `/mcp` lists neither server | Check that `~/.kiro/settings/mcp.json` is valid JSON with both entries, then restart `kiro-cli chat`. If they still do not appear, show a TA |
 | Kiro IDE or VS Code started from the icon fails with 401, the terminal check says `set` | The app did not see the shell profile. Quit it and start it from the terminal: `kiro .` or `code .` |
