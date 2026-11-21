@@ -125,7 +125,7 @@ fi
 Windows (your PowerShell terminal; checked against the docs, not run):
 
 ```powershell
-$rows = claude mcp list 2>$null; if ($LASTEXITCODE -ne 0) { "name listing failed: stop and ask a TA" } else { $rows | ForEach-Object { if ("$_" -match '^([A-Za-z0-9_.-]+): ') { $Matches[1] } } }
+if (-not (Get-Command claude -ErrorAction SilentlyContinue)) { "name listing failed: stop and ask a TA" } else { $rows = claude mcp list 2>$null; if ($LASTEXITCODE -ne 0) { "name listing failed: stop and ask a TA" } else { $rows | ForEach-Object { if ("$_" -match '^([A-Za-z0-9_.-]+): ') { $Matches[1] } } } }
 ```
 
 Codex CLI, macOS or Linux (your terminal):
@@ -229,10 +229,10 @@ print("removed")
 PY
 ```
 
-Windows (your PowerShell terminal; checked against the docs, not run):
+Windows (your PowerShell terminal; checked against the docs, not run). Use PowerShell 7.1 or newer; older versions can silently truncate nested settings. If it is unavailable, or serialization warns or fails, do not write the file; stop and ask a TA.
 
 ```powershell
-$f = "$HOME\.copilot\mcp-config.json"; $d = Get-Content $f -Raw | ConvertFrom-Json; foreach ($k in 'mcpServers', 'servers') { if ($d.$k) { $d.$k.PSObject.Properties.Remove('436c'); $d.$k.PSObject.Properties.Remove('aws-knowledge') } }; [IO.File]::WriteAllText($f, ($d | ConvertTo-Json -Depth 100 -WarningAction Stop)); "removed"
+if ($PSVersionTable.PSVersion -lt [version]'7.1') { throw 'PowerShell 7.1+ required for safe JSON removal; stop and ask a TA' }; $f = "$HOME\.copilot\mcp-config.json"; $d = Get-Content $f -Raw | ConvertFrom-Json; foreach ($k in 'mcpServers', 'servers') { if ($d.$k) { $d.$k.PSObject.Properties.Remove('436c'); $d.$k.PSObject.Properties.Remove('aws-knowledge') } }; [IO.File]::WriteAllText($f, ($d | ConvertTo-Json -Depth 100 -WarningAction Stop)); "removed"
 ```
 
 ## Step 3: write the configuration
