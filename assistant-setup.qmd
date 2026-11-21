@@ -537,8 +537,12 @@ Do the checks in order and stop at the first failure.
    `mcp__436c__cpsc436c_start_here`). The assistant may ask the student to allow the call; they allow it. The tool
    result starts with a `catalog_version` and names the current milestone; show it to the student. The server's
    tools include `cpsc436c_start_here`, `cpsc436c_search`, `cpsc436c_read` and `cpsc436c_list`.
-4. **AWS Knowledge tools.** The tools of `aws-knowledge` include `aws___search_documentation` and
-   `aws___read_documentation`.
+4. **AWS Knowledge tools.** Check that your list of tools from `aws-knowledge` includes `aws___list_regions`,
+   `aws___search_documentation` and `aws___read_documentation`. Then call `aws___list_regions` of the server
+   `aws-knowledge` (Claude Code names it `mcp__aws-knowledge__aws___list_regions`); it takes no arguments. The
+   assistant may ask the student to allow the call; they allow it. It works when the result lists AWS Regions and
+   includes `ca-central-1` (Canada (Central)); tell the student it did. If the tools are missing or the call returns
+   an error, stop: see [If a check fails](#if-a-check-fails).
 5. **Course LLM gateway.** In your own terminal, run the command for the system. It asks for the list of models and
    does not call a model.
 
@@ -699,7 +703,7 @@ again with step 2.
 | Claude Code: `436c` fails with `Dynamic Client Registration rejected (HTTP 404)` | The header script found no token: neither the keychain entry nor `KB_MCP_TOKEN`. Run the block of Step 4 again, then Step 5 |
 | macOS shows a dialog about the keychain item `436c-mcp` | Not seen in our checks (not run on macOS). The student shows a TA before choosing |
 | The Step 2 command (Claude Code on Windows) or the Copilot file check shows `<hidden>` or a token instead of `${KB_MCP_TOKEN}` | Remove the entry, add it again with the single quotes, and ask the student to get a new token from a TA, since the old one was written to a file |
-| A server is missing from the list, or the assistant does not list the course tools | The assistant read its configuration before Step 3. Repeat Step 5 |
+| A server is missing from the list, or the assistant does not list the course tools or the AWS Knowledge tools | The assistant read its configuration before Step 3. Repeat Step 5 |
 | Kiro IDE warns that `KB_MCP_TOKEN` is not approved | Add it under **Mcp Approved Env Vars** (Step 3, Kiro), then restart Kiro |
 | Kiro CLI: `/mcp` lists neither server | Check that `~/.kiro/settings/mcp.json` is valid JSON with both entries, then restart `kiro-cli chat`. If they still do not appear, show a TA |
 | Kiro IDE or VS Code started from the icon fails with 401, the terminal check says `set` | The app did not see the shell profile. VS Code: run **Shell Command: Install 'code' command in PATH** from the command palette, quit VS Code, then start it with `code .` in a terminal. Kiro IDE: not verified; show a TA |
