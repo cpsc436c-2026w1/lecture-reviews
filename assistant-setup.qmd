@@ -109,7 +109,8 @@ claude mcp add --transport http --scope user \
 
 In PowerShell, run each command on one line, with the same single quotes. Both servers go into `~/.claude.json`,
 for all the student's folders ([Claude Code MCP](https://code.claude.com/docs/en/mcp)). If the team repository
-already has a `.mcp.json` copied from `.mcp.json.example`, it names the same two servers and can stay.
+already has a `.mcp.json` copied from `.mcp.json.example`, it can stay: it names the same two servers with the same
+settings.
 
 ### Kiro IDE and Kiro CLI
 
@@ -176,10 +177,10 @@ Add these two servers under `mcpServers` in `~/.copilot/mcp-config.json`
 }
 ```
 
-### Course LLM gateway, for the student's code
+## Step 4: set the course LLM gateway for the student's code
 
-Course code and Inspect read the gateway from these variables. Give the student the lines for their system to add
-after the token line from Step 2:
+Do this step for every assistant. Course code and Inspect read the gateway from these variables. Give the student
+the lines for their system to run in their own terminal:
 
 macOS (zsh; on Linux, use `~/.bashrc`):
 
@@ -202,7 +203,7 @@ setx PROXY_API_KEY "$env:KB_MCP_TOKEN"
 Do not set `OPENAI_API_KEY` or `OPENAI_BASE_URL` for the whole user account: other tools on the laptop read them.
 Set them only in the project's own code or its untracked `.env` file.
 
-## Step 4: the student restarts the assistant
+## Step 5: the student restarts the assistant
 
 An assistant reads its MCP configuration and the environment when it starts. Ask the student to:
 
@@ -214,10 +215,10 @@ An assistant reads its MCP configuration and the environment when it starts. Ask
 
    ```text
    Run curl -sL https://ilm.wiki/436c/setup
-   and do Step 5 of the page it prints.
+   and do Step 6 of the page it prints.
    ```
 
-## Step 5: check both servers and the gateway
+## Step 6: check both servers and the gateway
 
 1. **Course MCP server.** Call the `cpsc436c_start_here` tool of the server `436c` and show the student the tool
    result. Then list the tools of `436c`. The list includes `cpsc436c_search`, `cpsc436c_read`, `cpsc436c_list`
@@ -231,7 +232,7 @@ An assistant reads its MCP configuration and the environment when it starts. Ask
    | Kiro IDE | Kiro panel (Kiro icon on the left bar), section **MCP Servers** |
    | Kiro CLI | `/mcp` in a `kiro-cli chat` session; `kiro-cli mcp list` shows only the servers in the files, not whether they connect |
    | Codex | `/mcp` in the `codex` chat; `codex mcp list` in a terminal |
-   | Copilot | VS Code: command **MCP: List Servers**; Copilot CLI: `/mcp` |
+   | Copilot | VS Code: command **Chat: Open Customizations**, then **MCP Servers** |
 
 4. **Course LLM gateway.** Run the command for the student's system. It asks for the list of models and does not
    call a model.
@@ -239,13 +240,13 @@ An assistant reads its MCP configuration and the environment when it starts. Ask
    ```bash
    curl -s \
      -H "Authorization: Bearer $KB_MCP_TOKEN" \
-     "$COURSE_GATEWAY_URL/models"
+     https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1/models
    ```
 
    ```powershell
    curl.exe -s `
      -H "Authorization: Bearer $env:KB_MCP_TOKEN" `
-     "$env:COURSE_GATEWAY_URL/models"
+     https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1/models
    ```
 
    The reply lists `qwen3.8-27b`, `qwen3.6-35b-a3b` and `qwen3-embedding-0.6b`.
@@ -256,8 +257,8 @@ Tell the student which checks passed. If all passed, the setup is done.
 
 | What you see | What to do |
 |---|---|
-| `436c` failed with `HTTP 401` or `invalid_token`; the gateway replies `missing or malformed API key` | The token did not reach the assistant, or it is not the student's current token. Check Step 2 with the check command. Ask the student to copy the token again from "Your course MCP tokens", with no spaces around it, then to repeat Step 4. The server's message about clearing authentication and re-registering does not apply: the course server uses this token only |
-| Claude Code warns `Missing environment variables: KB_MCP_TOKEN` | The assistant was started before the token was set. Repeat Step 4 |
+| `436c` failed with `HTTP 401` or `invalid_token`; the gateway replies `missing or malformed API key` | The token did not reach the assistant, or it is not the student's current token. Ask the student to copy the token again from "Your course MCP tokens" and to set it again as in Step 2: in `~/.zshrc` or `~/.bashrc`, replace the old `export KB_MCP_TOKEN` line in their editor; on Windows, run `setx KB_MCP_TOKEN` and `setx PROXY_API_KEY` again with the new token. Then repeat Step 5. The server's message about clearing authentication and re-registering does not apply: the course server uses this token only |
+| Claude Code warns `Missing environment variables: KB_MCP_TOKEN` | The assistant was started before the token was set. Repeat Step 5 |
 | Kiro warns that `KB_MCP_TOKEN` is not approved | Add it under **Mcp Approved Env Vars** (Step 3, Kiro), then restart Kiro |
 | Kiro CLI: `/mcp` lists neither server, but `kiro-cli mcp list` shows them | The agent in the chat may not include the MCP files. In its agent configuration, `includeMcpJson` must be `true` ([Kiro agent configuration](https://kiro.dev/docs/custom-agents/configuration-reference/)). Ask a TA if it is |
 | `aws-knowledge` fails as well | The laptop cannot reach the internet from the assistant. Try without the VPN, or ask a TA about the network |
