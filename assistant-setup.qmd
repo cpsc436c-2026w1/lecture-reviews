@@ -162,8 +162,10 @@ header values hidden (Rule 5) and ask before you replace it.
 
 ## Step 3: write the configuration
 
-Use only the section for the student's assistant. On Windows, run the commands in PowerShell: the single quotes keep
-`${KB_MCP_TOKEN}` as text there too, and `~` means the home folder `$HOME`.
+Use only the section for the student's assistant. The multi-line commands are for bash or zsh on macOS and Linux.
+On Windows, use the single-line block labelled Windows (PowerShell) instead: PowerShell does not continue a line
+with `\`. The single quotes keep `${KB_MCP_TOKEN}` as text there too, and `~` means the home folder `$HOME`. The
+Windows blocks are checked against the docs, not run.
 
 ### Claude Code
 
@@ -210,11 +212,18 @@ The script holds no token.
    config`, in `~/.claude.json`. Adding a name that exists prints `MCP server 436c already exists in user config`;
    to replace it, first run `claude mcp remove 436c -s user`.
 
-On Windows, there is no keychain reader to run, so the header reads the variable instead. Run this in PowerShell
-in place of the `add-json` command; the single quotes keep `${KB_MCP_TOKEN}` as text:
+On Windows, there is no keychain reader to run, so the header reads the variable instead. Skip the script and
+run these two commands in your PowerShell terminal in place of the two above; the single quotes keep
+`${KB_MCP_TOKEN}` as text.
+
+Windows (PowerShell):
 
 ```powershell
 claude mcp add --transport http --scope user 436c https://kb-cloud-students.fly.dev/mcp --header 'Authorization: Bearer ${KB_MCP_TOKEN}'
+```
+
+```powershell
+claude mcp add --transport http --scope user aws-knowledge https://knowledge-mcp.global.api.aws
 ```
 
 On Windows, the PowerShell command of Step 2 then shows `Authorization: Bearer ${KB_MCP_TOKEN}`; `<hidden>` means
@@ -240,6 +249,16 @@ codex mcp add aws-knowledge \
   --url https://knowledge-mcp.global.api.aws
 ```
 
+Windows (PowerShell), the same two commands:
+
+```powershell
+codex mcp add 436c --url https://kb-cloud-students.fly.dev/mcp --bearer-token-env-var KB_MCP_TOKEN
+```
+
+```powershell
+codex mcp add aws-knowledge --url https://knowledge-mcp.global.api.aws
+```
+
 Each prints `Added global MCP server '…'.` The second also prints `MCP server may or may not require login`; ignore
 it, because `aws-knowledge` needs no login. They write `~/.codex/config.toml`. Check with `codex mcp list`: the row
 for `436c` shows `KB_MCP_TOKEN` and `Bearer token`. This list does not connect to the servers; Step 6 does.
@@ -263,11 +282,27 @@ copilot mcp add --transport http aws-knowledge \
   https://knowledge-mcp.global.api.aws
 ```
 
+Windows (PowerShell), the same two commands:
+
+```powershell
+copilot mcp add --transport http 436c https://kb-cloud-students.fly.dev/mcp --header 'Authorization: Bearer ${KB_MCP_TOKEN}'
+```
+
+```powershell
+copilot mcp add --transport http aws-knowledge https://knowledge-mcp.global.api.aws
+```
+
 Each prints `Added server "…"`. They write `~/.copilot/mcp-config.json`. To replace an entry, first run
 `copilot mcp remove 436c`. `copilot mcp get` hides the header as `***`, so check the file itself:
 
 ```bash
 grep -F 'Bearer ${KB_MCP_TOKEN}' ~/.copilot/mcp-config.json
+```
+
+Windows (PowerShell):
+
+```powershell
+Select-String -Path "$HOME\.copilot\mcp-config.json" -SimpleMatch 'Bearer ${KB_MCP_TOKEN}' | ForEach-Object { $_.Line.Trim() }
 ```
 
 It prints the header line. If it prints nothing, remove the entry and add it again with the single quotes.
@@ -453,7 +488,7 @@ Do the checks in order and stop at the first failure.
 
    | Assistant | What to run | Works when |
    |---|---|---|
-   | Claude Code | `claude mcp list` in your terminal; on macOS and Linux also `grep -c 's436c-' ~/.claude.json` | `436c: … (HTTP) - ✔ Connected` and `aws-knowledge: … - ✔ Connected`; the `grep` prints `0`, meaning the file holds no token (its exit status 1 is expected) |
+   | Claude Code | `claude mcp list` in your terminal; on macOS and Linux also `grep -c 's436c-' ~/.claude.json`; on Windows `(Select-String -Path "$HOME\.claude.json" -SimpleMatch 's436c-').Count` | `436c: … (HTTP) - ✔ Connected` and `aws-knowledge: … - ✔ Connected`; the `grep` prints `0`, meaning the file holds no token (its exit status 1 is expected) |
    | Codex CLI | the student types `/mcp` in the chat | both servers listed with tools |
    | Copilot CLI | the student types `/mcp show 436c` in the chat | the server is running and lists tools |
    | VS Code with Copilot | the student runs **Chat: Open Customizations**, then **MCP Servers** | both servers running |
@@ -469,11 +504,15 @@ Do the checks in order and stop at the first failure.
 5. **Course LLM gateway.** In your own terminal, run the command for the system. It asks for the list of models and
    does not call a model.
 
+   macOS or Linux:
+
    ```bash
    curl -sS -w '\nHTTP %{http_code}\n' \
      -H "Authorization: Bearer $KB_MCP_TOKEN" \
      https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1/models
    ```
+
+   Windows (PowerShell; the backtick continues the line):
 
    ```powershell
    curl.exe -sS -w "`nHTTP %{http_code}`n" `
