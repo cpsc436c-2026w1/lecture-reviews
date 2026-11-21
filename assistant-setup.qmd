@@ -101,20 +101,59 @@ ask only about the system. Use only the section for that assistant in Step 3.
 
 ## Step 2: look for existing servers
 
-In your own terminal, run the command for the student's assistant. It prints the configuration, with headers hidden
-by the tool, or says the server is not there.
+In your own terminal, run the command for the student's assistant. It prints names, URLs and headers with their
+values hidden, or says the server is not there. Run it exactly as written: the hiding is part of the command.
 
 | Assistant | Command | Not there yet |
 |---|---|---|
-| Claude Code | `claude mcp get 436c` and `claude mcp get aws-knowledge` | `No MCP server named "436c"` |
-| Codex CLI | `codex mcp get 436c` and `codex mcp get aws-knowledge` | `Error: No MCP server named '436c' found.` |
-| Copilot CLI, VS Code | `copilot mcp get 436c` and `copilot mcp get aws-knowledge` (header values print as `***`) | `Error: Server "436c" not found.` |
+| Claude Code | the Claude Code commands below, for `436c` and for `aws-knowledge` | `No MCP server named "436c"` |
+| Codex CLI | `codex mcp get 436c` and `codex mcp get aws-knowledge` (header values print as `*****`) | `Error: No MCP server named '436c' found.` |
+| Copilot CLI | `copilot mcp get 436c` and `copilot mcp get aws-knowledge` (header values print as `***`) | `Error: Server "436c" not found.` |
+| VS Code with Copilot | `copilot mcp get` as above if the Copilot CLI is installed; otherwise the VS Code commands below | `No such file or directory`, or neither name printed |
 | Kiro CLI, Kiro IDE | `grep -n -e '"436c"' -e '"aws-knowledge"' -e '"url"' ~/.kiro/settings/mcp.json` | `No such file or directory`, or neither name printed |
 
+`claude mcp get` prints header values as they are, so pipe it through the filter that hides every header value
+other than a `${…}` variable. Claude Code, macOS or Linux (your terminal):
+
+```bash
+claude mcp get 436c 2>&1 \
+  | sed -E '/^    [^ ].*: /{/\$\{[A-Za-z_][A-Za-z0-9_]*\}$/!s/^(    [^:]+: ).*/\1<hidden>/;}'
+```
+
+Claude Code, Windows (your PowerShell terminal; checked against the docs, not run):
+
+```powershell
+claude mcp get 436c 2>&1 | ForEach-Object { $l = "$_"; if ($l -match '^    \S.*: ' -and $l -notmatch '\$\{\w+\}$') { $l -replace '^(    [^:]+: ).*', '$1<hidden>' } else { $l } }
+```
+
+Run each again with `aws-knowledge` in place of `436c`. An entry for `436c` without `Headers:` may use a header
+script: `grep -o '"headersHelper": *"[^"]*"' ~/.claude.json` (Windows:
+`Select-String -Path "$HOME\.claude.json" -Pattern '"headersHelper": *"[^"]*"' | ForEach-Object { $_.Matches.Value }`)
+prints `sh ~/.claude/436c-mcp-headers.sh` for the script of this page.
+
+VS Code without the Copilot CLI: read only the matching lines of `~/.copilot/mcp-config.json`, with the header value
+hidden. macOS or Linux (your terminal):
+
+```bash
+grep -n -e '"436c"' -e '"aws-knowledge"' -e '"url"' -e '"Authorization"' ~/.copilot/mcp-config.json \
+  | sed -E '/"Authorization"/{/"Bearer \$\{KB_MCP_TOKEN\}"/!s/("Authorization": *).*/\1<hidden>/;}'
+```
+
+Windows (your PowerShell terminal; checked against the docs, not run):
+
+```powershell
+Select-String -Path "$HOME\.copilot\mcp-config.json" -Pattern '"436c"','"aws-knowledge"','"url"','"Authorization"' | ForEach-Object { "$($_.LineNumber): " + ($_.Line -replace '("Authorization":\s*)(?!"Bearer \$\{KB_MCP_TOKEN\}").*', '$1<hidden>') }
+```
+
 Also look for a `.mcp.json` (Claude Code, Copilot), `.codex/config.toml` (Codex) or `.kiro/settings/mcp.json` (Kiro)
-in the folder the student works in. A server of the same name there takes precedence over the user configuration
-for that folder. Tell the student, and ask whether to keep it; if they keep it, it must have the same URL and
-`${KB_MCP_TOKEN}` in its header.
+in the folder the student works in, with the same kind of command (for `.mcp.json`, the VS Code command with the
+file name changed; for Codex, `grep -n '^\[mcp_servers' .codex/config.toml`). `claude mcp get` does not show a
+folder's `.mcp.json` entry until the student has approved it, so read that file. A server of the same name in the
+folder takes precedence over the user configuration there. If it has the URL of this page and `${KB_MCP_TOKEN}` (or the header script) for its token,
+keep it. Otherwise tell the student and ask whether you may change that entry to the values of this page. If they
+agree, change it and run this step's command again to see that the folder's entry now has those values. If they want
+to keep it as it is, stop the setup for that folder: the assistant would use that entry there, whatever the user
+configuration says. Tell the student so, and offer to go on in another folder.
 
 Do not print a whole configuration file: it may hold another server's token. If a server exists with the values on
 this page, keep it and say so. For Claude Code, an entry whose header is `Bearer ${KB_MCP_TOKEN}` also counts as
@@ -178,8 +217,8 @@ in place of the `add-json` command; the single quotes keep `${KB_MCP_TOKEN}` as 
 claude mcp add --transport http --scope user 436c https://kb-cloud-students.fly.dev/mcp --header 'Authorization: Bearer ${KB_MCP_TOKEN}'
 ```
 
-On Windows, `claude mcp get 436c` then shows `Authorization: Bearer ${KB_MCP_TOKEN}`; anything else means the quotes
-were lost: remove the entry and add it again.
+On Windows, the PowerShell command of Step 2 then shows `Authorization: Bearer ${KB_MCP_TOKEN}`; `<hidden>` means
+the quotes were lost: remove the entry and add it again.
 
 ### Codex CLI
 
@@ -523,7 +562,7 @@ again with step 2.
 | Gateway replies `HTTP 429` | The key's rate limit was reached; wait a minute and run the check again |
 | Claude Code: `436c` fails with `Dynamic Client Registration rejected (HTTP 404)` | The header script found no token: neither the keychain entry nor `KB_MCP_TOKEN`. Run the block of Step 4 again, then Step 5 |
 | macOS shows a dialog about the keychain item `436c-mcp` | Not seen in our checks (not run on macOS). The student shows a TA before choosing |
-| `claude mcp get 436c` (Windows) or the Copilot file shows a token instead of `${KB_MCP_TOKEN}` | Remove the entry, add it again with the single quotes, and ask the student to get a new token from a TA, since the old one was written to a file |
+| The Step 2 command (Claude Code on Windows) or the Copilot file check shows `<hidden>` or a token instead of `${KB_MCP_TOKEN}` | Remove the entry, add it again with the single quotes, and ask the student to get a new token from a TA, since the old one was written to a file |
 | A server is missing from the list, or the assistant does not list the course tools | The assistant read its configuration before Step 3. Repeat Step 5 |
 | Kiro IDE warns that `KB_MCP_TOKEN` is not approved | Add it under **Mcp Approved Env Vars** (Step 3, Kiro), then restart Kiro |
 | Kiro CLI: `/mcp` lists neither server | Check that `~/.kiro/settings/mcp.json` is valid JSON with both entries, then restart `kiro-cli chat`. If they still do not appear, show a TA |
