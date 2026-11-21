@@ -115,13 +115,17 @@ Claude Code, macOS or Linux (your terminal). `claude mcp list` prints one line p
 command keeps the name only:
 
 ```bash
-claude mcp list 2>/dev/null | sed -n -E 's/^([A-Za-z0-9_.-]+): .*/\1/p'
+if names=$(claude mcp list 2>/dev/null); then
+  printf '%s\n' "$names" | sed -n -E 's/^([A-Za-z0-9_.-]+): .*/\1/p'
+else
+  echo "name listing failed: stop and ask a TA"
+fi
 ```
 
 Windows (your PowerShell terminal; checked against the docs, not run):
 
 ```powershell
-claude mcp list 2>$null | ForEach-Object { if ("$_" -match '^([A-Za-z0-9_.-]+): ') { $Matches[1] } }
+$rows = claude mcp list 2>$null; if ($LASTEXITCODE -ne 0) { "name listing failed: stop and ask a TA" } else { $rows | ForEach-Object { if ("$_" -match '^([A-Za-z0-9_.-]+): ') { $Matches[1] } } }
 ```
 
 Codex CLI, macOS or Linux (your terminal):
@@ -176,8 +180,10 @@ A folder file that git tracks belongs to the whole team: never change it. Check 
 
 - If `grep -c 's436c-' <file>` prints a number above 0, a token is written in the team's repository. Stop, tell the
   student the file name (not its contents), and ask them to tell a TA: that token has to be replaced.
-- Otherwise leave the file as it is. Its `436c` entry reads the token from `KB_MCP_TOKEN`, so it works in that folder
-  once Step 4 is done. Look only at the user configuration in what follows.
+- Otherwise leave the file as it is and look only at the user configuration in what follows. Its `436c` entry may
+  override the user entry in that folder, so Step 6's checks run in that team folder too. If the course server fails
+  there while it works in the home folder, tell the student which tracked file overrides it (the name only) and ask
+  them to raise it with their team or a TA. Do not edit the file.
 
 If neither `436c` nor `aws-knowledge` is printed anywhere, go on to Step 3. If either is, do not look at its settings.
 Tell the student: "I will replace your existing 436c and aws-knowledge entries with the course settings." Name the
@@ -201,7 +207,8 @@ which git does not track. Both are expected.
 
 The JSON removal deletes the keys `436c` and `aws-knowledge` from `mcpServers` and `servers`, keeps every other key,
 and writes the same file in place, so its mode stays. If the file cannot be read as JSON, it changes nothing and
-prints the error: stop and ask a TA. Set `f` to the file first.
+prints the error: stop and ask a TA. On Windows, if serialization warns or fails, do not write the file; stop and ask
+a TA. Set `f` to the file first.
 
 macOS or Linux (your terminal):
 
@@ -225,7 +232,7 @@ PY
 Windows (your PowerShell terminal; checked against the docs, not run):
 
 ```powershell
-$f = "$HOME\.copilot\mcp-config.json"; $d = Get-Content $f -Raw | ConvertFrom-Json; foreach ($k in 'mcpServers', 'servers') { if ($d.$k) { $d.$k.PSObject.Properties.Remove('436c'); $d.$k.PSObject.Properties.Remove('aws-knowledge') } }; [IO.File]::WriteAllText($f, ($d | ConvertTo-Json -Depth 32)); "removed"
+$f = "$HOME\.copilot\mcp-config.json"; $d = Get-Content $f -Raw | ConvertFrom-Json; foreach ($k in 'mcpServers', 'servers') { if ($d.$k) { $d.$k.PSObject.Properties.Remove('436c'); $d.$k.PSObject.Properties.Remove('aws-knowledge') } }; [IO.File]::WriteAllText($f, ($d | ConvertTo-Json -Depth 100 -WarningAction Stop)); "removed"
 ```
 
 ## Step 3: write the configuration
@@ -294,9 +301,9 @@ claude mcp add --transport http --scope user 436c https://kb-cloud-students.fly.
 claude mcp add --transport http --scope user aws-knowledge https://knowledge-mcp.global.api.aws
 ```
 
-On Windows, check that the quotes held: `(Select-String -Path "$HOME\.claude.json" -SimpleMatch 'Bearer ${KB_MCP_TOKEN}').Count`
-prints `1` or more (checked against the docs, not run). `0` means the quotes were lost: remove the entry and add it
-again.
+On Windows, check only `436c`: `$d = Get-Content "$HOME\.claude.json" -Raw | ConvertFrom-Json; if ($d.mcpServers.'436c'.headers.Authorization -ceq 'Bearer ${KB_MCP_TOKEN}') { '1' } else { '0' }`
+(checked against the docs, not run). `1` means its header contains the variable literally; `0` means stop, remove that
+entry and add it again.
 
 ### Codex CLI
 
