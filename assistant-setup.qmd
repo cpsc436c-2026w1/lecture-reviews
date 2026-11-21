@@ -310,14 +310,13 @@ macOS or Linux (zsh or bash):
     */zsh) rc=~/.zshrc ;;
     *) rc=~/.bashrc ;;
   esac
-  printf 'Paste your token, then press Enter: '
-  read -rs KB_MCP_TOKEN
-  echo
-  if command -v security >/dev/null 2>&1 \
-    && security add-generic-password -U -s 436c-mcp -a "$USER" -w "$KB_MCP_TOKEN"; then
+  if command -v security >/dev/null 2>&1; then
+    echo "macOS asks twice for the token (password data): paste it each time, then press Enter"
+    security add-generic-password -U -s 436c-mcp -a "$USER" -w
     line='export KB_MCP_TOKEN="$(security find-generic-password -s 436c-mcp -w 2>/dev/null)"'
     echo "stored in the macOS keychain"
-  elif command -v secret-tool >/dev/null 2>&1 \
+  elif printf 'Paste your token, then press Enter: ' && read -rs KB_MCP_TOKEN && echo \
+    && command -v secret-tool >/dev/null 2>&1 \
     && printf '%s' "$KB_MCP_TOKEN" | secret-tool store --label="CPSC 436C MCP token" service 436c-mcp 2>/dev/null; then
     line='export KB_MCP_TOKEN="$(secret-tool lookup service 436c-mcp 2>/dev/null)"'
     echo "stored in the system keyring"
