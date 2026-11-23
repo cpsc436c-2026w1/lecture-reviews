@@ -453,7 +453,7 @@ If what it prints does not contain the line
 </tr>
 <tr class="odd">
 <td>Course LLM gateway base URL</td>
-<td><code>https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1</code></td>
+<td><code>https://co4zo6ssflbun6deagtswqresm0vrmyt.lambda-url.ca-central-1.on.aws/v1</code></td>
 </tr>
 <tr class="even">
 <td>Token</td>
@@ -938,11 +938,11 @@ and do Step 6 of the page it prints.</code></pre></li>
 <p>macOS or Linux:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-sS</span> <span class="at">-w</span> <span class="st">'\nHTTP %{http_code}\n'</span> <span class="dt">\</span></span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-H</span> <span class="st">"Authorization: Bearer </span><span class="va">$KB_MCP_TOKEN</span><span class="st">"</span> <span class="dt">\</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1/models</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  https://co4zo6ssflbun6deagtswqresm0vrmyt.lambda-url.ca-central-1.on.aws/v1/models</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Windows (PowerShell; the backtick continues the line; checked against the docs, not run):</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">curl</span><span class="op">.</span><span class="fu">exe</span> <span class="op">-</span>sS <span class="op">-</span>w <span class="st">"</span><span class="ch">`n</span><span class="st">HTTP %{http_code}</span><span class="ch">`n</span><span class="st">"</span> `</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">-</span>H <span class="st">"Authorization: Bearer </span><span class="va">$env</span><span class="op">:</span><span class="va">KB_MCP_TOKEN</span><span class="st">"</span> `</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  https<span class="op">://</span>oay6tcpsuv4gn5mubtlj7rnbl40gmrlv<span class="op">.</span><span class="fu">lambda</span><span class="op">-</span>url<span class="op">.</span><span class="fu">ca</span><span class="op">-</span>central-1<span class="op">.</span><span class="fu">on</span><span class="op">.</span><span class="fu">aws</span><span class="op">/</span>v1<span class="op">/</span>models</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  https<span class="op">://</span>co4zo6ssflbun6deagtswqresm0vrmyt<span class="op">.</span><span class="fu">lambda</span><span class="op">-</span>url<span class="op">.</span><span class="fu">ca</span><span class="op">-</span>central-1<span class="op">.</span><span class="fu">on</span><span class="op">.</span><span class="fu">aws</span><span class="op">/</span>v1<span class="op">/</span>models</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>It works when the last line is <code>HTTP 200</code> and the list includes <code>qwen3.8-27b</code>. Run on 2026-11-20.</p></li>
 </ol>
 <p>Tell the student which checks passed. When all pass, the assistant setup is done; do Step 7 if the student’s code will call the gateway.</p>
@@ -985,7 +985,7 @@ and do Step 6 of the page it prints.</code></pre></li>
 <span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>      <span class="va">tmp</span><span class="op">=</span><span class="va">$(</span><span class="fu">mktemp</span><span class="va">)</span></span>
 <span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>      <span class="fu">grep</span> <span class="at">-v</span> <span class="at">-E</span> <span class="st">'^(export )?(KB_MCP_TOKEN|COURSE_GATEWAY_URL)='</span> .env <span class="op">&gt;</span> <span class="st">"</span><span class="va">$tmp</span><span class="st">"</span></span>
 <span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>      <span class="bu">printf</span> <span class="st">'KB_MCP_TOKEN=%s\nCOURSE_GATEWAY_URL=%s\n'</span> <span class="st">"</span><span class="va">$KB_MCP_TOKEN</span><span class="st">"</span> <span class="dt">\</span></span>
-<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>        https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1 <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">$tmp</span><span class="st">"</span></span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>        https://co4zo6ssflbun6deagtswqresm0vrmyt.lambda-url.ca-central-1.on.aws/v1 <span class="op">&gt;&gt;</span> <span class="st">"</span><span class="va">$tmp</span><span class="st">"</span></span>
 <span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cat</span> <span class="st">"</span><span class="va">$tmp</span><span class="st">"</span> <span class="op">&gt;</span> .env</span>
 <span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">rm</span> <span class="at">-f</span> <span class="st">"</span><span class="va">$tmp</span><span class="st">"</span></span>
 <span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a>      <span class="bu">echo</span> <span class="st">"written; other lines kept: </span><span class="va">$(</span><span class="fu">grep</span> <span class="at">-v</span> <span class="at">-c</span> <span class="at">-E</span> <span class="st">'^(export )?(KB_MCP_TOKEN|COURSE_GATEWAY_URL)='</span> .env<span class="va">)</span><span class="st">"</span></span>

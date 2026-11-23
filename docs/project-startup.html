@@ -681,7 +681,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="course-llm-gateway" class="level3" data-number="6.5">
 <h3 data-number="6.5" class="anchored" data-anchor-id="course-llm-gateway"><span class="header-section-number">6.5</span> Course LLM gateway</h3>
 <p>The same token is your key for the course LLM gateway, which serves the course’s models (L16, L17). Its address is:</p>
-<pre class="text"><code>https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1</code></pre>
+<pre class="text"><code>https://co4zo6ssflbun6deagtswqresm0vrmyt.lambda-url.ca-central-1.on.aws/v1</code></pre>
 <p>Different course materials name the token and the address differently. They are the same two values:</p>
 <table class="caption-top table">
 <colgroup>
@@ -714,7 +714,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 <p>To run an Inspect eval through the gateway, set the two Inspect names from yours:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">COURSE_GATEWAY_URL</span><span class="op">=</span>https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">COURSE_GATEWAY_URL</span><span class="op">=</span>https://co4zo6ssflbun6deagtswqresm0vrmyt.lambda-url.ca-central-1.on.aws/v1</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PROXY_BASE_URL</span><span class="op">=</span><span class="va">$COURSE_GATEWAY_URL</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PROXY_API_KEY</span><span class="op">=</span><span class="va">$KB_MCP_TOKEN</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
