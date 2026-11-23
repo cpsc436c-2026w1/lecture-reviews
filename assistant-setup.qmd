@@ -66,7 +66,7 @@ The rest of this page is written for the assistant.
 |---|---|
 | Course server `436c` | `https://kb-cloud-students.fly.dev/mcp`, header `Authorization: Bearer <token>` |
 | AWS Knowledge server `aws-knowledge` | `https://knowledge-mcp.global.api.aws`, no token |
-| Course LLM gateway base URL | `https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1` |
+| Course LLM gateway base URL | `https://co4zo6ssflbun6deagtswqresm0vrmyt.lambda-url.ca-central-1.on.aws/v1` |
 | Token | variable `KB_MCP_TOKEN`, 38 characters, starts with `s436c-`; the same token is the gateway's API key |
 
 The student's token is in the issue "Your course MCP tokens" in their team repository, next to their name.
@@ -629,7 +629,7 @@ Do the checks in order and stop at the first failure.
    ```bash
    curl -sS -w '\nHTTP %{http_code}\n' \
      -H "Authorization: Bearer $KB_MCP_TOKEN" \
-     https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1/models
+     https://co4zo6ssflbun6deagtswqresm0vrmyt.lambda-url.ca-central-1.on.aws/v1/models
    ```
 
    Windows (PowerShell; the backtick continues the line; checked against the docs, not run):
@@ -637,7 +637,7 @@ Do the checks in order and stop at the first failure.
    ```powershell
    curl.exe -sS -w "`nHTTP %{http_code}`n" `
      -H "Authorization: Bearer $env:KB_MCP_TOKEN" `
-     https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1/models
+     https://co4zo6ssflbun6deagtswqresm0vrmyt.lambda-url.ca-central-1.on.aws/v1/models
    ```
 
    It works when the last line is `HTTP 200` and the list includes `qwen3.8-27b`. Run on 2026-11-20.
@@ -704,7 +704,7 @@ repository. Run on 2026-11-20 in a test repository.
          tmp=$(mktemp)
          grep -v -E '^(export )?(KB_MCP_TOKEN|COURSE_GATEWAY_URL)=' .env > "$tmp"
          printf 'KB_MCP_TOKEN=%s\nCOURSE_GATEWAY_URL=%s\n' "$KB_MCP_TOKEN" \
-           https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1 >> "$tmp"
+           https://co4zo6ssflbun6deagtswqresm0vrmyt.lambda-url.ca-central-1.on.aws/v1 >> "$tmp"
          cat "$tmp" > .env
          rm -f "$tmp"
          echo "written; other lines kept: $(grep -v -c -E '^(export )?(KB_MCP_TOKEN|COURSE_GATEWAY_URL)=' .env)"

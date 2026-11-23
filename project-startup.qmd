@@ -211,7 +211,7 @@ not put the token in the configuration file.
 The same token is your key for the course LLM gateway, which serves the course's models (L16, L17). Its address is:
 
 ```text
-https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1
+https://co4zo6ssflbun6deagtswqresm0vrmyt.lambda-url.ca-central-1.on.aws/v1
 ```
 
 Different course materials name the token and the address differently. They are the same two values:
@@ -224,7 +224,7 @@ Different course materials name the token and the address differently. They are 
 To run an Inspect eval through the gateway, set the two Inspect names from yours:
 
 ```bash
-export COURSE_GATEWAY_URL=https://oay6tcpsuv4gn5mubtlj7rnbl40gmrlv.lambda-url.ca-central-1.on.aws/v1
+export COURSE_GATEWAY_URL=https://co4zo6ssflbun6deagtswqresm0vrmyt.lambda-url.ca-central-1.on.aws/v1
 export PROXY_BASE_URL=$COURSE_GATEWAY_URL
 export PROXY_API_KEY=$KB_MCP_TOKEN
 ```
