@@ -5,6 +5,42 @@ project:
 website:
   title: "CPSC 436C companion"
   page-navigation: false
+  sidebar:
+    - id: project
+      title: "Course project"
+      style: docked
+      collapse-level: 2
+      contents:
+        - href: project-start.qmd
+          text: "Overview and dates"
+        - section: "Milestones"
+          contents:
+            - href: project-proposal.qmd
+              text: "Setup and proposal"
+            - href: project-checkpoint1.qmd
+              text: "Checkpoint 1"
+        - section: "Guidelines"
+          contents:
+            - href: project-startup.qmd
+              text: "Project setup"
+            - href: assistant-setup.qmd
+              text: "Coding assistant setup"
+            - href: project-mcp-scenarios.qmd
+              text: "Course server with your assistant"
+            - href: project-behave.qmd
+              text: "Behave for your project"
+            - href: https://github.com/cpsc436c-2026w1/b5-t2-behave-sim
+              text: "Simulated data (tutorial B5T2)"
+        - section: "Examples and data"
+          contents:
+            - href: project-case-example.qmd
+              text: "Proposal example"
+            - href: project-datasets.qmd
+              text: "Project datasets"
+            - href: project-experiments.qmd
+              text: "Experiment examples"
+            - href: https://github.com/cpsc436c-2026w1/recipes
+              text: "Course recipes"
   navbar:
     left:
       - text: Lecture reviews
@@ -55,28 +91,44 @@ website:
             text: "B2T2 part B: Spark/Glue, slow queries and their fixes"
           - href: tutorials.qmd#b3-t1
             text: "B3T1: Lakehouse/Athena+Glue"
+          - href: tutorials.qmd#b3-t2
+            text: "B3T2: Lakehouse/Glue build and maintain"
           - href: tutorials.qmd#b5-t1
             text: "B5T1: Course MCP and prompt evaluation"
+          - href: tutorials.qmd#b5-t2
+            text: "B5T2: behave and simulated data"
       - text: Project
         menu:
           - href: project-start.qmd
-            text: "Course project"
+            text: "Course project: overview and dates"
+          - text: "---"
+          - text: "Milestones"
           - href: project-proposal.qmd
             text: "Setup and proposal"
+          - href: project-checkpoint1.qmd
+            text: "Checkpoint 1"
+          - text: "---"
+          - text: "Guidelines"
+          - href: project-startup.qmd
+            text: "Project setup"
+          - href: assistant-setup.qmd
+            text: "Coding assistant setup"
+          - href: project-mcp-scenarios.qmd
+            text: "Course server with your assistant"
+          - href: project-behave.qmd
+            text: "Behave for your project"
+          - href: tutorials.qmd#b5-t2
+            text: "Simulated data (tutorial B5T2)"
+          - text: "---"
+          - text: "Examples and data"
+          - href: project-case-example.qmd
+            text: "Proposal example"
           - href: project-datasets.qmd
             text: "Project datasets"
           - href: project-experiments.qmd
             text: "Experiment examples"
-          - href: project-startup.qmd
-            text: Project setup
-          - href: project-case-example.qmd
-            text: Proposal example
-          - href: project-checkpoint1.qmd
-            text: "Checkpoint 1"
-          - href: project-behave.qmd
-            text: "Behave for your project"
-          - href: project-mcp-scenarios.qmd
-            text: "Course server with your assistant"
+          - href: https://github.com/cpsc436c-2026w1/recipes
+            text: "Course recipes"
       - text: Assignments
         menu:
           - href: https://cpsc436c-2026w1.github.io/a1-starter/
