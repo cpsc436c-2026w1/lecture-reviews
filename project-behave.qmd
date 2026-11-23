@@ -121,7 +121,7 @@ Feature: Trips requested in each zone
   5-minute period. A period holds the requests with an event time from its start up to, and not including, its end.
 
   @R020
-  Rule: If a request is received after its period ended, it is added to the stored count of the period of its event time
+  Rule: If a request is received after its period ended, then the system shall add it to the stored count of the period of its event time, and store a count of 1 if its zone does not have a count for that period yet
 
     Example: Request received 7 minutes late
       Given only these trip requests are received:
@@ -132,7 +132,7 @@ Feature: Trips requested in each zone
       Then zone 161 has 2 trips requested between 09:00 and 09:05
 ```
 
-The rule is the requirement R020 of `docs/requirements.md` in plain words. The example's answer, 2, follows from its
+The rule is the requirement R020 of `docs/requirements.md` in sentence case: it says what the system shall do. The example's answer, 2, follows from its
 table: request ev-000012 has an event time of 09:04, inside the period from 09:00 to 09:05, and was received
 7 minutes later, at 09:11. The `When` is 30 s after that receipt, inside R020's target of data latency under 60 s at p95 for a
 late request; one example checks one such request.
@@ -174,6 +174,12 @@ goes in the example:
 | the target after `\|` (data latency under 60 s at p95) | one case of it in the `Then` ("within 30 s", inside the target), or a time in the `When` chosen so that the answer must already hold; the percentile needs many cases |
 
 : {tbl-colwidths="[34,66]"}
+
+Write each `Rule:` line with the EARS form and meaning of its R line, in sentence case, so that it says what the
+system shall do (`When a 5-minute period ends, the system shall store one count …`); an RF line becomes
+`The system shall …`. Name only the situation in an `Example:` title
+and leave the outcome to its `Then`: not `A request at the end of a period is in the next period`, but
+`A request exactly at the end of a period (09:05:00)`.
 
 The answer of an example (2 trips) is not a requirement; the target from the R line (data latency under 60 s at p95) is. The times
 in an example are data: nobody waits for them.
@@ -235,7 +241,7 @@ This example describes the same requirement as behaviour:
 
 Test one behaviour in each example, as the behave documentation recommends
 ([behave: scenarios](https://behave.readthedocs.io/en/latest/gherkin/#scenarios)): when the example fails, its name
-tells you what broke. If an example checks two unrelated outcomes, split it into two examples, under the rules they
+tells you which situation broke it. If an example checks two unrelated outcomes, split it into two examples, under the rules they
 show.
 
 #### Put a number or a fixed answer in the Then
@@ -271,7 +277,7 @@ Feature: Pickup place of a rider's message
   You do not write step code for Checkpoint 1.
 
   @R110
-  Rule: Where the system includes the assistant, a rider's message is shown with the pickup place it names, or the system says that it names no pickup place
+  Rule: Where the system includes the assistant, when a support agent opens a rider's message, the system shall show the pickup place that the message names, as a name from our list of places, or say that the message names no pickup place
 
     Example: Message that names a pickup place
       Given the rider message "I'm waiting outside JFK Terminal 4, door 6. Where is my driver?"
@@ -290,7 +296,7 @@ Feature: Pickup place of a rider's message
       Then the pickup place is correct in at least 24 of the 30 runs
 
   @R120
-  Rule: If a rider's message names more than one pickup place, the system says so and does not show any of them as the pickup place
+  Rule: If a rider's message names more than one pickup place, then the system shall say that the message names more than one pickup place, and not show any of them as the pickup place
 
     Example: Message that names two pickup places
       Given the rider message "Pick me up at Penn Station or at Grand Central Terminal, whichever is faster for the driver."
@@ -427,7 +433,7 @@ Feature: One driver for each trip
   # (rule R070 is left out here)
 
   @R080 @RF030
-  Rule: If a driver accepts a trip that is already assigned, the accept is refused and the trip stays with its driver
+  Rule: If a driver accepts a trip that is already assigned, then the system shall refuse the accept and leave the trip with its driver
 
     Example: Two drivers accept at the same time
       Given only these trip requests are received:
@@ -509,7 +515,7 @@ behave-first-step/
      pickup zone, so that I can send free drivers where the requests are.
 
      @RF010
-     Scenario: A request that arrives twice is counted once
+     Scenario: A request that arrives twice
        Given riders in zone 161 request 6 trips
        And the simulator delivers 2 of the requests a second time
        When the requests are counted
@@ -634,7 +640,7 @@ serves every scenario that uses the same sentence with other values.
 
    ```default
      @RF010
-     Scenario: A request that arrives twice is counted once       # features/request_counts.feature:7
+     Scenario: A request that arrives twice                       # features/request_counts.feature:7
        Given riders in zone 161 request 6 trips                   # features/steps/request_steps.py:8
        And the simulator delivers 2 of the requests a second time # features/steps/request_steps.py:16
        When the requests are counted                              # features/steps/request_steps.py:22
@@ -657,7 +663,7 @@ serves every scenario that uses the same sentence with other values.
 
 
    Failing scenarios:
-     features/request_counts.feature:7  A request that arrives twice is counted once
+     features/request_counts.feature:7  A request that arrives twice
 
    0 features passed, 1 failed, 0 skipped
    0 scenarios passed, 1 failed, 0 skipped
@@ -753,7 +759,7 @@ a settings file leaves the tag out of a normal run.
    Feature: Trips requested in each zone, on AWS
 
      @RF010
-     Scenario: A request that arrives twice is counted once in the deployed table
+     Scenario: A request that arrives twice at the deployed pipeline
        Given the counting pipeline is deployed in my AWS account
        When 6 trip requests for zone 161 are written to the stream and 2 of them a second time
        Then the counts table has 6 trips requested for zone 161
