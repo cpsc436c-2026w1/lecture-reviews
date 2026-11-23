@@ -133,3 +133,23 @@ A Glue session bills until it stops, even after you close the browser tab. End e
      those that open later.
 
   If a reply has no tool call, ask again: "Check with the course server and show me the tool result you used."
+
+### B5T2: behave and simulated data {#b5-t2}
+
+- **What you do:** You write the step code for one rule of the Checkpoint 1 example with behave, and run it until it
+  passes. Then your coding assistant writes a generator for a simulated data set of your own project (your SIM01),
+  from a small sample of your data and the course's simulation standards, and a checker tells you whether the set
+  follows them. Last, you run a scenario against a simulated data set, with its expected values taken from the truth
+  files before the run, and find a planted bug from its failing output.
+- **Supports:** Checkpoint 1 (your features and data set bullets) and Checkpoint 2 (step code that runs against your
+  simulated data sets).
+- **Before the tutorial:** do these at home, so the tutorial time goes to the exercises.
+  1. Install [uv](https://docs.astral.sh/uv/getting-started/installation/), a Python package manager, and git.
+  2. Clone the tutorial repository and install its packages with the commands in its
+     [before the tutorial](https://github.com/cpsc436c-2026w1/b5-t2-behave-sim#before-the-tutorial) steps.
+  3. For part B: a coding assistant (Claude Code or Kiro, as in B5T1), and your team repository cloned next to the
+     tutorial repository, with a small sample of your data in it: your data set's preview file from the
+     [project datasets](project-datasets.qmd) page, or about 20 rows of your own data.
+- **Materials:** Use the [B5T2 repository](https://github.com/cpsc436c-2026w1/b5-t2-behave-sim) (short link
+  `ilm.wiki/436c/b5t2`). The simulation standards are in its `docs/simulation-standards.md`: they are guidance, not
+  required. Part D, sending a data set to AWS, is for after the tutorial and needs your team's lease.
