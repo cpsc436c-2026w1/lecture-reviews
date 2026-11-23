@@ -452,6 +452,13 @@ All four feature files are in the `features/` folder of [cp1-example](https://gi
 
 ## Level 1 (Checkpoint 2, proposed): a first step function {#level-1}
 
+::: {.callout-tip title="Practise it in tutorial B5T2"}
+[Tutorial B5T2](tutorials.qmd#b5-t2) ([repository](https://github.com/cpsc436c-2026w1/b5-t2-behave-sim)) walks
+through this level on the rides example: you write three step functions by hand, have your coding assistant write
+the steps of a second rule and check them, then run a scenario on a simulated data set whose expected value comes from
+its truth. After the section, B5 makes a simulated data set for your own project.
+:::
+
 At this level you write the Python code that makes each step do something. A **step function** is a Python
 function that behave calls when it reaches a step with a matching text. Build the example below once in an empty
 folder outside your repository, then do the same for your own scenarios.
