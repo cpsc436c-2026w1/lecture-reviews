@@ -291,6 +291,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#block-5" id="toc-block-5" class="nav-link" data-scroll-target="#block-5">Block 5</a>
   <ul class="collapse">
   <li><a href="#b5-t1" id="toc-b5-t1" class="nav-link" data-scroll-target="#b5-t1">B5T1: Course MCP and prompt evaluation</a></li>
+  <li><a href="#b5-t2" id="toc-b5-t2" class="nav-link" data-scroll-target="#b5-t2">B5T2: behave and simulated data</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -406,6 +407,20 @@ The wording of the replies changes from run to run. Your model applies the lens;
 <li>“What can the course server do for us? List what’s available now and what comes later. Check with the course server.” A good reply lists the server’s tools, the current milestone, and the course checks open now and those that open later.</li>
 </ol>
 If a reply has no tool call, ask again: “Check with the course server and show me the tool result you used.”</li>
+</ul>
+</section>
+<section id="b5-t2" class="level3">
+<h3 class="anchored" data-anchor-id="b5-t2">B5T2: behave and simulated data</h3>
+<ul>
+<li><strong>What you do:</strong> You write the step code for one rule of the Checkpoint 1 example with behave, and run it until it passes. Then your coding assistant writes a generator for a simulated data set of your own project (your SIM01), from a small sample of your data and the course’s simulation standards, and a checker tells you whether the set follows them. Last, you run a scenario against a simulated data set, with its expected values taken from the truth files before the run, and find a planted bug from its failing output.</li>
+<li><strong>Supports:</strong> Checkpoint 1 (your features and data set bullets) and Checkpoint 2 (step code that runs against your simulated data sets).</li>
+<li><strong>Before the tutorial:</strong> do these at home, so the tutorial time goes to the exercises.
+<ol type="1">
+<li>Install <a href="https://docs.astral.sh/uv/getting-started/installation/">uv</a>, a Python package manager, and git.</li>
+<li>Clone the tutorial repository and install its packages with the commands in its <a href="https://github.com/cpsc436c-2026w1/b5-t2-behave-sim#before-the-tutorial">before the tutorial</a> steps.</li>
+<li>For part B: a coding assistant (Claude Code or Kiro, as in B5T1), and your team repository cloned next to the tutorial repository, with a small sample of your data in it: your data set’s preview file from the <a href="./project-datasets.html">project datasets</a> page, or about 20 rows of your own data.</li>
+</ol></li>
+<li><strong>Materials:</strong> Use the <a href="https://github.com/cpsc436c-2026w1/b5-t2-behave-sim">B5T2 repository</a> (short link <code>ilm.wiki/436c/b5t2</code>). The simulation standards are in its <code>docs/simulation-standards.md</code>: they are guidance, not required. Part D, sending a data set to AWS, is for after the tutorial and needs your team’s lease.</li>
 </ul>
 
 
