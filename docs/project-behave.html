@@ -798,6 +798,19 @@ Feature: One driver for each trip
 </section>
 <section id="level-1" class="level2">
 <h2 class="anchored" data-anchor-id="level-1">Level 1 (Checkpoint 2, proposed): a first step function</h2>
+<div class="callout callout-style-default callout-tip callout-titled" title="Practise it in tutorial B5T2">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Practise it in tutorial B5T2
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><a href="./tutorials.html#b5-t2">Tutorial B5T2</a> (<a href="https://github.com/cpsc436c-2026w1/b5-t2-behave-sim">repository</a>) walks through this level on the rides example: you write three step functions by hand, have your coding assistant write the steps of a second rule and check them, then run a scenario on a simulated data set whose expected value comes from its truth. After the section, B5 makes a simulated data set for your own project.</p>
+</div>
+</div>
 <p>At this level you write the Python code that makes each step do something. A <strong>step function</strong> is a Python function that behave calls when it reaches a step with a matching text. Build the example below once in an empty folder outside your repository, then do the same for your own scenarios.</p>
 <p>The example tests one small function, <code>count_requests</code>, with a scenario of four steps. To stay short, it puts the tag <code>@RF010</code> on a <code>Scenario:</code> without a <code>Rule:</code>; in your repository, your examples stay under the rules of their IDs. The example has these files:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>behave-first-step/</span>
