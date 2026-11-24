@@ -1,0 +1,254 @@
+---
+order: 19
+title: "L19 review: from Feedback 1 to Checkpoint 1"
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-title: "Parts"
+filters:
+  - quizdown
+---
+
+If you need to look up a term, the [relevant vocabulary is below](#part-terms). The first part recaps L18; the second reviews the L19 studio, which took one requirement from your Feedback 1 issue to a dry run for [Checkpoint 1](project-checkpoint1.qmd).
+
+# Recap of L18 {#part-recap}
+
+## What decides the steps at the pet-food shop? {#part-recap-steps}
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## A pet-food shop runs a chat that can search its products and read the signed-in customer's orders. A nightly job loads the supplier's price file into the product table, and an alarm fires when the load goes wrong. For each piece of work, choose what decides its steps. Each option may be used once, more than once, or not at all.
+
+- A customer asks “where is my last order?”, and for every question of this kind the chat reads the signed-in customer's newest order and shows its status :: App code
+  > The steps are known before any request arrives: one look-up, then the reply. Code runs them every time, and no model call chooses them. A planner call or an agent would spend model calls on steps that never change.
+- The nightly load fails because the price file arrived after the load had started, a cause that the team's runbook checks by comparing the file's arrival time with the load's start time :: App code
+  > A runbook in code checks the causes seen before against the data, without a model call. A late file is one of them, so the data settles the alarm. An agent runs only when the runbook's checks do not settle the alarm.
+- A customer asks for “food for a new puppy and an older cat”. The shop has no fixed rules that turn a request like this into searches, and the search results go into the reply, not into choosing more searches :: Planner model call
+  > The kinds of food depend on the request, so one model call lists them before anything runs. App code caps the list and runs one search for each kind. An agent is not needed, because no search result changes which kinds are searched.
+- A customer asks for “what a kitten needs in its first week”. The shop's code does not list the supplies for a request like this, and the search results are used to choose products, not further searches :: Planner model call
+  > The shop has no fixed rules that list the supplies for every request written in free text, so a model call returns the list. Every part is known before the searches run, so app code can check the list and then run it.
+- The nightly load fails, the checks for the causes seen before find none of them, and which log or file to read next depends on what the last read showed :: Bounded agent
+  > The model chooses each next read-only tool call from the results so far, within limits that it cannot remove. A list of steps written before the first read could not follow the evidence. App code then checks the cause that the agent names.
+- After a failed load, the runbook names a missing file, but the file is there and has its usual rows. The runbook does not have a check for this, and which table or log to read next depends on what each read shows :: Bounded agent
+  > The data does not confirm the runbook's answer, so the alarm is not settled. The model chooses each next read from what the earlier reads returned, and app code checks the cause it names against the data.
+- :: Model gateway
+  > Every row asks what decides which steps run. The model gateway sits on the way to the model and checks the key, the request rate and the budget of a call that is already being made, so it does not choose the steps in any of these rows.
+```
+
+| Term | What it means |
+|---|---|
+| **Orchestrator-workers** | A planner model call splits the request into subtasks that depend on it. App code bounds the plan, runs a worker for each subtask and combines the results. |
+| **Plan, validate, then execute** | App code checks a plan before it runs: a cap on its steps, known tables and columns only, and Data scanned under a cap. |
+| **Agent loop** | The model returns a tool call, app code runs it and sends the tool result back, and the model returns the next tool call or the final reply. |
+| **Bounded agent** | An agent with limits on its actions, time or spend that the model cannot remove. Reaching a limit stops the loop. |
+| **Runbook first** | App code checks the causes seen before, with no model call. The agent runs only when the data does not settle the alarm, and app code checks the cause it names. |
+
+: {tbl-colwidths="[26,74]"}
+
+**Use a planner when the steps cannot be fixed in advance. Use code when the steps are known.**
+
+Read more: [*AI Engineering*, ch. 6, "Planning", "Agent Overview"](https://learning.oreilly.com/library/view/ai-engineering/9781098166298/ch06.html).
+
+# Review questions for L19 {#part-review}
+
+The questions follow a library team through its Checkpoint 1 hand-in. The team's project counts the books returned at each drop box of a city library. Each drop box sends one event for each returned book.
+
+## Where does each ID of the library team's Feedback 1 issue go for Checkpoint 1? {#part-feedback-ids}
+
+The team's Feedback 1 issue, the `staff-feedback` issue in its repository, lists these IDs.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## For each ID of the Feedback 1 issue, choose what the team writes for it for Checkpoint 1. Not all options will be used.
+
+- RF010: every returned book is counted once, even when a drop box sends its event twice :: Rule with an example
+  > A test can check this constraint: a book whose event arrives twice either changes the count or does not. Its line under `Stakeholder input` ends with `[Scenario](…)`, and its rule in the feature file carries the tag `@RF010`.
+- RF030: every AWS resource of the team carries the course tags :: `Read:` line
+  > The examples do not run on AWS, so a test of them cannot show the tags. The line ends with `Read at Checkpoint 2:` and names what staff will read then, the scripts and the tags on the resources, and the constraint does not get a rule.
+- RQ010: Fix: section 3 of the proposal names two drop boxes that the city does not have :: Fix in `docs/proposal.md`
+  > A request that starts with `Fix:` is corrected in `docs/proposal.md`. Its line under `Stakeholder input` then says where: `Done in docs/proposal.md, section 3.`
+- RQ020: say how long raw drop-box events are kept and who may delete them :: `Reply:` line
+  > The answer is due at Checkpoint 2. At Checkpoint 1 the line has a `Reply:` that says what the team will do and what it is based on.
+- :: Step code
+  > Step code, the Python functions that make the steps run, is Checkpoint 2 work. At Checkpoint 1 `features/steps/` holds only `.gitkeep`.
+- :: Answer in `docs/design.md`
+  > The answer to a request is due at Checkpoint 2. At Checkpoint 1 the request's line has a `Reply:` that says what the team will do.
+```
+
+## Which EARS form fits each requirement of the drop-box counter? {#part-ears}
+
+The team writes the requirements of its job stories in EARS. Readers use the library's app.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## For each requirement of the drop-box counter, choose the EARS form it should be written in. Each option may be used once, more than once, or not at all.
+
+- A 10-minute period ends, and the system stores one count of returned books for each drop box in that period :: `WHEN <trigger>` line
+  > The end of a period is an event that starts the response, so the line starts with `WHEN`. Nothing has gone wrong, so the line does not start with `IF`.
+- A reader enters a library number at a drop box, and within 2 seconds the box's screen shows the reader's books on loan :: `WHEN <trigger>` line
+  > Entering the number is an event that starts the response, and the 2 seconds go after `|` as the performance target. Nothing has gone wrong, so the line does not start with `IF`.
+- For as long as a drop box is marked full, the app shows readers the nearest drop box with space :: `WHILE <state>` line
+  > Being full is a state that lasts until the box is emptied, and the app shows the other box for the whole time. A `WHEN` line would answer one moment, not the time in between.
+- For as long as a book is on loan past its due date, the app shows the reader the late fee so far :: `WHILE <state>` line
+  > An overdue loan is a state that lasts, and the response holds while the state holds. A late loan is the reader's state, not a problem in the team's data, so the line does not start with `IF`.
+- A drop box sends the event of one returned book twice, and the system counts that book once :: `IF <problem> THEN` line
+  > A repeated event is a problem in the data that would make the outcome false: the count would be one too high. A problem gets an `IF … THEN` line.
+- A drop box stops sending events for 30 minutes, and the dashboard shows that box as silent, not as 0 returns :: `IF <problem> THEN` line
+  > Input that stops is a problem that would make the outcome false, because a broken box and an empty box would both show 0. The line says what the system does when the problem happens.
+- :: `WHERE <feature>` line
+  > A `WHERE` line is for behaviour that exists only when an optional feature is part of the system, such as an assistant. A requirement that holds without any optional feature does not start with `WHERE`.
+```
+
+## Where does each piece of the library team's example go? {#part-feature-file}
+
+The team writes the feature file for its job story JS02 and its requirement R030: IF a drop box sends a book's event twice THEN THE SYSTEM SHALL count the book once.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## For each piece of the team's work on R030, choose where it goes. Not all options will be used.
+
+- JS02, the ID of the job story :: Feature tag
+  > A feature serves one job story, and the story's ID is the tag on the line above `Feature:`. A requirement's ID goes above `Rule:`.
+- R030, the ID of the requirement :: Rule tag
+  > The rule's sentence says the requirement, and its ID is the tag above `Rule:`. The story's ID goes above `Feature:`.
+- Three return events as rows with the fields of the event, the first and the third with the same event ID :: Table under `Given`
+  > The events of the example become a table under `Given`, with the first row as column names. The row with the repeated event ID is the injected fault.
+- 10:16, the time at which the example's count must hold :: `When` step
+  > The time at which the answer must hold is the `When` step: "When the counts are read at 10:16". The data comes before it, under `Given`.
+- Drop box B12 shows 2 returned books between 10:10 and 10:15 :: `Then` step
+  > The answer, with its number, is the `Then` step. A test compares the number 2 with the count the system stores.
+- A question nobody on the team can answer: does a book returned and checked out again within a minute count as a return? :: `Assumptions` row
+  > An open question goes in `Assumptions` of `docs/requirements.md`, with the person who would answer it. A question is not a step, so it does not go in the feature file.
+- :: Step function
+  > A step function is Python code that behave calls for a step. The example is written as text, and step code is not due at Checkpoint 1.
+- :: `Background:` steps
+  > `Background:` holds the steps that every scenario of the feature shares, and behave runs them before each scenario. The events, the time and the answer of one example belong to that example.
+```
+
+## How does behave count each step? {#part-behave-results}
+
+The team runs behave on its feature files. behave's last line counts the steps, such as `47 steps passed, 3 failed, 0 skipped, 44 undefined`.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## For each step, choose the word that behave's steps line counts it under. Each option may be used once, more than once, or not at all.
+
+- In a normal run, a `Then` step's function runs, and its `assert` compares the expected 2 returned books with the 3 that the system counted :: Failed
+  > The function ran and its `assert` did not hold, so the step fails, and behave prints the assert's message with both numbers.
+- In a normal run, a `Then` step's function runs, and its `assert` expects drop box B7 to show as silent, but the system shows B7 with 0 returns :: Failed
+  > behave ran the step function, and the `assert` inside it did not hold, so the step is counted as failed. The step has a function, so it is not undefined.
+- In a dry run of the Checkpoint 1 draft, a `Given` step that has no step function, because `features/steps/` holds only `.gitkeep` :: Undefined
+  > No step function matches the step's text, so the step is undefined, and behave prints a snippet for it. A dry run does not run any step, so it does not report a step as passed.
+- In a normal run, a `When` step whose text matches no step function, because the team wrote new wording :: Undefined
+  > behave finds a step function by the step's text. New wording needs new step code, so the step is undefined.
+- In `uv run behave --tags=@R030`, a step of a scenario that only the tag `@R040` covers :: Skipped
+  > `--tags=@R030` runs only the scenarios under that tag, so behave does not run this step and reports it as skipped.
+- In `uv run behave --tags=@RF020`, a `Given` step of an example under the rule tagged `@RF010` :: Skipped
+  > The run includes only the scenarios under `@RF020`. The example under `@RF010` is left out, so behave does not run its steps.
+- :: Error
+  > `error` is a word of the scenarios line, not of the steps line. behave counts a scenario as an error when one of its steps is undefined, and it counts that step as undefined.
+```
+
+## What does the example report with the duplicate check off? {#part-predict}
+
+One example of the team's rule for RF010:
+
+    Example: One return delivered twice
+      Given only these return events are received:
+        | event_id  | drop_box | event_time | received_time |
+        | ev-000201 | B12      | 10:11:00   | 10:11:01      |
+        | ev-000202 | B12      | 10:12:30   | 10:12:31      |
+        | ev-000201 | B12      | 10:11:00   | 10:12:40      |
+      When the counts are read at 10:15:30
+      Then drop box B12 shows 2 returned books between 10:10 and 10:15
+
+The third row repeats the first row's `event_id`: the same return delivered twice. For one run, the team turns the counting function's duplicate check off; the test stays the same.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## With the duplicate check off, what does behave report for this example?
+
+1. [x] Fails: expected 2, counted 3
+    > Without the duplicate check, the return delivered twice is counted twice, so the system counts 3. The `Then` compares that count with the 2 worked out from the rows before the run, so the failure message shows both numbers.
+1. [ ] Passes: expected 2, counted 2
+    > The test stays the same, but the counting changed: the return delivered twice is now counted twice, so the count no longer matches the `Then`.
+1. [ ] Fails: expected 2, counted 1
+    > Turning the duplicate check off does not drop any event. Each of the three rows is counted, so the count goes up, not down.
+```
+
+## Which change fixes each draft scenario of the library team? {#part-good-scenario}
+
+The team reads its draft scenarios before Checkpoint 1.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## For each problem in a draft scenario, choose the change that fixes it. Not all options will be used.
+
+- A scenario ends with `Then the counts look right` :: Fixed answer in `Then`
+  > A test cannot compare "look right" with anything. A `Then` such as "drop box B12 shows 2 returned books between 10:10 and 10:15" gives the test a number to compare.
+- A scenario starts with `Given the librarian opens the dashboard and clicks Refresh` :: System behaviour, not clicks
+  > A click breaks when the page changes, and the scenario still has to say what the system must do. The step says which events the system has received.
+- Every scenario of one feature starts with `Given the returns table is empty` :: `Background:` steps
+  > The steps of `Background:` run before every scenario of the feature, so the shared `Given` is written once.
+- Three scenarios have the same steps and differ only in the faulty drop-box ID of one event: empty, unknown or negative :: `Scenario Outline:`
+  > The steps are written once with a placeholder, and each row of `Examples` is one injected fault. behave runs the outline once for each row, so the feature file does not keep three copies of the same steps.
+- One scenario checks a drop box's count and, in later `Then` steps, the email sent to the librarian when the box is full :: One behaviour each
+  > A scenario that tests one behaviour names what broke when it fails. The count and the email are two behaviours, so they get two scenarios.
+- :: Step functions
+  > Step code makes a step run at Checkpoint 2. It does not change what the scenario says or what its `Then` checks.
+- :: Second ID tag
+  > A rule carries a second tag when one of the team's requirements meets an RF, such as `@R080 @RF030`. A second tag does not change a scenario's steps or its `Then`.
+```
+
+## Where does each part of the library team's Checkpoint 1 hand-in go? {#part-hand-in}
+
+The team hands in Checkpoint 1 as a merged pull request with the tag `cp1` on the merged commit.
+
+```quizdown
+---
+shuffle_answers: true
+---
+
+## For each part of the team's work, choose where it goes in the Checkpoint 1 hand-in. Each option may be used once, more than once, or not at all.
+
+- Under each job story the team plans to implement, 2 to 5 requirements in EARS, each with its ID :: `docs/requirements.md`
+  > Each ID is defined once in `docs/requirements.md`, and a story's requirements are lines under the story's heading. The tags in `features/` then name IDs that this file defines.
+- A line for RQ020 under `Stakeholder input`, with its wording and a `Reply:` that says what the team will do :: `docs/requirements.md`
+  > Every RF and RQ ID of the Feedback 1 issue gets a line in the section `Stakeholder input` of `docs/requirements.md`. The answer itself is Checkpoint 2 work.
+- Sections 4 and 5 of the proposal, the workflows and the sketch, moved out of the proposal :: `docs/design.md`
+  > From Checkpoint 1 the design has its own file, beside the resource list and the `Data` section. `docs/proposal.md` keeps one line that points to `docs/design.md`.
+- A bullet for each simulated data set, with the IDs it shows and the exact count of each injected fault :: `docs/design.md`
+  > The bullets go in the `Data` section of `docs/design.md`, under `Simulated data for the demos`. At Checkpoint 1 a bullet is words, and no file or generator has to exist yet.
+- Step functions that make each example run :: Checkpoint 2 work
+  > At Checkpoint 1 `features/steps/` holds only `.gitkeep`, and the dry run reports every step as undefined.
+- The answer to RQ020: the number of days raw events are kept and the role that may delete them :: Checkpoint 2 work
+  > At Checkpoint 1 the line for RQ020 has a `Reply:` that says what the team will do. The answer is due at Checkpoint 2.
+- :: `docs/proposal.md`
+  > `docs/proposal.md` gets the corrections that the `Fix:` requests ask for and one line that points to `docs/design.md`. The requirements and the design have files of their own.
+```
+
+## Terms used on this page {#part-terms}
+
+{{< include _terms/page-l19.md >}}

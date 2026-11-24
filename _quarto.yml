@@ -77,6 +77,10 @@ website:
             text: "L17: retrieval, memory and agent patterns in the cloud"
           - href: l18.qmd
             text: "L18: planning and bounded agents in the cloud"
+          - href: l19.qmd
+            text: "L19: from Feedback 1 to Checkpoint 1"
+          - href: l20.qmd
+            text: "L20: stream processing with AWS Lambda, Hudi and agents"
           - href: midterm-review.qmd
             text: "Midterm review"
       - text: Tutorials
