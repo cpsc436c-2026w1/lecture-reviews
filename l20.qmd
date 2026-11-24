@@ -142,15 +142,15 @@ shuffle_answers: true
 ## Match each problem to the option that has it. Each option may be used once, more than once, or not at all.
 
 - A query that runs while a minute's files are being written reads only part of that minute's records :: Data lake only
-  > Plain files have no commit: a reader sees whatever files are there. An Iceberg commit switches the table to the new files at once (L11, P1).
+  > Plain files have no commit: a reader sees whatever files are there. An Iceberg commit switches the table to the new files at once (L11).
 - Nobody can tell which files belong to the table now, or what it held an hour ago :: Data lake only
-  > Iceberg's snapshots record each version of the table, so time travel and the current file list come with the format (L11, P5).
+  > Iceberg's snapshots record each version of the table, so time travel and the current file list come with the format (L11).
 - A new small file each minute, 1,440 a day, slows every query until a compaction job runs :: Both
-  > Iceberg also writes a file each minute; its manifests help planning, but reads stay slow until compaction rewrites the small files (L11, P3 and D5).
+  > Iceberg also writes a file each minute; its manifests help planning, but reads stay slow until compaction rewrites the small files (L11).
 - An update that the stream delivers twice is appended as two rows :: Both
   > Appending has no key, in plain files or in Iceberg; keeping one row for each update needs an upsert by its ID.
 - The team corrects wrong prices in place every minute, and queries keep getting slower until a clean-up job runs :: Iceberg table only
-  > A data lake cannot change a row in place at all. In Iceberg, each correction (MERGE) writes delete files that every read must apply until compaction folds them in (L11, D4).
+  > A data lake cannot change a row in place at all. In Iceberg, each correction (MERGE) writes delete files that every read must apply until compaction folds them in (L11).
 ```
 
 ### Which table type fits the warehouse? {#part-lake-table}
@@ -193,7 +193,7 @@ shuffle_answers: true
 - A dashboard must load as fast as possible, and may miss the last few minutes of scans :: Read-optimized query
   > It reads base files only; the newest scans still sit in log files until compaction.
 - A report needs every pallet's latest shelf, including scans from the last minute :: Snapshot query
-  > It merges the log files with the base files, so it returns the latest state, and is slower than read-optimized.
+  > It merges the log files with the base files, so it returns the latest state. It is slower than the read-optimized query.
 ```
 
 ## Who handles each part of a weekly cost report on the rides queue? {#part-cost-agent}
@@ -209,11 +209,11 @@ shuffle_answers: true
 
 - The report lists the week's function calls, log KB and p95 delay for each measured batching window :: Code
   > Fixed calls with fixed arguments: a tool returns the numbers, and the model sees only what the tool returned.
-- The report gives the percentage by which a 30 s window cuts the function's calls, against no window :: Code
+- The report gives the percentage by which a 30 s batching window cuts the function's calls, against no window :: Code
   > The arithmetic must be exact and the same on every run; a model's numbers can differ between runs, so a tool divides.
-- The team lead gets two sentences on whether the 30 s window's longer wait stays under the team's limit of 60 s at p95 :: Model
+- The team lead gets two sentences on whether the 30 s batching window's longer wait stays under the team's limit of 60 s at p95 :: Model
   > Free text from the tools' results. Code can check that the sentences use the numbers the tools returned.
-- The setting on the live queue changes from no batching window to the 30 s window the report suggests :: Person approves
+- The setting on the live queue changes from no batching window to a 30 s batching window :: Person approves
   > Changing the window is a write to the live queue's event source mapping: a person on the team authorizes the exact setting, and code then applies it. Applying the same setting again leaves the same mapping.
 - :: Model approves
   > The model can recommend a window, but it cannot authorize its own change to the live mapping; a person does.
