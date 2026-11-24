@@ -519,7 +519,18 @@ Write the scenarios in Gherkin, in a folder `features/` in your repository:
    is how you meet the constraint, write one rule with both IDs.
 4. Write at least one `Example:` under each rule, with an answer that you know before the system runs, and a few
    events in a table with the event fields of your `## Data` section as columns, or name a simulated data set by
-   its ID.
+   its ID. Your examples demonstrate the critical functionality, requirements and technical constraints, not all of
+   the system's behaviour. A rule can have three kinds of example:
+   - a **success case**: the rule working on ordinary input; `Given` the input rows, `Then` the correct answer,
+     calculated beforehand;
+   - a **problem**: an example that demonstrates a property of your system, such as how it handles a late or a
+     duplicate event;
+   - a **boundary**: what your system does at a limit of its design or technology, such as an event exactly at the
+     end of a period.
+
+   The minimum is one example for each rule; add a problem or a boundary where the rule has one. To demonstrate
+   problems and boundaries with many events, you generate data with the failures in it:
+   [tutorial B5T2](https://github.com/cpsc436c-2026w1/b5-t2-behave-sim).
 5. For a requirement on a model's answers, add one **gate example** to its rule: an example tagged `@eval` that
    names the eval of your `## Evals` section (see [Features for evals](#eval-features)).
 
