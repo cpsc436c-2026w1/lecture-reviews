@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.20">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>L19 review: from Feedback 1 to Checkpoint 1 – CPSC 436C companion</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-17888a1159294d3eb470f19f6f52f5a5.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-58899c9248c158d29b1429e15c8b5d12.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/quizdown-1.3.2/quizdown.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-1.3.2/quizdownKatex.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-1.3.2/quizdownHighlight.js"></script>
+<script src="site_libs/quarto-contrib/quizdown-1.3.2/quizdown-init.js"></script>
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">CPSC 436C companion</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lecture-reviews" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Lecture reviews</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-lecture-reviews">    
+        <li>
+    <a class="dropdown-item" href="./index.html">
+ <span class="dropdown-text">All reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l1.html">
+ <span class="dropdown-text">L1: the four resources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l2.html">
+ <span class="dropdown-text">L2: EC2, S3 and Lambda</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l3.html">
+ <span class="dropdown-text">L3: cost models and what starts a function</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l4.html">
+ <span class="dropdown-text">L4: scaling up and out</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l5.html">
+ <span class="dropdown-text">L5: Spark on a cluster</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./w2-l6.html">
+ <span class="dropdown-text">L6: how Spark runs a query</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l10.html">
+ <span class="dropdown-text">L10: lakes, lakehouses and query engines</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l11.html">
+ <span class="dropdown-text">L11: assembling the lakehouse in Athena and Glue</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l12.html">
+ <span class="dropdown-text">L12: DynamoDB as OLTP storage, distributed database problems and properties</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l13.html">
+ <span class="dropdown-text">L13: netsplit and CAP, data latency (freshness)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l14.html">
+ <span class="dropdown-text">L14: message brokers, delivery guarantees and event-time windows</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l15.html">
+ <span class="dropdown-text">L15: generative AI in a data app</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l16.html">
+ <span class="dropdown-text">L16: principles of cloud design for a user-facing GenAI app</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l17.html">
+ <span class="dropdown-text">L17: retrieval, memory and agent patterns in the cloud</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l18.html">
+ <span class="dropdown-text">L18: planning and bounded agents in the cloud</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l19.html">
+ <span class="dropdown-text">L19: from Feedback 1 to Checkpoint 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l20.html">
+ <span class="dropdown-text">L20: stream processing with AWS Lambda, Hudi and agents</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./midterm-review.html">
+ <span class="dropdown-text">Midterm review</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutorials" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tutorials</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tutorials">    
+        <li>
+    <a class="dropdown-item" href="./tutorials.html">
+ <span class="dropdown-text">All tutorials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#emr-cluster">
+ <span class="dropdown-text">B2T1: Cluster/EMR</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#glue-part-a">
+ <span class="dropdown-text">B2T2 part A: Spark/Glue, how Spark reads files</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#glue-part-b">
+ <span class="dropdown-text">B2T2 part B: Spark/Glue, slow queries and their fixes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#b3-t1">
+ <span class="dropdown-text">B3T1: Lakehouse/Athena+Glue</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#b3-t2">
+ <span class="dropdown-text">B3T2: Lakehouse/Glue build and maintain</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#b5-t1">
+ <span class="dropdown-text">B5T1: Course MCP and prompt evaluation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#b5-t2">
+ <span class="dropdown-text">B5T2: behave and simulated data</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-project" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Project</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-project">    
+        <li>
+    <a class="dropdown-item" href="./project-start.html">
+ <span class="dropdown-text">Course project: overview and dates</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Milestones</li>
+        <li>
+    <a class="dropdown-item" href="./project-proposal.html">
+ <span class="dropdown-text">Setup and proposal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-checkpoint1.html">
+ <span class="dropdown-text">Checkpoint 1</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Guidelines</li>
+        <li>
+    <a class="dropdown-item" href="./project-startup.html">
+ <span class="dropdown-text">Project setup</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./assistant-setup.html">
+ <span class="dropdown-text">Coding assistant setup</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-mcp-scenarios.html">
+ <span class="dropdown-text">Course server with your assistant</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-behave.html">
+ <span class="dropdown-text">Behave for your project</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#b5-t2">
+ <span class="dropdown-text">Simulated data (tutorial B5T2)</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Examples and data</li>
+        <li>
+    <a class="dropdown-item" href="./project-case-example.html">
+ <span class="dropdown-text">Proposal example</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-datasets.html">
+ <span class="dropdown-text">Project datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-experiments.html">
+ <span class="dropdown-text">Experiment examples</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/cpsc436c-2026w1/recipes">
+ <span class="dropdown-text">Course recipes</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-assignments" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Assignments</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-assignments">    
+        <li>
+    <a class="dropdown-item" href="https://cpsc436c-2026w1.github.io/a1-starter/">
+ <span class="dropdown-text">A1 starter</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://cpsc436c-2026w1.github.io/a2-starter/">
+ <span class="dropdown-text">A2 starter</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://cpsc436c-2026w1.github.io/a3-starter/">
+ <span class="dropdown-text">A3 starter</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Parts</h2>
+   
+  <ul>
+  <li><a href="#part-recap" id="toc-part-recap" class="nav-link active" data-scroll-target="#part-recap">Recap of L18</a>
+  <ul class="collapse">
+  <li><a href="#part-recap-steps" id="toc-part-recap-steps" class="nav-link" data-scroll-target="#part-recap-steps">What decides the steps at the pet-food shop?</a></li>
+  </ul></li>
+  <li><a href="#part-review" id="toc-part-review" class="nav-link" data-scroll-target="#part-review">Review questions for L19</a>
+  <ul class="collapse">
+  <li><a href="#part-feedback-ids" id="toc-part-feedback-ids" class="nav-link" data-scroll-target="#part-feedback-ids">Where does each ID of the library team’s Feedback 1 issue go for Checkpoint 1?</a></li>
+  <li><a href="#part-ears" id="toc-part-ears" class="nav-link" data-scroll-target="#part-ears">Which EARS form fits each requirement of the drop-box counter?</a></li>
+  <li><a href="#part-feature-file" id="toc-part-feature-file" class="nav-link" data-scroll-target="#part-feature-file">Where does each piece of the library team’s example go?</a></li>
+  <li><a href="#part-behave-results" id="toc-part-behave-results" class="nav-link" data-scroll-target="#part-behave-results">How does behave count each step?</a></li>
+  <li><a href="#part-predict" id="toc-part-predict" class="nav-link" data-scroll-target="#part-predict">What does the example report with the duplicate check off?</a></li>
+  <li><a href="#part-good-scenario" id="toc-part-good-scenario" class="nav-link" data-scroll-target="#part-good-scenario">Which change fixes each draft scenario of the library team?</a></li>
+  <li><a href="#part-hand-in" id="toc-part-hand-in" class="nav-link" data-scroll-target="#part-hand-in">Where does each part of the library team’s Checkpoint 1 hand-in go?</a></li>
+  <li><a href="#part-terms" id="toc-part-terms" class="nav-link" data-scroll-target="#part-terms">Terms used on this page</a>
+  <ul class="collapse">
+  <li><a href="#recap-of-l18" id="toc-recap-of-l18" class="nav-link" data-scroll-target="#recap-of-l18">Recap of L18</a></li>
+  <li><a href="#feedback-ids-and-requirements" id="toc-feedback-ids-and-requirements" class="nav-link" data-scroll-target="#feedback-ids-and-requirements">Feedback IDs and requirements</a></li>
+  <li><a href="#data-and-examples" id="toc-data-and-examples" class="nav-link" data-scroll-target="#data-and-examples">Data and examples</a></li>
+  <li><a href="#feature-files-and-behave" id="toc-feature-files-and-behave" class="nav-link" data-scroll-target="#feature-files-and-behave">Feature files and behave</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">L19 review: from Feedback 1 to Checkpoint 1</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>If you need to look up a term, the <a href="#part-terms">relevant vocabulary is below</a>. The first part recaps L18; the second reviews the L19 studio, which took one requirement from your Feedback 1 issue to a dry run for <a href="./project-checkpoint1.html">Checkpoint 1</a>.</p>
+<section id="part-recap" class="level1">
+<h1>Recap of L18</h1>
+<section id="part-recap-steps" class="level2">
+<h2 class="anchored" data-anchor-id="part-recap-steps">What decides the steps at the pet-food shop?</h2>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## A pet-food shop runs a chat that can search its products and read the signed-in customer's orders. A nightly job loads the supplier's price file into the product table, and an alarm fires when the load goes wrong. For each piece of work, choose what decides its steps. Each option may be used once, more than once, or not at all.
+
+- A customer asks “where is my last order?”, and for every question of this kind the chat reads the signed-in customer's newest order and shows its status :: App code
+  &gt; The steps are known before any request arrives: one look-up, then the reply. Code runs them every time, and no model call chooses them. A planner call or an agent would spend model calls on steps that never change.
+- The nightly load fails because the price file arrived after the load had started, a cause that the team's runbook checks by comparing the file's arrival time with the load's start time :: App code
+  &gt; A runbook in code checks the causes seen before against the data, without a model call. A late file is one of them, so the data settles the alarm. An agent runs only when the runbook's checks do not settle the alarm.
+- A customer asks for “food for a new puppy and an older cat”. The shop has no fixed rules that turn a request like this into searches, and the search results go into the reply, not into choosing more searches :: Planner model call
+  &gt; The kinds of food depend on the request, so one model call lists them before anything runs. App code caps the list and runs one search for each kind. An agent is not needed, because no search result changes which kinds are searched.
+- A customer asks for “what a kitten needs in its first week”. The shop's code does not list the supplies for a request like this, and the search results are used to choose products, not further searches :: Planner model call
+  &gt; The shop has no fixed rules that list the supplies for every request written in free text, so a model call returns the list. Every part is known before the searches run, so app code can check the list and then run it.
+- The nightly load fails, the checks for the causes seen before find none of them, and which log or file to read next depends on what the last read showed :: Bounded agent
+  &gt; The model chooses each next read-only tool call from the results so far, within limits that it cannot remove. A list of steps written before the first read could not follow the evidence. App code then checks the cause that the agent names.
+- After a failed load, the runbook names a missing file, but the file is there and has its usual rows. The runbook does not have a check for this, and which table or log to read next depends on what each read shows :: Bounded agent
+  &gt; The data does not confirm the runbook's answer, so the alarm is not settled. The model chooses each next read from what the earlier reads returned, and app code checks the cause it names against the data.
+- :: Model gateway
+  &gt; Every row asks what decides which steps run. The model gateway sits on the way to the model and checks the key, the request rate and the budget of a call that is already being made, so it does not choose the steps in any of these rows.
+</div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 74%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Term</th>
+<th>What it means</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Orchestrator-workers</strong></td>
+<td>A planner model call splits the request into subtasks that depend on it. App code bounds the plan, runs a worker for each subtask and combines the results.</td>
+</tr>
+<tr class="even">
+<td><strong>Plan, validate, then execute</strong></td>
+<td>App code checks a plan before it runs: a cap on its steps, known tables and columns only, and Data scanned under a cap.</td>
+</tr>
+<tr class="odd">
+<td><strong>Agent loop</strong></td>
+<td>The model returns a tool call, app code runs it and sends the tool result back, and the model returns the next tool call or the final reply.</td>
+</tr>
+<tr class="even">
+<td><strong>Bounded agent</strong></td>
+<td>An agent with limits on its actions, time or spend that the model cannot remove. Reaching a limit stops the loop.</td>
+</tr>
+<tr class="odd">
+<td><strong>Runbook first</strong></td>
+<td>App code checks the causes seen before, with no model call. The agent runs only when the data does not settle the alarm, and app code checks the cause it names.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Use a planner when the steps cannot be fixed in advance. Use code when the steps are known.</strong></p>
+<p>Read more: <a href="https://learning.oreilly.com/library/view/ai-engineering/9781098166298/ch06.html"><em>AI Engineering</em>, ch.&nbsp;6, “Planning”, “Agent Overview”</a>.</p>
+</section>
+</section>
+<section id="part-review" class="level1">
+<h1>Review questions for L19</h1>
+<p>The questions follow a library team through its Checkpoint 1 hand-in. The team’s project counts the books returned at each drop box of a city library. Each drop box sends one event for each returned book.</p>
+<section id="part-feedback-ids" class="level2">
+<h2 class="anchored" data-anchor-id="part-feedback-ids">Where does each ID of the library team’s Feedback 1 issue go for Checkpoint 1?</h2>
+<p>The team’s Feedback 1 issue, the <code>staff-feedback</code> issue in its repository, lists these IDs.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## For each ID of the Feedback 1 issue, choose what the team writes for it for Checkpoint 1. Not all options will be used.
+
+- RF010: every returned book is counted once, even when a drop box sends its event twice :: Rule with an example
+  &gt; A test can check this constraint: a book whose event arrives twice either changes the count or does not. Its line under `Stakeholder input` ends with `[Scenario](…)`, and its rule in the feature file carries the tag `@RF010`.
+- RF050: every AWS resource of the team carries the course tags :: `Read:` line
+  &gt; Staff check the tags by reading the scripts and the tags on the resources, not by running an example. The line ends with `Read at Checkpoint 2:` and names what staff will read, and the constraint does not get a rule.
+- RQ010: Fix: section 3 of the proposal names two drop boxes that the city does not have :: Fix in `docs/proposal.md`
+  &gt; A request that starts with `Fix:` is corrected in `docs/proposal.md`. Its line under `Stakeholder input` then says where: `Done in docs/proposal.md, section 3.`
+- RQ020: say how long raw drop-box events are kept and who may delete them :: `Reply:` line
+  &gt; The answer is due at Checkpoint 2. At Checkpoint 1 the line has a `Reply:` that says what the team will do and what it is based on.
+- :: Step code
+  &gt; Step code, the Python functions that make the steps run, is Checkpoint 2 work. At Checkpoint 1 `features/steps/` holds only `.gitkeep`.
+- :: Answer in `docs/design.md`
+  &gt; The answer to a request is due at Checkpoint 2. At Checkpoint 1 the request's line has a `Reply:` that says what the team will do.
+</div>
+</section>
+<section id="part-ears" class="level2">
+<h2 class="anchored" data-anchor-id="part-ears">Which EARS form fits each requirement of the drop-box counter?</h2>
+<p>The team writes the requirements of its job stories in EARS. Readers use the library’s app.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## For each requirement of the drop-box counter, choose the EARS form it should be written in. Each option may be used once, more than once, or not at all.
+
+- A 10-minute period ends, and the system stores one count of returned books for each drop box in that period :: `WHEN &lt;trigger&gt;` line
+  &gt; The end of a period is an event that starts the response, so the line starts with `WHEN`. Nothing has gone wrong, so the line does not start with `IF`.
+- A reader enters a library number at a drop box, and within 2 seconds the box's screen shows the reader's books on loan :: `WHEN &lt;trigger&gt;` line
+  &gt; Entering the number is an event that starts the response, and the 2 seconds go after `|` as the performance target. Nothing has gone wrong, so the line does not start with `IF`.
+- For as long as a drop box is marked full, the app shows readers the nearest drop box with space :: `WHILE &lt;state&gt;` line
+  &gt; Being full is a state that lasts until the box is emptied, and the app shows the other box for the whole time. A `WHEN` line would answer one moment, not the time in between.
+- For as long as a book is on loan past its due date, the app shows the reader the late fee so far :: `WHILE &lt;state&gt;` line
+  &gt; An overdue loan is a state that lasts, and the response holds while the state holds. A late loan is the reader's state, not a problem in the team's data, so the line does not start with `IF`.
+- A drop box sends the event of one returned book twice, and the system counts that book once :: `IF &lt;problem&gt; THEN` line
+  &gt; A repeated event is a problem in the data that would make the outcome false: the count would be one too high. A problem gets an `IF … THEN` line.
+- A drop box stops sending events for 30 minutes, and the dashboard shows that box as silent, not as 0 returns :: `IF &lt;problem&gt; THEN` line
+  &gt; Input that stops is a problem that would make the outcome false, because a broken box and an empty box would both show 0. Interrupted input is trouble, so it gets an `IF … THEN` line; `WHILE` is for a normal state, such as a full box.
+- :: `WHERE &lt;feature&gt;` line
+  &gt; A `WHERE` line is for behaviour that exists only when an optional feature is part of the system, such as an assistant. A requirement that holds without any optional feature does not start with `WHERE`.
+</div>
+</section>
+<section id="part-feature-file" class="level2">
+<h2 class="anchored" data-anchor-id="part-feature-file">Where does each piece of the library team’s example go?</h2>
+<p>The team writes the feature file for its job story JS02 and its requirement R030: IF a drop box sends a book’s event twice THEN THE SYSTEM SHALL count the book once.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## For each piece of the team's work on R030, choose where it goes. Not all options will be used.
+
+- JS02, the ID of the job story :: Feature tag
+  &gt; A feature serves one job story, and the story's ID is the tag on the line above `Feature:`. A requirement's ID goes above `Rule:`.
+- R030, the ID of the requirement :: Rule tag
+  &gt; The rule's sentence says the requirement, and its ID is the tag above `Rule:`. The story's ID goes above `Feature:`.
+- Three return events as rows with the fields of the event, the first and the third with the same event ID :: Table under `Given`
+  &gt; The events of the example become a table under `Given`, with the first row as column names. The row with the repeated event ID is the injected fault.
+- 10:16, the time at which the example's count must hold :: `When` step
+  &gt; The time at which the answer must hold is the `When` step: "When the counts are read at 10:16". The data comes before it, under `Given`.
+- Drop box B12 shows 2 returned books between 10:10 and 10:15 :: `Then` step
+  &gt; The answer, with its number, is the `Then` step. A test compares the number 2 with the count the system stores.
+- A question nobody on the team can answer: does a book returned and checked out again within a minute count as a return? :: `Assumptions` row
+  &gt; An open question goes in `Assumptions` of `docs/requirements.md`, with the person who would answer it. A question is not a step, so it does not go in the feature file.
+- :: Step function
+  &gt; A step function is Python code that behave calls for a step. The example is written as text, and step code is not due at Checkpoint 1.
+- :: `Background:` steps
+  &gt; `Background:` holds the steps that every scenario of the feature shares, and behave runs them before each scenario. The events, the time and the answer of one example belong to that example.
+</div>
+</section>
+<section id="part-behave-results" class="level2">
+<h2 class="anchored" data-anchor-id="part-behave-results">How does behave count each step?</h2>
+<p>The team runs behave on its feature files. behave’s last line counts the steps, such as <code>47 steps passed, 3 failed, 0 skipped, 44 undefined</code>.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## For each step, choose the word that behave's steps line counts it under. Each option may be used once, more than once, or not at all.
+
+- In a normal run, a `Then` step's function runs, and its `assert` compares the expected 2 returned books with the 3 that the system counted :: Failed
+  &gt; The function ran and its `assert` did not hold, so the step fails, and behave prints the assert's message with both numbers.
+- In a normal run, a `Then` step's function runs, and its `assert` expects drop box B7 to show as silent, but the system shows B7 with 0 returns :: Failed
+  &gt; behave ran the step function, and the `assert` inside it did not hold, so the step is counted as failed. The step has a function, so it is not undefined.
+- In a dry run of the Checkpoint 1 draft, a `Given` step that has no step function, because `features/steps/` holds only `.gitkeep` :: Undefined
+  &gt; No step function matches the step's text, so the step is undefined, and behave prints a snippet for it. A dry run does not run any step, so it does not report a step as passed.
+- In a normal run, a `When` step whose text matches no step function, because the team wrote new wording :: Undefined
+  &gt; behave finds a step function by the step's text. New wording needs new step code, so the step is undefined.
+- In `uv run behave --tags=@R030`, a step of a scenario that only the tag `@R040` covers :: Skipped
+  &gt; `--tags=@R030` runs only the scenarios under that tag, so behave does not run this step and reports it as skipped.
+- In `uv run behave --tags=@RF020`, a `Given` step of an example under the rule tagged `@RF010` :: Skipped
+  &gt; The run includes only the scenarios under `@RF020`. The example under `@RF010` is left out, so behave does not run its steps.
+- :: Error
+  &gt; `error` is a word of the scenarios line, not of the steps line. behave counts a scenario as an error when one of its steps is undefined, and it counts that step as undefined.
+</div>
+</section>
+<section id="part-predict" class="level2">
+<h2 class="anchored" data-anchor-id="part-predict">What does the example report with the duplicate check off?</h2>
+<p>One example of the team’s rule for RF010:</p>
+<pre><code>Example: One return delivered twice
+  Given only these return events are received:
+    | event_id  | drop_box | event_time | received_time |
+    | ev-000201 | B12      | 10:11:00   | 10:11:01      |
+    | ev-000202 | B12      | 10:12:30   | 10:12:31      |
+    | ev-000201 | B12      | 10:11:00   | 10:12:40      |
+  When the counts are read at 10:15:30
+  Then drop box B12 shows 2 returned books between 10:10 and 10:15</code></pre>
+<p>The third row repeats the first row’s <code>event_id</code>: the same return delivered twice. For one run, the team turns the counting function’s duplicate check off; the test stays the same.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## With the duplicate check off, what does behave report for this example?
+
+1. [x] Fails: expected 2, counted 3
+    &gt; Without the duplicate check, the return delivered twice is counted twice, so the system counts 3. The `Then` compares that count with the 2 worked out from the rows before the run, so the failure message shows both numbers.
+1. [ ] Passes: expected 2, counted 2
+    &gt; The test stays the same, but the counting changed: the return delivered twice is now counted twice, so the count no longer matches the `Then`.
+1. [ ] Fails: expected 2, counted 1
+    &gt; Turning the duplicate check off does not drop any event. Each of the three rows is counted, so the count goes up, not down.
+</div>
+</section>
+<section id="part-good-scenario" class="level2">
+<h2 class="anchored" data-anchor-id="part-good-scenario">Which change fixes each draft scenario of the library team?</h2>
+<p>The team reads its draft scenarios before Checkpoint 1.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## For each problem in a draft scenario, choose the change that fixes it. Not all options will be used.
+
+- A scenario ends with `Then the counts look right` :: Fixed answer in `Then`
+  &gt; A test cannot compare "look right" with anything. A `Then` such as "drop box B12 shows 2 returned books between 10:10 and 10:15" gives the test a number to compare.
+- A scenario starts with `Given the librarian opens the dashboard and clicks Refresh` :: System behaviour, not clicks
+  &gt; A click breaks when the page changes, and the scenario still has to say what the system must do. The step says which events the system has received.
+- Every scenario of one feature starts with `Given the returns table is empty` :: `Background:` steps
+  &gt; The steps of `Background:` run before every scenario of the feature, so the shared `Given` is written once.
+- Three scenarios have the same steps and differ only in the faulty drop-box ID of one event: empty, unknown or negative :: `Scenario Outline:`
+  &gt; The steps are written once with a placeholder, and each row of `Examples` is one injected fault. behave runs the outline once for each row, so the feature file does not keep three copies of the same steps.
+- One scenario checks a drop box's count and, in later `Then` steps, the email sent to the librarian when the box is full :: One behaviour each
+  &gt; A scenario that tests one behaviour names what broke when it fails. The count and the email are two behaviours, so they get two scenarios.
+- :: Step functions
+  &gt; Step code makes a step run at Checkpoint 2. It does not change what the scenario says or what its `Then` checks.
+- :: Second ID tag
+  &gt; A rule carries a second tag when one of the team's requirements meets an RF, such as `@R080 @RF030`. A second tag does not change a scenario's steps or its `Then`.
+</div>
+</section>
+<section id="part-hand-in" class="level2">
+<h2 class="anchored" data-anchor-id="part-hand-in">Where does each part of the library team’s Checkpoint 1 hand-in go?</h2>
+<p>The team hands in Checkpoint 1 as a merged pull request with the tag <code>cp1</code> on the merged commit.</p>
+<div class="quizdown">
+---
+shuffle_answers: true
+---
+
+## For each part of the team's work, choose where it goes in the Checkpoint 1 hand-in. Each option may be used once, more than once, or not at all.
+
+- Under each job story the team plans to implement, 2 to 5 requirements in EARS, each with its ID :: `docs/requirements.md`
+  &gt; Each ID is defined once in `docs/requirements.md`, and a story's requirements are lines under the story's heading. The tags in `features/` then name IDs that this file defines.
+- A line for RQ020 under `Stakeholder input`, with its wording and a `Reply:` that says what the team will do :: `docs/requirements.md`
+  &gt; Every RF and RQ ID of the Feedback 1 issue gets a line in the section `Stakeholder input` of `docs/requirements.md`. The answer itself is Checkpoint 2 work.
+- Sections 4 and 5 of the proposal, the workflows and the sketch, moved out of the proposal :: `docs/design.md`
+  &gt; From Checkpoint 1 the design has its own file, beside the resource list and the `Data` section. `docs/proposal.md` keeps one line that points to `docs/design.md`.
+- A bullet for each simulated data set, with the IDs it shows and the exact count of each injected fault :: `docs/design.md`
+  &gt; The bullets go in the `Data` section of `docs/design.md`, under `Simulated data for the demos`. At Checkpoint 1 a bullet is words, and no file or generator has to exist yet.
+- Step functions that make each example run :: Checkpoint 2 work
+  &gt; At Checkpoint 1 `features/steps/` holds only `.gitkeep`, and the dry run reports every step as undefined.
+- The answer to RQ020: the number of days raw events are kept and the role that may delete them :: Checkpoint 2 work
+  &gt; At Checkpoint 1 the line for RQ020 has a `Reply:` that says what the team will do. The answer is due at Checkpoint 2.
+- :: `docs/proposal.md`
+  &gt; `docs/proposal.md` gets the corrections that the `Fix:` requests ask for and one line that points to `docs/design.md`. The requirements and the design have files of their own.
+</div>
+</section>
+<section id="part-terms" class="level2">
+<h2 class="anchored" data-anchor-id="part-terms">Terms used on this page</h2>
+<section id="recap-of-l18" class="level3">
+<h3 class="anchored" data-anchor-id="recap-of-l18">Recap of L18</h3>
+<p><strong>Orchestrator-workers</strong>. A planner model call splits the request into subtasks that depend on it. App code bounds the plan, runs a worker for each subtask and combines the results.</p>
+<p><strong>Agent loop</strong>. The model returns a tool call, app code runs it and sends the tool result back, and the model returns the next tool call or the final reply.</p>
+<p><strong>Bounded agent</strong>. An agent with limits on its actions, time or spend that the model cannot remove. Reaching a limit stops the loop.</p>
+<p><strong>Runbook first</strong>. App code checks the causes seen before, with no model call. The agent runs only when the data does not settle the alarm, and app code checks the cause it names.</p>
+<p><strong>Model gateway</strong> (L16). A service between apps and model providers. It can hold the provider key, check each key’s budget and forward the calls.</p>
+</section>
+<section id="feedback-ids-and-requirements" class="level3">
+<h3 class="anchored" data-anchor-id="feedback-ids-and-requirements">Feedback IDs and requirements</h3>
+<p><strong>Feedback 1 issue</strong>. The GitHub issue <code>staff-feedback</code> in your repository, where staff listed constraints (RF) and requests (RQ) about your proposal.</p>
+<p><strong>Constraint</strong> (RF010 …). A property of your system from your Feedback 1 issue. One that a test can check gets a rule; one that no test can check ends with <code>Read at Checkpoint 2: …</code> and what staff will read.</p>
+<p><strong>Request</strong> (RQ010 …). Something staff ask your team to do or answer. A request that starts with <code>Fix:</code> is corrected in <code>docs/proposal.md</code>; any other request gets a <code>Reply:</code> that says what you will do, and its answer is due at Checkpoint 2.</p>
+<p><strong>Stakeholder input</strong>. The section of <code>docs/requirements.md</code> with one line for each RF and RQ ID of your Feedback 1 issue, with its wording and your <code>Reply:</code>.</p>
+<p><strong>Job story</strong>. Each job story from your proposal that you plan to implement, as a heading with its ID (JS01 …) in <code>docs/requirements.md</code>.</p>
+<p><strong>EARS</strong> (Easy Approach to Requirements Syntax). One sentence of the same shape for every requirement: a keyword says when it applies, and <code>THE SYSTEM SHALL</code> says what the system then does. No keyword: always; <code>WHEN &lt;trigger&gt;</code>; <code>WHILE &lt;state&gt;</code>; <code>IF &lt;problem&gt; THEN</code>; <code>WHERE &lt;feature&gt;</code>.</p>
+<p><strong>Traceability</strong>. Each ID is defined once in <code>docs/</code>, and every other place that uses it names it: a tag in <code>features/</code>, a cell in <code>docs/design.md</code>.</p>
+</section>
+<section id="data-and-examples" class="level3">
+<h3 class="anchored" data-anchor-id="data-and-examples">Data and examples</h3>
+<p><strong>Event</strong>. A record that says something happened.</p>
+<p><strong>Delivery</strong>. One arrival of an event at the system. <code>received_time</code> is when it arrived; <code>event_time</code> is when it happened.</p>
+<p><strong>Event format</strong>. One line for each kind of event in <code>docs/design.md</code>, section <code>Data</code>, naming the fields that your examples’ tables use.</p>
+<p><strong>Example Mapping</strong>. A short team conversation that writes down a story, its rules, examples of each rule, and the questions nobody can answer yet.</p>
+<p><strong>Injected fault</strong>. A problem added to the test data on purpose, with an exact count, and recorded so the test knows the right answer. The system is not told which events are faulty.</p>
+<p><strong>Simulated data set</strong> (SIM01 …). A named set of generated test events or rows, for an example that needs more events than a small table holds. At Checkpoint 1 it is one bullet of words in <code>docs/design.md</code>, section <code>Data</code>.</p>
+<p><strong>Example</strong>. Test data and an expected answer: <code>Given</code> the data, <code>When</code> something happens, <code>Then</code> an answer known before the system runs.</p>
+<p><strong>Eval in words</strong>. An entry under <code>Evals</code> in <code>docs/requirements.md</code> for a requirement on a model’s answers: the cases, what counts as correct, the runs, when it passes, and the model in use.</p>
+</section>
+<section id="feature-files-and-behave" class="level3">
+<h3 class="anchored" data-anchor-id="feature-files-and-behave">Feature files and behave</h3>
+<p><strong>Gherkin</strong>. The plain-text format that uses <code>Feature</code>, <code>Rule</code>, <code>Example</code>, <code>Given</code>, <code>When</code> and <code>Then</code>.</p>
+<p><strong>behave</strong>. A Python tool that reads Gherkin feature files and runs them.</p>
+<p><strong>Feature file</strong>. Plain text in <code>features/</code>, named for what the user gets.</p>
+<p><strong>Rule</strong>. A group of scenarios that show one requirement, with the requirement’s ID as its tag.</p>
+<p><strong>Tag</strong>. A label such as <code>@R020</code> on the line above a feature, a rule or a scenario. It applies to everything under it.</p>
+<p><strong>Step function</strong>. Python code in <code>features/steps/</code> that behave calls for a step with matching text.</p>
+<p><strong>Background</strong>. Steps that run before every scenario of the feature.</p>
+<p><strong>Scenario Outline</strong>. Steps with <code>&lt;placeholders&gt;</code>, run once for each row of its <code>Examples:</code> table.</p>
+<p><strong>Dry run</strong>. behave reads the feature files and matches each step with step code, without running it.</p>
+<p><strong>Undefined step</strong>. A step without step code. behave prints a snippet for it: the empty step function to write later.</p>
+<p><strong>Pull request</strong>. A proposed change for review. The Checkpoint 1 hand-in is a merged pull request with the tag <code>cp1</code> on the merged commit.</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
