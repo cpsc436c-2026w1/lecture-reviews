@@ -1,18 +1,22 @@
-### Recap of L19 and the GenAI block
-
-**Requirement in EARS** (L19). One line under a job story, with an ID such as R020: `IF <problem> THEN THE SYSTEM SHALL <response>` for something that goes wrong, `WHEN <trigger> THE SYSTEM SHALL <response>` for an event that starts it.
-
-**Example** (L19). Test data and an expected answer under a rule tagged with the requirement's ID: `Given` the data, `When` something happens, `Then` an answer worked out by hand before the system runs.
-
-**Injected fault** (L19). A problem the simulator adds to the test data on purpose, and records, so the test knows the right answer.
-
-**Simulated data set** (L19). A named set of generated test events or rows, with an ID such as SIM01, for an example that needs more events than a small table holds.
+### Recap of the GenAI block
 
 **Approval gate** (L18). A check that must pass before an action runs: a person approves, tests pass, or an eval score reaches a set threshold.
 
 **Idempotent write** (L18). A write that has the same effect whether it is sent once or several times. Retries use the same request key so the store can recognize the repeated write.
 
 **Model gateway** (L16). A service between apps and model providers. It can hold the provider key, check each key's budget and forward the calls.
+
+### Stream processing patterns
+
+**Stream processor**. A program that reads events from a stream (a log, such as Apache Kafka or Kinesis, or a queue) and runs computations on them.
+
+**Event routing**. A rule matches each event's content and sends it to targets; nothing is kept between events. On AWS: EventBridge rules.
+
+**FaaS on the stream**. The platform reads a batch of records and calls your function with it. On AWS: Lambda with an event source mapping.
+
+**Micro-batch engine**. A stream engine that runs a query over each small batch of new events and keeps windows, joins and state, checkpointed. Open source: Spark Structured Streaming.
+
+**Record-at-a-time engine**. A stream engine that processes each event as it arrives, with state and timers for each key, checkpointed. Open source: Apache Flink, Kafka Streams.
 
 ### Windows and late updates
 
@@ -34,7 +38,13 @@
 
 **Late record**. A record whose event-time window is already final when it arrives. The job either drops it and counts the drop, or updates the stored count and counts a correction.
 
-### Lake table (Hudi)
+### Lakehouse for streams: data lake, Iceberg and Hudi
+
+**Data lake** (L11). Raw files in object storage, read by engines that list the folders; a folder of files has no commit, no record of its schema and no history.
+
+**Iceberg table** (L11). A table with a table format: each write is a commit, snapshots record each version, and manifests list its data files.
+
+**Delete file** (L11). A small file that lists which rows of a data file are deleted. Readers skip those rows until compaction rewrites the data file.
 
 **Apache Hudi**. A table format for the lake, like Iceberg (L11), built to change rows by key in files on S3.
 
