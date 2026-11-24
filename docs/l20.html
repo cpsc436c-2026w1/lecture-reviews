@@ -388,6 +388,55 @@ shuffle_answers: true
 1. [ ] 122
     &gt; 122 counts the 2 late scans twice in the hour from 14:00. The 120 scans of the hour already include them, so a count above 120 is too high.
 </div>
+<p>What Checkpoint 1 changes in your repository (<a href="./project-checkpoint1.html#repo">Checkpoint 1 page</a>):</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 14%">
+<col style="width: 56%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>File</th>
+<th>Change</th>
+<th>What goes in it</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>docs/proposal.md</code></td>
+<td>change</td>
+<td>the corrections asked for by <code>Fix:</code> requests</td>
+</tr>
+<tr class="even">
+<td><code>docs/requirements.md</code></td>
+<td>fill in</td>
+<td>job stories with their requirements, and the <code>Stakeholder input</code> section</td>
+</tr>
+<tr class="odd">
+<td><code>docs/design.md</code></td>
+<td>fill in</td>
+<td>sketch, workflows, planned resources, <code>Data</code></td>
+</tr>
+<tr class="even">
+<td><code>features/*.feature</code></td>
+<td>add</td>
+<td>rules tagged with IDs, with their examples; by default one feature file for each job story</td>
+</tr>
+<tr class="odd">
+<td><code>features/steps/.gitkeep</code></td>
+<td>add</td>
+<td>empty for now: step code comes at Checkpoint 2</td>
+</tr>
+<tr class="even">
+<td>tag <code>cp1</code> on <code>main</code></td>
+<td>add</td>
+<td>after your pull request is merged</td>
+</tr>
+</tbody>
+</table>
+<p><strong><code>docs/</code> says what you will build, <code>features/</code> says how you demonstrate it works.</strong></p>
+<p>For each requirement, a rule tagged with its ID holds three examples:</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 18%">
