@@ -34,8 +34,6 @@
 
 **Event format**. One line for each kind of event in `docs/design.md`, section `Data`, naming the fields that your examples' tables use.
 
-**Example Mapping**. A short team conversation that writes down a story, its rules, examples of each rule, and the questions nobody can answer yet.
-
 **Injected fault**. A problem added to the test data on purpose, with an exact count, and recorded so the test knows the right answer. The system is not told which events are faulty.
 
 **Simulated data set** (SIM01 …). A named set of generated test events or rows, for an example that needs more events than a small table holds. At Checkpoint 1 it is one bullet of words in `docs/design.md`, section `Data`.
