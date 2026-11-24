@@ -516,7 +516,7 @@ shuffle_answers: true
 
 ## Match each problem to the option that has it. Each option may be used once, more than once, or not at all.
 
-- A query that runs while a minute's files are being written reads only part of that minute :: Data lake only
+- A query that runs while a minute's files are being written reads only part of that minute's records :: Data lake only
   &gt; Plain files have no commit: a reader sees whatever files are there. An Iceberg commit switches the table to the new files at once (L11, P1).
 - Nobody can tell which files belong to the table now, or what it held an hour ago :: Data lake only
   &gt; Iceberg's snapshots record each version of the table, so time travel and the current file list come with the format (L11, P5).
