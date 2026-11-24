@@ -55,3 +55,7 @@ The milestones are:
 
 Other dates are announced with each milestone. Repository hand-ins are tags in your course repository; the
 [setup and proposal](project-proposal.qmd) page explains how.
+
+### Your team's AWS group lease
+
+One of you requests the group lease and invites the others. A teammate who was added to a group sees the shared lease under *Shared with me*, not under *All leases* or *My leases*, so that is where to look if anyone says their account is missing.
