@@ -32,11 +32,11 @@ shuffle_answers: true
 1. [ ] 2
     > 2 is the number of late scans that the simulator injected. The `Then` checks the count for the whole hour, and the 2 late scans are part of it.
 1. [ ] 118
-    > 118 is what a system shows if it counts each scan in the hour it arrives: the 2 late scans would land in the hour from 15:00. The test catches that mistake because the data has 2 late scans and the `Then` checks 120.
+    > 118 is what a system shows if it counts each scan in the hour it arrives: the 2 late scans would land in the hour from 15:00. A `Then` that checks 120 fails such a system.
 1. [x] 120
     > The 2 scans made at 14:58 belong to the hour from 14:00 to 15:00, even though they arrive at 15:04. R020 counts each scan in the hour of its event time, so all 120 scans made in that hour are counted there.
 1. [ ] 122
-    > 122 counts each late scan twice, once in the hour it was made and once more when it arrives. Depot D7 made 120 scans in the hour, so a count above 120 is too high.
+    > 122 counts the 2 late scans twice in the hour from 14:00. The 120 scans of the hour already include them, so a count above 120 is too high.
 ```
 
 | Example | What it shows | Where its data comes from |
@@ -126,18 +126,18 @@ shuffle_answers: true
 
 ## For each need of the warehouse, choose the table type or the query that fits it. Not all options will be used.
 
-- Analysts query each pallet's current shelf many times a day, and the scans change a few pallets an hour :: Copy-on-write table
+- Table type: analysts query each pallet's current shelf many times a day, and the scans change a few pallets an hour :: Copy-on-write table
   > Few pallets change, so the writer rewrites few base files, and every read opens base files only, without log files to merge. A merge-on-read table would make each of the many reads merge the log files.
-- The scans change most pallets every minute, the writer must keep up, and analysts read once a day :: Merge-on-read table
+- Table type: the scans change most pallets every minute, the writer must keep up, and analysts read once a day :: Merge-on-read table
   > Each commit appends the updates to log files instead of rewriting base files, so the writer keeps up, and the one daily read merges the log files. A copy-on-write table would rewrite most file groups every minute.
-- On a merge-on-read table, a nightly job needs the current shelf of each pallet whose row was written after the last commit the job processed :: Incremental query
+- Query on a merge-on-read table: a nightly job needs the current shelf of each pallet whose row was written after the last commit the job processed :: Incremental query
   > An incremental query returns the rows changed since a commit, each once in its latest state. A snapshot query would return every pallet, and the job would have to find the changed ones itself.
-- On a merge-on-read table, a report must read as fast as possible and may leave out the changes still in log files :: Read-optimized query
+- Query on a merge-on-read table: a report must read as fast as possible and may leave out the changes still in log files :: Read-optimized query
   > A read-optimized query reads base files only, so it is faster and misses the changes still in log files. A snapshot query merges the log files and reads slower.
 - :: Change data capture query
   > A change data capture query returns every change of a row, with the row before and after it. A job that needs each changed pallet's current shelf once needs only the latest state of each row.
 - :: Snapshot query
-  > A snapshot query merges the base files with the log files and returns every row in its latest state. It returns more rows than a job that needs only the changed pallets, and it reads slower than base files alone.
+  > A snapshot query is a way to read a table, not a table type. It merges the base files with the log files and returns every row in its latest state, so it returns more rows than a job that needs only the changed pallets, and it reads slower than base files alone.
 ```
 
 ## What changes when Lambda gathers messages from the queue for up to 30 s? {#part-batching}
@@ -152,20 +152,19 @@ The batching window is how long Lambda gathers messages before it calls the func
 ```quizdown
 ---
 shuffle_answers: true
+schema_building: true
 ---
 
-## For each measure, choose what happened to it in setting B, measured against setting A. Each option may be used once, more than once, or not at all.
+## For each measure, choose how setting B compares with setting A. Each option may be used more than once.
 
 - Calls of the function :: Lower
   > Lambda gathered up to 30 s of messages into one call, so the function ran 331 times instead of 2,514.
 - Log data that the function writes, in KB :: Lower
   > Each call writes its own log lines, so fewer calls wrote less log data: 140 KB instead of 1,058 KB.
 - Delay from the send to the stored trip, at p95 :: Higher
-  > A message can wait up to 30 s for its batch before the function runs, so the p95 delay rose from 0.07 s to 34.1 s.
+  > A message waits for its batch, up to the 30 s window, and then for the call that stores it. The p95 delay rose from 0.07 s to 34.1 s.
 - Billed requests to SQS: sends, receives and deletes :: Higher
   > The pollers still received about one message per receive and made more empty receives, so the requests rose from 11,543 to 12,135. Batching the sends, 10 messages in each call, is the lever on this count.
-- :: About the same
-  > Each of these measures changed in setting B. The batching window changes how Lambda reads the queue and calls the function; only the sender's own calls to SQS stayed about the same.
 ```
 
 ## Should code, the model or a person do each part of the queue's cost agent? {#part-cost-agent}
@@ -178,14 +177,14 @@ shuffle_answers: true
 schema_building: true
 ---
 
-## For each part of the cost agent's work, choose who should do it. Each option may be used more than once.
+## For each part of the cost agent's work, choose who does it, or who must approve it first. Each option may be used more than once.
 
 - Read the week's counted SQS requests by operation (sends, receives, deletes) for each batching window the team has measured :: Code
   > The calls and their arguments are fixed, so a tool in code returns the counts.
 - Compute the request charge at 0.40 USD per million requests for each of those windows :: Code
   > The arithmetic must be exact and the same on every run, and a model's numbers can differ between runs.
-- Explain to the team in two sentences what those charges and the measured p95 delays show for the 30 s window against no window, under the team's limit of 60 s at p95 :: Model
-  > The explanation is free text written from the tool results. Code can then check that it names the numbers the tools returned.
+- Write a two-sentence summary for the team: how the 30 s window compares with no window on the request charge and the measured p95 delay, against the limit of 60 s at p95 :: Model
+  > The summary is free text written from the tool results. Code can then check that it names the numbers the tools returned.
 - Change the batching window of the queue's live event source mapping :: Person approves
   > A change to the live mapping is a write to the account. A person on the team, not the model, authorizes it by approving the exact setting. Code then applies it, and applying the same setting again leaves the mapping as it was.
 ```

@@ -70,8 +70,8 @@ shuffle_answers: true
 
 - RF010: every returned book is counted once, even when a drop box sends its event twice :: Rule with an example
   > A test can check this constraint: a book whose event arrives twice either changes the count or does not. Its line under `Stakeholder input` ends with `[Scenario](…)`, and its rule in the feature file carries the tag `@RF010`.
-- RF030: every AWS resource of the team carries the course tags :: `Read:` line
-  > The examples do not run on AWS, so a test of them cannot show the tags. The line ends with `Read at Checkpoint 2:` and names what staff will read then, the scripts and the tags on the resources, and the constraint does not get a rule.
+- RF050: every AWS resource of the team carries the course tags :: `Read:` line
+  > Staff check the tags by reading the scripts and the tags on the resources, not by running an example. The line ends with `Read at Checkpoint 2:` and names what staff will read, and the constraint does not get a rule.
 - RQ010: Fix: section 3 of the proposal names two drop boxes that the city does not have :: Fix in `docs/proposal.md`
   > A request that starts with `Fix:` is corrected in `docs/proposal.md`. Its line under `Stakeholder input` then says where: `Done in docs/proposal.md, section 3.`
 - RQ020: say how long raw drop-box events are kept and who may delete them :: `Reply:` line
@@ -104,7 +104,7 @@ shuffle_answers: true
 - A drop box sends the event of one returned book twice, and the system counts that book once :: `IF <problem> THEN` line
   > A repeated event is a problem in the data that would make the outcome false: the count would be one too high. A problem gets an `IF … THEN` line.
 - A drop box stops sending events for 30 minutes, and the dashboard shows that box as silent, not as 0 returns :: `IF <problem> THEN` line
-  > Input that stops is a problem that would make the outcome false, because a broken box and an empty box would both show 0. The line says what the system does when the problem happens.
+  > Input that stops is a problem that would make the outcome false, because a broken box and an empty box would both show 0. Interrupted input is trouble, so it gets an `IF … THEN` line; `WHILE` is for a normal state, such as a full box.
 - :: `WHERE <feature>` line
   > A `WHERE` line is for behaviour that exists only when an optional feature is part of the system, such as an assistant. A requirement that holds without any optional feature does not start with `WHERE`.
 ```
