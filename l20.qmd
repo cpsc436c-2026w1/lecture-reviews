@@ -39,6 +39,23 @@ shuffle_answers: true
     > 122 counts the 2 late scans twice in the hour from 14:00. The 120 scans of the hour already include them, so a count above 120 is too high.
 ```
 
+What Checkpoint 1 changes in your repository ([Checkpoint 1 page](project-checkpoint1.qmd#repo)):
+
+| File | Change | What goes in it |
+|---|---|---|
+| `docs/proposal.md` | change | the corrections asked for by `Fix:` requests |
+| `docs/requirements.md` | fill in | job stories with their requirements, and the `Stakeholder input` section |
+| `docs/design.md` | fill in | sketch, workflows, planned resources, `Data` |
+| `features/*.feature` | add | rules tagged with IDs, with their examples; by default one feature file for each job story |
+| `features/steps/.gitkeep` | add | empty for now: step code comes at Checkpoint 2 |
+| tag `cp1` on `main` | add | after your pull request is merged |
+
+: {tbl-colwidths="[30,14,56]"}
+
+**`docs/` says what you will build, `features/` says how you demonstrate it works.**
+
+For each requirement, a rule tagged with its ID holds three examples:
+
 | Example | What it shows | Where its data comes from |
 |---|---|---|
 | **Simplest case** | the rule working on ordinary input, the sunny day | 2 or 3 rows in a table inside the example |
