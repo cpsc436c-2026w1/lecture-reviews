@@ -59,7 +59,7 @@ cases are a set of questions with known answers. Each metric is an aggregate ove
 **1. Question.** Which of the two course LLMs (large language models; we also say *models*) gives the
 assistant more correct answers, within our cost and latency limits?
 
-**2. Design alternatives.** The two LLMs you have access to through the LTIC, served by the model gateway, each
+**2. Design alternatives.** The two LLMs you have access to through the LTIC, served by the course LLM gateway, each
 behind the same assistant code.
 
 | Alternative | What it is | Why it might win |
@@ -103,7 +103,7 @@ gateway's prices.
 
 **6. Method.**
 
-- Commands, one per alternative, through the model gateway:
+- Commands, one per alternative, through the course LLM gateway:
   - `inspect eval experiments/food-qa/task.py --model openai-api/proxy/qwen3.6-35b-a3b --epochs 3`
   - `inspect eval experiments/food-qa/task.py --model openai-api/proxy/qwen3.8-27b --epochs 3`
 
