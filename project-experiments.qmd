@@ -56,16 +56,16 @@ A generative-AI-first team on Open Food Facts. The team's assistant answers ques
 in Canada have under 5 g of sugar per 100 g?" by filling the parameters of one fixed Athena query. Here the test
 cases are a set of questions with known answers. Each metric is an aggregate over the set.
 
-**1. Question.** Which of the two course models gives the assistant more correct answers, within our cost and
-latency limits?
+**1. Question.** Which of the two course LLMs (large language models; we also say *models*) gives the
+assistant more correct answers, within our cost and latency limits?
 
-**2. Design alternatives.** The two models you have access to through the LTIC, served by the model gateway, each
+**2. Design alternatives.** The two LLMs you have access to through the LTIC, served by the model gateway, each
 behind the same assistant code.
 
 | Alternative | What it is | Why it might win |
 |---|---|---|
 | Qwen 3.6 35B-A3B | a mixture-of-experts model: 35B parameters, about 3B active per token | fewer active parameters per token, so it may answer faster |
-| Qwen 3.8 27B | a dense 27B model, the newer of the two | the newer model may follow the tool's parameters more reliably |
+| Qwen 3.8 27B | a dense 27B model, the newer of the two | the newer LLM may follow the tool's parameters more reliably |
 
 **3. Overall evaluation criterion and guardrails.**
 
@@ -114,7 +114,7 @@ gateway's prices.
   answer and median latency, and marks each guardrail as held or not.
 - Repeats: start with 40 questions × 3 epochs, so 120 scored answers per alternative; added failure cases increase
   both totals.
-- When to run again: after any change to the prompt, the tool or the model, and before the `cp2` and `final` tags.
+- When to run again: after any change to the prompt, the tool or the LLM, and before the `cp2` and `final` tags.
   Each run gets its own evidence folder, so the results of different runs can be compared.
 - Evidence: `evidence/<run id>/` holds Inspect's log file for each run, the command, the commit SHA, and the script
   that rebuilds the result table from the logs.

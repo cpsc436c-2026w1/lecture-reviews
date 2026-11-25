@@ -18,7 +18,7 @@ first draft to tests that run against your system on AWS. You need only the leve
 |---|---|---|
 | [Level 0](#level-0) | Checkpoint 1 | Write draft rules and examples, and check them with a dry run. You do not write code. |
 | [Level 1](#level-1) | Checkpoint 2 (proposed) | Write the Python function behind each step, and run the examples. |
-| [Level 2](#level-2) | Later (proposed) | Use ready steps from the course kit for the simulator, DuckDB queries and evals (runs of a model's answers on cases with known answers). |
+| [Level 2](#level-2) | Later (proposed) | Use ready steps from the course kit for the simulator, DuckDB queries and evals: runs of the answers of an LLM (large language model; we also say *the model*) on cases with known answers. |
 | [Level 3](#level-3) | Later (proposed) | Run chosen examples on AWS, and make an eval a gate: an example that fails when fewer runs are correct than the number you chose. |
 
 : {tbl-colwidths="[14,22,64]"}
@@ -257,10 +257,10 @@ you know the answer: the table above holds two different `event_id` values, so 2
 
 : {tbl-colwidths="[36,64]"}
 
-### Testing model answers
+### Testing LLM answers {#testing-model-answers}
 
-A model's answer can differ between runs, so one example with a fixed reply does not show a requirement on it. An
-**eval** runs the model's part of your system on a set of cases with known answers, each case several times, and
+An LLM's answer can differ between runs, so one example with a fixed reply does not show a requirement on it. An
+**eval** runs the LLM's part of your system on a set of cases with known answers, each case several times, and
 counts the runs with a correct answer. The rule gets one **gate example**: an example tagged `@eval` whose steps
 name the eval of your `## Evals` section in `docs/requirements.md`, its number of cases, the runs of each case, and
 how many runs must be correct; it fails when fewer runs are correct. Beside it go ordinary examples, each with one
@@ -808,7 +808,7 @@ on the rule, as the rule of RF040 in `features/js01_trips_per_zone.feature` of t
 
 ### Eval as a gate
 
-A part of your system that calls a language model can give a different answer on each run, so a `Then` with one
+A part of your system that calls an LLM can give a different answer on each run, so a `Then` with one
 fixed answer does not test it. An eval runs that part on a set of cases with known answers, each case several times.
 A **gate** is a check that fails when fewer runs are correct than the number you chose. The gate is the `@eval`
 example under the requirement's rule, as at [Level 0](#level-0): at this level its steps run the eval, or read a

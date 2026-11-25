@@ -13,7 +13,8 @@ assistant cannot reach the server or does not find a fact, it should say so inst
 used.
 
 Words used below: a **lease** is your group's AWS sandbox account for the term; the **course LLM gateway** is the
-course's address for model calls, paid from your team's keys; a **git tag** such as `cp1` marks the commit you hand in.
+course's address for calls to an LLM (large language model; we also say *the model*), paid from your team's keys; a **git
+tag** such as `cp1` marks the commit you hand in.
 
 This page lists questions teams ask, what the assistant should do, and what a good answer has. If an answer lacks
 what the third column lists, ask again, or ask the assistant where it took each fact from.
@@ -22,8 +23,8 @@ what the third column lists, ask again, or ask the assistant where it took each 
 
 | You ask | What the assistant should do | What a good answer has |
 |---|---|---|
-| "What do we need to know from the course right now: what is due next, our budgets, and anything we must not get wrong in AWS?" | read the course's start page, the milestone list and the resources page | the next milestone with its date and its git tag; the AWS budget per group lease and the model-call budget; the Region; how to name and tag resources; the account limits that catch teams out |
-| "What is our AWS budget for the term, and how much can we spend on model calls now?" | read the course pages that state the budgets | AWS: 30 USD per group lease for the term. Model calls through the course LLM gateway: about 5 USD per team for tests and experiments for now; you ask for more when your team is ready for production use. Each with the page it comes from |
+| "What do we need to know from the course right now: what is due next, our budgets, and anything we must not get wrong in AWS?" | read the course's start page, the milestone list and the resources page | the next milestone with its date and its git tag; the AWS budget per group lease and the LLM-call budget; the Region; how to name and tag resources; the account limits that catch teams out |
+| "What is our AWS budget for the term, and how much can we spend on LLM calls now?" | read the course pages that state the budgets | AWS: 30 USD per group lease for the term. LLM calls through the course LLM gateway: about 5 USD per team for tests and experiments for now; you ask for more when your team is ready for production use. Each with the page it comes from |
 | "We're writing the script that creates our first Lambda function. Which Region, names and account limits do we have to respect?" | read the resources page | the Region (`ca-central-1`), the name prefix and the tags the resources page requires, each quoted from that page; Lambda concurrency 10 in a lease (confirm in yours); Service Quotas is denied, so limits are read from each service's own calls |
 | "Our Spark job needs more memory. Can we use an m7g.2xlarge in our group lease?" | read the resources page, then search | no: the allowed m7g sizes are medium to xlarge, quoted from the resources page; how to confirm a size in your lease with a dry run of `aws ec2 run-instances` (the reply `DryRunOperation` means allowed); a larger size needs a request to the course staff |
 | "Which models can our app call through the course LLM gateway, and what is the most output tokens one request may ask for?" | search, then read the course values | the model names to use in your code: `qwen3.8-27b` and `qwen3.6-35b-a3b` for chat, `qwen3-embedding-0.6b` for embeddings; at most 16,384 output tokens for one chat request; 120 requests a minute per key |

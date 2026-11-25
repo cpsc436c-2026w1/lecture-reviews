@@ -176,8 +176,9 @@ Here is part of the example's `docs/requirements.md`. Three things help you read
   that comes from a data set names its ID and is marked *measured* or *assumed*. Q040 and Q050 are questions in its
   `## Assumptions` table (see [Making and tracking assumptions](#assumptions)).
 - A 5-minute period holds the requests from its start up to, and not including, its end.
-- R110 is about the answers of a model: `pickup-place` in it is an eval, a set of test cases for the model's
-  answers (see [Testing model answers](#evals)). JS04 was added after the proposal, so its heading says so.
+- R110 is about the answers of an LLM (large language model; we also say *the model*): `pickup-place` in it is an eval, a
+  set of test cases for the LLM's answers (see [Testing LLM answers](#evals)). JS04 was added after the proposal,
+  so its heading says so.
 
 ```markdown
 ## JS01 Operations analyst: trips requested in each zone
@@ -255,18 +256,18 @@ From the proposal feedback issue, with its IDs and wording.
   encouraged, not due Tuesday. They are also how we track your progress on our feedback.
 :::
 
-### Testing model answers {#evals}
+### Testing LLM answers {#evals}
 
 **In the example repo:** [docs/requirements.md, Evals](https://github.com/cpsc436c-2026w1/cp1-example/blob/cp1/docs/requirements.md?plain=1#L54-L61).
 
-If a requirement is about a model's answers, write an entry for its **eval** in a section `## Evals`, with:
+If a requirement is about an LLM's answers, write an entry for its **eval** in a section `## Evals`, with:
 
 1. **Cases:** at least 10, each with its reference value, and the file that holds them.
 2. **Correct when (checked by code):** what a reply must be to count as correct, in terms that code can check.
-3. **Runs:** each case 3 times, because the model's replies vary from run to run.
+3. **Runs:** each case 3 times, because the LLM's replies vary from run to run.
 4. **Passes when:** correct in at least N of the runs, so that accuracy is at least 80% (24 of 30 runs for 10
    cases).
-5. **Model in use:** the model and how the system reaches it.
+5. **Model in use:** the LLM and how the system reaches it.
 
 The example's entry:
 
@@ -510,8 +511,9 @@ BDD test scenarios are your demos of the system's behaviour: `Given` the data, `
 
 Write the scenarios in Gherkin, in a folder `features/` in your repository:
 
-1. Create one feature file in `features/` for each job story you plan to implement, named for what the user gets,
-   and tag its `Feature:` with every job story it serves (`@JS01`).
+1. Start with one feature file in `features/` for each job story you plan to implement; when two stories share a
+   result, one file can serve both, named for what the user gets, and tag its `Feature:` with every job story it
+   serves (`@JS01`).
 2. Write one `Rule:` for each requirement and for each RF that a test can check, tagged with its ID (`@R010`,
    `@RF010`). Each ID is one rule in one feature file. RQ IDs, and RF IDs whose line ends with `Read:` or `Read at Checkpoint 2:`, do not get a
    rule.
@@ -520,7 +522,7 @@ Write the scenarios in Gherkin, in a folder `features/` in your repository:
 4. Write at least one `Example:` under each rule, with an answer that you know before the system runs, and a few
    events in a table with the event fields of your `## Data` section as columns, or name a simulated data set by
    its ID.
-5. For a requirement on a model's answers, add one **gate example** to its rule: an example tagged `@eval` that
+5. For a requirement on an LLM's answers, add one **gate example** to its rule: an example tagged `@eval` that
    names the eval of your `## Evals` section (see [Features for evals](#eval-features)).
 
 ::: {.callout-note collapse="true" title="Guidelines: From Example Mapping to Feature Files"}
@@ -597,7 +599,7 @@ examples, and how to read the dry run's output.
 
 **In the example repo:** [features/js04_pickup_place.feature](https://github.com/cpsc436c-2026w1/cp1-example/blob/cp1/features/js04_pickup_place.feature).
 
-For a requirement on a model's answers, add one **gate example** to its rule: an example tagged `@eval` whose
+For a requirement on an LLM's answers, add one **gate example** to its rule: an example tagged `@eval` whose
 steps name the eval of your `## Evals` section, its number of cases, the runs of each case, and how many runs must
 be correct. Beside it, write ordinary examples, each with one input and the answer that the rule allows. Here is
 the example's whole `features/js04_pickup_place.feature`:
@@ -643,11 +645,11 @@ Feature: Pickup place of a rider's message
 The example repo has step code for this feature only, to demonstrate LLM evals. You do not write step code for
 Checkpoint 1.
 
-::: {.callout-note collapse="true" title="Guidelines: Testing Model Answers"}
+::: {.callout-note collapse="true" title="Guidelines: Testing LLM Answers"}
 ![Eval in words](img/l19/l19-st6e.png){fig-alt="L19 slide: Eval in words"}
 
-If your system includes a model, its answer can differ between runs, so one example with a fixed reply does not
-show the requirement. An **eval** runs the model's part of your system on a set of cases with known answers, each
+If your system includes an LLM, its answer can differ between runs, so one example with a fixed reply does not
+show the requirement. An **eval** runs the LLM's part of your system on a set of cases with known answers, each
 case several times, and counts the runs with a correct answer. The gate example fails when fewer runs are correct
 than the number in its `Then`. Choose that number from the cases and runs: 10 cases run 3 times are 30 runs, and
 80% of 30 is 24.
@@ -739,7 +741,7 @@ Given the simulated data set SIM01 "rush-hour"
 ID (`@R010`), and an RF tag *must* be added only for an RF of your issue. Compare every rule tag in `features/` with the IDs in
 `docs/requirements.md` (step 3 of [⑤](#dry-run)).
 
-**Problem: For a model's answer, the answer is already in the input rows.** `Given` *must* keep only what the system receives,
+**Problem: For an LLM's answer, the answer is already in the input rows.** `Given` *must* keep only what the system receives,
 and the answer you expect *must* go in `Then`, see example below:
 
 ```{=html}
@@ -752,6 +754,10 @@ Given the rider message "I'm outside JFK Terminal 4, door 6"
 When the support agent opens the message
 Then the pickup place is "JFK Terminal 4"</code></pre>
 ```
+
+**Problem: A requirement relying on LLM answers has no gate example checking it.** Its rule *must* have one example
+tagged `@eval` whose steps name the eval of your `## Evals` section, its number of cases, the runs of each case,
+and how many runs must be correct (see [Features for evals](#eval-features)).
 :::
 
 ## ⑤ Check the scenarios {#dry-run}
