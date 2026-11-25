@@ -926,13 +926,13 @@ docs/design.md <em>gets a new section "Cost" with the cost of one year in CAD</e
 </div>
 <div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><strong>Problem: your requirement does not have a unique R000-style id, or uses mine (RF00 or RQ00).</strong> It <em>must</em> get the next free R ID (RF and RQ IDs come only from the proposal feedback issue). To find it, read the R IDs already in <code>docs/requirements.md</code>. If the requirement is how you meet an RF, write <code>Reply [&lt;R ID&gt;]:</code> in the RF’s line and then describe how you address it, see examples below:</p>
+<p><strong>Problem: your requirement does not have a unique R000-style id, or uses an RF or RQ ID from the proposal feedback issue (RF010, RQ010).</strong> It <em>must</em> get the next free R ID (RF and RQ IDs come only from the proposal feedback issue). To find it, read the R IDs already in <code>docs/requirements.md</code>. If the requirement is how you meet an RF, write <code>Reply [&lt;R ID&gt;]:</code> in the RF’s line and then describe how you address it, see examples below:</p>
 <pre class="nt-ex"><code># Not this
 - **<em>RF031</em>** IF a driver accepts a trip that is already assigned THEN …
 # This
 - **R080** IF a driver accepts a trip that is already assigned THEN THE SYSTEM SHALL refuse the accept and leave the trip with its driver | response time under 2 s at p99, from the accept reaching our API to the driver's answer (SLO) [Scenario](../features/trip_assignment.feature)
 - **RF030** Say what happens when two drivers accept the same trip at the same moment, and show it. Reply [R080]: the write that assigns a trip has a condition: the trip is not assigned yet. [Scenario](../features/trip_assignment.feature)</code></pre>
-<p><strong>Problem: A requirement is not in EARS form: it does not have <code>THEN</code>, it says “will” or “should”, or a part of the system is its subject.</strong> It <em>must</em> have THE SYSTEM as its subject and SHALL as its verb, see example below:</p>
+<p><strong>Problem: A requirement is not in EARS form: an <code>IF</code> line does not have <code>THEN</code>, it says “will” or “should”, or a part of the system is its subject.</strong> It <em>must</em> have THE SYSTEM as its subject and SHALL as its verb, see example below:</p>
 <pre class="nt-ex"><code># Not this
 If the stream sends an event twice, <em>the counter service will</em> ignore it.
 # This

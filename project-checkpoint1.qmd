@@ -305,7 +305,7 @@ The example's `## Assumptions` table, two of its rows:
 :::
 
 ::: {.callout-tip collapse="true" title="Typical feedback from the Studio: requirements"}
-**Problem: your requirement does not have a unique R000-style id, or uses mine (RF00 or RQ00).** It *must* get the next free R ID (RF and RQ IDs come
+**Problem: your requirement does not have a unique R000-style id, or uses an RF or RQ ID from the proposal feedback issue (RF010, RQ010).** It *must* get the next free R ID (RF and RQ IDs come
 only from the proposal feedback issue). To find it, read the R IDs already in `docs/requirements.md`. If the requirement is how you meet an RF, write `Reply [<R ID>]:` in the RF's line and then
 describe how you address it, see examples below:
 
@@ -317,8 +317,8 @@ describe how you address it, see examples below:
 - **RF030** Say what happens when two drivers accept the same trip at the same moment, and show it. Reply [R080]: the write that assigns a trip has a condition: the trip is not assigned yet. [Scenario](../features/trip_assignment.feature)</code></pre>
 ```
 
-**Problem: A requirement is not in EARS form: it does not have `THEN`, it says "will" or "should", or a part of the system is
-its subject.** It *must* have THE SYSTEM as its subject and SHALL as its verb, see example below:
+**Problem: A requirement is not in EARS form: an `IF` line does not have `THEN`, it says "will" or "should", or a part of the
+system is its subject.** It *must* have THE SYSTEM as its subject and SHALL as its verb, see example below:
 
 ```{=html}
 <pre class="nt-ex"><code># Not this
