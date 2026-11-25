@@ -464,7 +464,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 <p>The course server is an MCP server (MCP: Model Context Protocol, the standard way an assistant calls outside tools). Your assistant (Claude Code, or another assistant that supports MCP, such as Kiro or Copilot) connects to it with your course token and reads the course’s pages, prices, milestones and checks from it. You do not need to name a tool or a file: ask in your own words. If the assistant cannot reach the server or does not find a fact, it should say so instead of guessing, and name the pages it used.</p>
-<p>Words used below: a <strong>lease</strong> is your group’s AWS sandbox account for the term; the <strong>course LLM gateway</strong> is the course’s address for model calls, paid from your team’s keys; a <strong>git tag</strong> such as <code>cp1</code> marks the commit you hand in.</p>
+<p>Words used below: a <strong>lease</strong> is your group’s AWS sandbox account for the term; the <strong>course LLM gateway</strong> is the course’s address for calls to an LLM (large language model; we also say <em>the model</em>), paid from your team’s keys; a <strong>git tag</strong> such as <code>cp1</code> marks the commit you hand in.</p>
 <p>This page lists questions teams ask, what the assistant should do, and what a good answer has. If an answer lacks what the third column lists, ask again, or ask the assistant where it took each fact from.</p>
 <section id="course-information-you-need-now" class="level2">
 <h2 class="anchored" data-anchor-id="course-information-you-need-now">Course information you need now</h2>
@@ -485,12 +485,12 @@ ul.task-list li input[type="checkbox"] {
 <tr class="odd">
 <td>“What do we need to know from the course right now: what is due next, our budgets, and anything we must not get wrong in AWS?”</td>
 <td>read the course’s start page, the milestone list and the resources page</td>
-<td>the next milestone with its date and its git tag; the AWS budget per group lease and the model-call budget; the Region; how to name and tag resources; the account limits that catch teams out</td>
+<td>the next milestone with its date and its git tag; the AWS budget per group lease and the LLM-call budget; the Region; how to name and tag resources; the account limits that catch teams out</td>
 </tr>
 <tr class="even">
-<td>“What is our AWS budget for the term, and how much can we spend on model calls now?”</td>
+<td>“What is our AWS budget for the term, and how much can we spend on LLM calls now?”</td>
 <td>read the course pages that state the budgets</td>
-<td>AWS: 30 USD per group lease for the term. Model calls through the course LLM gateway: about 5 USD per team for tests and experiments for now; you ask for more when your team is ready for production use. Each with the page it comes from</td>
+<td>AWS: 30 USD per group lease for the term. LLM calls through the course LLM gateway: about 5 USD per team for tests and experiments for now; you ask for more when your team is ready for production use. Each with the page it comes from</td>
 </tr>
 <tr class="odd">
 <td>“We’re writing the script that creates our first Lambda function. Which Region, names and account limits do we have to respect?”</td>
