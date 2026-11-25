@@ -1,0 +1,142 @@
+---
+title: "Checkpoint 2: review and the base running"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+---
+
+In this checkpoint, your system runs for the first time. You generate the simulated data sets your Checkpoint 1
+examples name, write the step code that runs those examples, deploy your first slice on AWS, and run a
+Well-Architected review of your design that leads to one change. You also answer the requests (RQ) and build the
+constraints (RF) of your feedback issue that waited for this checkpoint. The checkpoint is due **Tuesday 1 December,
+end of day**. You hand it in as before: a pull request to `main`, a teammate approves it, you merge it, and you tag
+the merged commit `cp2`.
+
+Tutorial [B5T2](https://github.com/cpsc436c-2026w1/b5-t2-behave-sim) does the step code and the simulated data step
+by step on the rides example, and its `shapes/` folder has a worked example for each project shape. The
+[course recipes](https://github.com/cpsc436c-2026w1/recipes) give you the AWS parts.
+
+## What you hand in {#hand-in-list}
+
+| Path | What | |
+|---|---|---|
+| `sim/` | a generator for each simulated data set your examples name, and its data: what the system receives in one folder, the truth in another | add |
+| `features/steps/` | step code, so that every example of your Checkpoint 1 rules runs | add |
+| your code (`src/` or the layout of your shape) | the first slice: one job story end to end, deployed on AWS | add |
+| `docs/requirements.md` | a reply for every RQ, and a rule with running examples for every testable RF | change |
+| `docs/review.md` | your Well-Architected review: the questions you chose, your answers, and the change it led to | add |
+| `docs/design.md` | the design after the review's change, and the resources you deployed | change |
+| tag `cp2` | on the merge commit on `main` | add |
+
+## The minimum for Tuesday {#minimum}
+
+- One job story runs end to end on AWS: data in, your store, the number or answer the user gets. Its examples pass
+  on your generated data, locally and against the deployed slice.
+- Every other rule has step code and runs. A rule whose AWS part is not built yet may fail; say so in its
+  example with the tag `@todo`.
+- Your review has at least three questions, with the change it led to made in the repository.
+- `uvx behave@1.3.3` runs without a `ParserError`, and its summary is in your pull request.
+
+## ① Generate your simulated data {#simulate}
+
+Your `## Data` section names each simulated data set (SIM01, SIM02, …) with its size and its injected faults. Now
+a generator writes each one.
+
+1. Follow [B5T2, Part B5](https://github.com/cpsc436c-2026w1/b5-t2-behave-sim#b5-have-your-assistant-write-your-projects-sim01-then-check-it):
+   your assistant writes the generator of your SIM01 from your bullet, and you check what it wrote.
+2. Use the worked example of your shape in B5T2's [`shapes/`](https://github.com/cpsc436c-2026w1/b5-t2-behave-sim/tree/main/shapes)
+   (lakehouse, operational, generative AI).
+3. Keep two folders for each data set: what the system receives (`sim/data/SIM01/`), and the truth: the events as
+   they happened and the faults the generator added (`sim/data/SIM01/_truth/`). Your examples' expected answers come
+   from the truth, before your system runs.
+4. Seed the generator, so that the same command writes the same data every time.
+5. Check each data set with B5T2's `sim/check.py`: the counts in your bullet match the files.
+
+The other conventions of the [simulation standards](https://github.com/cpsc436c-2026w1/b5-t2-behave-sim/blob/main/docs/simulation-standards.md)
+(JSON Lines, one Pydantic model for each event type, Parquet as a separate step) are recommended, not required.
+
+## ② Write the step code {#steps}
+
+Every example of your Checkpoint 1 rules now runs.
+
+1. Read the behave guide's [Level 1](project-behave.qmd): a first step function, setup in `environment.py`, steps
+   with parameters.
+2. Do B5T2 Parts A and C if you have not: write the steps of one rule by hand, then run a scenario on SIM01.
+3. A step's `When` calls your code, not a copy of the answer. A `Then` compares your system's result with the
+   expected value from the example's rows or from the truth.
+4. Run `uvx behave@1.3.3` and fix what fails. A failing example that shows a real fault in your code stays failing
+   until the code is fixed; do not change the example to pass.
+
+## ③ Build the first slice {#slice}
+
+The first slice is one job story end to end on AWS. Start from the
+[course recipes](https://github.com/cpsc436c-2026w1/recipes) for your shape and extension, and change the names and
+the data to your own:
+
+| Your project | Start from |
+|---|---|
+| every shape | `project-skeleton` (its folder for your shape), `cost-and-teardown` |
+| lakehouse first | `s3-event-etl`, `lake-layout-experiment`, `cdc-to-lake` |
+| operational first | `lambda-dynamodb`, `dynamodb`, `concurrency-correctness` |
+| generative AI first | `dashboard-chat`, `llm-gateway`, `hybrid-retrieval-eval` |
+| streaming ingestion extension | `streaming-ingestion`, `simulated-runs` |
+| chat on the dashboard | `dashboard-chat` |
+| change data capture to the lake | `cdc-to-lake` |
+| model routing, agent with tools, retrieval | `model-routing`, `agent-agentcore`, `hybrid-retrieval-eval` |
+
+Each recipe's README has a Decisions table: what it chose, why, and the course constraint behind it. Keep the
+course constraints: everything in `ca-central-1`, every resource name starting with your team's prefix, model
+calls through the course LLM gateway with your course token, and a clean-up for everything you create.
+
+## ④ Answer your requests and build your constraints {#feedback}
+
+At Checkpoint 1 you listed every RF and RQ of your feedback issue under `## Stakeholder input`. Now:
+
+- **Each RQ** gets its answer in its `Reply:`: the calculation with its numbers and where they come from, or the
+  test and its result.
+- **Each testable RF** has a rule in `features/` with running examples, and its line ends with `[Scenario](…)`.
+- **An RF a test cannot check** keeps its `Read:` line and says, in one or two sentences, how your design meets it.
+
+## ⑤ Review your design and make one change {#review}
+
+A Well-Architected review asks questions about your design, one pillar at a time (operational excellence,
+security, reliability, performance efficiency, cost optimization, sustainability), and each answer can lead to a
+change. Choose three to five questions from the lens for your shape:
+
+| Your project | Lens |
+|---|---|
+| lakehouse first, streaming | [Analytics Lens](https://docs.aws.amazon.com/wellarchitected/latest/analytics-lens/analytics-lens.html) |
+| operational first | [Serverless Applications Lens](https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/welcome.html), and the [DynamoDB Lens](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-wal.html) if you use DynamoDB |
+| generative AI first, or a model in your system | [Generative AI Lens](https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/generative-ai-lens.html) |
+
+Write `docs/review.md` with one section for each question:
+
+- **Question** and its best-practice ID (for example `COST01-BP09`), with a link;
+- **Now:** what your design does, with the file and line;
+- **Risk:** what could go wrong, in your system's words;
+- **Change:** what you changed, or why you change nothing, and where in the repository the change is.
+
+At least one question leads to a change you made for this checkpoint. A coding assistant can read the lens pages
+through the AWS Knowledge server (`https://knowledge-mcp.global.api.aws`, no account needed); use it to read and
+review, not to create resources.
+
+## ⑥ Check before you hand in {#check}
+
+1. `uvx behave@1.3.3` runs, and every rule tagged with an ID has examples that run.
+2. `python3 tools/check_trace.py` shows no problems (copy the script from the
+   [Checkpoint 1 example](https://github.com/cpsc436c-2026w1/cp1-example/blob/main/tools/check_trace.py)).
+3. Each data set checks clean with `sim/check.py`.
+4. Your clean-up removes everything the slice created; run it once and deploy again.
+5. Your cost so far is within your team's budget.
+
+## ⑦ Hand in with a pull request and the tag cp2 {#tag}
+
+As at Checkpoint 1: a pull request from a branch such as `cp2-draft` to `main`, a teammate approves it, you merge
+it, and you tag the merge commit `cp2`:
+
+```bash
+git checkout main && git pull
+git tag cp2
+git push origin cp2
+```

@@ -19,6 +19,8 @@ website:
               text: "Setup and proposal"
             - href: project-checkpoint1.qmd
               text: "Checkpoint 1"
+            - href: project-checkpoint2.qmd
+              text: "Checkpoint 2"
         - section: "Guidelines"
           contents:
             - href: project-startup.qmd
