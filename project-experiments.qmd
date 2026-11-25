@@ -78,7 +78,7 @@ behind the same assistant code.
   - F1 of the returned product lists, for threshold and ranking questions, at least 0.8;
   - mean cost under 0.0005 CAD per scored answer, for each alternative over all questions and epochs:
     `(input tokens × input price + output tokens × output price) / 1,000,000`, with Inspect's token counts and the
-    model gateway's prices in CAD per million tokens from L18 (Qwen 3.6 35B-A3B 0.05 input, 0.10 output; Qwen 3.8
+    course LLM gateway's prices in CAD per million tokens from L18 (Qwen 3.6 35B-A3B 0.05 input, 0.10 output; Qwen 3.8
     27B 0.10 input, 0.20 output);
   - median latency under 5 s.
 - Job story it informs: the shopper's question story, for example JS01. Once requirements exist, the requirement
