@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.20">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Budget and sandbox check – CPSC 436C companion</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-17888a1159294d3eb470f19f6f52f5a5.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-58899c9248c158d29b1429e15c8b5d12.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">CPSC 436C companion</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-lecture-reviews" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Lecture reviews</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-lecture-reviews">    
+        <li>
+    <a class="dropdown-item" href="./index.html">
+ <span class="dropdown-text">All reviews</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l1.html">
+ <span class="dropdown-text">L1: the four resources</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l2.html">
+ <span class="dropdown-text">L2: EC2, S3 and Lambda</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l3.html">
+ <span class="dropdown-text">L3: cost models and what starts a function</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l4.html">
+ <span class="dropdown-text">L4: scaling up and out</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l5.html">
+ <span class="dropdown-text">L5: Spark on a cluster</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./w2-l6.html">
+ <span class="dropdown-text">L6: how Spark runs a query</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l10.html">
+ <span class="dropdown-text">L10: lakes, lakehouses and query engines</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l11.html">
+ <span class="dropdown-text">L11: assembling the lakehouse in Athena and Glue</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l12.html">
+ <span class="dropdown-text">L12: DynamoDB as OLTP storage, distributed database problems and properties</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l13.html">
+ <span class="dropdown-text">L13: netsplit and CAP, data latency (freshness)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l14.html">
+ <span class="dropdown-text">L14: message brokers, delivery guarantees and event-time windows</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l15.html">
+ <span class="dropdown-text">L15: generative AI in a data app</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l16.html">
+ <span class="dropdown-text">L16: principles of cloud design for a user-facing GenAI app</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l17.html">
+ <span class="dropdown-text">L17: retrieval, memory and agent patterns in the cloud</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l18.html">
+ <span class="dropdown-text">L18: planning and bounded agents in the cloud</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l19.html">
+ <span class="dropdown-text">L19: from Feedback 1 to Checkpoint 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./l20.html">
+ <span class="dropdown-text">L20: stream processing with AWS Lambda, Hudi and agents</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./midterm-review.html">
+ <span class="dropdown-text">Midterm review</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutorials" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tutorials</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-tutorials">    
+        <li>
+    <a class="dropdown-item" href="./tutorials.html">
+ <span class="dropdown-text">All tutorials</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#emr-cluster">
+ <span class="dropdown-text">B2T1: Cluster/EMR</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#glue-part-a">
+ <span class="dropdown-text">B2T2 part A: Spark/Glue, how Spark reads files</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#glue-part-b">
+ <span class="dropdown-text">B2T2 part B: Spark/Glue, slow queries and their fixes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#b3-t1">
+ <span class="dropdown-text">B3T1: Lakehouse/Athena+Glue</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#b3-t2">
+ <span class="dropdown-text">B3T2: Lakehouse/Glue build and maintain</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#b5-t1">
+ <span class="dropdown-text">B5T1: Course MCP and prompt evaluation</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#b5-t2">
+ <span class="dropdown-text">B5T2: behave and simulated data</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-project" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Project</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-project">    
+        <li>
+    <a class="dropdown-item" href="./project-start.html">
+ <span class="dropdown-text">Course project: overview and dates</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Milestones</li>
+        <li>
+    <a class="dropdown-item" href="./project-proposal.html">
+ <span class="dropdown-text">Setup and proposal</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-checkpoint1.html">
+ <span class="dropdown-text">Checkpoint 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-budget-check.html">
+ <span class="dropdown-text">Budget and sandbox check</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Guidelines</li>
+        <li>
+    <a class="dropdown-item" href="./project-startup.html">
+ <span class="dropdown-text">Project setup</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./assistant-setup.html">
+ <span class="dropdown-text">Coding assistant setup</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-mcp-scenarios.html">
+ <span class="dropdown-text">Course server with your assistant</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-behave.html">
+ <span class="dropdown-text">Behave for your project</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./tutorials.html#b5-t2">
+ <span class="dropdown-text">Simulated data (tutorial B5T2)</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li class="dropdown-header">Examples and data</li>
+        <li>
+    <a class="dropdown-item" href="./project-case-example.html">
+ <span class="dropdown-text">Proposal example</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-datasets.html">
+ <span class="dropdown-text">Project datasets</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./project-experiments.html">
+ <span class="dropdown-text">Experiment examples</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://github.com/cpsc436c-2026w1/recipes">
+ <span class="dropdown-text">Course recipes</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-assignments" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Assignments</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-assignments">    
+        <li>
+    <a class="dropdown-item" href="https://cpsc436c-2026w1.github.io/a1-starter/">
+ <span class="dropdown-text">A1 starter</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://cpsc436c-2026w1.github.io/a2-starter/">
+ <span class="dropdown-text">A2 starter</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://cpsc436c-2026w1.github.io/a3-starter/">
+ <span class="dropdown-text">A3 starter</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./project-proposal.html">Milestones</a></li><li class="breadcrumb-item"><a href="./project-budget-check.html">Budget and sandbox check</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./project-start.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview and dates</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Milestones</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./project-proposal.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Setup and proposal</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./project-checkpoint1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Checkpoint 1</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./project-budget-check.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Budget and sandbox check</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Guidelines</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./project-startup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Project setup</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./assistant-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Coding assistant setup</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./project-mcp-scenarios.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Course server with your assistant</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./project-behave.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Behave for your project</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://github.com/cpsc436c-2026w1/b5-t2-behave-sim" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Simulated data (tutorial B5T2)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Examples and data</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./project-case-example.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Proposal example</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./project-datasets.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Project datasets</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./project-experiments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Experiment examples</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="https://github.com/cpsc436c-2026w1/recipes" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Course recipes</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul class="collapse">
+  <li><a href="#bc005" id="toc-bc005" class="nav-link active" data-scroll-target="#bc005">BC005 Your team’s budget alert</a></li>
+  <li><a href="#bc010" id="toc-bc010" class="nav-link" data-scroll-target="#bc010">BC010 Things that cost money while nobody uses them (idle resources)</a></li>
+  <li><a href="#bc020" id="toc-bc020" class="nav-link" data-scroll-target="#bc020">BC020 Costs that grow with each query and each run</a></li>
+  <li><a href="#bc030" id="toc-bc030" class="nav-link" data-scroll-target="#bc030">BC030 What your team’s lease refuses</a></li>
+  <li><a href="#run" id="toc-run" class="nav-link" data-scroll-target="#run">Run it</a></li>
+  <li><a href="#after" id="toc-after" class="nav-link" data-scroll-target="#after">After the check</a></li>
+  <li><a href="#again" id="toc-again" class="nav-link" data-scroll-target="#again">When to run it again</a></li>
+  </ul>
+</nav>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./project-proposal.html">Milestones</a></li><li class="breadcrumb-item"><a href="./project-budget-check.html">Budget and sandbox check</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Budget and sandbox check</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>This check looks at what your design and your scripts will cost in your team’s lease, and at what the lease refuses. Run it before you create anything in your lease, and again before each deploy. Your team has 30 USD of AWS for the term in its lease, and 5 USD for LLM calls through the course LLM gateway for now (20 USD for the term on request). The check is feedback for your team, not a grade: each Problem below says what you would see, the number that shows it, and what to do. Many of them are about an idle resource: one that costs money as long as it exists, even when nobody uses it.</p>
+<p>The prices are from the course price sheet, <code>436c-student/prices.md</code> on the course server (ca-central-1, USD), and the lease’s limits from <code>436c-student/resources.md</code> on the course server.</p>
+<section id="bc005" class="level2">
+<h2 class="anchored" data-anchor-id="bc005">BC005 Your team’s budget alert</h2>
+<p><strong>Look in:</strong> your team’s answer (a budget is not in the repository), <code>docs/design.md</code>.</p>
+<p><strong>Problem: your team has no AWS budget with an email alert.</strong> Set one up once for your team’s lease: a cost budget of 30 USD for the whole term, with an email to every team member when actual spend passes 3, 5, 10, 15 and 20 USD (each person confirms the email from AWS before alerts arrive). AWS guide: <a href="https://docs.aws.amazon.com/cost-management/latest/userguide/create-cost-budget.html">Creating a cost budget</a>. In the console: <strong>Billing and Cost Management → Budgets → Create budget → Customize (advanced) → Cost budget</strong>, period <strong>Custom</strong> from the first day of your lease to the end of term, then one alert for each amount (<strong>Absolute value</strong>, <strong>Actual</strong>). Or in CloudShell (ca-central-1), with your team’s emails:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">ACCOUNT</span><span class="op">=</span><span class="va">$(</span><span class="ex">aws</span> sts get-caller-identity <span class="at">--query</span> Account <span class="at">--output</span> text<span class="va">)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="va">EMAILS</span><span class="op">=</span><span class="st">"first@student.ubc.ca second@student.ubc.ca third@student.ubc.ca"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> <span class="op">&gt;</span> budget.json <span class="op">&lt;&lt;'JSON'</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="st">{"BudgetName": "team-term-budget", "BudgetType": "COST", "TimeUnit": "CUSTOM",</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="st"> "BudgetLimit": {"Amount": "30", "Unit": "USD"},</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="st"> "TimePeriod": {"Start": "2026-11-01T00:00:00Z", "End": "2026-12-31T00:00:00Z"}}</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="op">JSON</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-</span> <span class="st">"</span><span class="va">$EMAILS</span><span class="st">"</span> <span class="op">&gt;</span> notifications.json <span class="op">&lt;&lt;'PY'</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="st">import json, sys</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="st">subs = [{"SubscriptionType": "EMAIL", "Address": a} for a in sys.argv[1].split()]</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="st">print(json.dumps([{"Notification": {"NotificationType": "ACTUAL", "ComparisonOperator": "GREATER_THAN",</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="st">                                    "Threshold": t, "ThresholdType": "ABSOLUTE_VALUE"},</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="st">                   "Subscribers": subs} for t in (3, 5, 10, 15, 20)]))</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="op">PY</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="ex">aws</span> budgets create-budget <span class="at">--account-id</span> <span class="st">"</span><span class="va">$ACCOUNT</span><span class="st">"</span> <span class="at">--budget</span> file://budget.json <span class="dt">\</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">--notifications-with-subscribers</span> file://notifications.json</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="ex">aws</span> budgets describe-notifications-for-budget <span class="at">--account-id</span> <span class="st">"</span><span class="va">$ACCOUNT</span><span class="st">"</span> <span class="at">--budget-name</span> team-term-budget <span class="dt">\</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">--query</span> <span class="st">'Notifications[].Threshold'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The last command should print the five amounts. The budget’s figures update about once a day, so an alert can come a day after the spending: it does not replace deleting idle resources.</p>
+<p>To see what is costing money: <code>aws ce get-cost-and-usage --time-period Start=&lt;first of month&gt;,End=&lt;tomorrow&gt; --granularity DAILY --metrics UnblendedCost --group-by Type=DIMENSION,Key=SERVICE</code> (Cost Explorer; read-only). AWS CLI reference: <a href="https://docs.aws.amazon.com/cli/latest/reference/ce/get-cost-and-usage.html">get-cost-and-usage</a>.</p>
+</section>
+<section id="bc010" class="level2">
+<h2 class="anchored" data-anchor-id="bc010">BC010 Things that cost money while nobody uses them (idle resources)</h2>
+<p><strong>Look in:</strong> <code>docs/design.md</code> Resources, <code>scripts/</code>.</p>
+<p>This question looks for idle resources in your design and your scripts.</p>
+<p><strong>Problem: your design uses an idle resource and your clean-up script does not delete it.</strong> Idle resources: EC2 instances, EMR clusters, Kinesis streams, load balancers, ECS services, NAT gateways, RDS and Aurora databases, OpenSearch Serverless collections, MSK clusters, ElastiCache nodes, SageMaker endpoints. Three EMR nodes left on for a week cost about 112 USD; your team has 30 USD for the term. Create it for a run, then delete it.</p>
+<p><strong>Problem: your design does not say what your system costs in a month when nobody uses it.</strong> Add up every idle resource for 30 days. If the total is more than a few dollars, your design should create those resources only for runs and demos.</p>
+<p><strong>Problem: you chose a service whose smallest setting costs more than your budget.</strong> OpenSearch Serverless needs at least 2 OCUs, about 89 USD a week, unless its collection group can scale to zero; MSK Serverless is about 141 USD a week; a SageMaker endpoint about 21.50 a week; Aurora Serverless v2 charges its minimum capacity, 23.52 a week for each ACU. For vectors use S3 Vectors or DynamoDB vector search; for queries Athena or DuckDB; for a small database RDS PostgreSQL <code>db.t4g.micro</code> (3.02 a week, plus storage). AWS guide: <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors.html">Working with S3 Vectors and vector buckets</a>.</p>
+<p><strong>Problem: you plan a database server where a table would do.</strong> An RDS PostgreSQL database is an idle resource: <code>db.t4g.micro</code> left on until the end of term (about three weeks) costs about 9.50 USD, a third of your budget. If the app reads items by key, DynamoDB on demand charges only for requests; if it runs analysis queries, Athena or DuckDB over Parquet does. RDS is not yet tried in a student lease: check that you can create it before you depend on it.</p>
+<p><strong>Problem: a stopped EC2 instance still costs money.</strong> Its EBS volume and its public IPv4 address are still charged (the address is 0.005 USD an hour, more than a <code>t4g.nano</code>). Delete the volume and release the address, or terminate the instance. AWS guide: <a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html">Elastic IP addresses</a>.</p>
+</section>
+<section id="bc020" class="level2">
+<h2 class="anchored" data-anchor-id="bc020">BC020 Costs that grow with each query and each run</h2>
+<p><strong>Look in:</strong> <code>docs/design.md</code> (Data, Resources, the cost of your long-term horizon RQ), <code>scripts/</code>, <code>features/</code>.</p>
+<p><strong>Problem: an Athena query reads the whole source data set instead of your subset.</strong> Athena charges for the data scanned: 5.50 USD per TB in ca-central-1. A source data set on S3 can be far larger than the course preview: measure it first (<code>aws s3 ls --recursive --summarize s3://…</code>). Query your own Parquet copy of your subset, with a partition filter. Athena guide: <a href="https://docs.aws.amazon.com/athena/latest/ug/partitions.html">Partition your data</a>.</p>
+<p><strong>Problem: your data is in CSV or JSON and every query reads all of it.</strong> Athena reads every column of a CSV or JSON file, even the ones the query does not use. Convert to Parquet once, partition by the column your queries filter on, and compare the data scanned before and after. Athena guide: <a href="https://docs.aws.amazon.com/athena/latest/ug/columnar-storage.html">Use columnar storage formats</a>.</p>
+<p><strong>Problem: a job or query runs on a schedule, and each run has a minimum charge.</strong> Athena charges at least 10 MB for each query (100,000 small queries cost about 5.50); Glue and EMR charge at least one minute for each run. A job every 15 minutes is 2,880 runs a month. Run it as often as your freshness requirement needs, no more.</p>
+<p><strong>Problem: the dashboard runs a query every time someone opens it.</strong> Compute the number the dashboard shows once, store it, and read the stored result.</p>
+<p><strong>Problem: your LLM calls can use up your team’s 5 USD before the demo.</strong> Count the tokens of one answer, times the answers you expect, plus each eval run: cases × runs, every time you run your tests or push to CI. When the team’s pool is used up, the course LLM gateway refuses every call (error 429 <code>team_budget_exhausted</code>). Run evals on demand, not on every push; embed your documents once and reuse the vectors.</p>
+<p><strong>Problem: you load your history into DynamoDB one row at a time.</strong> 100 million rows cost about 69 USD in writes; importing from S3 costs 0.165 USD per GB (about 1.65 for 10 GB). Or keep the history in S3 and put in DynamoDB only the items the app reads by key. DynamoDB guide: <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/S3DataImport.Requesting.html">Requesting a table import in DynamoDB</a>.</p>
+<p><strong>Problem: your functions log every record or every LLM reply.</strong> CloudWatch charges 0.55 USD per GB of logs received. Log counts, errors and a sample, and set a short retention on the log group. CloudWatch guide: <a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/Working-with-log-groups-and-streams.html">Working with log groups and log streams</a>.</p>
+<p><strong>Problem: your design moves data out of AWS or to another Region.</strong> Data sent to the internet costs 0.09 USD per GB. Keep the processing in ca-central-1 and send only the result the app shows.</p>
+<p><strong>Problem: your first run on AWS replays your whole simulated data set.</strong> Run a small sample first (1%, or one batch), check the cost, then scale up.</p>
+</section>
+<section id="bc030" class="level2">
+<h2 class="anchored" data-anchor-id="bc030">BC030 What your team’s lease refuses</h2>
+<p><strong>Look in:</strong> <code>docs/design.md</code> Resources, <code>scripts/</code>, any instance type, Region or model your design names.</p>
+<p><strong>Problem: your design uses an EC2 instance type the lease does not allow.</strong> The lease allows <code>t4g</code> nano to large (no <code>t4g.xlarge</code>), <code>m7g</code> medium to xlarge, <code>m8g.xlarge</code>, and <code>t3a</code> and <code>m6a.xlarge</code> only when something does not run on ARM; other types are refused with <code>UnauthorizedOperation</code>. Test a type with <code>aws ec2 run-instances --dry-run</code>: <code>DryRunOperation</code> means it is allowed. AWS CLI reference: <a href="https://docs.aws.amazon.com/cli/latest/reference/ec2/run-instances.html">run-instances</a>.</p>
+<p><strong>Problem: your design runs more than 10 Lambda functions at the same time.</strong> The lease allows 10 at once (the AWS default is 1,000); the rest wait. Batch the work, or limit how many run at once. Lambda guide: <a href="https://docs.aws.amazon.com/lambda/latest/dg/configuration-concurrency.html">Configuring reserved concurrency for an Event Function</a>.</p>
+<p><strong>Problem: your design uses a Region other than ca-central-1, or a model that is not offered there.</strong> Everything runs in ca-central-1. Current Claude models are not offered on demand in ca-central-1; use the course LLM gateway.</p>
+<p><strong>Problem: your scripts assume a default VPC.</strong> The lease has one VPC with four subnets and no default; name a subnet in every launch. A Fargate task reaches the internet from a public subnet with a public IP; a NAT gateway is an idle resource.</p>
+<p><strong>Problem: your scripts call Service Quotas or the Pricing API.</strong> The lease refuses both. Read limits from the service’s own describe calls or the AWS documentation, and prices from the course price sheet.</p>
+<p><strong>Problem: your design creates an Athena view over the course’s shared tables.</strong> Athena refuses a view over a table in another account. Make the view over your own copy.</p>
+<p><strong>Problem: your team cannot find everything it created.</strong> The whole team shares one lease and one 30 USD budget. Give every resource the team’s name prefix and the course tags, so one list (the <code>cost-and-teardown</code> recipe’s inventory) finds what each member created. When the lease ends, everything in it is deleted: your scripts must be able to create the system again.</p>
+<p>The recipe is in the course recipes repository: <a href="https://github.com/cpsc436c-2026w1/recipes/tree/main/cost-and-teardown">cost-and-teardown</a>.</p>
+</section>
+<section id="run" class="level2">
+<h2 class="anchored" data-anchor-id="run">Run it</h2>
+<p>With the course server connected to your assistant, ask: “Run the budget and sandbox check on our repository.” It reads the files each question names under <strong>Look in</strong>, writes one file, <code>docs/reviews/budget-check.md</code>, and changes nothing else in your repository or in your lease. For BC005 it asks you whether your team has a budget.</p>
+<p>By hand: go through each Problem above, look in the places its question names, and note each line of your design or scripts that it describes, with its file and line, and what you will change.</p>
+</section>
+<section id="after" class="level2">
+<h2 class="anchored" data-anchor-id="after">After the check</h2>
+<p>Take one Problem at a time. Change <code>docs/design.md</code> Resources: replace the service, or say when it is created and deleted, and add the delete to your clean-up script. Then run the check again, and keep the “What we changed” section of <code>docs/reviews/budget-check.md</code>.</p>
+</section>
+<section id="again" class="level2">
+<h2 class="anchored" data-anchor-id="again">When to run it again</h2>
+<p>After you add a resource to your design, before each deploy, and when a budget alert arrives.</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

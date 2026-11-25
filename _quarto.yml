@@ -19,6 +19,8 @@ website:
               text: "Setup and proposal"
             - href: project-checkpoint1.qmd
               text: "Checkpoint 1"
+            - href: project-budget-check.qmd
+              text: "Budget and sandbox check"
         - section: "Guidelines"
           contents:
             - href: project-startup.qmd
@@ -111,6 +113,8 @@ website:
             text: "Setup and proposal"
           - href: project-checkpoint1.qmd
             text: "Checkpoint 1"
+          - href: project-budget-check.qmd
+            text: "Budget and sandbox check"
           - text: "---"
           - text: "Guidelines"
           - href: project-startup.qmd

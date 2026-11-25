@@ -1,0 +1,186 @@
+---
+title: "Budget and sandbox check"
+format:
+  html:
+    toc: true
+    toc-depth: 2
+---
+
+This check looks at what your design and your scripts will cost in your team's lease, and at what the lease
+refuses. Run it before you create anything in your lease, and again before each deploy. Your team has 30 USD of AWS
+for the term in its lease, and 5 USD for LLM calls through the course LLM gateway for now (20 USD for the term on
+request). The check is feedback for your team, not a grade: each Problem below says what you would see, the number
+that shows it, and what to do. Many of them are about an idle resource: one that costs money as long as it exists,
+even when nobody uses it.
+
+The prices are from the course price sheet, `436c-student/prices.md` on the course server (ca-central-1, USD), and
+the lease's limits from `436c-student/resources.md` on the course server.
+
+## BC005 Your team's budget alert {#bc005}
+
+**Look in:** your team's answer (a budget is not in the repository), `docs/design.md`.
+
+**Problem: your team has no AWS budget with an email alert.** Set one up once for your team's lease: a cost
+budget of 30 USD for the whole term, with an email to every team member when actual spend passes 3, 5, 10, 15 and
+20 USD (each person confirms the email from AWS before alerts arrive). AWS guide:
+[Creating a cost budget](https://docs.aws.amazon.com/cost-management/latest/userguide/create-cost-budget.html).
+In the console: **Billing and Cost Management → Budgets → Create budget → Customize (advanced) → Cost budget**,
+period **Custom** from the first day of your lease to the end of term, then one alert for each amount
+(**Absolute value**, **Actual**). Or in CloudShell (ca-central-1), with your team's emails:
+
+```bash
+ACCOUNT=$(aws sts get-caller-identity --query Account --output text)
+EMAILS="first@student.ubc.ca second@student.ubc.ca third@student.ubc.ca"
+cat > budget.json <<'JSON'
+{"BudgetName": "team-term-budget", "BudgetType": "COST", "TimeUnit": "CUSTOM",
+ "BudgetLimit": {"Amount": "30", "Unit": "USD"},
+ "TimePeriod": {"Start": "2026-11-01T00:00:00Z", "End": "2026-12-31T00:00:00Z"}}
+JSON
+python3 - "$EMAILS" > notifications.json <<'PY'
+import json, sys
+subs = [{"SubscriptionType": "EMAIL", "Address": a} for a in sys.argv[1].split()]
+print(json.dumps([{"Notification": {"NotificationType": "ACTUAL", "ComparisonOperator": "GREATER_THAN",
+                                    "Threshold": t, "ThresholdType": "ABSOLUTE_VALUE"},
+                   "Subscribers": subs} for t in (3, 5, 10, 15, 20)]))
+PY
+aws budgets create-budget --account-id "$ACCOUNT" --budget file://budget.json \
+  --notifications-with-subscribers file://notifications.json
+aws budgets describe-notifications-for-budget --account-id "$ACCOUNT" --budget-name team-term-budget \
+  --query 'Notifications[].Threshold'
+```
+
+The last command should print the five amounts. The budget's figures update about once a day, so an alert can
+come a day after the spending: it does not replace deleting idle resources.
+
+To see what is costing money: `aws ce get-cost-and-usage --time-period Start=<first of month>,End=<tomorrow>
+--granularity DAILY --metrics UnblendedCost --group-by Type=DIMENSION,Key=SERVICE` (Cost Explorer; read-only).
+AWS CLI reference: [get-cost-and-usage](https://docs.aws.amazon.com/cli/latest/reference/ce/get-cost-and-usage.html).
+
+## BC010 Things that cost money while nobody uses them (idle resources) {#bc010}
+
+**Look in:** `docs/design.md` Resources, `scripts/`.
+
+This question looks for idle resources in your design and your scripts.
+
+**Problem: your design uses an idle resource and your clean-up script does not delete it.** Idle resources: EC2
+instances, EMR clusters, Kinesis streams, load balancers, ECS services, NAT gateways, RDS and Aurora databases,
+OpenSearch Serverless collections, MSK clusters, ElastiCache nodes, SageMaker endpoints. Three EMR nodes left on
+for a week cost about 112 USD; your team has 30 USD for the term. Create it for a run, then delete it.
+
+**Problem: your design does not say what your system costs in a month when nobody uses it.** Add up every idle
+resource for 30 days. If the total is more than a few dollars, your design should create those resources only
+for runs and demos.
+
+**Problem: you chose a service whose smallest setting costs more than your budget.** OpenSearch Serverless needs
+at least 2 OCUs, about 89 USD a week, unless its collection group can scale to zero; MSK Serverless is about 141
+USD a week; a SageMaker endpoint about 21.50 a week; Aurora Serverless v2 charges its minimum capacity, 23.52 a
+week for each ACU. For vectors use S3 Vectors or DynamoDB vector search; for queries Athena or DuckDB; for a small
+database RDS PostgreSQL `db.t4g.micro` (3.02 a week, plus storage).
+AWS guide: [Working with S3 Vectors and vector buckets](https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors.html).
+
+**Problem: you plan a database server where a table would do.** An RDS PostgreSQL database is an idle resource:
+`db.t4g.micro` left on until the end of term (about three weeks) costs about 9.50 USD, a third of your budget. If the
+app reads items by key, DynamoDB on demand charges only for requests; if it runs analysis queries, Athena or
+DuckDB over Parquet does. RDS is not yet tried in a student lease: check that you can create it before you depend
+on it.
+
+**Problem: a stopped EC2 instance still costs money.** Its EBS volume and its public IPv4 address are still
+charged (the address is 0.005 USD an hour, more than a `t4g.nano`). Delete the volume and release the address, or
+terminate the instance.
+AWS guide: [Elastic IP addresses](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html).
+
+## BC020 Costs that grow with each query and each run {#bc020}
+
+**Look in:** `docs/design.md` (Data, Resources, the cost of your long-term horizon RQ), `scripts/`, `features/`.
+
+**Problem: an Athena query reads the whole source data set instead of your subset.** Athena charges for the data
+scanned: 5.50 USD per TB in ca-central-1. A source data set on S3 can be far larger than the course preview:
+measure it first (`aws s3 ls --recursive --summarize s3://…`). Query your own Parquet copy of your subset, with a
+partition filter.
+Athena guide: [Partition your data](https://docs.aws.amazon.com/athena/latest/ug/partitions.html).
+
+**Problem: your data is in CSV or JSON and every query reads all of it.** Athena reads every column of a CSV or
+JSON file, even the ones the query does not use. Convert to Parquet once, partition by the column your queries
+filter on, and compare the data scanned before and after.
+Athena guide: [Use columnar storage formats](https://docs.aws.amazon.com/athena/latest/ug/columnar-storage.html).
+
+**Problem: a job or query runs on a schedule, and each run has a minimum charge.** Athena charges at least 10 MB
+for each query (100,000 small queries cost about 5.50); Glue and EMR charge at least one minute for each run. A job
+every 15 minutes is 2,880 runs a month. Run it as often as your freshness requirement needs, no more.
+
+**Problem: the dashboard runs a query every time someone opens it.** Compute the number the dashboard shows once,
+store it, and read the stored result.
+
+**Problem: your LLM calls can use up your team's 5 USD before the demo.** Count the tokens of one answer, times the
+answers you expect, plus each eval run: cases × runs, every time you run your tests or push to CI. When the team's
+pool is used up, the course LLM gateway refuses every call (error 429 `team_budget_exhausted`). Run evals on
+demand, not on every push; embed your documents once and reuse the vectors.
+
+**Problem: you load your history into DynamoDB one row at a time.** 100 million rows cost about 69 USD in writes;
+importing from S3 costs 0.165 USD per GB (about 1.65 for 10 GB). Or keep the history in S3 and put in DynamoDB
+only the items the app reads by key.
+DynamoDB guide: [Requesting a table import in DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/S3DataImport.Requesting.html).
+
+**Problem: your functions log every record or every LLM reply.** CloudWatch charges 0.55 USD per GB of logs
+received. Log counts, errors and a sample, and set a short retention on the log group.
+CloudWatch guide: [Working with log groups and log streams](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/Working-with-log-groups-and-streams.html).
+
+**Problem: your design moves data out of AWS or to another Region.** Data sent to the internet costs 0.09 USD per
+GB. Keep the processing in ca-central-1 and send only the result the app shows.
+
+**Problem: your first run on AWS replays your whole simulated data set.** Run a small sample first (1%, or one
+batch), check the cost, then scale up.
+
+## BC030 What your team's lease refuses {#bc030}
+
+**Look in:** `docs/design.md` Resources, `scripts/`, any instance type, Region or model your design names.
+
+**Problem: your design uses an EC2 instance type the lease does not allow.** The lease allows `t4g` nano to large
+(no `t4g.xlarge`), `m7g` medium to xlarge, `m8g.xlarge`, and `t3a` and `m6a.xlarge` only when something does not
+run on ARM; other types are refused with `UnauthorizedOperation`. Test a type with
+`aws ec2 run-instances --dry-run`: `DryRunOperation` means it is allowed.
+AWS CLI reference: [run-instances](https://docs.aws.amazon.com/cli/latest/reference/ec2/run-instances.html).
+
+**Problem: your design runs more than 10 Lambda functions at the same time.** The lease allows 10 at once
+(the AWS default is 1,000); the rest wait. Batch the work, or limit how many run at once.
+Lambda guide: [Configuring reserved concurrency for an Event Function](https://docs.aws.amazon.com/lambda/latest/dg/configuration-concurrency.html).
+
+**Problem: your design uses a Region other than ca-central-1, or a model that is not offered there.** Everything
+runs in ca-central-1. Current Claude models are not offered on demand in ca-central-1; use the course LLM gateway.
+
+**Problem: your scripts assume a default VPC.** The lease has one VPC with four subnets and no default; name a
+subnet in every launch. A Fargate task reaches the internet from a public subnet with a public IP; a NAT gateway is
+an idle resource.
+
+**Problem: your scripts call Service Quotas or the Pricing API.** The lease refuses both. Read limits from the
+service's own describe calls or the AWS documentation, and prices from the course price sheet.
+
+**Problem: your design creates an Athena view over the course's shared tables.** Athena refuses a view over a
+table in another account. Make the view over your own copy.
+
+**Problem: your team cannot find everything it created.** The whole team shares one lease and one 30 USD budget.
+Give every resource the team's name prefix and the course tags, so one list (the `cost-and-teardown` recipe's
+inventory) finds what each member created. When the lease ends, everything in it is deleted: your scripts must be
+able to create the system again.
+
+The recipe is in the course recipes repository:
+[cost-and-teardown](https://github.com/cpsc436c-2026w1/recipes/tree/main/cost-and-teardown).
+
+## Run it {#run}
+
+With the course server connected to your assistant, ask: "Run the budget and sandbox check on our repository." It
+reads the files each question names under **Look in**, writes one file, `docs/reviews/budget-check.md`, and changes
+nothing else in your repository or in your lease. For BC005 it asks you whether your team has a budget.
+
+By hand: go through each Problem above, look in the places its question names, and note each line of your design or
+scripts that it describes, with its file and line, and what you will change.
+
+## After the check {#after}
+
+Take one Problem at a time. Change `docs/design.md` Resources: replace the service, or say when it is created and
+deleted, and add the delete to your clean-up script. Then run the check again, and keep the "What we changed"
+section of `docs/reviews/budget-check.md`.
+
+## When to run it again {#again}
+
+After you add a resource to your design, before each deploy, and when a budget alert arrives.
