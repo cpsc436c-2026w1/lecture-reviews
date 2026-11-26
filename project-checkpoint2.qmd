@@ -114,7 +114,8 @@ and the decision lines in [docs/requirements.md](https://github.com/cpsc436c-202
    connected, ask your assistant, for example, "Run the budget and sandbox check on our repository." Without an
    assistant, go through the same questions by hand from the repository [mcp-static-content](https://github.students.cs.ubc.ca/CPSC436C-2026W-T1/mcp-static-content).
 2. Each check writes one file in `docs/reviews/`, such as `docs/reviews/budget-check.md`, and changes nothing else.
-   Commit at least one of these files.
+   Commit at least one report of a check for Checkpoint 2: the budget and sandbox check, the Checkpoint 2 check, or
+   the Checkpoint 1 check run again.
 3. Compare the reports of two team members who ran the same check: the assistant's model writes them, so they
    differ. Keep what your team agrees is a real problem.
 4. For each item a check lists, decide: change it (in `docs/requirements.md`, `docs/design.md` or your scripts), or
@@ -154,8 +155,13 @@ example below:
 - Decision (budget-check BC010, t00-trip-events, PR #3): keep. …</code></pre>
 ```
 
-**Problem: No check report is in the repository at the tag.** At least one `docs/reviews/<check>.md` *must* be
-committed.
+**Problem: A check report is committed, but nothing answers it.** Your triage *must* show: a change in
+`docs/requirements.md` or `docs/design.md` for what you fixed, or a decision line for what you keep. You don't have
+to fix everything.
+
+**Problem: No check report is in the repository at the tag.** At least one report of a check for Checkpoint 2 (the
+budget and sandbox check, the Checkpoint 2 check, or the Checkpoint 1 check run again) *must* be in `docs/reviews/`;
+a report of the proposal check does not count.
 :::
 
 ### Requests (RQ) and constraints (RF) {#feedback}

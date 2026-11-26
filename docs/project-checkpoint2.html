@@ -477,7 +477,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#checks" id="toc-checks" class="nav-link" data-scroll-target="#checks">Run a check and triage its report</a></li>
   <li><a href="#feedback" id="toc-feedback" class="nav-link" data-scroll-target="#feedback">Requests (RQ) and constraints (RF)</a></li>
-  <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">A Well-Architected review (optional)</a></li>
   </ul></li>
   <li><a href="#guidance-2" id="toc-guidance-2" class="nav-link" data-scroll-target="#guidance-2">② Simulated data and demo scenarios</a>
   <ul class="collapse">
@@ -536,7 +535,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>the budget check is important because you don’t want to miss something putting you out of budget soon!</li>
 <li>together with the budget check, consider the RQs I left in your feedback issue: they should help you to plan better (but you can hand in the answers after cp2 if you are tight on time).</li>
 <li>the Checkpoint 2 check is based on the cp2 state I expect to see and on some typical errors I already know about.</li>
-<li>you can also run a Well-Architected review of your design with the AWS lens for your project shape, and build a first slice on AWS (guidance <a href="#review">①</a> and <a href="#slice">③</a>), but don’t be overwhelmed by the output, pick what makes sense to account for.</li>
 <li>Remember, your coding assistant’s LLM model generates the output, so compare the results across team members, and triage. Decisions are on you!</li>
 <li>I expect to see at least one check report in the repo, and some evidence of triage and decisions in <code>requirements</code> and <code>design</code> made based on the report (changes in both; decision lines go in <code>requirements</code>) – you don’t have to fix everything!</li>
 </ul></li>
@@ -560,7 +558,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <style>pre.nt-ex{font-family:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:.875em;line-height:1.4;color:rgb(0,59,79);background-color:rgba(233,236,239,.65);border:1px solid rgba(233,236,239,.65);border-radius:0;padding:5.355px 5.355px 5.355px 0;margin:1em 0;white-space:pre;overflow-x:visible}pre.nt-ex code{font-size:.85em;padding:.125rem .25rem;color:inherit;background:transparent;white-space:pre-wrap;word-break:break-word}pre.nt-ex em{font-style:italic;text-decoration:none}</style>
 <section id="repo" class="level2">
 <h2 class="anchored" data-anchor-id="repo">What changes in your repository</h2>
-<p>The <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2">example repository</a> at tag <code>cp2</code> is a whole Checkpoint 2 hand-in, written for the rides case; it goes further than what you need for Tuesday (it also has the slice on AWS and the Well-Architected review). Compare it with its tag <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp1">cp1</a> to see what changes between the checkpoints. You can reasonably deviate from the example, as long as all requirements from this page are satisfied. Each file name below links to it in that state.</p>
+<p>The <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2">example repository</a> at tag <code>cp2</code> is a whole Checkpoint 2 hand-in, written for the rides case; it goes further than what you need for Tuesday (it also has the slice on AWS). Compare it with its tag <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp1">cp1</a> to see what changes between the checkpoints. You can reasonably deviate from the example, as long as all requirements from this page are satisfied. Each file name below links to it in that state.</p>
 <style>
 .repo-tab { width: 100%; border-collapse: collapse; font-size: 0.9em; margin: 0.6em 0 0.3em; }
 .repo-tab td { padding: 0.18em 0.5em; vertical-align: top; border-bottom: 1px solid #eee; }
@@ -601,66 +599,60 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td class="tr">each line names its file and line; your decision lines name the check and question ID</td>
 </tr>
 <tr class="odd">
-<td class="t">│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/reviews/well-architected.md">well-architected.md</a></td>
-<td><span class="opt">optional</span></td>
-<td>your Well-Architected review: the questions, your answers, and the change</td>
-<td class="tr">names the best-practice ID of each question and the file and line it is about</td>
-</tr>
-<tr class="even">
 <td class="t">│&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/requirements.md">requirements.md</a></td>
 <td><span class="chg">change</span></td>
 <td>what your triage changed; <code>Decision (…)</code> lines for the check findings your team decides not to change; RQ answers when you have them (they can come after Checkpoint 2)</td>
 <td class="tr">a decision line names the check, the question ID and the pull request</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/design.md">design.md</a></td>
 <td><span class="chg">change</span></td>
 <td>what your triage changed; if you build, the rows of <code>## Resources</code> say what you deployed</td>
 <td class="tr">each row of <code>## Resources</code> names the script that creates the resource and the requirements it serves (for example R010, RF050)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="t">├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/evidence">evidence/</a></td>
 <td><span class="opt">optional</span></td>
 <td>if you deploy: what the deployed slice returned, kept before the clean-up</td>
 <td class="tr"></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="t">├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/sim">sim/</a></td>
 <td><span class="add">add</span></td>
 <td>a generator for each simulated data set your scenarios use, and the data (or its path in a public S3 bucket)</td>
 <td class="tr"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/sim/data/SIM01">data/SIM01/</a></td>
 <td><span class="add">add</span></td>
 <td>what the system receives; <code>_truth/</code> inside it holds the events as they happened and any injected faults</td>
 <td class="tr">the folder is the SIM ID, the same ID as the bullet in <code>## Data</code> and the <code>Given</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="t">├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/features">features/</a></td>
 <td><span class="chg">change</span></td>
 <td>scenarios that run for at least one job story and its requirements; <code>@todo</code> on a scenario not implemented yet</td>
 <td class="tr"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/features/steps">steps/</a></td>
 <td><span class="fill">fill in</span></td>
 <td>step code for the implemented scenarios</td>
 <td class="tr">runs the rules tagged with IDs (<code>@R010</code>, <code>@RF010</code>)</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="t">├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/src">src/</a></td>
 <td><span class="opt">optional</span></td>
 <td>your system's code, as far as you build it</td>
 <td class="tr"></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td class="t">├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/tools/check_trace.py">tools/check_trace.py</a></td>
 <td><span class="chg">change</span></td>
 <td>the current traceability script: copy it from the example if yours is older or missing</td>
 <td class="tr">compares the IDs, tags and data references across these files</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td class="t">└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/scripts">scripts/</a></td>
 <td><span class="opt">optional</span></td>
 <td>if you deploy: one script for each service, safe to run again, and <code>teardown.sh</code>, which deletes everything they create</td>
@@ -778,63 +770,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="review" class="level3">
-<h3 class="anchored" data-anchor-id="review">A Well-Architected review (optional)</h3>
-<p><strong>In the example repo:</strong> <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/reviews/well-architected.md">docs/reviews/well-architected.md</a>.</p>
-<p>A Well-Architected review asks questions about your design, one pillar at a time (operational excellence, security, reliability, performance efficiency, cost optimization, sustainability), and each answer can lead to a change. This step is optional at Checkpoint 2: don’t be overwhelmed by the output, pick what makes sense to account for. Choose three to five questions from the lens for your shape:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 40%">
-<col style="width: 60%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Your project</th>
-<th>Lens</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>lakehouse first, streaming, change data capture to the lake</td>
-<td><a href="https://docs.aws.amazon.com/wellarchitected/latest/analytics-lens/analytics-lens.html">Analytics Lens</a></td>
-</tr>
-<tr class="even">
-<td>operational first</td>
-<td><a href="https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/welcome.html">Serverless Applications Lens</a>, and the <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-wal.html">DynamoDB Lens</a> if you use DynamoDB</td>
-</tr>
-<tr class="odd">
-<td>generative AI first, or an LLM in your system (chat, model routing, an agent, retrieval)</td>
-<td><a href="https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/generative-ai-lens.html">Generative AI Lens</a></td>
-</tr>
-</tbody>
-</table>
-<p>Write <code>docs/reviews/well-architected.md</code>, next to the check reports, with one section for each question:</p>
-<ul>
-<li><strong>Question</strong> and its best-practice ID (for example <code>COST01-BP09</code>), with a link;</li>
-<li><strong>Now:</strong> what your design does, with the file and line;</li>
-<li><strong>Risk:</strong> what could go wrong, in your system’s words;</li>
-<li><strong>Change:</strong> what you changed, or why you change nothing, and where in the repository the change is.</li>
-</ul>
-<p>If you run it, at least one question leads to a change you make. A coding assistant can read the lens pages through the AWS Knowledge server (<code>https://knowledge-mcp.global.api.aws</code>, no account needed); use it to read and review, not to create resources.</p>
-<div class="callout callout-style-default callout-tip callout-titled" title="Typical problems: the review">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Typical problems: the review
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p><strong>Problem: A question has no best-practice ID.</strong> It <em>must</em> name the ID and link the lens page it comes from.</p>
-<p><strong>Problem: <code>Now:</code> describes the design in general.</strong> It <em>must</em> name the file and line that do what it says.</p>
-<p><strong>Problem: Every question ends with “no change”.</strong> At least one question <em>must</em> lead to a change you made, and <code>docs/design.md</code> <em>must</em> show it.</p>
-</div>
-</div>
-</div>
-</section>
 </section>
 <section id="guidance-2" class="level2">
 <h2 class="anchored" data-anchor-id="guidance-2">② Simulated data and demo scenarios</h2>
@@ -861,7 +796,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Do the same for every other data set your scenarios use.</p></li>
 </ol>
 <div class="callout callout-style-default callout-note callout-titled" title="Guidelines: From the Data Bullet to Generated Files">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -870,7 +805,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -890,7 +825,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled" title="Typical problems: simulated data">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -899,7 +834,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>Problem: The generator writes different data on each run.</strong> It <em>must</em> use a fixed seed, so that an example’s expected answer stays true, see example below:</p>
 <pre class="nt-ex"><code># Not this
@@ -932,7 +867,7 @@ Given the simulated data set SIM01 "rush-hour"</code></pre>
 <li>Run <code>uvx behave@1.3.3 --tags="not @todo"</code> and fix what fails. A failing example that shows a real fault in your code stays failing until the code is fixed; do not change the example to pass.</li>
 </ol>
 <div class="callout callout-style-default callout-tip callout-titled" title="Typical problems: step code">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -941,7 +876,7 @@ Given the simulated data set SIM01 "rush-hour"</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>Problem: A <code>Then</code> checks a value the step computed itself.</strong> It <em>must</em> compare the system’s result with the value from the example’s rows or from <code>_truth/</code>, see example below:</p>
 <pre class="nt-ex"><code># Not this: the step counts the rows itself
@@ -1021,7 +956,7 @@ assert actual == expected</code></pre>
 <li>Before you clean up, keep what shows the slice ran in <code>evidence/</code>: the output of those examples and the tags AWS returns for each resource. Staff read them after the slice is deleted.</li>
 </ol>
 <div class="callout callout-style-default callout-note callout-titled" title="Guidelines: Course Constraints for the Slice">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1030,7 +965,7 @@ assert actual == expected</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -1043,7 +978,7 @@ assert actual == expected</code></pre>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled" title="Typical problems: the slice">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1052,7 +987,7 @@ assert actual == expected</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>Problem: An idle resource (one that costs money as long as it exists, such as a stream or a cluster) stays up after the run.</strong> Its delete command <em>must</em> be in <code>scripts/teardown.sh</code>, and the slice <em>must</em> be deleted when you are not using it (the <a href="project-budget-check.qmd">budget and sandbox check</a> lists these resources).</p>
 <p><strong>Problem: The first run on AWS replays the whole simulated data set.</strong> Run a small part first (one batch), check what it cost, then the rest.</p>
@@ -1078,7 +1013,7 @@ assert actual == expected</code></pre>
 <li>Your requirements and design name the issues and pull requests they come from, for example <code>(#12)</code>.</li>
 </ol>
 <div class="callout callout-style-default callout-tip callout-titled" title="Typical problems: required updates">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1087,7 +1022,7 @@ assert actual == expected</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>Problem: The requirements and the design name no issue or pull request.</strong> A change your team made for Checkpoint 2 <em>should</em> name the issue or pull request it comes from, so that the teaching team can follow why it changed.</p>
 <p><strong>Problem: The tag shows no change since Checkpoint 1 in the files the plan names.</strong> At <code>cp2</code>, <code>docs/requirements.md</code>, <code>docs/design.md</code> and the behave scenarios (<code>features/</code> and <code>features/steps/</code>) <em>must</em> show the changes of blocks ① and ②, and at least one check report <em>must</em> be in <code>docs/reviews/</code>.</p>
@@ -1107,7 +1042,7 @@ assert actual == expected</code></pre>
 <li>Check on github.students that the tag <code>cp2</code> points at that merge commit.</li>
 </ol>
 <div class="callout callout-style-default callout-note callout-titled" title="Guidelines: Hand-In with a Pull Request and a Tag">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1116,7 +1051,7 @@ assert actual == expected</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>If you build in your course repository</strong> (github.students, remote <code>origin</code>), after your last pull request is merged:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>git switch main</span>
@@ -1136,7 +1071,7 @@ assert actual == expected</code></pre>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled" title="Typical git problems">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1145,7 +1080,7 @@ assert actual == expected</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>The problems of Checkpoint 1 apply with <code>cp2</code> in place of <code>cp1</code>: see <a href="./project-checkpoint1.html#hand-in">Typical git problems</a> on the Checkpoint 1 page.</p>
 <p><strong>Problem: You fixed something after you tagged.</strong> The fix <em>must</em> be merged with a pull request and the tag moved to the new merge commit, see the commands below. The <code>course</code> line is only for teams that build on github.com:</p>
@@ -1176,7 +1111,6 @@ assert actual == expected</code></pre>
 <li><strong>Generator:</strong> the script that writes a simulated data set from its bullet in <code>## Data</code>, with a fixed seed.</li>
 <li><strong>Simulated data set:</strong> data your team generates to demonstrate your system in the situations your examples show; when a requirement is about a problem in the data, it also holds injected faults.</li>
 <li><strong>Truth:</strong> the folder <code>_truth/</code> inside a data set’s folder: the events as they happened and any faults the generator added. An example’s expected answer can come from it.</li>
-<li><strong>Well-Architected review:</strong> questions from an AWS lens asked of your design, each with a best-practice ID, your answer and what changed.</li>
 <li><strong>Decision line:</strong> one line in <code>docs/requirements.md</code> that says what your team decided about something a check listed: keep, later, or check is wrong, with the reason.</li>
 <li><strong>Clean-up:</strong> <code>scripts/teardown.sh</code>, which deletes everything your scripts create.</li>
 <li><strong>Idle resource:</strong> a resource that costs money as long as it exists, even when nobody uses it, such as a stream, a cluster or a load balancer.</li>
