@@ -157,8 +157,8 @@ cfg, rng = DATA_SETS[sim_id], random.Random(SEED)</code></pre>
 {"fault": "duplicate", "event_id": "ev-000358"}</code></pre>
 ```
 
-**Problem: The files do not match the numbers in the bullet.** The checker *must* pass for every data set; when it
-does not, fix the generator or the bullet, so that both say the same thing.
+**Problem: The files do not match the numbers in the bullet.** Every number of the bullet *must* be what the files
+hold; when one is not, fix the generator or the bullet, so that both say the same thing.
 :::
 
 ## ② Write the step code {#steps}
@@ -171,10 +171,11 @@ fail.
 
 1. Read the behave guide's [Level 1](project-behave.qmd#level-1): a first step function, setup in `environment.py`, steps
    with parameters.
-2. Do B5T2 Parts A and C if you have not: write the steps of one rule by hand, then run a scenario on SIM01.
+2. Do B5T2 Parts A and C if you have not: write the steps of one rule by hand, then run a scenario on a simulated
+   data set.
 3. A step's `When` calls your code, not a copy of the answer. A `Then` compares your system's result with the
    expected value from the example's rows or from the truth.
-4. Run `uvx behave@1.3.3` and fix what fails. A failing example that shows a real fault in your code stays failing
+4. Run `uvx behave@1.3.3 --tags="not @todo"` and fix what fails. A failing example that shows a real fault in your code stays failing
    until the code is fixed; do not change the example to pass.
 
 ::: {.callout-tip collapse="true" title="Typical problems: step code"}
@@ -251,9 +252,8 @@ through the course LLM gateway with your course token, and a clean-up for everyt
 
 ::: {.callout-tip collapse="true" title="Typical problems: the slice"}
 **Problem: An idle resource (one that costs money as long as it exists, such as a stream or a cluster) stays up after
-the run.** Its delete
-command *must* be in `scripts/teardown.sh`, and the slice *must* be deleted when you are not using it (the
-[budget and sandbox check](project-budget-check.qmd) lists these resources).
+the run.** Its delete command *must* be in `scripts/teardown.sh`, and the slice *must* be deleted when you are not
+using it (the [budget and sandbox check](project-budget-check.qmd) lists these resources).
 
 **Problem: The first run on AWS replays the whole simulated data set.** Run a small part first (one batch), check what
 it cost, then the rest.
@@ -355,13 +355,13 @@ A decision line says what your team decided about something a check listed. Two 
 indented under the RF it concerns, the second a list item under `## Decisions`, naming its resource:
 
 ```markdown
-  Decision (budget-check BC020, t00-compact-events, PR #4): later, Checkpoint 3. The nightly compaction job and its 00:30 UTC trigger are not created at Checkpoint 2: RF040's example runs on the local stand-in (src/rides/compact.py) and is tagged @todo; scripts/compact.py and the delete of the trigger and the job in scripts/teardown.sh come with them.
+  Decision (budget-check BC020, t00-compact-events, PR #4): later, final hand-in. The nightly compaction job and its 00:30 UTC trigger are not created at Checkpoint 2: RF040's example runs on the local stand-in (src/rides/compact.py) and is tagged @todo; scripts/compact.py and the delete of the trigger and the job in scripts/teardown.sh come with them.
 - Decision (budget-check BC010, t00-trip-events, PR #3): keep. The stream is the one resource of the slice that bills by the hour (0.0165 USD, 11.88 for 30 days); scripts/stream.py up creates it for a run or a demo, scripts/teardown.sh deletes it first, and nothing is kept between runs (docs/design.md, Resources).
 ```
 
-The answers are `keep`, `later, <checkpoint>` or `check is wrong`. `PR #<n>` is the number of the pull request that
-adds the line. The checks keep the item
-on their list with your reason beside it, and `tools/check_trace.py` lists every decision as DECISION. Ideally you
+The answers are `keep`, `later, <checkpoint>` or `check is wrong`; after Checkpoint 2 the next hand-in is the final
+one, so a `later` decision says `later, final hand-in`. `PR #<n>` is the number of the pull request that adds the
+line. The checks keep the item on their list with your reason beside it, and `tools/check_trace.py` lists every decision as DECISION. Ideally you
 would group pull requests: one pull request for each fix that belongs together, with the check ID in the pull request
 and the pull request number in your decision. Before you tag, read each decision once more: it still holds only if
 what it is about has not changed. A `later, Checkpoint 2` decision is due now: delete it when the item is fixed and the
