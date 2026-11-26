@@ -218,14 +218,15 @@ Before you create anything in your team's lease for this step, run the
 
 The first slice is one job story end to end on AWS. Start from the
 [course recipes](https://github.com/cpsc436c-2026w1/recipes) for your shape and extension, and change the names and
-the data to your own:
+the data to your own. The first folder of each shape is the route in the recipes README's table "Checkpoint 2 starting
+routes", with its first command:
 
 | Your project | Start from |
 |---|---|
-| every shape | `project-skeleton` (its folder for your shape), `cost-and-teardown` |
-| lakehouse first | `s3-event-etl`, `lake-layout-experiment`, `cdc-to-lake` |
-| operational first | `lambda-dynamodb`, `dynamodb`, `concurrency-correctness` |
-| generative AI first | `dashboard-chat`, `llm-gateway`, `hybrid-retrieval-eval` |
+| every shape | `cost-and-teardown` |
+| lakehouse first | `project-skeleton/rep-lakehouse-first/`, then `s3-event-etl`, `lake-layout-experiment`, `cdc-to-lake` |
+| operational first | `project-skeleton/rep-operational-first/`, then `lambda-dynamodb`, `dynamodb`, `concurrency-correctness` |
+| generative AI first | `project-skeleton/rep-genai-first/`, then `dashboard-chat`, `llm-gateway`, `hybrid-retrieval-eval` |
 | streaming ingestion extension | `streaming-ingestion`, `simulated-runs` |
 | chat on the dashboard | `dashboard-chat` |
 | change data capture to the lake | `cdc-to-lake` |
