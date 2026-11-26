@@ -1,5 +1,5 @@
 ---
-title: "Checkpoint 2: review and the base running"
+title: "Checkpoint 2: checks, simulated data and demo scenarios"
 format:
   html:
     toc: true
@@ -13,7 +13,7 @@ format:
 Due **Tuesday 1 December, end of day**, with the tag `cp2`.
 
 For Checkpoint 2, you continue working on demo scenarios, and, hopefully, start building the system.
-I will check only a small subset at the deadline, but you now have leases and recipes are available on Wed Nov 25, so
+I will check only a small subset at the deadline, but you now have leases and recipes are available on Fri Nov 27, so
 nothing blocks you from creating infrastructure.
 
 What to focus on:
@@ -52,7 +52,7 @@ What to focus on:
 - [⑤](#guidance-5) **Getting ready for the project clinic:** I would also focus on surfacing as many questions and issues as possible before our Dec 3 project clinic, so focus
   on what's uncertain vs what's easy, if you can.
 - Everything else on this page should help you to focus on the right things, but you can sensibly change stuff.
-- Recipes with the code should be ready by Wed Nov 25 EoD; before that, you can start on checking and updating
+- Recipes with the code should be ready by Fri Nov 27 EoD; before that, you can start on checking and updating
   requirements.
 
 
