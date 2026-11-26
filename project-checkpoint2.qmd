@@ -332,8 +332,10 @@ then the example.
 
 **In the example repo:** [DEMO.md, Checkpoint 2](https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/DEMO.md) (the dry run and its summary).
 
-To leave some features without steps at Checkpoint 2, tag their scenarios `@todo`, and test the dry run with
-`uvx behave@1.3.3 --dry-run --tags="not @todo"`. I expect the dry run to pass.
+To leave some features without steps at Checkpoint 2, put the tag `@todo` on the line above each `Feature:`,
+`Rule:` or `Example:` you are not implementing yet (a tag on a `Feature:` or a `Rule:` covers every example under
+it), and test the dry run with `uvx behave@1.3.3 --dry-run --tags="not @todo"`. I expect the dry run to pass: it
+exits with code 0 and its summary shows no undefined steps.
 
 ::: {.callout-tip collapse="true" title="Typical problems: the dry run"}
 **Problem: The dry run fails.** A dry run fails while any scenario has a step without code. Implement the steps, or
@@ -437,12 +439,16 @@ commands and their output).
 **Problem: The requirements and the design name no issue or pull request.** A change your team made for Checkpoint 2
 *should* name the issue or pull request it comes from, so that the teaching team can follow why it changed.
 
-**Problem: `main` shows no change since Checkpoint 1, and your work is on a branch.** Merge each branch into `main`
-with a pull request before you tag `cp2`: the tag reads `main` only, see the commands below:
+**Problem: `main` shows no change since Checkpoint 1, and your work is on a branch.** The tag `cp2` *must* be on
+the merge commit of your last pull request on `main`, so the work you hand in *must* be on `main` before you tag.
+Before you tag `cp2`: list the branches whose work is not on `main` yet, merge each one into `main` with a pull
+request that a teammate approves, then check that `main` shows your changes since Checkpoint 1, see the commands
+below:
 
 ```default
-git log --oneline cp1..main          # what main has since Checkpoint 1
-git branch -a --no-merged main       # branches whose work is not on main yet
+git fetch --all --tags
+git branch -r --no-merged origin/main     # branches whose work is not on main yet: each needs a pull request
+git log --oneline cp1..origin/main        # what main has since Checkpoint 1: your Checkpoint 2 changes
 ```
 
 **Problem: The tag shows no change since Checkpoint 1 in the files the plan names.** At `cp2`, `docs/requirements.md`,
@@ -462,11 +468,14 @@ other than the author, and no squash merge.
    belongs together. In its description, name the IDs it touches and the check IDs it settles. If you build on
    github.com, first merge your course repository's `main` into the branch.
 2. Ask a teammate to approve it, then merge it with a merge commit, not a squash merge.
-3. In the last pull request before the deadline, paste the summary of
+3. Before you tag `cp2`, check that every branch with Checkpoint 2 work is merged into `main`
+   (`git branch -r --no-merged origin/main` lists none of them), that at least one check report is in
+   `docs/reviews/`, and that `uvx behave@1.3.3 --dry-run --tags="not @todo"` passes on `main`.
+4. In the last pull request before the deadline, paste the summary of
    `uvx behave@1.3.3 --dry-run --tags="not @todo"`.
-4. Tag the merge commit of that last pull request on `main` as `cp2`, and push the tag to your course repository on
+5. Tag the merge commit of that last pull request on `main` as `cp2`, and push the tag to your course repository on
    github.students.
-5. Check on github.students that the tag `cp2` points at that merge commit.
+6. Check on github.students that the tag `cp2` points at that merge commit.
 
 ::: {.callout-note collapse="true" title="Guidelines: Hand-In with a Pull Request and a Tag"}
 **If you build in your course repository** (github.students, remote `origin`), after your last pull request is merged:
