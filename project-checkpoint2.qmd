@@ -133,7 +133,8 @@ review, not to create resources.
 
 1. `uvx behave@1.3.3` runs, and every rule tagged with an ID has examples that run.
 2. `python3 tools/check_trace.py`, run in your team's repository after the course update brings in its current
-   version, shows no problems. Read each line it prints beside the requirement, rule or data definition it names.
+   version, shows no problem without a team decision beside it. Read each line it prints beside the requirement,
+   rule or data definition it names.
 3. Each data set checks clean with `sim/check.py`.
 4. Your clean-up removes everything the slice created; run it once and deploy again.
 5. Your cost so far is within your team's budget: check it in Cost Explorer, list what is still running, and run
