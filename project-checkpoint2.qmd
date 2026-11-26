@@ -373,7 +373,7 @@ is deleted).
 
 **In the example repo:** [the tag cp2](https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/).
 
-Your team hands in through a pull request, as at Checkpoint 1: no direct pushes to `main`, one approval from someone
+Your team hands in through pull requests, as at Checkpoint 1: no direct pushes to `main`, one approval from someone
 other than the author, and no squash merge.
 
 1. Commit each change on a branch and open a pull request to `main` where you build, ideally one for each fix that
