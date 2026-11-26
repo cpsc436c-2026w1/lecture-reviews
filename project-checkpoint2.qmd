@@ -44,10 +44,14 @@ by step on the rides example, and its `shapes/` folder has a worked example for 
 Your `## Data` section names each simulated data set (SIM01, SIM02, …) with its size and its injected faults. Now
 a generator writes each one.
 
-1. Follow [B5T2, Part B5](https://github.com/cpsc436c-2026w1/b5-t2-behave-sim#b5-have-your-assistant-write-your-projects-sim01-then-check-it):
-   your assistant writes the generator of your SIM01 from your bullet, and you check what it wrote.
-2. Use the worked example of your shape in B5T2's [`shapes/`](https://github.com/cpsc436c-2026w1/b5-t2-behave-sim/tree/main/shapes)
-   (lakehouse, operational, generative AI).
+1. Write the generator of your SIM01 from its bullet: first the base rows, then each injected fault, with a fixed
+   seed. Start from the worked example of your shape in B5T2's
+   [`shapes/`](https://github.com/cpsc436c-2026w1/b5-t2-behave-sim/tree/main/shapes) (lakehouse, operational,
+   generative AI; B5T2 Part B4 runs it), and change its events and faults to your bullet's.
+2. Check it against the bullet with B5T2's `sim/check.py`: the counts and fields of the files match the numbers your
+   bullet gives (for example, a bullet that says 28 event rows for 9 barcodes, 2 of them delivered late, must give
+   exactly those). With a coding assistant, [B5T2 Part B5](https://github.com/cpsc436c-2026w1/b5-t2-behave-sim#b5-have-your-assistant-write-your-projects-sim01-then-check-it)
+   has it draft the same generator from your bullet; you check it the same way.
 3. Keep two folders for each data set: what the system receives (`sim/data/SIM01/`), and the truth: the events as
    they happened and the faults the generator added (`sim/data/SIM01/_truth/`). Your examples' expected answers come
    from the truth, before your system runs.
@@ -134,6 +138,11 @@ review, not to create resources.
 4. Your clean-up removes everything the slice created; run it once and deploy again.
 5. Your cost so far is within your team's budget: check it in Cost Explorer, list what is still running, and run
    the [budget and sandbox check](project-budget-check.qmd) again if your design changed.
+6. Read your team's decisions once more: `tools/check_trace.py` lists each `Decision (…)` line as DECISION, with
+   the line it is under. A decision still holds only if that line still says what the decision is about.
+7. Run the checks one last time after your last fix, so the review files describe what you hand in. Ideally you
+   group pull requests: one pull request for each fix that belongs together, with the check ID in the pull request
+   and the pull request number in your decision.
 
 ## ⑦ Hand in with a pull request and the tag cp2 {#tag}
 

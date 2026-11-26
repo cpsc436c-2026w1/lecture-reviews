@@ -584,8 +584,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="simulate">① Generate your simulated data</h2>
 <p>Your <code>## Data</code> section names each simulated data set (SIM01, SIM02, …) with its size and its injected faults. Now a generator writes each one.</p>
 <ol type="1">
-<li>Follow <a href="https://github.com/cpsc436c-2026w1/b5-t2-behave-sim#b5-have-your-assistant-write-your-projects-sim01-then-check-it">B5T2, Part B5</a>: your assistant writes the generator of your SIM01 from your bullet, and you check what it wrote.</li>
-<li>Use the worked example of your shape in B5T2’s <a href="https://github.com/cpsc436c-2026w1/b5-t2-behave-sim/tree/main/shapes"><code>shapes/</code></a> (lakehouse, operational, generative AI).</li>
+<li>Write the generator of your SIM01 from its bullet: first the base rows, then each injected fault, with a fixed seed. Start from the worked example of your shape in B5T2’s <a href="https://github.com/cpsc436c-2026w1/b5-t2-behave-sim/tree/main/shapes"><code>shapes/</code></a> (lakehouse, operational, generative AI; B5T2 Part B4 runs it), and change its events and faults to your bullet’s.</li>
+<li>Check it against the bullet with B5T2’s <code>sim/check.py</code>: the counts and fields of the files match the numbers your bullet gives (for example, a bullet that says 28 event rows for 9 barcodes, 2 of them delivered late, must give exactly those). With a coding assistant, <a href="https://github.com/cpsc436c-2026w1/b5-t2-behave-sim#b5-have-your-assistant-write-your-projects-sim01-then-check-it">B5T2 Part B5</a> has it draft the same generator from your bullet; you check it the same way.</li>
 <li>Keep two folders for each data set: what the system receives (<code>sim/data/SIM01/</code>), and the truth: the events as they happened and the faults the generator added (<code>sim/data/SIM01/_truth/</code>). Your examples’ expected answers come from the truth, before your system runs.</li>
 <li>Seed the generator, so that the same command writes the same data every time.</li>
 <li>Check each data set with B5T2’s <code>sim/check.py</code>: the counts in your bullet match the files.</li>
@@ -705,6 +705,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Each data set checks clean with <code>sim/check.py</code>.</li>
 <li>Your clean-up removes everything the slice created; run it once and deploy again.</li>
 <li>Your cost so far is within your team’s budget: check it in Cost Explorer, list what is still running, and run the <a href="project-budget-check.qmd">budget and sandbox check</a> again if your design changed.</li>
+<li>Read your team’s decisions once more: <code>tools/check_trace.py</code> lists each <code>Decision (…)</code> line as DECISION, with the line it is under. A decision still holds only if that line still says what the decision is about.</li>
+<li>Run the checks one last time after your last fix, so the review files describe what you hand in. Ideally you group pull requests: one pull request for each fix that belongs together, with the check ID in the pull request and the pull request number in your decision.</li>
 </ol>
 </section>
 <section id="tag" class="level2">
