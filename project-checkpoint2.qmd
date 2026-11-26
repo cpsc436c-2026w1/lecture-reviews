@@ -51,7 +51,7 @@ hand-in, written for the rides case. Each file name below links to it in that st
 <tr><td class="t">│&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/design.md">design.md</a></td><td><span class="chg">change</span></td><td>the resources you deployed, the sections your RQs ask for (such as Cost), and the change your review led to</td></tr>
 <tr><td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/review.md">review.md</a></td><td><span class="add">add</span></td><td>your Well-Architected review: the questions, your answers, and the change</td></tr>
 <tr><td class="t">├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/sim">sim/</a></td><td><span class="add">add</span></td><td>a generator for each simulated data set your examples name, its checker, and the data</td></tr>
-<tr><td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/sim/data/SIM01">data/SIM01/</a></td><td><span class="add">add</span></td><td>what the system receives; <code>_truth/</code> beside it holds the events as they happened and the faults</td></tr>
+<tr><td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/sim/data/SIM01">data/SIM01/</a></td><td><span class="add">add</span></td><td>what the system receives; <code>_truth/</code> inside it holds the events as they happened and any injected faults</td></tr>
 <tr><td class="t">├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/features">features/</a></td><td><span class="chg">change</span></td><td>the rules of Checkpoint 1, now with examples that run; <code>@todo</code> on an example whose AWS part is not built yet</td></tr>
 <tr><td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/features/steps">steps/</a></td><td><span class="fill">fill in</span></td><td>step code, so that every example runs</td></tr>
 <tr><td class="t">├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/src">src/</a></td><td><span class="add">add</span></td><td>your system's code: the first slice, one job story end to end</td></tr>
@@ -61,7 +61,7 @@ hand-in, written for the rides case. Each file name below links to it in that st
 
 | File | What it shows | Traceability |
 |---|---|---|
-| `sim/` | each simulated data set of `## Data`, generated with its injected faults | the folder is the SIM ID (`sim/data/SIM01/`), the same ID as the bullet and the `Given` |
+| `sim/` | each simulated data set of `## Data`, generated: the data your demos run on | the folder is the SIM ID (`sim/data/SIM01/`), the same ID as the bullet and the `Given` |
 | `features/steps/` | the code behind each `Given`, `When` and `Then` | runs the rules tagged with IDs (`@R010`, `@RF010`) |
 | `scripts/`, `src/` | the slice on AWS and the code it runs | each resource is a row of `## Resources` in `docs/design.md`, with its IDs |
 | `docs/review.md` | the questions you asked of your design and what changed | names the best-practice ID of each question and the file and line it is about |
@@ -91,21 +91,22 @@ without a `ParserError`, and its summary is in your pull request.
 **In the example repo:** [sim/](https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/sim) and its data
 [sim/data/SIM01/](https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/sim/data/SIM01).
 
-Your `## Data` section names each simulated data set (SIM01, SIM02 …) with its size and its injected faults. Now a
-generator writes each one.
+Your `## Data` section names the simulated data sets (SIM01, SIM02 …) that your demos need: what each holds, and
+its injected faults when a requirement is about a problem in the data. Now a generator writes each one, so that your
+examples show your system working on it.
 
-1. Write the generator of your SIM01 from its bullet: first the base rows, then each injected fault, with a fixed
-   seed. Start from the worked example of your shape in B5T2's
+1. Write the generator of your SIM01 from its bullet: first the rows of what it shows (in the example, one rush hour
+   of trip requests in three zones), then any injected faults the bullet names, with a fixed seed. Start from the worked example of your shape in B5T2's
    [`shapes/`](https://github.com/cpsc436c-2026w1/b5-t2-behave-sim/tree/main/shapes) (lakehouse, operational,
-   generative AI; B5T2 Part B4 runs it), and change its events and faults to your bullet's.
+   generative AI; B5T2 Part B4 runs it), and change its events, and any faults, to your bullet's.
 2. Check it against the bullet with B5T2's `sim/check.py`: the counts and fields of the files match the numbers your
    bullet gives (for example, a bullet that says 28 event rows for 9 barcodes, 2 of them delivered late, must give
    exactly those). With a coding assistant,
    [B5T2 Part B5](https://github.com/cpsc436c-2026w1/b5-t2-behave-sim#b5-have-your-assistant-write-your-projects-sim01-then-check-it)
    has it draft the same generator from your bullet; you check it the same way.
-3. Keep two folders for each data set: what the system receives (`sim/data/SIM01/`), and the truth: the events as
-   they happened and the faults the generator added (`sim/data/SIM01/_truth/`). Your examples' expected answers come
-   from the truth, before your system runs.
+3. Keep two kinds of files in each data set's folder: what the system receives (`sim/data/SIM01/`), and, in
+   `sim/data/SIM01/_truth/`, the events as they happened and any faults the generator added. Your examples' expected
+   answers come from the example's rows or from the truth, always worked out before your system runs.
 4. Seed the generator, so that the same command writes the same data every time.
 5. Make your system read only what it receives: the files of `sim/data/SIM01/` outside `_truth/`. To check it,
    change a field that exists only in `_truth/` and run the example again: the system's result must not change.
@@ -116,8 +117,10 @@ generator writes each one.
 
 ![One line of fields for each kind of event](img/l19/l19-st3.png){fig-alt="L19 slide: One line of fields for each kind of event"}
 
-Each line of event fields in `## Data` becomes one kind of record in the files, with the same field names your
-examples' tables use. The injected faults are not fields of the events: the system you test must not be told which
+A simulated data set is for a demo: it shows your system doing what a job story asks, on enough data to see it (a
+rush hour, a quiet zone, two drivers who accept the same trip). It holds injected faults only when a requirement is
+about a problem in the data. Each line of event fields in `## Data` becomes one kind of record in the files, with the
+same field names your examples' tables use. The injected faults are not fields of the events: the system you test must not be told which
 events are faulty. They are recorded in `_truth/`, where the test reads them.
 
 The other conventions of the [simulation standards](https://github.com/cpsc436c-2026w1/b5-t2-behave-sim/blob/main/docs/simulation-standards.md)
@@ -402,8 +405,10 @@ git push -f course cp2      # if you build on github.com
 - **Slice:** one job story working end to end on AWS: data in, your store, the number or answer the user gets.
 - **Step code:** the Python functions behave runs for each `Given`, `When` and `Then` line, in `features/steps/`.
 - **Generator:** the script that writes a simulated data set from its bullet in `## Data`, with a fixed seed.
-- **Truth:** the folder `_truth/` beside a data set: the events as they happened and the faults the generator added.
-  Your examples' expected answers come from it.
+- **Simulated data set:** data your team generates to demonstrate your system in the situations your examples show;
+  when a requirement is about a problem in the data, it also holds injected faults.
+- **Truth:** the folder `_truth/` inside a data set's folder: the events as they happened and any faults the generator
+  added. An example's expected answer can come from it.
 - **Well-Architected review:** questions from an AWS lens asked of your design, each with a best-practice ID, your
   answer and what changed.
 - **Decision line:** one line in `docs/requirements.md` that says what your team decided about something a check
