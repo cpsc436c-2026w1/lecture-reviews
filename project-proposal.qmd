@@ -135,8 +135,8 @@ your team. Change them to fit how your team works.
   | Section | What it tells the assistant |
   |---|---|
   | Project | the project name, the team, your AWS lease and region |
-  | Our documents | that `docs/requirements.md`, `docs/design.md` and `docs/tasks.md` are the source of truth, and the id rules |
-  | Tasks and the project board | that `docs/tasks.md` is the source of truth, how S rows cite R lines, and how the board mirrors them |
+  | Our documents | that `docs/requirements.md` and `docs/design.md` ~~and `docs/tasks.md`~~ are the source of truth, and the id rules |
+  | Tasks and the project board | ~~that `docs/tasks.md` is the source of truth, how S rows cite R lines, and how the board mirrors them~~ [that each task is an issue on the project board, and how pull requests and lines name it]{.chg} |
   | Course knowledge (MCP) | to search the course MCP server before stating a number or a rule |
   | Reviews | how it reviews a change |
   | Working on AWS | the profile, the name prefix and tags, and the teardown date |
@@ -146,7 +146,7 @@ your team. Change them to fit how your team works.
   : {tbl-colwidths="[30,70]"}
 
   Adapt it with your team's choices. If you do not use an assistant, keep the file for the day you do. Keeping
-  `docs/tasks.md`, your requirements and the board linked comes at ~~checkpoint 1~~ [Checkpoint 2]{.chg}; the
+  ~~`docs/tasks.md`,~~ your requirements and the board linked [through issues]{.chg} comes at ~~checkpoint 1~~ [Checkpoint 2]{.chg}; the
   [setup page](project-startup.qmd#connecting-tasks-requirements-and-the-board) shows how.
 
 ## Project board {#board}

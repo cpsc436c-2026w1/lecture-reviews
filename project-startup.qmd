@@ -41,7 +41,7 @@ requirements.~~ [For Checkpoint 1 the check is a dry run, `uvx behave@1.3.3 --dr
 | `docs/requirements.md` | Numbered requirements R010, R020 … in EARS form, each with numbered constraints and a Given/When/Then test, plus assumptions Q010, Q020 …. | Write it after the proposal, before the design and tasks. Cite R ids in design, tasks, pull requests and reviews. |
 | `docs/design.md` | The architecture sketch (elements D010, D020 …), the data layout table, correctness properties P010, P020 … that each validate an R line, and the Lens answers table. | Write it after the requirements. Update it through a pull request when the architecture changes. |
 | `CONTRIBUTING.md` | How work gets into the repository (issues, branches, checks, pull requests, reviews) and the team agreement: roles, meetings, response times, disagreements. | Repo root. Fill in the placeholders as a team in your first week and merge it through a pull request. |
-| `docs/tasks.md` | Build steps S010, S020 …, each naming the R lines it serves and what it measures to show they hold. | Use it to plan and split the work. Name the S ids in each pull request. |
+| ~~`docs/tasks.md`~~ | ~~Build steps S010, S020 …, each naming the R lines it serves and what it measures to show they hold.~~ [Not used: each task is an issue on your project board.]{.chg} | ~~Use it to plan and split the work. Name the S ids in each pull request.~~ [A pull request names the issue it closes.]{.chg} |
 
 ## Getting Started with Kiro
 
@@ -80,8 +80,8 @@ read it when a session starts. Claude Code reads it when the repository has no `
 an older version, update Claude Code. See [AGENTS.md in the Claude Code docs](https://code.claude.com/docs/en/memory#agents-md). It tells the assistant what it would otherwise have to guess:
 
 - **What the project is:** the project name, the team, the course, and the AWS lease and Region you work in.
-- **Where the design lives:** `docs/requirements.md`, `docs/design.md` and `docs/tasks.md` are the source of truth, and
-  the file gives the id rules (R, D, P, S, Q) the assistant must follow when it edits them.
+- **Where the design lives:** `docs/requirements.md` and `docs/design.md` ~~and `docs/tasks.md`~~ are the source of truth, and
+  the file gives the id rules the assistant must follow when it edits them. [Tasks are issues on your project board.]{.chg}
 - **Where facts come from:** the assistant searches the course MCP server before it states a number or a rule about
   AWS, Spark or file formats, and uses the AWS Knowledge MCP for AWS documentation.
 - **How work is done:** the review procedure, how to run the spec checker, how pull requests are written and
@@ -278,8 +278,10 @@ kiro-cli chat --no-interactive --require-mcp-startup \
 
 ## Connecting tasks, requirements and the board
 
-Your assistant keeps three things linked: `docs/requirements.md` (the R lines), `docs/tasks.md` (the S rows, each
-citing the R lines it serves) and your GitHub Project board. The "Tasks and the project board" section of
+Your assistant keeps ~~three~~ [two]{.chg} things linked: `docs/requirements.md` (the R lines) ~~, `docs/tasks.md` (the S rows, each
+citing the R lines it serves)~~ and your GitHub Project board[, where each task is an issue: a pull request says `Closes #<n>`
+and names the IDs it serves, and a line of `docs/requirements.md` or `docs/design.md` names the issue or pull request it
+comes from, for example `(#12)`]{.chg}. The "Tasks and the project board" section of
 `AGENTS.md` holds the rules. For them to work, the assistant needs:
 
 1. **Board link.** Add its URL to `metadata/team.yml` in your course repository, as a line `board: <URL>`. Also put
@@ -292,13 +294,9 @@ citing the R lines it serves) and your GitHub Project board. The "Tasks and the 
 3. **Permission to run `gh`.** In Kiro CLI, trust the shell tool for the session, for example
    `kiro-cli chat --trust-tools=read,write,shell`. In Claude Code, allow `gh` commands when it asks.
 
-Test it at ~~checkpoint 1~~ [Checkpoint 2]{.chg}, once your requirements and first build tasks exist. Add one S row to `docs/tasks.md` with an empty Issue cell, and prompt:
-
-> Read AGENTS.md. Sync docs/tasks.md to the project board.
-
-**It passes when** the assistant creates one issue titled `S010: …` with the label `task`, adds it to the board as
-Todo, and opens a pull request that writes the issue number into the row. Run the same prompt again: it should
-report that everything is in sync and create nothing.
+~~Test it at Checkpoint 2, once your requirements and first build tasks exist. Add one S row to `docs/tasks.md` with an empty Issue cell, and prompt: "Read AGENTS.md. Sync docs/tasks.md to the project board." It passes when the assistant creates one issue titled `S010: …` with the label `task`, adds it to the board as Todo, and opens a pull request that writes the issue number into the row.~~
+[Test it at Checkpoint 2: create one issue for a task on your board, ask your assistant to open a branch and a pull
+request for it, and check that the pull request says `Closes #<n>` and names the IDs it serves.]{.chg}
 
 The assistant never writes R lines to make a check pass. If a task needs an R line that does not exist, it stops and
 tells you.

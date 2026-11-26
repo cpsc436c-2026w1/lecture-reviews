@@ -579,9 +579,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>Repo root. Fill in the placeholders as a team in your first week and merge it through a pull request.</td>
 </tr>
 <tr class="odd">
-<td><code>docs/tasks.md</code></td>
-<td>Build steps S010, S020 …, each naming the R lines it serves and what it measures to show they hold.</td>
-<td>Use it to plan and split the work. Name the S ids in each pull request.</td>
+<td><del><code>docs/tasks.md</code></del></td>
+<td><del>Build steps S010, S020 …, each naming the R lines it serves and what it measures to show they hold.</del> <span class="chg">Not used: each task is an issue on your project board.</span></td>
+<td><del>Use it to plan and split the work. Name the S ids in each pull request.</del> <span class="chg">A pull request names the issue it closes.</span></td>
 </tr>
 </tbody>
 </table>
@@ -618,7 +618,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><code>AGENTS.md</code> is the instruction file for the coding assistant in your project. Kiro, Copilot CLI and Claude Code read it when a session starts. Claude Code reads it when the repository has no <code>CLAUDE.md</code>, from version 2.1.277; on an older version, update Claude Code. See <a href="https://code.claude.com/docs/en/memory#agents-md">AGENTS.md in the Claude Code docs</a>. It tells the assistant what it would otherwise have to guess:</p>
 <ul>
 <li><strong>What the project is:</strong> the project name, the team, the course, and the AWS lease and Region you work in.</li>
-<li><strong>Where the design lives:</strong> <code>docs/requirements.md</code>, <code>docs/design.md</code> and <code>docs/tasks.md</code> are the source of truth, and the file gives the id rules (R, D, P, S, Q) the assistant must follow when it edits them.</li>
+<li><strong>Where the design lives:</strong> <code>docs/requirements.md</code> and <code>docs/design.md</code> <del>and <code>docs/tasks.md</code></del> are the source of truth, and the file gives the id rules the assistant must follow when it edits them. <span class="chg">Tasks are issues on your project board.</span></li>
 <li><strong>Where facts come from:</strong> the assistant searches the course MCP server before it states a number or a rule about AWS, Spark or file formats, and uses the AWS Knowledge MCP for AWS documentation.</li>
 <li><strong>How work is done:</strong> the review procedure, how to run the spec checker, how pull requests are written and attributed.</li>
 <li><strong>What is off limits:</strong> no committed credentials, no public buckets, no <code>"Action": "*"</code> or <code>"Resource": "*"</code>, and no hourly-billed resources or IAM changes without asking a person first.</li>
@@ -923,7 +923,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="connecting-tasks-requirements-and-the-board" class="level2" data-number="7">
 <h2 data-number="7" class="anchored" data-anchor-id="connecting-tasks-requirements-and-the-board"><span class="header-section-number">7</span> Connecting tasks, requirements and the board</h2>
-<p>Your assistant keeps three things linked: <code>docs/requirements.md</code> (the R lines), <code>docs/tasks.md</code> (the S rows, each citing the R lines it serves) and your GitHub Project board. The “Tasks and the project board” section of <code>AGENTS.md</code> holds the rules. For them to work, the assistant needs:</p>
+<p>Your assistant keeps <del>three</del> <span class="chg">two</span> things linked: <code>docs/requirements.md</code> (the R lines) <del>, <code>docs/tasks.md</code> (the S rows, each citing the R lines it serves)</del> and your GitHub Project board<span class="chg">, where each task is an issue: a pull request says <code>Closes #&lt;n&gt;</code> and names the IDs it serves, and a line of <code>docs/requirements.md</code> or <code>docs/design.md</code> names the issue or pull request it comes from, for example <code>(#12)</code></span>. The “Tasks and the project board” section of <code>AGENTS.md</code> holds the rules. For them to work, the assistant needs:</p>
 <ol type="1">
 <li><strong>Board link.</strong> Add its URL to <code>metadata/team.yml</code> in your course repository, as a line <code>board: &lt;URL&gt;</code>. Also put it in the “Project board” line of the Project section of <code>AGENTS.md</code>, so the assistant finds it in the repository it works in.</li>
 <li><strong>GitHub CLI with the project scope.</strong> Install <a href="https://cli.github.com/">GitHub CLI</a> and sign in with <code>gh auth login</code> on each host you use. The assistant creates issues and board items through <code>gh</code>. Add the project scope:
@@ -933,11 +933,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul></li>
 <li><strong>Permission to run <code>gh</code>.</strong> In Kiro CLI, trust the shell tool for the session, for example <code>kiro-cli chat --trust-tools=read,write,shell</code>. In Claude Code, allow <code>gh</code> commands when it asks.</li>
 </ol>
-<p>Test it at <del>checkpoint 1</del> <span class="chg">Checkpoint 2</span>, once your requirements and first build tasks exist. Add one S row to <code>docs/tasks.md</code> with an empty Issue cell, and prompt:</p>
-<blockquote class="blockquote">
-<p>Read AGENTS.md. Sync docs/tasks.md to the project board.</p>
-</blockquote>
-<p><strong>It passes when</strong> the assistant creates one issue titled <code>S010: …</code> with the label <code>task</code>, adds it to the board as Todo, and opens a pull request that writes the issue number into the row. Run the same prompt again: it should report that everything is in sync and create nothing.</p>
+<p><del>Test it at Checkpoint 2, once your requirements and first build tasks exist. Add one S row to <code>docs/tasks.md</code> with an empty Issue cell, and prompt: “Read AGENTS.md. Sync docs/tasks.md to the project board.” It passes when the assistant creates one issue titled <code>S010: …</code> with the label <code>task</code>, adds it to the board as Todo, and opens a pull request that writes the issue number into the row.</del> <span class="chg">Test it at Checkpoint 2: create one issue for a task on your board, ask your assistant to open a branch and a pull request for it, and check that the pull request says <code>Closes #&lt;n&gt;</code> and names the IDs it serves.</span></p>
 <p>The assistant never writes R lines to make a check pass. If a task needs an R line that does not exist, it stops and tells you.</p>
 </section>
 <section id="setup-testing" class="level2" data-number="8">
