@@ -468,14 +468,11 @@ other than the author, and no squash merge.
    belongs together. In its description, name the IDs it touches and the check IDs it settles. If you build on
    github.com, first merge your course repository's `main` into the branch.
 2. Ask a teammate to approve it, then merge it with a merge commit, not a squash merge.
-3. Before you tag `cp2`, check that every branch with Checkpoint 2 work is merged into `main`
-   (`git branch -r --no-merged origin/main` lists none of them), that at least one check report is in
-   `docs/reviews/`, and that `uvx behave@1.3.3 --dry-run --tags="not @todo"` passes on `main`.
-4. In the last pull request before the deadline, paste the summary of
+3. In the last pull request before the deadline, paste the summary of
    `uvx behave@1.3.3 --dry-run --tags="not @todo"`.
-5. Tag the merge commit of that last pull request on `main` as `cp2`, and push the tag to your course repository on
+4. Tag the merge commit of that last pull request on `main` as `cp2`, and push the tag to your course repository on
    github.students.
-6. Check on github.students that the tag `cp2` points at that merge commit.
+5. Check on github.students that the tag `cp2` points at that merge commit.
 
 ::: {.callout-note collapse="true" title="Guidelines: Hand-In with a Pull Request and a Tag"}
 **If you build in your course repository** (github.students, remote `origin`), after your last pull request is merged:
