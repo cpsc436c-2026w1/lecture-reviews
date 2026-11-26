@@ -906,7 +906,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><code>--no-interactive</code> runs without a chat session and prints the first response.</li>
 <li><code>--trust-tools</code> approves the listed tools up front. The <code>@</code> prefix marks a tool as coming from an MCP server rather than a built-in tool (like <code>read</code> or <code>shell</code>): <code>@aws-knowledge/aws___search_documentation</code> means the <code>aws___search_documentation</code> tool from the server named <code>aws-knowledge</code> in <code>mcp.json</code>. Use <code>@aws-knowledge</code> alone to trust all of that server’s tools. Run <code>/tools</code> in an interactive session to see the exact names.</li>
-<li><code>--require-mcp-startup</code> exits with code 3 if an MCP server fails to start, so a broken setup fails loudly instead of answering from the model’s own knowledge.</li>
+<li><code>--require-mcp-startup</code> exits with code 3 if an MCP server fails to start, so a broken setup fails loudly instead of answering from the LLM’s own knowledge (LLM: large language model; we also say <em>the model</em>).</li>
 </ul>
 </section>
 </section>

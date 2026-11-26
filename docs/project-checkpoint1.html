@@ -768,7 +768,7 @@ docs/design.md <em>gets a new section "Cost" with the cost of one year in CAD</e
 <ul>
 <li>DS01 is a real data set, listed in the <code>## Data</code> section of <code>docs/design.md</code> (see <a href="#data">③, Data section</a>). A number that comes from a data set names its ID and is marked <em>measured</em> or <em>assumed</em>. Q040 and Q050 are questions in its <code>## Assumptions</code> table (see <a href="#assumptions">Making and tracking assumptions</a>).</li>
 <li>A 5-minute period holds the requests from its start up to, and not including, its end.</li>
-<li>R110 is about the answers of a model: <code>pickup-place</code> in it is an eval, a set of test cases for the model’s answers (see <a href="#evals">Testing model answers</a>). JS04 was added after the proposal, so its heading says so.</li>
+<li>R110 is about the answers of an LLM (large language model; we also say <em>the model</em>): <code>pickup-place</code> in it is an eval, a set of test cases for the LLM’s answers (see <a href="#evals">Testing LLM answers</a>). JS04 was added after the proposal, so its heading says so.</li>
 </ul>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## JS01 Operations analyst: trips requested in each zone</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -869,15 +869,15 @@ docs/design.md <em>gets a new section "Cost" with the cost of one year in CAD</e
 </div>
 </section>
 <section id="evals" class="level3">
-<h3 class="anchored" data-anchor-id="evals">Testing model answers</h3>
+<h3 class="anchored" data-anchor-id="evals">Testing LLM answers</h3>
 <p><strong>In the example repo:</strong> <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp1/docs/requirements.md?plain=1#L54-L61">docs/requirements.md, Evals</a>.</p>
-<p>If a requirement is about a model’s answers, write an entry for its <strong>eval</strong> in a section <code>## Evals</code>, with:</p>
+<p>If a requirement is about an LLM’s answers, write an entry for its <strong>eval</strong> in a section <code>## Evals</code>, with:</p>
 <ol type="1">
 <li><strong>Cases:</strong> at least 10, each with its reference value, and the file that holds them.</li>
 <li><strong>Correct when (checked by code):</strong> what a reply must be to count as correct, in terms that code can check.</li>
-<li><strong>Runs:</strong> each case 3 times, because the model’s replies vary from run to run.</li>
+<li><strong>Runs:</strong> each case 3 times, because the LLM’s replies vary from run to run.</li>
 <li><strong>Passes when:</strong> correct in at least N of the runs, so that accuracy is at least 80% (24 of 30 runs for 10 cases).</li>
-<li><strong>Model in use:</strong> the model and how the system reaches it.</li>
+<li><strong>Model in use:</strong> the LLM and how the system reaches it.</li>
 </ol>
 <p>The example’s entry:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## Evals</span></span>
@@ -1114,11 +1114,11 @@ IF a completed trip in the file has a fare that is missing, 0 or negative THEN T
 <p>BDD test scenarios are your demos of the system’s behaviour: <code>Given</code> the data, <code>When</code> something happens, <code>Then</code> the answer you know before the system runs.</p>
 <p>Write the scenarios in Gherkin, in a folder <code>features/</code> in your repository:</p>
 <ol type="1">
-<li>Create one feature file in <code>features/</code> for each job story you plan to implement, named for what the user gets, and tag its <code>Feature:</code> with every job story it serves (<code>@JS01</code>).</li>
+<li>Start with one feature file in <code>features/</code> for each job story you plan to implement; when two stories share a result, one file can serve both, named for what the user gets, and tag its <code>Feature:</code> with every job story it serves (<code>@JS01</code>).</li>
 <li>Write one <code>Rule:</code> for each requirement and for each RF that a test can check, tagged with its ID (<code>@R010</code>, <code>@RF010</code>). Each ID is one rule in one feature file. RQ IDs, and RF IDs whose line ends with <code>Read:</code> or <code>Read at Checkpoint 2:</code>, do not get a rule.</li>
 <li>Put an RF rule in the feature file of the job story that the constraint is about. When one of your requirements is how you meet the constraint, write one rule with both IDs.</li>
 <li>Write at least one <code>Example:</code> under each rule, with an answer that you know before the system runs, and a few events in a table with the event fields of your <code>## Data</code> section as columns, or name a simulated data set by its ID.</li>
-<li>For a requirement on a model’s answers, add one <strong>gate example</strong> to its rule: an example tagged <code>@eval</code> that names the eval of your <code>## Evals</code> section (see <a href="#eval-features">Features for evals</a>).</li>
+<li>For a requirement on an LLM’s answers, add one <strong>gate example</strong> to its rule: an example tagged <code>@eval</code> that names the eval of your <code>## Evals</code> section (see <a href="#eval-features">Features for evals</a>).</li>
 </ol>
 <div class="callout callout-style-default callout-note callout-titled" title="Guidelines: From Example Mapping to Feature Files">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
@@ -1204,7 +1204,7 @@ Feature: Trips requested in each zone
 <section id="eval-features" class="level3">
 <h3 class="anchored" data-anchor-id="eval-features">Features for evals</h3>
 <p><strong>In the example repo:</strong> <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp1/features/js04_pickup_place.feature">features/js04_pickup_place.feature</a>.</p>
-<p>For a requirement on a model’s answers, add one <strong>gate example</strong> to its rule: an example tagged <code>@eval</code> whose steps name the eval of your <code>## Evals</code> section, its number of cases, the runs of each case, and how many runs must be correct. Beside it, write ordinary examples, each with one input and the answer that the rule allows. Here is the example’s whole <code>features/js04_pickup_place.feature</code>:</p>
+<p>For a requirement on an LLM’s answers, add one <strong>gate example</strong> to its rule: an example tagged <code>@eval</code> whose steps name the eval of your <code>## Evals</code> section, its number of cases, the runs of each case, and how many runs must be correct. Beside it, write ordinary examples, each with one input and the answer that the rule allows. Here is the example’s whole <code>features/js04_pickup_place.feature</code>:</p>
 <pre class="gherkin"><code>@JS04 @assistant
 Feature: Pickup place of a rider's message
   Covers JS04 (support agent) in a system that includes the assistant, our extension. The assistant sends the
@@ -1241,13 +1241,13 @@ Feature: Pickup place of a rider's message
       When the support agent opens the message
       Then the system says that the message names more than one pickup place</code></pre>
 <p>The example repo has step code for this feature only, to demonstrate LLM evals. You do not write step code for Checkpoint 1.</p>
-<div class="callout callout-style-default callout-note callout-titled" title="Guidelines: Testing Model Answers">
+<div class="callout callout-style-default callout-note callout-titled" title="Guidelines: Testing LLM Answers">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Guidelines: Testing Model Answers
+<span class="screen-reader-only">Note</span>Guidelines: Testing LLM Answers
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -1259,7 +1259,7 @@ Feature: Pickup place of a rider's message
 <figcaption>Eval in words</figcaption>
 </figure>
 </div>
-<p>If your system includes a model, its answer can differ between runs, so one example with a fixed reply does not show the requirement. An <strong>eval</strong> runs the model’s part of your system on a set of cases with known answers, each case several times, and counts the runs with a correct answer. The gate example fails when fewer runs are correct than the number in its <code>Then</code>. Choose that number from the cases and runs: 10 cases run 3 times are 30 runs, and 80% of 30 is 24.</p>
+<p>If your system includes an LLM, its answer can differ between runs, so one example with a fixed reply does not show the requirement. An <strong>eval</strong> runs the LLM’s part of your system on a set of cases with known answers, each case several times, and counts the runs with a correct answer. The gate example fails when fewer runs are correct than the number in its <code>Then</code>. Choose that number from the cases and runs: 10 cases run 3 times are 30 runs, and 80% of 30 is 24.</p>
 </div>
 </div>
 </div>
@@ -1323,7 +1323,7 @@ Given the simulated data set SIM01 "rush-hour"
   sent as 2,515 deliveries: 4 requests arrive twice, and 2 arrive 6 to 10 minutes late.
 # At Checkpoint 2 its files are in sim/data/SIM01/</code></pre>
 <p><strong>Problem: A rule is tagged with an ID that is not in <code>docs/requirements.md</code>.</strong> Each rule <em>must</em> be tagged with its requirement’s ID (<code>@R010</code>), and an RF tag <em>must</em> be added only for an RF of your issue. Compare every rule tag in <code>features/</code> with the IDs in <code>docs/requirements.md</code> (step 3 of <a href="#dry-run">⑤</a>).</p>
-<p><strong>Problem: For a model’s answer, the answer is already in the input rows.</strong> <code>Given</code> <em>must</em> keep only what the system receives, and the answer you expect <em>must</em> go in <code>Then</code>, see example below:</p>
+<p><strong>Problem: For an LLM’s answer, the answer is already in the input rows.</strong> <code>Given</code> <em>must</em> keep only what the system receives, and the answer you expect <em>must</em> go in <code>Then</code>, see example below:</p>
 <pre class="nt-ex"><code># Not this: the rows already say what the model should find
 Given these rider messages:
   | message                               | <em>pickup_place</em>   |
@@ -1332,6 +1332,7 @@ Given these rider messages:
 Given the rider message "I'm outside JFK Terminal 4, door 6"
 When the support agent opens the message
 Then the pickup place is "JFK Terminal 4"</code></pre>
+<p><strong>Problem: A requirement relying on LLM answers has no gate example checking it.</strong> Its rule <em>must</em> have one example tagged <code>@eval</code> whose steps name the eval of your <code>## Evals</code> section, its number of cases, the runs of each case, and how many runs must be correct (see <a href="#eval-features">Features for evals</a>).</p>
 </div>
 </div>
 </div>

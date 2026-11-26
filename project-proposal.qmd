@@ -210,11 +210,11 @@ measure how well it works.
   combines them. You measure how often it finds the right source. It needs text in your dataset.
 - **Agent with tools under controlled autonomy.** An assistant completes a task by calling your system's tools. It
   can call only the tools you list, within limits you set on what it may do without asking.
-- **LLM eval matrix.** Your evaluation script runs models, prompts or settings on the same questions with known
-  answers. It reports accuracy and cost for each.
-- **Second provider with measured failover.** When the course model fails, requests switch to a second provider. You
+- **LLM eval matrix.** Your evaluation script runs LLMs (large language models; we also say *models*), prompts or
+  settings on the same questions with known answers. It reports accuracy and cost for each.
+- **Second provider with measured failover.** When the course LLM fails, requests switch to a second provider. You
   measure how long the switch takes.
-- **Model routing, cheap model first.** Each question goes to a small model first, and to a larger one only when
+- **Model routing, cheap model first.** Each question goes to a small LLM first, and to a larger one only when
   needed. You measure cost and accuracy.
 
 **Infrastructure and testing, 2 points**
@@ -245,11 +245,11 @@ measure how well it works.
 
 **Generative AI, 1 point** (your system needs an assistant)
 
-- **Answer or retrieval cache.** A repeated question gets a stored result instead of a new model call. Results you
+- **Answer or retrieval cache.** A repeated question gets a stored result instead of a new LLM call. Results you
   mark as never cached are always computed again.
 - **Guardrails with a red-team log.** Checks on input and output stop requests you do not allow. You run attack
   prompts and normal questions, and count what got through and what was wrongly refused.
-- **Trace analysis and alarms.** The traces link every model and tool call of one request. Alarms fire on errors,
+- **Trace analysis and alarms.** The traces link every LLM and tool call of one request. Alarms fire on errors,
   slow answers and daily cost.
 
 **Infrastructure and testing, 1 point**

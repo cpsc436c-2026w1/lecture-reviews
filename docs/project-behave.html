@@ -481,7 +481,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#ears" id="toc-ears" class="nav-link" data-scroll-target="#ears">From an EARS line to a rule and its examples</a></li>
   <li><a href="#data-in-an-example" id="toc-data-in-an-example" class="nav-link" data-scroll-target="#data-in-an-example">Data in an example</a></li>
   <li><a href="#how-to-write-a-good-example" id="toc-how-to-write-a-good-example" class="nav-link" data-scroll-target="#how-to-write-a-good-example">How to write a good example</a></li>
-  <li><a href="#testing-model-answers" id="toc-testing-model-answers" class="nav-link" data-scroll-target="#testing-model-answers">Testing model answers</a></li>
+  <li><a href="#testing-model-answers" id="toc-testing-model-answers" class="nav-link" data-scroll-target="#testing-model-answers">Testing LLM answers</a></li>
   <li><a href="#dry-run" id="toc-dry-run" class="nav-link" data-scroll-target="#dry-run">Dry run and how to read its output</a></li>
   <li><a href="#whole-example" id="toc-whole-example" class="nav-link" data-scroll-target="#whole-example">Feature files of the rides example</a></li>
   </ul></li>
@@ -562,7 +562,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td><a href="#level-2">Level 2</a></td>
 <td>Later (proposed)</td>
-<td>Use ready steps from the course kit for the simulator, DuckDB queries and evals (runs of a model’s answers on cases with known answers).</td>
+<td>Use ready steps from the course kit for the simulator, DuckDB queries and evals: runs of the answers of an LLM (large language model; we also say <em>the model</em>) on cases with known answers.</td>
 </tr>
 <tr class="even">
 <td><a href="#level-3">Level 3</a></td>
@@ -758,8 +758,8 @@ Feature: Trips requested in each zone
 </section>
 </section>
 <section id="testing-model-answers" class="level3">
-<h3 class="anchored" data-anchor-id="testing-model-answers">Testing model answers</h3>
-<p>A model’s answer can differ between runs, so one example with a fixed reply does not show a requirement on it. An <strong>eval</strong> runs the model’s part of your system on a set of cases with known answers, each case several times, and counts the runs with a correct answer. The rule gets one <strong>gate example</strong>: an example tagged <code>@eval</code> whose steps name the eval of your <code>## Evals</code> section in <code>docs/requirements.md</code>, its number of cases, the runs of each case, and how many runs must be correct; it fails when fewer runs are correct. Beside it go ordinary examples, each with one input and the answer that the rule allows, such as a message that names only a destination.</p>
+<h3 class="anchored" data-anchor-id="testing-model-answers">Testing LLM answers</h3>
+<p>An LLM’s answer can differ between runs, so one example with a fixed reply does not show a requirement on it. An <strong>eval</strong> runs the LLM’s part of your system on a set of cases with known answers, each case several times, and counts the runs with a correct answer. The rule gets one <strong>gate example</strong>: an example tagged <code>@eval</code> whose steps name the eval of your <code>## Evals</code> section in <code>docs/requirements.md</code>, its number of cases, the runs of each case, and how many runs must be correct; it fails when fewer runs are correct. Beside it go ordinary examples, each with one input and the answer that the rule allows, such as a message that names only a destination.</p>
 <pre class="gherkin"><code>@JS04 @assistant
 Feature: Pickup place of a rider's message
   Covers JS04 (support agent) in a system that includes the assistant, our extension. The assistant sends the
@@ -1228,7 +1228,7 @@ Feature: Trips requested in each zone, on AWS
 </section>
 <section id="eval-as-a-gate" class="level3">
 <h3 class="anchored" data-anchor-id="eval-as-a-gate">Eval as a gate</h3>
-<p>A part of your system that calls a language model can give a different answer on each run, so a <code>Then</code> with one fixed answer does not test it. An eval runs that part on a set of cases with known answers, each case several times. A <strong>gate</strong> is a check that fails when fewer runs are correct than the number you chose. The gate is the <code>@eval</code> example under the requirement’s rule, as at <a href="#level-0">Level 0</a>: at this level its steps run the eval, or read a saved eval run, and compare the number of correct runs with the number in its <code>Then</code>.</p>
+<p>A part of your system that calls an LLM can give a different answer on each run, so a <code>Then</code> with one fixed answer does not test it. An eval runs that part on a set of cases with known answers, each case several times. A <strong>gate</strong> is a check that fails when fewer runs are correct than the number you chose. The gate is the <code>@eval</code> example under the requirement’s rule, as at <a href="#level-0">Level 0</a>: at this level its steps run the eval, or read a saved eval run, and compare the number of correct runs with the number in its <code>Then</code>.</p>
 </section>
 <section id="live-runs-and-gates-in-l19-events-and-recipes" class="level3">
 <h3 class="anchored" data-anchor-id="live-runs-and-gates-in-l19-events-and-recipes">Live runs and gates in l19-events and recipes</h3>

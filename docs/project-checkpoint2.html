@@ -1063,7 +1063,6 @@ assert actual == expected</code></pre>
 <ol type="1">
 <li>Commit each change on a branch and open a pull request to <code>main</code> where you build, ideally one for each fix that belongs together. In its description, name the IDs it touches and the check IDs it settles. If you build on github.com, first merge your course repository’s <code>main</code> into the branch.</li>
 <li>Ask a teammate to approve it, then merge it with a merge commit, not a squash merge.</li>
-<li>Before you tag <code>cp2</code>, check that every branch with Checkpoint 2 work is merged into <code>main</code> (<code>git branch -r --no-merged origin/main</code> lists none of them), that at least one check report is in <code>docs/reviews/</code>, and that <code>uvx behave@1.3.3 --dry-run --tags="not @todo"</code> passes on <code>main</code>.</li>
 <li>In the last pull request before the deadline, paste the summary of <code>uvx behave@1.3.3 --dry-run --tags="not @todo"</code>.</li>
 <li>Tag the merge commit of that last pull request on <code>main</code> as <code>cp2</code>, and push the tag to your course repository on github.students.</li>
 <li>Check on github.students that the tag <code>cp2</code> points at that merge commit.</li>

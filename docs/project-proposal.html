@@ -723,9 +723,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><strong>Chat on the dashboard</strong> (lakehouse first or operational first). Users ask questions in plain language and get answers from your data.</li>
 <li><strong>Hybrid retrieval with an eval.</strong> Your system finds source text in two ways, word matching and embeddings, and combines them. You measure how often it finds the right source. It needs text in your dataset.</li>
 <li><strong>Agent with tools under controlled autonomy.</strong> An assistant completes a task by calling your system’s tools. It can call only the tools you list, within limits you set on what it may do without asking.</li>
-<li><strong>LLM eval matrix.</strong> Your evaluation script runs models, prompts or settings on the same questions with known answers. It reports accuracy and cost for each.</li>
-<li><strong>Second provider with measured failover.</strong> When the course model fails, requests switch to a second provider. You measure how long the switch takes.</li>
-<li><strong>Model routing, cheap model first.</strong> Each question goes to a small model first, and to a larger one only when needed. You measure cost and accuracy.</li>
+<li><strong>LLM eval matrix.</strong> Your evaluation script runs LLMs (large language models; we also say <em>models</em>), prompts or settings on the same questions with known answers. It reports accuracy and cost for each.</li>
+<li><strong>Second provider with measured failover.</strong> When the course LLM fails, requests switch to a second provider. You measure how long the switch takes.</li>
+<li><strong>Model routing, cheap model first.</strong> Each question goes to a small LLM first, and to a larger one only when needed. You measure cost and accuracy.</li>
 </ul>
 <p><strong>Infrastructure and testing, 2 points</strong></p>
 <ul>
@@ -744,9 +744,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p><strong>Generative AI, 1 point</strong> (your system needs an assistant)</p>
 <ul>
-<li><strong>Answer or retrieval cache.</strong> A repeated question gets a stored result instead of a new model call. Results you mark as never cached are always computed again.</li>
+<li><strong>Answer or retrieval cache.</strong> A repeated question gets a stored result instead of a new LLM call. Results you mark as never cached are always computed again.</li>
 <li><strong>Guardrails with a red-team log.</strong> Checks on input and output stop requests you do not allow. You run attack prompts and normal questions, and count what got through and what was wrongly refused.</li>
-<li><strong>Trace analysis and alarms.</strong> The traces link every model and tool call of one request. Alarms fire on errors, slow answers and daily cost.</li>
+<li><strong>Trace analysis and alarms.</strong> The traces link every LLM and tool call of one request. Alarms fire on errors, slow answers and daily cost.</li>
 </ul>
 <p><strong>Infrastructure and testing, 1 point</strong></p>
 <ul>
