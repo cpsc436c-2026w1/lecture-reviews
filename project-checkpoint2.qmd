@@ -3,7 +3,7 @@ title: "Checkpoint 2: review and the base running"
 format:
   html:
     toc: true
-    toc-depth: 2
+    toc-depth: 3
 ---
 
 ```{=html}
@@ -18,7 +18,7 @@ nothing blocks you from creating infrastructure.
 
 What to focus on:
 
-- run the new checks I provided on MCP, especially the budget check, and triage the results (step [①](#checks)).
+- [①](#guidance-1) run the new checks I provided on MCP, especially the budget check, and triage the results.
   - to run a check, connect the course MCP server to your coding assistant ([ilm.wiki/436c/mcp-setup](https://ilm.wiki/436c/mcp-setup))
     and ask it, for example, "Run the budget and sandbox check on our repository." It writes one file in
     `docs/reviews/` and changes nothing else in your repository or your lease; commit that file: it is your check
@@ -30,14 +30,14 @@ What to focus on:
     better (but you can hand in the answers after cp2 if you are tight on time).
   - the Checkpoint 2 check is based on the cp2 state I expect to see and on some typical errors I already know about.
   - you can also run a Well-Architected review of your design with the AWS lens for your project shape, and build a
-    first slice on AWS (steps [④](#slice) and [⑥](#review)), but don't be overwhelmed by the output, pick what makes
+    first slice on AWS (guidance [①](#review) and [③](#slice)), but don't be overwhelmed by the output, pick what makes
     sense to account for.
   - Remember, your coding assistant's LLM model generates the output, so compare the results across team members, and
     triage. Decisions are on you!
   - I expect to see at least one check report in the repo, and some evidence of triage and decisions in
     `requirements` and `design` made based on the report (changes in both; decision lines go in `requirements`) --
     you don't have to fix everything!
-  - generate simulated data and create behave scenarios at least for some of your key job stories and requirements.
+- [②](#guidance-2) generate simulated data and create behave scenarios at least for some of your key job stories and requirements.
   - your choice how to pace yourself before cp2: I expect to see at least (just?) **one JS and a (sub)set of
     requirements for it** at least partially covered at cp2, but realistically it would be good to cover more.
   - use B5T2 as an example, and the guidelines included in MCP if they help to generate data, but essentially, how you
@@ -47,11 +47,11 @@ What to focus on:
     S3 bucket, with paths in the behave scenarios; create such a bucket in your S3 account regional namespace (its
     name ends in `-<account-id>-ca-central-1-an`), so that no other account can take or reuse its name.
   - we should be able to do a not-failing dry run on implemented scenario(-s).
-- what you can build is up to you; I would set up at least a very small setup, maybe helping you to run your
+- [③](#guidance-3) what you can build is up to you; I would set up at least a very small setup, maybe helping you to run your
   experiment (no report expected yet).
-- I would also focus on surfacing as many questions and issues as possible before our Dec 3 project clinic, so focus
+- ④ I would also focus on surfacing as many questions and issues as possible before our Dec 3 project clinic, so focus
   on what's uncertain vs what's easy, if you can.
-- With the tag `cp2`, I expect to see some changes based on the guidance above in `requirements`, `design`, and behave
+- [⑤](#guidance-5) With the tag `cp2`, I expect to see some changes based on the guidance above in `requirements`, `design`, and behave
   scenarios (feature and steps folders), and at least one check report in the repo.
 - You should continue to use issues and PRs in your repo and mention them in your requirements and design docs.
 - Everything else on this page should help you to focus on the right things, but you can sensibly change stuff.
@@ -118,19 +118,9 @@ hand-in, written for the rides case. Each file name below links to it in that st
 
 **At Checkpoint 1 your files said what you will build; at Checkpoint 2 some of it runs.**
 
-## Checklist
+## Guidance for ①: the checks and their triage {#guidance-1}
 
-- ① [Run the checks and triage the results](#checks).
-- ② [Generate your simulated data](#simulate).
-- ③ [Write the step code](#steps).
-- ④ [Build a first slice on AWS](#slice) (if you build).
-- ⑤ [Answer your requests and run your constraints](#feedback) (RQ answers can come after Checkpoint 2).
-- ⑥ [Review your design](#review) (optional).
-- ⑦ [Check before you hand in](#check).
-- ⑧ [Hand in with a pull request and the tag cp2](#tag).
-
-
-## ① Run the checks and triage the results {#checks}
+### Run a check and triage its report {#checks}
 
 **In the example repo:** [docs/reviews/budget-check.md](https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/reviews/budget-check.md)
 and the decision lines in [docs/requirements.md](https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/requirements.md).
@@ -164,7 +154,71 @@ one pull request for each fix that belongs together, with the check ID in the pu
 in your decision.
 :::
 
-## ② Generate your simulated data {#simulate}
+### Requests (RQ) and constraints (RF) {#feedback}
+
+**In the example repo:** [docs/requirements.md, Stakeholder input](https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/requirements.md).
+
+At Checkpoint 1 you listed every RF and RQ of your feedback issue under `## Stakeholder input`. Now:
+
+| From the proposal feedback issue | What to do for Checkpoint 2 |
+|---|---|
+| **Request** (RQ …) | Together with the budget check, it helps you plan; the answer can come after Checkpoint 2. `docs/requirements.md`: its `Reply:` gives the answer: the calculation with its numbers and where they come from, or the test and its result. Its `Read at Checkpoint 2:` becomes `Read:`, and what it names exists |
+| **Request** that starts with `Fix:` | nothing new: it keeps its `Done in docs/proposal.md, section <n>.` |
+| **Constraint** (RF …) that a test can check | `features/`: the rule you wrote at Checkpoint 1 now has step code, and its examples run. `docs/requirements.md`: its line keeps its `[Scenario](…)` |
+| **Constraint** we can't test | `docs/requirements.md`: its `Reply:` says, in one or two sentences, how your design meets it, and its `Read at Checkpoint 2:` becomes `Read:`, naming what staff now read |
+
+: {tbl-colwidths="[38,62]"}
+
+::: {.callout-tip collapse="true" title="Typical problems: requests and constraints"}
+**Problem: An answered RQ's `Reply:` still says what you will do.** When you answer it, it *must* give the answer.
+
+**Problem: The rule of an RF that a test can check has no step code.** Its examples *must* run, and its line *must*
+keep its `[Scenario](…)`.
+
+**Problem: A line still says `Read at Checkpoint 2:`, or names a section that does not exist.** It *must* say `Read:`,
+and what it names *must* be in the file it names.
+:::
+
+### A Well-Architected review (optional) {#review}
+
+**In the example repo:** [docs/review.md](https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/review.md).
+
+A Well-Architected review asks questions about your design, one pillar at a time (operational excellence,
+security, reliability, performance efficiency, cost optimization, sustainability), and each answer can lead to a
+change. This step is optional at Checkpoint 2: don't be overwhelmed by the output, pick what makes sense to account
+for. Choose three to five questions from the lens for your shape:
+
+| Your project | Lens |
+|---|---|
+| lakehouse first, streaming, change data capture to the lake | [Analytics Lens](https://docs.aws.amazon.com/wellarchitected/latest/analytics-lens/analytics-lens.html) |
+| operational first | [Serverless Applications Lens](https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/welcome.html), and the [DynamoDB Lens](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-wal.html) if you use DynamoDB |
+| generative AI first, or an LLM in your system (chat, model routing, an agent, retrieval) | [Generative AI Lens](https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/generative-ai-lens.html) |
+
+: {tbl-colwidths="[40,60]"}
+
+Write `docs/review.md` with one section for each question:
+
+- **Question** and its best-practice ID (for example `COST01-BP09`), with a link;
+- **Now:** what your design does, with the file and line;
+- **Risk:** what could go wrong, in your system's words;
+- **Change:** what you changed, or why you change nothing, and where in the repository the change is.
+
+If you run it, at least one question leads to a change you make. A coding assistant can read the lens pages
+through the AWS Knowledge server (`https://knowledge-mcp.global.api.aws`, no account needed); use it to read and
+review, not to create resources.
+
+::: {.callout-tip collapse="true" title="Typical problems: the review"}
+**Problem: A question has no best-practice ID.** It *must* name the ID and link the lens page it comes from.
+
+**Problem: `Now:` describes the design in general.** It *must* name the file and line that do what it says.
+
+**Problem: Every question ends with "no change".** At least one question *must* lead to a change you made, and
+`docs/design.md` *must* show it.
+:::
+
+## Guidance for ②: simulated data and behave scenarios {#guidance-2}
+
+### Simulated data {#simulate}
 
 **In the example repo:** [sim/](https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/sim) and its data
 [sim/data/SIM01/](https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/sim/data/SIM01).
@@ -199,9 +253,16 @@ examples show your system working on it.
    account can take or reuse its name; if your lease refuses to make it public, keep the files in the repository:
 
    ```default
-   aws s3api create-bucket --bucket <team-id>-sim-<account-id>-ca-central-1-an --bucket-namespace account-regional \
+   B=<team-id>-sim-<account-id>-ca-central-1-an
+   aws s3api create-bucket --bucket $B --bucket-namespace account-regional \
        --region ca-central-1 --create-bucket-configuration LocationConstraint=ca-central-1
+   # allow a public policy on this bucket only, then make only sim/ readable by anyone
+   aws s3api put-public-access-block --bucket $B --region ca-central-1 --public-access-block-configuration \
+       BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=false,RestrictPublicBuckets=false
+   aws s3api put-bucket-policy --bucket $B --region ca-central-1 --policy \
+       '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":"*","Action":"s3:GetObject","Resource":"arn:aws:s3:::'$B'/sim/*"}]}'
    ```
+   <!--src: measured:s3-public-test 2026-11-26 (ops/laptop/s3-public-test.sh, manager permission set, 940482406111: all steps OK, anonymous read HTTP 200, cleaned up) -->
 7. Do the same for every other data set your scenarios use.
 
 ::: {.callout-note collapse="true" title="Guidelines: From the Data Bullet to Generated Files"}
@@ -244,7 +305,7 @@ cfg, rng = DATA_SETS[sim_id], random.Random(SEED)</code></pre>
 hold; when one is not, fix the generator or the bullet, so that both say the same thing.
 :::
 
-## ③ Write the step code {#steps}
+### Step code and the dry run {#steps}
 
 **In the example repo:** [features/steps/](https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/features/steps).
 
@@ -288,7 +349,9 @@ uvx behave@1.3.3 --dry-run --tags=@todo           # what is still to implement
 ```
 :::
 
-## ④ Build a first slice on AWS (if you build) {#slice}
+## Guidance for ③: what you build {#guidance-3}
+
+### A first slice on AWS {#slice}
 
 **In the example repo:** [scripts/](https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/scripts),
 [src/](https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/src),
@@ -347,69 +410,9 @@ it cost, then the rest.
 your team can create it again and `scripts/teardown.sh` can delete it.
 :::
 
-## ⑤ Answer your requests and run your constraints {#feedback}
+## Guidance for ⑤: the hand-in {#guidance-5}
 
-**In the example repo:** [docs/requirements.md, Stakeholder input](https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/requirements.md).
-
-At Checkpoint 1 you listed every RF and RQ of your feedback issue under `## Stakeholder input`. Now:
-
-| From the proposal feedback issue | What to do for Checkpoint 2 |
-|---|---|
-| **Request** (RQ …) | Together with the budget check, it helps you plan; the answer can come after Checkpoint 2. `docs/requirements.md`: its `Reply:` gives the answer: the calculation with its numbers and where they come from, or the test and its result. Its `Read at Checkpoint 2:` becomes `Read:`, and what it names exists |
-| **Request** that starts with `Fix:` | nothing new: it keeps its `Done in docs/proposal.md, section <n>.` |
-| **Constraint** (RF …) that a test can check | `features/`: the rule you wrote at Checkpoint 1 now has step code, and its examples run. `docs/requirements.md`: its line keeps its `[Scenario](…)` |
-| **Constraint** we can't test | `docs/requirements.md`: its `Reply:` says, in one or two sentences, how your design meets it, and its `Read at Checkpoint 2:` becomes `Read:`, naming what staff now read |
-
-: {tbl-colwidths="[38,62]"}
-
-::: {.callout-tip collapse="true" title="Typical problems: requests and constraints"}
-**Problem: An answered RQ's `Reply:` still says what you will do.** When you answer it, it *must* give the answer.
-
-**Problem: The rule of an RF that a test can check has no step code.** Its examples *must* run, and its line *must*
-keep its `[Scenario](…)`.
-
-**Problem: A line still says `Read at Checkpoint 2:`, or names a section that does not exist.** It *must* say `Read:`,
-and what it names *must* be in the file it names.
-:::
-
-## ⑥ Review your design (optional) {#review}
-
-**In the example repo:** [docs/review.md](https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/review.md).
-
-A Well-Architected review asks questions about your design, one pillar at a time (operational excellence,
-security, reliability, performance efficiency, cost optimization, sustainability), and each answer can lead to a
-change. This step is optional at Checkpoint 2: don't be overwhelmed by the output, pick what makes sense to account
-for. Choose three to five questions from the lens for your shape:
-
-| Your project | Lens |
-|---|---|
-| lakehouse first, streaming, change data capture to the lake | [Analytics Lens](https://docs.aws.amazon.com/wellarchitected/latest/analytics-lens/analytics-lens.html) |
-| operational first | [Serverless Applications Lens](https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/welcome.html), and the [DynamoDB Lens](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-wal.html) if you use DynamoDB |
-| generative AI first, or an LLM in your system (chat, model routing, an agent, retrieval) | [Generative AI Lens](https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/generative-ai-lens.html) |
-
-: {tbl-colwidths="[40,60]"}
-
-Write `docs/review.md` with one section for each question:
-
-- **Question** and its best-practice ID (for example `COST01-BP09`), with a link;
-- **Now:** what your design does, with the file and line;
-- **Risk:** what could go wrong, in your system's words;
-- **Change:** what you changed, or why you change nothing, and where in the repository the change is.
-
-If you run it, at least one question leads to a change you make. A coding assistant can read the lens pages
-through the AWS Knowledge server (`https://knowledge-mcp.global.api.aws`, no account needed); use it to read and
-review, not to create resources.
-
-::: {.callout-tip collapse="true" title="Typical problems: the review"}
-**Problem: A question has no best-practice ID.** It *must* name the ID and link the lens page it comes from.
-
-**Problem: `Now:` describes the design in general.** It *must* name the file and line that do what it says.
-
-**Problem: Every question ends with "no change".** At least one question *must* lead to a change you made, and
-`docs/design.md` *must* show it.
-:::
-
-## ⑦ Check before you hand in {#check}
+### Check before you hand in {#check}
 
 **In the example repo:** [DEMO.md, Checkpoint 2](https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/DEMO.md) (the
 commands and their output).
@@ -428,11 +431,11 @@ commands and their output).
    demo), write a decision line under `## Decisions` naming it, with who owns it and when it is deleted.
 5. Your cost so far is within your team's budget: check it in Cost Explorer, and run the
    [budget and sandbox check](project-budget-check.qmd) again before each deploy and after you add a resource.
-6. Every decision line is in `docs/requirements.md` ([step ①](#checks)).
+6. Every decision line is in `docs/requirements.md` ([triage and decision lines](#checks)).
 7. Run the checks one last time after your last fix, and commit at least one check report (`docs/reviews/<check>.md`).
 
 
-## ⑧ Hand in with a pull request and the tag cp2 {#tag}
+### Hand in with a pull request and the tag cp2 {#tag}
 
 **In the example repo:** [the tag cp2](https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/).
 
