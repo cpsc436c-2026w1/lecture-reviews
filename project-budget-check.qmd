@@ -227,23 +227,9 @@ it is created and deleted. Put the delete command for each resource in `scripts/
 your team keeps between runs (for example the data in S3). Then run the check again: a later run shows what is
 gone.
 
-When your team decides not to change a line the check listed, write one line (not wrapped) under it:
-
-```
-Decision (<check> <question id>, PR #<n>): keep | later, <checkpoint> | check is wrong. <reason>
-```
-
-For a row of the Resources table, put it as its own paragraph after the table and name the row; in a script, as a
-`#` comment above the line. For example, after the Resources table:
-
-```
-Decision (budget-check BC010, row tXX-product-edits, PR #34): later, Checkpoint 2. Created only for a replay run; teardown.sh deletes it.
-```
-
-The check keeps the item on its list, with your reason beside it, so a teammate who changes that row later still
-sees it. Ideally you would group pull requests: one pull request for each fix that belongs together, with the check
-ID in the pull request and the pull request number in your decision. "Check is wrong" tells the course staff a check
-needs fixing.
+If your team decides not to change something this check lists, record it as a decision line, as
+[Checkpoint 2, step ⑥](project-checkpoint2.qmd#check) describes. The check keeps the item on its list with your
+reason beside it.
 
 ## When to run it again {#again}
 
