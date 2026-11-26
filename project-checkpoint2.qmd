@@ -366,6 +366,9 @@ actual = show(context.counts, zone, start_of(start))
 assert actual == expected</code></pre>
 ```
 
+**Problem: No job story has an implemented scenario.** At least one job story and a (sub)set of its requirements
+*must* have scenarios with step code that run on your simulated data; scenarios that all carry `@todo` do not count.
+
 **Problem: An example is changed so that it passes.** When an example shows a real fault in your code, the example
 *must* stay as it is and the code *must* be fixed; if the requirement itself was wrong, change the requirement first,
 then the example.
@@ -465,6 +468,15 @@ commands and their output).
 6. Every decision line is in `docs/requirements.md` ([triage and decision lines](#checks)).
 7. Run the checks one last time after your last fix, and commit at least one check report (`docs/reviews/<check>.md`).
 8. Your requirements and design name the issues and pull requests they come from, for example `(#12)`.
+
+::: {.callout-tip collapse="true" title="Typical problems: required updates"}
+**Problem: The requirements and the design name no issue or pull request.** A change your team made for Checkpoint 2
+*should* name the issue or pull request it comes from, so that the teaching team can follow why it changed.
+
+**Problem: The tag shows no change since Checkpoint 1 in the files the plan names.** At `cp2`, `docs/requirements.md`,
+`docs/design.md` and the behave scenarios (`features/` and `features/steps/`) *must* show the changes of blocks ①
+and ②, and at least one check report *must* be in `docs/reviews/`.
+:::
 
 
 ### Hand in with a pull request and the tag cp2 {#tag}
