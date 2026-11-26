@@ -29,9 +29,6 @@ What to focus on:
   - together with the budget check, consider the RQs I left in your feedback issue: they should help you to plan
     better (but you can hand in the answers after cp2 if you are tight on time).
   - the Checkpoint 2 check is based on the cp2 state I expect to see and on some typical errors I already know about.
-  - you can also run a Well-Architected review of your design with the AWS lens for your project shape, and build a
-    first slice on AWS (guidance [①](#review) and [③](#slice)), but don't be overwhelmed by the output, pick what makes
-    sense to account for.
   - Remember, your coding assistant's LLM model generates the output, so compare the results across team members, and
     triage. Decisions are on you!
   - I expect to see at least one check report in the repo, and some evidence of triage and decisions in
@@ -67,8 +64,7 @@ What to focus on:
 ## What changes in your repository {#repo}
 
 The [example repository](https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2) at tag `cp2` is a whole Checkpoint 2
-hand-in, written for the rides case; it goes further than what you need for Tuesday (it also has the slice on AWS and
-the Well-Architected review). Compare it with its tag [cp1](https://github.com/cpsc436c-2026w1/cp1-example/tree/cp1) to see what changes between the
+hand-in, written for the rides case; it goes further than what you need for Tuesday (it also has the slice on AWS). Compare it with its tag [cp1](https://github.com/cpsc436c-2026w1/cp1-example/tree/cp1) to see what changes between the
 checkpoints. You can reasonably deviate from the example, as long as all requirements from this page are satisfied.
 Each file name below links to it in that state.
 
@@ -90,7 +86,6 @@ Each file name below links to it in that state.
 <tr><td class="t">your-repository/</td><td><span class="add">add</span></td><td>tag <code>cp2</code> on <code>main</code>, after your last pull request is merged</td><td class="tr"></td></tr>
 <tr><td class="t">├── docs/</td><td></td><td></td><td class="tr"></td></tr>
 <tr><td class="t">│&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/docs/reviews">reviews/</a></td><td><span class="add">add</span></td><td>at least one check report: the file a check writes, such as <code>budget-check.md</code></td><td class="tr">each line names its file and line; your decision lines name the check and question ID</td></tr>
-<tr><td class="t">│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/reviews/well-architected.md">well-architected.md</a></td><td><span class="opt">optional</span></td><td>your Well-Architected review: the questions, your answers, and the change</td><td class="tr">names the best-practice ID of each question and the file and line it is about</td></tr>
 <tr><td class="t">│&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/requirements.md">requirements.md</a></td><td><span class="chg">change</span></td><td>what your triage changed; <code>Decision (…)</code> lines for the check findings your team decides not to change; RQ answers when you have them (they can come after Checkpoint 2)</td><td class="tr">a decision line names the check, the question ID and the pull request</td></tr>
 <tr><td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/design.md">design.md</a></td><td><span class="chg">change</span></td><td>what your triage changed; if you build, the rows of <code>## Resources</code> say what you deployed</td><td class="tr">each row of <code>## Resources</code> names the script that creates the resource and the requirements it serves (for example R010, RF050)</td></tr>
 <tr><td class="t">├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/evidence">evidence/</a></td><td><span class="opt">optional</span></td><td>if you deploy: what the deployed slice returned, kept before the clean-up</td><td class="tr"></td></tr>
@@ -186,43 +181,6 @@ keep its `[Scenario](…)`.
 
 **Problem: A line still says `Read at Checkpoint 2:`, or names a section that does not exist.** It *must* say `Read:`,
 and what it names *must* be in the file it names.
-:::
-
-### A Well-Architected review (optional) {#review}
-
-**In the example repo:** [docs/reviews/well-architected.md](https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/reviews/well-architected.md).
-
-A Well-Architected review asks questions about your design, one pillar at a time (operational excellence,
-security, reliability, performance efficiency, cost optimization, sustainability), and each answer can lead to a
-change. This step is optional at Checkpoint 2: don't be overwhelmed by the output, pick what makes sense to account
-for. Choose three to five questions from the lens for your shape:
-
-| Your project | Lens |
-|---|---|
-| lakehouse first, streaming, change data capture to the lake | [Analytics Lens](https://docs.aws.amazon.com/wellarchitected/latest/analytics-lens/analytics-lens.html) |
-| operational first | [Serverless Applications Lens](https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/welcome.html), and the [DynamoDB Lens](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-wal.html) if you use DynamoDB |
-| generative AI first, or an LLM in your system (chat, model routing, an agent, retrieval) | [Generative AI Lens](https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/generative-ai-lens.html) |
-
-: {tbl-colwidths="[40,60]"}
-
-Write `docs/reviews/well-architected.md`, next to the check reports, with one section for each question:
-
-- **Question** and its best-practice ID (for example `COST01-BP09`), with a link;
-- **Now:** what your design does, with the file and line;
-- **Risk:** what could go wrong, in your system's words;
-- **Change:** what you changed, or why you change nothing, and where in the repository the change is.
-
-If you run it, at least one question leads to a change you make. A coding assistant can read the lens pages
-through the AWS Knowledge server (`https://knowledge-mcp.global.api.aws`, no account needed); use it to read and
-review, not to create resources.
-
-::: {.callout-tip collapse="true" title="Typical problems: the review"}
-**Problem: A question has no best-practice ID.** It *must* name the ID and link the lens page it comes from.
-
-**Problem: `Now:` describes the design in general.** It *must* name the file and line that do what it says.
-
-**Problem: Every question ends with "no change".** At least one question *must* lead to a change you made, and
-`docs/design.md` *must* show it.
 :::
 
 ## ② Simulated data and demo scenarios {#guidance-2}
@@ -548,8 +506,6 @@ about your design, your requirements and scenarios. Every team member should kno
   when a requirement is about a problem in the data, it also holds injected faults.
 - **Truth:** the folder `_truth/` inside a data set's folder: the events as they happened and any faults the generator
   added. An example's expected answer can come from it.
-- **Well-Architected review:** questions from an AWS lens asked of your design, each with a best-practice ID, your
-  answer and what changed.
 - **Decision line:** one line in `docs/requirements.md` that says what your team decided about something a check
   listed: keep, later, or check is wrong, with the reason.
 - **Clean-up:** `scripts/teardown.sh`, which deletes everything your scripts create.
