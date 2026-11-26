@@ -18,12 +18,12 @@ nothing blocks you from creating infrastructure.
 
 What to focus on:
 
-- [①](#guidance-1) run the new checks I provided on MCP, especially the budget check, and triage the results.
+- [①](#guidance-1) **Design and requirement checks:** run the new checks I provided on MCP, especially the budget check, and triage the results.
   - to run a check, connect the course MCP server to your coding assistant ([ilm.wiki/436c/mcp-setup](https://ilm.wiki/436c/mcp-setup))
     and ask it, for example, "Run the budget and sandbox check on our repository." It writes one file in
     `docs/reviews/` and changes nothing else in your repository or your lease; commit that file: it is your check
     report.
-  - if you want to work without an LLM assistant, the content of the MCP checks is in the repo ... (link): open your
+  - if you want to work without an LLM assistant, the content of the MCP checks is in the repo [mcp-static-content](https://github.students.cs.ubc.ca/CPSC436C-2026W-T1/mcp-static-content): open your
     milestone's folder and go through its questions by hand.
   - the budget check is important because you don't want to miss something putting you out of budget soon!
   - together with the budget check, consider the RQs I left in your feedback issue: they should help you to plan
@@ -37,7 +37,7 @@ What to focus on:
   - I expect to see at least one check report in the repo, and some evidence of triage and decisions in
     `requirements` and `design` made based on the report (changes in both; decision lines go in `requirements`) --
     you don't have to fix everything!
-- [②](#guidance-2) generate simulated data and create behave scenarios at least for some of your key job stories and requirements.
+- [②](#guidance-2) **Simulated data and demo scenarios:** generate simulated data and create behave scenarios at least for some of your key job stories and requirements.
   - your choice how to pace yourself before cp2: I expect to see at least (just?) **one JS and a (sub)set of
     requirements for it** at least partially covered at cp2, but realistically it would be good to cover more.
   - use B5T2 as an example, and the guidelines included in MCP if they help to generate data, but essentially, how you
@@ -47,13 +47,13 @@ What to focus on:
     S3 bucket, with paths in the behave scenarios; create such a bucket in your S3 account regional namespace (its
     name ends in `-<account-id>-ca-central-1-an`), so that no other account can take or reuse its name.
   - we should be able to do a not-failing dry run on implemented scenario(-s).
-- [③](#guidance-3) what you can build is up to you; I would set up at least a very small setup, maybe helping you to run your
+- [③](#guidance-3) **Implementation:** what you can build is up to you; I would set up at least a very small setup, maybe helping you to run your
   experiment (no report expected yet).
-- ④ I would also focus on surfacing as many questions and issues as possible before our Dec 3 project clinic, so focus
-  on what's uncertain vs what's easy, if you can.
-- [⑤](#guidance-5) With the tag `cp2`, I expect to see some changes based on the guidance above in `requirements`, `design`, and behave
+- [④](#guidance-4) **Required updates:** With the tag `cp2`, I expect to see some changes based on the guidance above in `requirements`, `design`, and behave
   scenarios (feature and steps folders), and at least one check report in the repo.
-- You should continue to use issues and PRs in your repo and mention them in your requirements and design docs.
+  - You should continue to use issues and PRs in your repo and mention them in your requirements and design docs.
+- [⑤](#guidance-5) **Getting ready for the project clinic:** I would also focus on surfacing as many questions and issues as possible before our Dec 3 project clinic, so focus
+  on what's uncertain vs what's easy, if you can.
 - Everything else on this page should help you to focus on the right things, but you can sensibly change stuff.
 - Recipes with the code should be ready by Wed Nov 25 EoD; before that, you can start on checking and updating
   requirements.
@@ -118,7 +118,7 @@ hand-in, written for the rides case. Each file name below links to it in that st
 
 **At Checkpoint 1 your files said what you will build; at Checkpoint 2 some of it runs.**
 
-## Guidance for ①: the checks and their triage {#guidance-1}
+## ① Design and requirement checks {#guidance-1}
 
 ### Run a check and triage its report {#checks}
 
@@ -128,7 +128,7 @@ and the decision lines in [docs/requirements.md](https://github.com/cpsc436c-202
 1. Run the budget and sandbox check before you create anything in your lease (what it looks for:
    [budget and sandbox check](project-budget-check.qmd)), and the Checkpoint 2 check. With the course MCP server
    connected, ask your assistant, for example, "Run the budget and sandbox check on our repository." Without an
-   assistant, go through the same questions by hand from the review repository (link).
+   assistant, go through the same questions by hand from the repository [mcp-static-content](https://github.students.cs.ubc.ca/CPSC436C-2026W-T1/mcp-static-content).
 2. Each check writes one file in `docs/reviews/`, such as `docs/reviews/budget-check.md`, and changes nothing else.
    Commit at least one of these files.
 3. Compare the reports of two team members who ran the same check: the assistant's model writes them, so they
@@ -152,6 +152,26 @@ The answers are `keep`, `later, <checkpoint>` or `check is wrong`. The checks ke
 reason beside it, and `tools/check_trace.py` lists every decision as DECISION. Ideally you would group pull requests:
 one pull request for each fix that belongs together, with the check ID in the pull request and the pull request number
 in your decision.
+:::
+
+::: {.callout-tip collapse="true" title="Typical problems: checks and triage"}
+**Problem: The team changes everything one report listed.** Your assistant's model writes the report, and two runs on
+the same files list different lines. The team *must* compare the reports of two members and decide: change what you
+agree is a problem, and write a decision line for what you keep.
+
+**Problem: A decision line is in `docs/design.md`.** Every decision line *must* be in `docs/requirements.md`, under the
+requirement it concerns or under `## Decisions` naming its item; `tools/check_trace.py` reports one anywhere else, see
+example below:
+
+```{=html}
+<pre class="nt-ex"><code># Not this, in docs/design.md under ## Resources
+<em>- Decision (budget-check BC010, t00-trip-events, PR #3): keep. …</em>
+# This, in docs/requirements.md under ## Decisions
+- Decision (budget-check BC010, t00-trip-events, PR #3): keep. …</code></pre>
+```
+
+**Problem: No check report is in the repository at the tag.** At least one `docs/reviews/<check>.md` *must* be
+committed.
 :::
 
 ### Requests (RQ) and constraints (RF) {#feedback}
@@ -216,7 +236,7 @@ review, not to create resources.
 `docs/design.md` *must* show it.
 :::
 
-## Guidance for ②: simulated data and behave scenarios {#guidance-2}
+## ② Simulated data and demo scenarios {#guidance-2}
 
 ### Simulated data {#simulate}
 
@@ -301,6 +321,16 @@ cfg, rng = DATA_SETS[sim_id], random.Random(SEED)</code></pre>
 {"fault": "duplicate", "event_id": "ev-000358"}</code></pre>
 ```
 
+**Problem: A scenario reads data only from a team member's laptop or a private bucket.** The data *must* be in the
+repository, or at a public S3 path written in the scenario, see example below:
+
+```{=html}
+<pre class="nt-ex"><code># Not this
+Given the simulated data set SIM01 at <em>"/Users/ana/Downloads/sim01"</em>
+# This (features/js01_trips_per_zone.feature of the example: SIM01 is in sim/data/SIM01/)
+Given the simulated data set SIM01 "rush-hour"</code></pre>
+```
+
 **Problem: The files do not match the numbers in the bullet.** Every number of the bullet *must* be what the files
 hold; when one is not, fix the generator or the bullet, so that both say the same thing.
 :::
@@ -349,7 +379,7 @@ uvx behave@1.3.3 --dry-run --tags=@todo           # what is still to implement
 ```
 :::
 
-## Guidance for ③: what you build {#guidance-3}
+## ③ Implementation {#guidance-3}
 
 ### A first slice on AWS {#slice}
 
@@ -359,7 +389,8 @@ uvx behave@1.3.3 --dry-run --tags=@todo           # what is still to implement
 [evidence/](https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/evidence) and
 [docs/design.md, Resources](https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/design.md).
 
-What you build is up to you; this step is for a team that deploys a first slice now. Before you create anything in
+What you build is up to you. A very small setup is enough, for example one that helps you run your experiment (no
+report on it is expected yet); this section is for a team that deploys a first slice now. Before you create anything in
 your team's lease, run the
 [budget and sandbox check](project-budget-check.qmd) on your design and scripts.
 
@@ -410,7 +441,7 @@ it cost, then the rest.
 your team can create it again and `scripts/teardown.sh` can delete it.
 :::
 
-## Guidance for ⑤: the hand-in {#guidance-5}
+## ④ Required updates {#guidance-4}
 
 ### Check before you hand in {#check}
 
@@ -433,6 +464,7 @@ commands and their output).
    [budget and sandbox check](project-budget-check.qmd) again before each deploy and after you add a resource.
 6. Every decision line is in `docs/requirements.md` ([triage and decision lines](#checks)).
 7. Run the checks one last time after your last fix, and commit at least one check report (`docs/reviews/<check>.md`).
+8. Your requirements and design name the issues and pull requests they come from, for example `(#12)`.
 
 
 ### Hand in with a pull request and the tag cp2 {#tag}
@@ -494,6 +526,17 @@ git push -f origin cp2
 git push -f course cp2      # if you build on github.com
 ```
 :::
+
+## ⑤ Getting ready for the project clinic {#guidance-5}
+
+The clinic is on Thursday 3 December, in class: we discuss and debug your project, and ask a couple of light questions
+about your design, your requirements and scenarios. Every team member should know them well.
+
+1. Before the clinic, write each open question or problem as an issue in your repository: what you tried, what
+   happened, and where you are stuck.
+2. Put what is uncertain first: a part you have not tried yet, a check result your team disagrees on, a cost you
+   cannot estimate yet.
+3. Bring the list of issue numbers to the clinic.
 
 ## Words used on this page {#words}
 

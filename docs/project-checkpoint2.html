@@ -471,17 +471,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
-  <ul class="collapse">
+  <ul>
   <li><a href="#repo" id="toc-repo" class="nav-link active" data-scroll-target="#repo">What changes in your repository</a></li>
-  <li><a href="#checklist" id="toc-checklist" class="nav-link" data-scroll-target="#checklist">Checklist</a></li>
-  <li><a href="#checks" id="toc-checks" class="nav-link" data-scroll-target="#checks">① Run the checks and triage the results</a></li>
-  <li><a href="#simulate" id="toc-simulate" class="nav-link" data-scroll-target="#simulate">② Generate your simulated data</a></li>
-  <li><a href="#steps" id="toc-steps" class="nav-link" data-scroll-target="#steps">③ Write the step code</a></li>
-  <li><a href="#slice" id="toc-slice" class="nav-link" data-scroll-target="#slice">④ Build a first slice on AWS (if you build)</a></li>
-  <li><a href="#feedback" id="toc-feedback" class="nav-link" data-scroll-target="#feedback">⑤ Answer your requests and run your constraints</a></li>
-  <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">⑥ Review your design (optional)</a></li>
-  <li><a href="#check" id="toc-check" class="nav-link" data-scroll-target="#check">⑦ Check before you hand in</a></li>
-  <li><a href="#tag" id="toc-tag" class="nav-link" data-scroll-target="#tag">⑧ Hand in with a pull request and the tag cp2</a></li>
+  <li><a href="#guidance-1" id="toc-guidance-1" class="nav-link" data-scroll-target="#guidance-1">Guidance for ①: the checks and their triage</a>
+  <ul class="collapse">
+  <li><a href="#checks" id="toc-checks" class="nav-link" data-scroll-target="#checks">Run a check and triage its report</a></li>
+  <li><a href="#feedback" id="toc-feedback" class="nav-link" data-scroll-target="#feedback">Requests (RQ) and constraints (RF)</a></li>
+  <li><a href="#review" id="toc-review" class="nav-link" data-scroll-target="#review">A Well-Architected review (optional)</a></li>
+  </ul></li>
+  <li><a href="#guidance-2" id="toc-guidance-2" class="nav-link" data-scroll-target="#guidance-2">Guidance for ②: simulated data and behave scenarios</a>
+  <ul class="collapse">
+  <li><a href="#simulate" id="toc-simulate" class="nav-link" data-scroll-target="#simulate">Simulated data</a></li>
+  <li><a href="#steps" id="toc-steps" class="nav-link" data-scroll-target="#steps">Step code and the dry run</a></li>
+  </ul></li>
+  <li><a href="#guidance-3" id="toc-guidance-3" class="nav-link" data-scroll-target="#guidance-3">Guidance for ③: what you build</a>
+  <ul class="collapse">
+  <li><a href="#slice" id="toc-slice" class="nav-link" data-scroll-target="#slice">A first slice on AWS</a></li>
+  </ul></li>
+  <li><a href="#guidance-5" id="toc-guidance-5" class="nav-link" data-scroll-target="#guidance-5">Guidance for ⑤: the hand-in</a>
+  <ul class="collapse">
+  <li><a href="#check" id="toc-check" class="nav-link" data-scroll-target="#check">Check before you hand in</a></li>
+  <li><a href="#tag" id="toc-tag" class="nav-link" data-scroll-target="#tag">Hand in with a pull request and the tag cp2</a></li>
+  </ul></li>
   <li><a href="#words" id="toc-words" class="nav-link" data-scroll-target="#words">Words used on this page</a></li>
   </ul>
 </nav>
@@ -517,25 +528,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>For Checkpoint 2, you continue working on demo scenarios, and, hopefully, start building the system. I will check only a small subset at the deadline, but you now have leases and recipes are available on Wed Nov 25, so nothing blocks you from creating infrastructure.</p>
 <p>What to focus on:</p>
 <ul>
-<li>run the new checks I provided on MCP, especially the budget check, and triage the results (step <a href="#checks">①</a>).
+<li><a href="#guidance-1">①</a> run the new checks I provided on MCP, especially the budget check, and triage the results.
 <ul>
 <li>to run a check, connect the course MCP server to your coding assistant (<a href="https://ilm.wiki/436c/mcp-setup">ilm.wiki/436c/mcp-setup</a>) and ask it, for example, “Run the budget and sandbox check on our repository.” It writes one file in <code>docs/reviews/</code> and changes nothing else in your repository or your lease; commit that file: it is your check report.</li>
 <li>if you want to work without an LLM assistant, the content of the MCP checks is in the repo … (link): open your milestone’s folder and go through its questions by hand.</li>
 <li>the budget check is important because you don’t want to miss something putting you out of budget soon!</li>
 <li>together with the budget check, consider the RQs I left in your feedback issue: they should help you to plan better (but you can hand in the answers after cp2 if you are tight on time).</li>
 <li>the Checkpoint 2 check is based on the cp2 state I expect to see and on some typical errors I already know about.</li>
-<li>you can also run a Well-Architected review of your design with the AWS lens for your project shape, and build a first slice on AWS (steps <a href="#slice">④</a> and <a href="#review">⑥</a>), but don’t be overwhelmed by the output, pick what makes sense to account for.</li>
+<li>you can also run a Well-Architected review of your design with the AWS lens for your project shape, and build a first slice on AWS (guidance <a href="#review">①</a> and <a href="#slice">③</a>), but don’t be overwhelmed by the output, pick what makes sense to account for.</li>
 <li>Remember, your coding assistant’s LLM model generates the output, so compare the results across team members, and triage. Decisions are on you!</li>
 <li>I expect to see at least one check report in the repo, and some evidence of triage and decisions in <code>requirements</code> and <code>design</code> made based on the report (changes in both; decision lines go in <code>requirements</code>) – you don’t have to fix everything!</li>
-<li>generate simulated data and create behave scenarios at least for some of your key job stories and requirements.</li>
+</ul></li>
+<li><a href="#guidance-2">②</a> generate simulated data and create behave scenarios at least for some of your key job stories and requirements.
+<ul>
 <li>your choice how to pace yourself before cp2: I expect to see at least (just?) <strong>one JS and a (sub)set of requirements for it</strong> at least partially covered at cp2, but realistically it would be good to cover more.</li>
 <li>use B5T2 as an example, and the guidelines included in MCP if they help to generate data, but essentially, how you approach this is largely up to you. I expect to have some test data files available, called and evaluated in behave scenarios, and making sense.</li>
 <li>make sure your sim data used in the behave scenarios is available to us: stored either in the repo or in a public S3 bucket, with paths in the behave scenarios; create such a bucket in your S3 account regional namespace (its name ends in <code>-&lt;account-id&gt;-ca-central-1-an</code>), so that no other account can take or reuse its name.</li>
 <li>we should be able to do a not-failing dry run on implemented scenario(-s).</li>
 </ul></li>
-<li>what you can build is up to you; I would set up at least a very small setup, maybe helping you to run your experiment (no report expected yet).</li>
-<li>I would also focus on surfacing as many questions and issues as possible before our Dec 3 project clinic, so focus on what’s uncertain vs what’s easy, if you can.</li>
-<li>With the tag <code>cp2</code>, I expect to see some changes based on the guidance above in <code>requirements</code>, <code>design</code>, and behave scenarios (feature and steps folders), and at least one check report in the repo.</li>
+<li><a href="#guidance-3">③</a> what you can build is up to you; I would set up at least a very small setup, maybe helping you to run your experiment (no report expected yet).</li>
+<li>④ I would also focus on surfacing as many questions and issues as possible before our Dec 3 project clinic, so focus on what’s uncertain vs what’s easy, if you can.</li>
+<li><a href="#guidance-5">⑤</a> With the tag <code>cp2</code>, I expect to see some changes based on the guidance above in <code>requirements</code>, <code>design</code>, and behave scenarios (feature and steps folders), and at least one check report in the repo.</li>
 <li>You should continue to use issues and PRs in your repo and mention them in your requirements and design docs.</li>
 <li>Everything else on this page should help you to focus on the right things, but you can sensibly change stuff.</li>
 <li>Recipes with the code should be ready by Wed Nov 25 EoD; before that, you can start on checking and updating requirements.</li>
@@ -679,21 +692,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 <p><strong>At Checkpoint 1 your files said what you will build; at Checkpoint 2 some of it runs.</strong></p>
 </section>
-<section id="checklist" class="level2">
-<h2 class="anchored" data-anchor-id="checklist">Checklist</h2>
-<ul>
-<li>① <a href="#checks">Run the checks and triage the results</a>.</li>
-<li>② <a href="#simulate">Generate your simulated data</a>.</li>
-<li>③ <a href="#steps">Write the step code</a>.</li>
-<li>④ <a href="#slice">Build a first slice on AWS</a> (if you build).</li>
-<li>⑤ <a href="#feedback">Answer your requests and run your constraints</a> (RQ answers can come after Checkpoint 2).</li>
-<li>⑥ <a href="#review">Review your design</a> (optional).</li>
-<li>⑦ <a href="#check">Check before you hand in</a>.</li>
-<li>⑧ <a href="#tag">Hand in with a pull request and the tag cp2</a>.</li>
-</ul>
-</section>
-<section id="checks" class="level2">
-<h2 class="anchored" data-anchor-id="checks">① Run the checks and triage the results</h2>
+<section id="guidance-1" class="level2">
+<h2 class="anchored" data-anchor-id="guidance-1">Guidance for ①: the checks and their triage</h2>
+<section id="checks" class="level3">
+<h3 class="anchored" data-anchor-id="checks">Run a check and triage its report</h3>
 <p><strong>In the example repo:</strong> <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/reviews/budget-check.md">docs/reviews/budget-check.md</a> and the decision lines in <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/requirements.md">docs/requirements.md</a>.</p>
 <ol type="1">
 <li>Run the budget and sandbox check before you create anything in your lease (what it looks for: <a href="project-budget-check.qmd">budget and sandbox check</a>), and the Checkpoint 2 check. With the course MCP server connected, ask your assistant, for example, “Run the budget and sandbox check on our repository.” Without an assistant, go through the same questions by hand from the review repository (link).</li>
@@ -723,8 +725,121 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="simulate" class="level2">
-<h2 class="anchored" data-anchor-id="simulate">② Generate your simulated data</h2>
+<section id="feedback" class="level3">
+<h3 class="anchored" data-anchor-id="feedback">Requests (RQ) and constraints (RF)</h3>
+<p><strong>In the example repo:</strong> <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/requirements.md">docs/requirements.md, Stakeholder input</a>.</p>
+<p>At Checkpoint 1 you listed every RF and RQ of your feedback issue under <code>## Stakeholder input</code>. Now:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 38%">
+<col style="width: 62%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>From the proposal feedback issue</th>
+<th>What to do for Checkpoint 2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Request</strong> (RQ …)</td>
+<td>Together with the budget check, it helps you plan; the answer can come after Checkpoint 2. <code>docs/requirements.md</code>: its <code>Reply:</code> gives the answer: the calculation with its numbers and where they come from, or the test and its result. Its <code>Read at Checkpoint 2:</code> becomes <code>Read:</code>, and what it names exists</td>
+</tr>
+<tr class="even">
+<td><strong>Request</strong> that starts with <code>Fix:</code></td>
+<td>nothing new: it keeps its <code>Done in docs/proposal.md, section &lt;n&gt;.</code></td>
+</tr>
+<tr class="odd">
+<td><strong>Constraint</strong> (RF …) that a test can check</td>
+<td><code>features/</code>: the rule you wrote at Checkpoint 1 now has step code, and its examples run. <code>docs/requirements.md</code>: its line keeps its <code>[Scenario](…)</code></td>
+</tr>
+<tr class="even">
+<td><strong>Constraint</strong> we can’t test</td>
+<td><code>docs/requirements.md</code>: its <code>Reply:</code> says, in one or two sentences, how your design meets it, and its <code>Read at Checkpoint 2:</code> becomes <code>Read:</code>, naming what staff now read</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-tip callout-titled" title="Typical problems: requests and constraints">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Typical problems: requests and constraints
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Problem: An answered RQ’s <code>Reply:</code> still says what you will do.</strong> When you answer it, it <em>must</em> give the answer.</p>
+<p><strong>Problem: The rule of an RF that a test can check has no step code.</strong> Its examples <em>must</em> run, and its line <em>must</em> keep its <code>[Scenario](…)</code>.</p>
+<p><strong>Problem: A line still says <code>Read at Checkpoint 2:</code>, or names a section that does not exist.</strong> It <em>must</em> say <code>Read:</code>, and what it names <em>must</em> be in the file it names.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="review" class="level3">
+<h3 class="anchored" data-anchor-id="review">A Well-Architected review (optional)</h3>
+<p><strong>In the example repo:</strong> <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/review.md">docs/review.md</a>.</p>
+<p>A Well-Architected review asks questions about your design, one pillar at a time (operational excellence, security, reliability, performance efficiency, cost optimization, sustainability), and each answer can lead to a change. This step is optional at Checkpoint 2: don’t be overwhelmed by the output, pick what makes sense to account for. Choose three to five questions from the lens for your shape:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 40%">
+<col style="width: 60%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Your project</th>
+<th>Lens</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>lakehouse first, streaming, change data capture to the lake</td>
+<td><a href="https://docs.aws.amazon.com/wellarchitected/latest/analytics-lens/analytics-lens.html">Analytics Lens</a></td>
+</tr>
+<tr class="even">
+<td>operational first</td>
+<td><a href="https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/welcome.html">Serverless Applications Lens</a>, and the <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-wal.html">DynamoDB Lens</a> if you use DynamoDB</td>
+</tr>
+<tr class="odd">
+<td>generative AI first, or an LLM in your system (chat, model routing, an agent, retrieval)</td>
+<td><a href="https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/generative-ai-lens.html">Generative AI Lens</a></td>
+</tr>
+</tbody>
+</table>
+<p>Write <code>docs/review.md</code> with one section for each question:</p>
+<ul>
+<li><strong>Question</strong> and its best-practice ID (for example <code>COST01-BP09</code>), with a link;</li>
+<li><strong>Now:</strong> what your design does, with the file and line;</li>
+<li><strong>Risk:</strong> what could go wrong, in your system’s words;</li>
+<li><strong>Change:</strong> what you changed, or why you change nothing, and where in the repository the change is.</li>
+</ul>
+<p>If you run it, at least one question leads to a change you make. A coding assistant can read the lens pages through the AWS Knowledge server (<code>https://knowledge-mcp.global.api.aws</code>, no account needed); use it to read and review, not to create resources.</p>
+<div class="callout callout-style-default callout-tip callout-titled" title="Typical problems: the review">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Typical problems: the review
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><strong>Problem: A question has no best-practice ID.</strong> It <em>must</em> name the ID and link the lens page it comes from.</p>
+<p><strong>Problem: <code>Now:</code> describes the design in general.</strong> It <em>must</em> name the file and line that do what it says.</p>
+<p><strong>Problem: Every question ends with “no change”.</strong> At least one question <em>must</em> lead to a change you made, and <code>docs/design.md</code> <em>must</em> show it.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="guidance-2" class="level2">
+<h2 class="anchored" data-anchor-id="guidance-2">Guidance for ②: simulated data and behave scenarios</h2>
+<section id="simulate" class="level3">
+<h3 class="anchored" data-anchor-id="simulate">Simulated data</h3>
 <p><strong>In the example repo:</strong> <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/sim">sim/</a> and its data <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/sim/data/SIM01">sim/data/SIM01/</a>.</p>
 <p>Your <code>## Data</code> section names the simulated data sets (SIM01, SIM02 …) that your demos need: what each holds, and its injected faults when a requirement is about a problem in the data. Now a generator writes each one, so that your examples show your system working on it.</p>
 <ol type="1">
@@ -734,12 +849,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Keep two kinds of files in each data set’s folder: what the system receives (<code>sim/data/SIM01/</code>), and, in <code>sim/data/SIM01/_truth/</code>, the events as they happened and any faults the generator added. Your examples’ expected answers come from the example’s rows or from the truth, always worked out before your system runs.</p></li>
 <li><p>Make your system read only what it receives: the files of <code>sim/data/SIM01/</code> outside <code>_truth/</code>. To check it, change a field that exists only in <code>_truth/</code> and run the example again: the system’s result must not change.</p></li>
 <li><p>Keep the data where the teaching team can read it: in the repository, or in a public S3 bucket with its <code>s3://</code> path in the scenario’s <code>Given</code>. Create such a bucket in your S3 account regional namespace, so that no other account can take or reuse its name; if your lease refuses to make it public, keep the files in the repository:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>aws s3api create-bucket --bucket &lt;team-id&gt;-sim-&lt;account-id&gt;-ca-central-1-an --bucket-namespace account-regional \</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    --region ca-central-1 --create-bucket-configuration LocationConstraint=ca-central-1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>B=&lt;team-id&gt;-sim-&lt;account-id&gt;-ca-central-1-an</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>aws s3api create-bucket --bucket $B --bucket-namespace account-regional \</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    --region ca-central-1 --create-bucket-configuration LocationConstraint=ca-central-1</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a># allow a public policy on this bucket only, then make only sim/ readable by anyone</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>aws s3api put-public-access-block --bucket $B --region ca-central-1 --public-access-block-configuration \</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=false,RestrictPublicBuckets=false</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>aws s3api put-bucket-policy --bucket $B --region ca-central-1 --policy \</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    '{"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":"*","Action":"s3:GetObject","Resource":"arn:aws:s3:::'$B'/sim/*"}]}'</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<!--src: measured:s3-public-test 2026-11-26 (ops/laptop/s3-public-test.sh, manager permission set, 940482406111: all steps OK, anonymous read HTTP 200, cleaned up) --></li>
 <li><p>Do the same for every other data set your scenarios use.</p></li>
 </ol>
 <div class="callout callout-style-default callout-note callout-titled" title="Guidelines: From the Data Bullet to Generated Files">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -748,7 +870,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -768,7 +890,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled" title="Typical problems: simulated data">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -777,7 +899,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>Problem: The generator writes different data on each run.</strong> It <em>must</em> use a fixed seed, so that an example’s expected answer stays true, see example below:</p>
 <pre class="nt-ex"><code># Not this
@@ -794,8 +916,8 @@ cfg, rng = DATA_SETS[sim_id], random.Random(SEED)</code></pre>
 </div>
 </div>
 </section>
-<section id="steps" class="level2">
-<h2 class="anchored" data-anchor-id="steps">③ Write the step code</h2>
+<section id="steps" class="level3">
+<h3 class="anchored" data-anchor-id="steps">Step code and the dry run</h3>
 <p><strong>In the example repo:</strong> <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/features/steps">features/steps/</a>.</p>
 <p>Write the step code for the scenarios of at least one job story and its requirements, more if you can. A scenario not implemented yet carries the tag <code>@todo</code>, so that the dry run of the others does not fail: <code>uvx behave@1.3.3 --dry-run --tags="not @todo"</code>.</p>
 <ol type="1">
@@ -805,7 +927,7 @@ cfg, rng = DATA_SETS[sim_id], random.Random(SEED)</code></pre>
 <li>Run <code>uvx behave@1.3.3 --tags="not @todo"</code> and fix what fails. A failing example that shows a real fault in your code stays failing until the code is fixed; do not change the example to pass.</li>
 </ol>
 <div class="callout callout-style-default callout-tip callout-titled" title="Typical problems: step code">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -814,7 +936,7 @@ cfg, rng = DATA_SETS[sim_id], random.Random(SEED)</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>Problem: A <code>Then</code> checks a value the step computed itself.</strong> It <em>must</em> compare the system’s result with the value from the example’s rows or from <code>_truth/</code>, see example below:</p>
 <pre class="nt-ex"><code># Not this: the step counts the rows itself
@@ -832,8 +954,11 @@ assert actual == expected</code></pre>
 </div>
 </div>
 </section>
-<section id="slice" class="level2">
-<h2 class="anchored" data-anchor-id="slice">④ Build a first slice on AWS (if you build)</h2>
+</section>
+<section id="guidance-3" class="level2">
+<h2 class="anchored" data-anchor-id="guidance-3">Guidance for ③: what you build</h2>
+<section id="slice" class="level3">
+<h3 class="anchored" data-anchor-id="slice">A first slice on AWS</h3>
 <p><strong>In the example repo:</strong> <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/scripts">scripts/</a>, <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/src">src/</a>, <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/features/environment.py">features/environment.py</a>, <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/evidence">evidence/</a> and <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/design.md">docs/design.md, Resources</a>.</p>
 <p>What you build is up to you; this step is for a team that deploys a first slice now. Before you create anything in your team’s lease, run the <a href="project-budget-check.qmd">budget and sandbox check</a> on your design and scripts.</p>
 <p>The first slice is one job story end to end on AWS. Start from the <a href="https://github.com/cpsc436c-2026w1/recipes">course recipes</a> for your shape and extension, and change the names and the data to your own. The first folder of each shape is the route in the recipes README’s table “Checkpoint 2 starting routes”, with its first command:</p>
@@ -890,7 +1015,7 @@ assert actual == expected</code></pre>
 <li>Before you clean up, keep what shows the slice ran in <code>evidence/</code>: the output of those examples and the tags AWS returns for each resource. Staff read them after the slice is deleted.</li>
 </ol>
 <div class="callout callout-style-default callout-note callout-titled" title="Guidelines: Course Constraints for the Slice">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -899,7 +1024,7 @@ assert actual == expected</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -912,7 +1037,7 @@ assert actual == expected</code></pre>
 </div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled" title="Typical problems: the slice">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -921,7 +1046,7 @@ assert actual == expected</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><strong>Problem: An idle resource (one that costs money as long as it exists, such as a stream or a cluster) stays up after the run.</strong> Its delete command <em>must</em> be in <code>scripts/teardown.sh</code>, and the slice <em>must</em> be deleted when you are not using it (the <a href="project-budget-check.qmd">budget and sandbox check</a> lists these resources).</p>
 <p><strong>Problem: The first run on AWS replays the whole simulated data set.</strong> Run a small part first (one batch), check what it cost, then the rest.</p>
@@ -930,118 +1055,11 @@ assert actual == expected</code></pre>
 </div>
 </div>
 </section>
-<section id="feedback" class="level2">
-<h2 class="anchored" data-anchor-id="feedback">⑤ Answer your requests and run your constraints</h2>
-<p><strong>In the example repo:</strong> <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/requirements.md">docs/requirements.md, Stakeholder input</a>.</p>
-<p>At Checkpoint 1 you listed every RF and RQ of your feedback issue under <code>## Stakeholder input</code>. Now:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 38%">
-<col style="width: 62%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>From the proposal feedback issue</th>
-<th>What to do for Checkpoint 2</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><strong>Request</strong> (RQ …)</td>
-<td>Together with the budget check, it helps you plan; the answer can come after Checkpoint 2. <code>docs/requirements.md</code>: its <code>Reply:</code> gives the answer: the calculation with its numbers and where they come from, or the test and its result. Its <code>Read at Checkpoint 2:</code> becomes <code>Read:</code>, and what it names exists</td>
-</tr>
-<tr class="even">
-<td><strong>Request</strong> that starts with <code>Fix:</code></td>
-<td>nothing new: it keeps its <code>Done in docs/proposal.md, section &lt;n&gt;.</code></td>
-</tr>
-<tr class="odd">
-<td><strong>Constraint</strong> (RF …) that a test can check</td>
-<td><code>features/</code>: the rule you wrote at Checkpoint 1 now has step code, and its examples run. <code>docs/requirements.md</code>: its line keeps its <code>[Scenario](…)</code></td>
-</tr>
-<tr class="even">
-<td><strong>Constraint</strong> we can’t test</td>
-<td><code>docs/requirements.md</code>: its <code>Reply:</code> says, in one or two sentences, how your design meets it, and its <code>Read at Checkpoint 2:</code> becomes <code>Read:</code>, naming what staff now read</td>
-</tr>
-</tbody>
-</table>
-<div class="callout callout-style-default callout-tip callout-titled" title="Typical problems: requests and constraints">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Typical problems: requests and constraints
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-7" class="callout-7-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p><strong>Problem: An answered RQ’s <code>Reply:</code> still says what you will do.</strong> When you answer it, it <em>must</em> give the answer.</p>
-<p><strong>Problem: The rule of an RF that a test can check has no step code.</strong> Its examples <em>must</em> run, and its line <em>must</em> keep its <code>[Scenario](…)</code>.</p>
-<p><strong>Problem: A line still says <code>Read at Checkpoint 2:</code>, or names a section that does not exist.</strong> It <em>must</em> say <code>Read:</code>, and what it names <em>must</em> be in the file it names.</p>
-</div>
-</div>
-</div>
 </section>
-<section id="review" class="level2">
-<h2 class="anchored" data-anchor-id="review">⑥ Review your design (optional)</h2>
-<p><strong>In the example repo:</strong> <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/review.md">docs/review.md</a>.</p>
-<p>A Well-Architected review asks questions about your design, one pillar at a time (operational excellence, security, reliability, performance efficiency, cost optimization, sustainability), and each answer can lead to a change. This step is optional at Checkpoint 2: don’t be overwhelmed by the output, pick what makes sense to account for. Choose three to five questions from the lens for your shape:</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 40%">
-<col style="width: 60%">
-</colgroup>
-<thead>
-<tr class="header">
-<th>Your project</th>
-<th>Lens</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>lakehouse first, streaming, change data capture to the lake</td>
-<td><a href="https://docs.aws.amazon.com/wellarchitected/latest/analytics-lens/analytics-lens.html">Analytics Lens</a></td>
-</tr>
-<tr class="even">
-<td>operational first</td>
-<td><a href="https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/welcome.html">Serverless Applications Lens</a>, and the <a href="https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-wal.html">DynamoDB Lens</a> if you use DynamoDB</td>
-</tr>
-<tr class="odd">
-<td>generative AI first, or an LLM in your system (chat, model routing, an agent, retrieval)</td>
-<td><a href="https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/generative-ai-lens.html">Generative AI Lens</a></td>
-</tr>
-</tbody>
-</table>
-<p>Write <code>docs/review.md</code> with one section for each question:</p>
-<ul>
-<li><strong>Question</strong> and its best-practice ID (for example <code>COST01-BP09</code>), with a link;</li>
-<li><strong>Now:</strong> what your design does, with the file and line;</li>
-<li><strong>Risk:</strong> what could go wrong, in your system’s words;</li>
-<li><strong>Change:</strong> what you changed, or why you change nothing, and where in the repository the change is.</li>
-</ul>
-<p>If you run it, at least one question leads to a change you make. A coding assistant can read the lens pages through the AWS Knowledge server (<code>https://knowledge-mcp.global.api.aws</code>, no account needed); use it to read and review, not to create resources.</p>
-<div class="callout callout-style-default callout-tip callout-titled" title="Typical problems: the review">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Typical problems: the review
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p><strong>Problem: A question has no best-practice ID.</strong> It <em>must</em> name the ID and link the lens page it comes from.</p>
-<p><strong>Problem: <code>Now:</code> describes the design in general.</strong> It <em>must</em> name the file and line that do what it says.</p>
-<p><strong>Problem: Every question ends with “no change”.</strong> At least one question <em>must</em> lead to a change you made, and <code>docs/design.md</code> <em>must</em> show it.</p>
-</div>
-</div>
-</div>
-</section>
-<section id="check" class="level2">
-<h2 class="anchored" data-anchor-id="check">⑦ Check before you hand in</h2>
+<section id="guidance-5" class="level2">
+<h2 class="anchored" data-anchor-id="guidance-5">Guidance for ⑤: the hand-in</h2>
+<section id="check" class="level3">
+<h3 class="anchored" data-anchor-id="check">Check before you hand in</h3>
 <p><strong>In the example repo:</strong> <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/DEMO.md">DEMO.md, Checkpoint 2</a> (the commands and their output).</p>
 <ol type="1">
 <li><code>uvx behave@1.3.3 --dry-run --tags="not @todo"</code> does not fail, and the implemented scenarios cover at least one job story and its requirements.</li>
@@ -1049,12 +1067,12 @@ assert actual == expected</code></pre>
 <li>Each data set checks clean: <code>sim/check.py</code> (or your own check of the same things), and the numbers of its bullet.</li>
 <li>If you deployed anything, your clean-up removes everything the slice created: run it once, deploy again, check the slice works, then run the clean-up again so nothing keeps costing money. Then list what is still running, with the inventory of the <code>cost-and-teardown</code> recipe or the list commands of the <a href="project-budget-check.qmd">budget and sandbox check</a>: a finished clean-up command alone does not show that everything is gone. If you keep a resource on purpose (for a demo), write a decision line under <code>## Decisions</code> naming it, with who owns it and when it is deleted.</li>
 <li>Your cost so far is within your team’s budget: check it in Cost Explorer, and run the <a href="project-budget-check.qmd">budget and sandbox check</a> again before each deploy and after you add a resource.</li>
-<li>Every decision line is in <code>docs/requirements.md</code> (<a href="#checks">step ①</a>).</li>
+<li>Every decision line is in <code>docs/requirements.md</code> (<a href="#checks">triage and decision lines</a>).</li>
 <li>Run the checks one last time after your last fix, and commit at least one check report (<code>docs/reviews/&lt;check&gt;.md</code>).</li>
 </ol>
 </section>
-<section id="tag" class="level2">
-<h2 class="anchored" data-anchor-id="tag">⑧ Hand in with a pull request and the tag cp2</h2>
+<section id="tag" class="level3">
+<h3 class="anchored" data-anchor-id="tag">Hand in with a pull request and the tag cp2</h3>
 <p><strong>In the example repo:</strong> <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/">the tag cp2</a>.</p>
 <p>Your team hands in through pull requests, as at Checkpoint 1: no direct pushes to <code>main</code>, one approval from someone other than the author, and no squash merge.</p>
 <ol type="1">
@@ -1115,6 +1133,7 @@ assert actual == expected</code></pre>
 </div>
 </div>
 </div>
+</section>
 </section>
 <section id="words" class="level2">
 <h2 class="anchored" data-anchor-id="words">Words used on this page</h2>
