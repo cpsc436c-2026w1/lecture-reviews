@@ -21,8 +21,6 @@ website:
               text: "Checkpoint 1"
             - href: project-checkpoint2.qmd
               text: "Checkpoint 2"
-            - href: project-budget-check.qmd
-              text: "Budget and sandbox check"
         - section: "Guidelines"
           contents:
             - href: project-startup.qmd
@@ -31,6 +29,8 @@ website:
               text: "Coding assistant setup"
             - href: project-mcp-scenarios.qmd
               text: "Course server with your assistant"
+            - href: project-budget-check.qmd
+              text: "Budget and sandbox check"
             - href: project-behave.qmd
               text: "Behave for your project"
             - href: https://github.com/cpsc436c-2026w1/b5-t2-behave-sim
