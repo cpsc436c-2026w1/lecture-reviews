@@ -359,14 +359,10 @@ indented under the RF it concerns, the second a list item under `## Decisions`, 
 - Decision (budget-check BC010, t00-trip-events, PR #3): keep. The stream is the one resource of the slice that bills by the hour (0.0165 USD, 11.88 for 30 days); scripts/stream.py up creates it for a run or a demo, scripts/teardown.sh deletes it first, and nothing is kept between runs (docs/design.md, Resources).
 ```
 
-The answers are `keep`, `later, <checkpoint>` or `check is wrong`; after Checkpoint 2 the next hand-in is the final
-one, so a `later` decision says `later, final hand-in`. `PR #<n>` is the number of the pull request that adds the
-line. The checks keep the item on their list with your reason beside it, and `tools/check_trace.py` lists every decision as DECISION. Ideally you
-would group pull requests: one pull request for each fix that belongs together, with the check ID in the pull request
-and the pull request number in your decision. Before you tag, read each decision once more: it still holds only if
-what it is about has not changed. A `later, Checkpoint 2` decision is due now: delete it when the item is fixed and the
-check no longer lists it, or change it to `keep` with what happened (for a resource you keep, who owns it and when it
-is deleted).
+The answers are `keep`, `later, <checkpoint>` or `check is wrong`. The checks keep the item on their list with your
+reason beside it, and `tools/check_trace.py` lists every decision as DECISION. Ideally you would group pull requests:
+one pull request for each fix that belongs together, with the check ID in the pull request and the pull request number
+in your decision.
 :::
 
 ## ⑦ Hand in with a pull request and the tag cp2 {#tag}
