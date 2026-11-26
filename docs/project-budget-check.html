@@ -584,11 +584,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="after" class="level2">
 <h2 class="anchored" data-anchor-id="after">After the check</h2>
 <p>Take one Problem at a time and fix what you choose. In <code>docs/design.md</code> Resources, replace the service, or say when it is created and deleted. Put the delete command for each resource in <code>scripts/teardown.sh</code>, and write down what your team keeps between runs (for example the data in S3). Then run the check again: a later run shows what is gone.</p>
-<p>When your team decides not to change a line the check listed, write one line under it:</p>
+<p>When your team decides not to change a line the check listed, write one line (not wrapped) under it:</p>
 <pre><code>Decision (&lt;check&gt; &lt;question id&gt;, PR #&lt;n&gt;): keep | later, &lt;checkpoint&gt; | check is wrong. &lt;reason&gt;</code></pre>
 <p>For a row of the Resources table, put it as its own paragraph after the table and name the row; in a script, as a <code>#</code> comment above the line. For example, after the Resources table:</p>
-<pre><code>Decision (budget-check BC010, row tXX-product-edits, PR #34): later, Checkpoint 2. The stream is created only for a
-replay run; scripts/teardown.sh deletes it after each run.</code></pre>
+<pre><code>Decision (budget-check BC010, row tXX-product-edits, PR #34): later, Checkpoint 2. Created only for a replay run; teardown.sh deletes it.</code></pre>
 <p>The check keeps the item on its list, with your reason beside it, so a teammate who changes that row later still sees it. Ideally you would group pull requests: one pull request for each fix that belongs together, with the check ID in the pull request and the pull request number in your decision. “Check is wrong” tells the course staff a check needs fixing.</p>
 </section>
 <section id="again" class="level2">

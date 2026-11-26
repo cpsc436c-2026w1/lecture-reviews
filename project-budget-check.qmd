@@ -227,7 +227,7 @@ it is created and deleted. Put the delete command for each resource in `scripts/
 your team keeps between runs (for example the data in S3). Then run the check again: a later run shows what is
 gone.
 
-When your team decides not to change a line the check listed, write one line under it:
+When your team decides not to change a line the check listed, write one line (not wrapped) under it:
 
 ```
 Decision (<check> <question id>, PR #<n>): keep | later, <checkpoint> | check is wrong. <reason>
@@ -237,8 +237,7 @@ For a row of the Resources table, put it as its own paragraph after the table an
 `#` comment above the line. For example, after the Resources table:
 
 ```
-Decision (budget-check BC010, row tXX-product-edits, PR #34): later, Checkpoint 2. The stream is created only for a
-replay run; scripts/teardown.sh deletes it after each run.
+Decision (budget-check BC010, row tXX-product-edits, PR #34): later, Checkpoint 2. Created only for a replay run; teardown.sh deletes it.
 ```
 
 The check keeps the item on its list, with your reason beside it, so a teammate who changes that row later still
