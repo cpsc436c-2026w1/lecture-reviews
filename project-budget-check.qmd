@@ -218,7 +218,7 @@ nothing else in your repository or in your lease. For BC005 it asks you whether 
 By hand: go through each Problem above, look in the places its question names, and note each line of your design or
 scripts that it describes, with its file and line. Decide which of them to change before you deploy.
 
-When you have checked your design, go back to building your first slice: step ③ of the Checkpoint 2 page.
+When you have checked your design, go back to building your first slice: [step ④ of the Checkpoint 2 page](project-checkpoint2.qmd#slice).
 
 ## After the check {#after}
 
@@ -228,7 +228,7 @@ your team keeps between runs (for example the data in S3). Then run the check ag
 gone.
 
 If your team decides not to change something this check lists, record it as a decision line, as
-[Checkpoint 2, step ⑥](project-checkpoint2.qmd#check) describes. The check keeps the item on its list with your
+[Checkpoint 2, step ①](project-checkpoint2.qmd#checks) describes. The check keeps the item on its list with your
 reason beside it.
 
 ## When to run it again {#again}
