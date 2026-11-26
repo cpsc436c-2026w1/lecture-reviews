@@ -271,6 +271,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="dropdown-item" href="./project-checkpoint1.html">
  <span class="dropdown-text">Checkpoint 1</span></a>
   </li>  
+        <li>
+    <a class="dropdown-item" href="./project-budget-check.html">
+ <span class="dropdown-text">Budget and sandbox check</span></a>
+  </li>  
         <li><hr class="dropdown-divider"></li>
         <li class="dropdown-header">Guidelines</li>
         <li>
@@ -386,6 +390,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="./project-checkpoint2.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Checkpoint 2</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./project-budget-check.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Budget and sandbox check</span></a>
   </div>
 </li>
       </ul>
@@ -669,7 +679,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="checks">Run a check and triage its report</h3>
 <p><strong>In the example repo:</strong> <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/reviews/budget-check.md">docs/reviews/budget-check.md</a> and the decision lines in <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/requirements.md">docs/requirements.md</a>.</p>
 <ol type="1">
-<li>Run the budget and sandbox check before you create anything in your lease (what it looks for: <a href="project-budget-check.qmd">budget and sandbox check</a>), and the Checkpoint 2 check. With the course MCP server connected, ask your assistant, for example, “Run the budget and sandbox check on our repository.” Without an assistant, go through the same questions by hand from the repository <a href="https://github.students.cs.ubc.ca/CPSC436C-2026W-T1/mcp-static-content">mcp-static-content</a>.</li>
+<li>Run the budget and sandbox check before you create anything in your lease (what it looks for: <a href="./project-budget-check.html">budget and sandbox check</a>), and the Checkpoint 2 check. With the course MCP server connected, ask your assistant, for example, “Run the budget and sandbox check on our repository.” Without an assistant, go through the same questions by hand from the repository <a href="https://github.students.cs.ubc.ca/CPSC436C-2026W-T1/mcp-static-content">mcp-static-content</a>.</li>
 <li>Each check writes one file in <code>docs/reviews/</code>, such as <code>docs/reviews/budget-check.md</code>, and changes nothing else. Commit at least one report of a check for Checkpoint 2: the budget and sandbox check, the Checkpoint 2 check, or the Checkpoint 1 check run again.</li>
 <li>Compare the reports of two team members who ran the same check: the assistant’s model writes them, so they differ. Keep what your team agrees is a real problem.</li>
 <li>For each item a check lists, decide: change it (in <code>docs/requirements.md</code>, <code>docs/design.md</code> or your scripts), or keep it and write a decision line in <code>docs/requirements.md</code>.</li>
@@ -923,7 +933,7 @@ assert actual == expected</code></pre>
 <section id="slice" class="level3">
 <h3 class="anchored" data-anchor-id="slice">A first slice on AWS</h3>
 <p><strong>In the example repo:</strong> <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/scripts">scripts/</a>, <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/src">src/</a>, <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/features/environment.py">features/environment.py</a>, <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/evidence">evidence/</a> and <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/design.md">docs/design.md, Resources</a>.</p>
-<p>What you build is up to you. A very small setup is enough, for example one that helps you run your experiment (no report on it is expected yet); this section is for a team that deploys a first slice now. Before you create anything in your team’s lease, run the <a href="project-budget-check.qmd">budget and sandbox check</a> on your design and scripts.</p>
+<p>What you build is up to you. A very small setup is enough, for example one that helps you run your experiment (no report on it is expected yet); this section is for a team that deploys a first slice now. Before you create anything in your team’s lease, run the <a href="./project-budget-check.html">budget and sandbox check</a> on your design and scripts.</p>
 <p>The first slice is one job story end to end on AWS. Start from the <a href="https://github.com/cpsc436c-2026w1/recipes">course recipes</a> for your shape and extension, and change the names and the data to your own. The first folder of each shape is the route in the recipes README’s table “Checkpoint 2 starting routes”, with its first command:</p>
 <table class="caption-top table">
 <colgroup>
@@ -1011,7 +1021,7 @@ assert actual == expected</code></pre>
 </div>
 <div id="callout-9" class="callout-9-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><strong>Problem: An idle resource (one that costs money as long as it exists, such as a stream or a cluster) stays up after the run.</strong> Its delete command <em>must</em> be in <code>scripts/teardown.sh</code>, and the slice <em>must</em> be deleted when you are not using it (the <a href="project-budget-check.qmd">budget and sandbox check</a> lists these resources).</p>
+<p><strong>Problem: An idle resource (one that costs money as long as it exists, such as a stream or a cluster) stays up after the run.</strong> Its delete command <em>must</em> be in <code>scripts/teardown.sh</code>, and the slice <em>must</em> be deleted when you are not using it (the <a href="./project-budget-check.html">budget and sandbox check</a> lists these resources).</p>
 <p><strong>Problem: The first run on AWS replays the whole simulated data set.</strong> Run a small part first (one batch), check what it cost, then the rest.</p>
 <p><strong>Problem: A resource is created by hand in the console.</strong> It <em>must</em> be created by a script in <code>scripts/</code>, so that your team can create it again and <code>scripts/teardown.sh</code> can delete it.</p>
 </div>
@@ -1028,8 +1038,8 @@ assert actual == expected</code></pre>
 <li><code>uvx behave@1.3.3 --dry-run --tags="not @todo"</code> does not fail, and the implemented scenarios cover at least one job story and its requirements.</li>
 <li><code>python3 tools/check_trace.py</code> (the current version, from the example’s <code>tools/</code>): every problem it prints is fixed, or has your team’s decision printed beside it. The command exits with code 1 while it prints any problem: read each decision against that exact problem, and do not change a choice you made on purpose just to make the command pass. Read each line it prints beside the requirement, rule or data definition it names.</li>
 <li>Each data set checks clean: <code>sim/check.py</code> (or your own check of the same things), and the numbers of its bullet.</li>
-<li>If you deployed anything, your clean-up removes everything the slice created: run it once, deploy again, check the slice works, then run the clean-up again so nothing keeps costing money. Then list what is still running, with the inventory of the <code>cost-and-teardown</code> recipe or the list commands of the <a href="project-budget-check.qmd">budget and sandbox check</a>: a finished clean-up command alone does not show that everything is gone. If you keep a resource on purpose (for a demo), write a decision line under <code>## Decisions</code> naming it, with who owns it and when it is deleted.</li>
-<li>Your cost so far is within your team’s budget: check it in Cost Explorer, and run the <a href="project-budget-check.qmd">budget and sandbox check</a> again before each deploy and after you add a resource.</li>
+<li>If you deployed anything, your clean-up removes everything the slice created: run it once, deploy again, check the slice works, then run the clean-up again so nothing keeps costing money. Then list what is still running, with the inventory of the <code>cost-and-teardown</code> recipe or the list commands of the <a href="./project-budget-check.html">budget and sandbox check</a>: a finished clean-up command alone does not show that everything is gone. If you keep a resource on purpose (for a demo), write a decision line under <code>## Decisions</code> naming it, with who owns it and when it is deleted.</li>
+<li>Your cost so far is within your team’s budget: check it in Cost Explorer, and run the <a href="./project-budget-check.html">budget and sandbox check</a> again before each deploy and after you add a resource.</li>
 <li>Every decision line is in <code>docs/requirements.md</code> (<a href="#checks">triage and decision lines</a>).</li>
 <li>Run the checks one last time after your last fix, and commit at least one check report (<code>docs/reviews/&lt;check&gt;.md</code>).</li>
 <li>Your requirements and design name the issues and pull requests they come from, for example <code>(#12)</code>.</li>
