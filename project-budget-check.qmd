@@ -223,9 +223,28 @@ When you have checked your design, go back to building your first slice: step â‘
 ## After the check {#after}
 
 Take one Problem at a time and fix what you choose. In `docs/design.md` Resources, replace the service, or say when
-it is created and deleted. Put the delete command for each resource in your clean-up script, and write down what
+it is created and deleted. Put the delete command for each resource in `scripts/teardown.sh`, and write down what
 your team keeps between runs (for example the data in S3). Then run the check again: a later run shows what is
 gone.
+
+When your team decides not to change a line the check listed, write one line under it:
+
+```
+Decision (<check> <question id>, PR #<n>): keep | later, <checkpoint> | check is wrong. <reason>
+```
+
+For a row of the Resources table, put it as its own paragraph after the table and name the row; in a script, as a
+`#` comment above the line. For example, after the Resources table:
+
+```
+Decision (budget-check BC010, row tXX-product-edits, PR #34): later, Checkpoint 2. The stream is created only for a
+replay run; scripts/teardown.sh deletes it after each run.
+```
+
+The check keeps the item on its list, with your reason beside it, so a teammate who changes that row later still
+sees it. Ideally you would group pull requests: one pull request for each fix that belongs together, with the check
+ID in the pull request and the pull request number in your decision. "Check is wrong" tells the course staff a check
+needs fixing.
 
 ## When to run it again {#again}
 
