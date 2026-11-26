@@ -473,7 +473,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul class="collapse">
   <li><a href="#hand-in-list" id="toc-hand-in-list" class="nav-link active" data-scroll-target="#hand-in-list">What you hand in</a></li>
-  <li><a href="#minimum" id="toc-minimum" class="nav-link" data-scroll-target="#minimum">The minimum for Tuesday</a></li>
+  <li><a href="#minimum" id="toc-minimum" class="nav-link" data-scroll-target="#minimum">Minimum hand-in</a></li>
   <li><a href="#simulate" id="toc-simulate" class="nav-link" data-scroll-target="#simulate">① Generate your simulated data</a></li>
   <li><a href="#steps" id="toc-steps" class="nav-link" data-scroll-target="#steps">② Write the step code</a></li>
   <li><a href="#slice" id="toc-slice" class="nav-link" data-scroll-target="#slice">③ Build the first slice</a></li>
@@ -523,8 +523,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <thead>
 <tr class="header">
 <th>Path</th>
-<th>What</th>
-<th></th>
+<th>What to include</th>
+<th>Action</th>
 </tr>
 </thead>
 <tbody>
@@ -539,26 +539,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>add</td>
 </tr>
 <tr class="odd">
+<td><code>features/</code></td>
+<td>for every testable RF, a rule with running examples, linked from the RF’s line</td>
+<td>change</td>
+</tr>
+<tr class="even">
 <td>your code (<code>src/</code> or the layout of your shape)</td>
 <td>the first slice: one job story end to end, deployed on AWS</td>
 <td>add</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>docs/requirements.md</code></td>
-<td>a reply for every RQ, and a rule with running examples for every testable RF</td>
+<td>a <code>Reply:</code> for every RQ, and a <code>[Scenario](…)</code> link on every testable RF</td>
 <td>change</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td><code>docs/review.md</code></td>
 <td>your Well-Architected review: the questions you chose, your answers, and the change it led to</td>
 <td>add</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td><code>docs/design.md</code></td>
 <td>the design after the review’s change, and the resources you deployed</td>
 <td>change</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>tag <code>cp2</code></td>
 <td>on the merge commit on <code>main</code></td>
 <td>add</td>
@@ -567,7 +572,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </table>
 </section>
 <section id="minimum" class="level2">
-<h2 class="anchored" data-anchor-id="minimum">The minimum for Tuesday</h2>
+<h2 class="anchored" data-anchor-id="minimum">Minimum hand-in</h2>
 <ul>
 <li>One job story runs end to end on AWS: data in, your store, the number or answer the user gets. Its examples pass on your generated data, locally and against the deployed slice.</li>
 <li>Every other rule has step code and runs. A rule whose AWS part is not built yet may fail; say so in its example with the tag <code>@todo</code>.</li>
@@ -599,6 +604,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="slice" class="level2">
 <h2 class="anchored" data-anchor-id="slice">③ Build the first slice</h2>
+<p>Before you create anything in your team’s lease for this step, run the <a href="project-budget-check.qmd">budget and sandbox check</a> on your design and scripts.</p>
 <p>The first slice is one job story end to end on AWS. Start from the <a href="https://github.com/cpsc436c-2026w1/recipes">course recipes</a> for your shape and extension, and change the names and the data to your own:</p>
 <table class="caption-top table">
 <colgroup>
@@ -695,18 +701,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="check">⑥ Check before you hand in</h2>
 <ol type="1">
 <li><code>uvx behave@1.3.3</code> runs, and every rule tagged with an ID has examples that run.</li>
-<li><code>python3 tools/check_trace.py</code> shows no problems (copy the script from the <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/main/tools/check_trace.py">Checkpoint 1 example</a>).</li>
+<li><code>python3 tools/check_trace.py</code>, run in your team’s repository after the course update brings in its current version, shows no problems. Read each line it prints beside the requirement, rule or data definition it names.</li>
 <li>Each data set checks clean with <code>sim/check.py</code>.</li>
 <li>Your clean-up removes everything the slice created; run it once and deploy again.</li>
-<li>Your cost so far is within your team’s budget.</li>
+<li>Your cost so far is within your team’s budget: check it in Cost Explorer, list what is still running, and run the <a href="project-budget-check.qmd">budget and sandbox check</a> again if your design changed.</li>
 </ol>
 </section>
 <section id="tag" class="level2">
 <h2 class="anchored" data-anchor-id="tag">⑦ Hand in with a pull request and the tag cp2</h2>
-<p>As at Checkpoint 1: a pull request from a branch such as <code>cp2-draft</code> to <code>main</code>, a teammate approves it, you merge it, and you tag the merge commit <code>cp2</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout main <span class="kw">&amp;&amp;</span> <span class="fu">git</span> pull</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> tag cp2</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin cp2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>As at Checkpoint 1: a pull request from a branch such as <code>cp2-draft</code> to <code>main</code>, a teammate approves it, you merge it, and you tag the merge commit <code>cp2</code>. The tag must reach your course repository on github.students:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> switch main</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull origin main</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> tag cp2</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin cp2</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push course cp2      <span class="co"># if you build on github.com, with a separate course remote</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> ls-remote course cp2 <span class="co"># or origin, if you build on github.students</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The commit <code>git ls-remote</code> shows is the one the teaching team reads: it must be the merge commit of your pull request.</p>
 
 
 </section>

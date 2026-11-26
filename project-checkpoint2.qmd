@@ -19,17 +19,18 @@ by step on the rides example, and its `shapes/` folder has a worked example for 
 
 ## What you hand in {#hand-in-list}
 
-| Path | What | |
+| Path | What to include | Action |
 |---|---|---|
 | `sim/` | a generator for each simulated data set your examples name, and its data: what the system receives in one folder, the truth in another | add |
 | `features/steps/` | step code, so that every example of your Checkpoint 1 rules runs | add |
+| `features/` | for every testable RF, a rule with running examples, linked from the RF's line | change |
 | your code (`src/` or the layout of your shape) | the first slice: one job story end to end, deployed on AWS | add |
-| `docs/requirements.md` | a reply for every RQ, and a rule with running examples for every testable RF | change |
+| `docs/requirements.md` | a `Reply:` for every RQ, and a `[Scenario](…)` link on every testable RF | change |
 | `docs/review.md` | your Well-Architected review: the questions you chose, your answers, and the change it led to | add |
 | `docs/design.md` | the design after the review's change, and the resources you deployed | change |
 | tag `cp2` | on the merge commit on `main` | add |
 
-## The minimum for Tuesday {#minimum}
+## Minimum hand-in {#minimum}
 
 - One job story runs end to end on AWS: data in, your store, the number or answer the user gets. Its examples pass
   on your generated data, locally and against the deployed slice.
@@ -69,6 +70,9 @@ Every example of your Checkpoint 1 rules now runs.
    until the code is fixed; do not change the example to pass.
 
 ## ③ Build the first slice {#slice}
+
+Before you create anything in your team's lease for this step, run the
+[budget and sandbox check](project-budget-check.qmd) on your design and scripts.
 
 The first slice is one job story end to end on AWS. Start from the
 [course recipes](https://github.com/cpsc436c-2026w1/recipes) for your shape and extension, and change the names and
@@ -124,19 +128,26 @@ review, not to create resources.
 ## ⑥ Check before you hand in {#check}
 
 1. `uvx behave@1.3.3` runs, and every rule tagged with an ID has examples that run.
-2. `python3 tools/check_trace.py` shows no problems (copy the script from the
-   [Checkpoint 1 example](https://github.com/cpsc436c-2026w1/cp1-example/blob/main/tools/check_trace.py)).
+2. `python3 tools/check_trace.py`, run in your team's repository after the course update brings in its current
+   version, shows no problems. Read each line it prints beside the requirement, rule or data definition it names.
 3. Each data set checks clean with `sim/check.py`.
 4. Your clean-up removes everything the slice created; run it once and deploy again.
-5. Your cost so far is within your team's budget.
+5. Your cost so far is within your team's budget: check it in Cost Explorer, list what is still running, and run
+   the [budget and sandbox check](project-budget-check.qmd) again if your design changed.
 
 ## ⑦ Hand in with a pull request and the tag cp2 {#tag}
 
 As at Checkpoint 1: a pull request from a branch such as `cp2-draft` to `main`, a teammate approves it, you merge
-it, and you tag the merge commit `cp2`:
+it, and you tag the merge commit `cp2`. The tag must reach your course repository on github.students:
 
 ```bash
-git checkout main && git pull
+git switch main
+git pull origin main
 git tag cp2
 git push origin cp2
+git push course cp2      # if you build on github.com, with a separate course remote
+git ls-remote course cp2 # or origin, if you build on github.students
 ```
+
+The commit `git ls-remote` shows is the one the teaching team reads: it must be the merge commit of your pull
+request.

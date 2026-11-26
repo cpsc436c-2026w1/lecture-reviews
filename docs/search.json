@@ -846,7 +846,7 @@
     "href": "project-checkpoint2.html#hand-in-list",
     "title": "Checkpoint 2: review and the base running",
     "section": "What you hand in",
-    "text": "What you hand in\n\n\n\n\n\n\n\n\nPath\nWhat\n\n\n\n\n\nsim/\na generator for each simulated data set your examples name, and its data: what the system receives in one folder, the truth in another\nadd\n\n\nfeatures/steps/\nstep code, so that every example of your Checkpoint 1 rules runs\nadd\n\n\nyour code (src/ or the layout of your shape)\nthe first slice: one job story end to end, deployed on AWS\nadd\n\n\ndocs/requirements.md\na reply for every RQ, and a rule with running examples for every testable RF\nchange\n\n\ndocs/review.md\nyour Well-Architected review: the questions you chose, your answers, and the change it led to\nadd\n\n\ndocs/design.md\nthe design after the review’s change, and the resources you deployed\nchange\n\n\ntag cp2\non the merge commit on main\nadd",
+    "text": "What you hand in\n\n\n\n\n\n\n\n\nPath\nWhat to include\nAction\n\n\n\n\nsim/\na generator for each simulated data set your examples name, and its data: what the system receives in one folder, the truth in another\nadd\n\n\nfeatures/steps/\nstep code, so that every example of your Checkpoint 1 rules runs\nadd\n\n\nfeatures/\nfor every testable RF, a rule with running examples, linked from the RF’s line\nchange\n\n\nyour code (src/ or the layout of your shape)\nthe first slice: one job story end to end, deployed on AWS\nadd\n\n\ndocs/requirements.md\na Reply: for every RQ, and a [Scenario](…) link on every testable RF\nchange\n\n\ndocs/review.md\nyour Well-Architected review: the questions you chose, your answers, and the change it led to\nadd\n\n\ndocs/design.md\nthe design after the review’s change, and the resources you deployed\nchange\n\n\ntag cp2\non the merge commit on main\nadd",
     "crumbs": [
       "Milestones",
       "Checkpoint 2"
@@ -856,8 +856,8 @@
     "objectID": "project-checkpoint2.html#minimum",
     "href": "project-checkpoint2.html#minimum",
     "title": "Checkpoint 2: review and the base running",
-    "section": "The minimum for Tuesday",
-    "text": "The minimum for Tuesday\n\nOne job story runs end to end on AWS: data in, your store, the number or answer the user gets. Its examples pass on your generated data, locally and against the deployed slice.\nEvery other rule has step code and runs. A rule whose AWS part is not built yet may fail; say so in its example with the tag @todo.\nYour review has at least three questions, with the change it led to made in the repository.\nuvx behave@1.3.3 runs without a ParserError, and its summary is in your pull request.",
+    "section": "Minimum hand-in",
+    "text": "Minimum hand-in\n\nOne job story runs end to end on AWS: data in, your store, the number or answer the user gets. Its examples pass on your generated data, locally and against the deployed slice.\nEvery other rule has step code and runs. A rule whose AWS part is not built yet may fail; say so in its example with the tag @todo.\nYour review has at least three questions, with the change it led to made in the repository.\nuvx behave@1.3.3 runs without a ParserError, and its summary is in your pull request.",
     "crumbs": [
       "Milestones",
       "Checkpoint 2"
@@ -890,7 +890,7 @@
     "href": "project-checkpoint2.html#slice",
     "title": "Checkpoint 2: review and the base running",
     "section": "③ Build the first slice",
-    "text": "③ Build the first slice\nThe first slice is one job story end to end on AWS. Start from the course recipes for your shape and extension, and change the names and the data to your own:\n\n\n\n\n\n\n\nYour project\nStart from\n\n\n\n\nevery shape\nproject-skeleton (its folder for your shape), cost-and-teardown\n\n\nlakehouse first\ns3-event-etl, lake-layout-experiment, cdc-to-lake\n\n\noperational first\nlambda-dynamodb, dynamodb, concurrency-correctness\n\n\ngenerative AI first\ndashboard-chat, llm-gateway, hybrid-retrieval-eval\n\n\nstreaming ingestion extension\nstreaming-ingestion, simulated-runs\n\n\nchat on the dashboard\ndashboard-chat\n\n\nchange data capture to the lake\ncdc-to-lake\n\n\nmodel routing, agent with tools, retrieval\nmodel-routing, agent-agentcore, hybrid-retrieval-eval\n\n\n\nEach recipe’s README has a Decisions table: what it chose, why, and the course constraint behind it. Keep the course constraints: everything in ca-central-1, every resource name starting with your team’s prefix, model calls through the course LLM gateway with your course token, and a clean-up for everything you create.",
+    "text": "③ Build the first slice\nBefore you create anything in your team’s lease for this step, run the budget and sandbox check on your design and scripts.\nThe first slice is one job story end to end on AWS. Start from the course recipes for your shape and extension, and change the names and the data to your own:\n\n\n\n\n\n\n\nYour project\nStart from\n\n\n\n\nevery shape\nproject-skeleton (its folder for your shape), cost-and-teardown\n\n\nlakehouse first\ns3-event-etl, lake-layout-experiment, cdc-to-lake\n\n\noperational first\nlambda-dynamodb, dynamodb, concurrency-correctness\n\n\ngenerative AI first\ndashboard-chat, llm-gateway, hybrid-retrieval-eval\n\n\nstreaming ingestion extension\nstreaming-ingestion, simulated-runs\n\n\nchat on the dashboard\ndashboard-chat\n\n\nchange data capture to the lake\ncdc-to-lake\n\n\nmodel routing, agent with tools, retrieval\nmodel-routing, agent-agentcore, hybrid-retrieval-eval\n\n\n\nEach recipe’s README has a Decisions table: what it chose, why, and the course constraint behind it. Keep the course constraints: everything in ca-central-1, every resource name starting with your team’s prefix, model calls through the course LLM gateway with your course token, and a clean-up for everything you create.",
     "crumbs": [
       "Milestones",
       "Checkpoint 2"
@@ -923,7 +923,7 @@
     "href": "project-checkpoint2.html#check",
     "title": "Checkpoint 2: review and the base running",
     "section": "⑥ Check before you hand in",
-    "text": "⑥ Check before you hand in\n\nuvx behave@1.3.3 runs, and every rule tagged with an ID has examples that run.\npython3 tools/check_trace.py shows no problems (copy the script from the Checkpoint 1 example).\nEach data set checks clean with sim/check.py.\nYour clean-up removes everything the slice created; run it once and deploy again.\nYour cost so far is within your team’s budget.",
+    "text": "⑥ Check before you hand in\n\nuvx behave@1.3.3 runs, and every rule tagged with an ID has examples that run.\npython3 tools/check_trace.py, run in your team’s repository after the course update brings in its current version, shows no problems. Read each line it prints beside the requirement, rule or data definition it names.\nEach data set checks clean with sim/check.py.\nYour clean-up removes everything the slice created; run it once and deploy again.\nYour cost so far is within your team’s budget: check it in Cost Explorer, list what is still running, and run the budget and sandbox check again if your design changed.",
     "crumbs": [
       "Milestones",
       "Checkpoint 2"
@@ -934,7 +934,7 @@
     "href": "project-checkpoint2.html#tag",
     "title": "Checkpoint 2: review and the base running",
     "section": "⑦ Hand in with a pull request and the tag cp2",
-    "text": "⑦ Hand in with a pull request and the tag cp2\nAs at Checkpoint 1: a pull request from a branch such as cp2-draft to main, a teammate approves it, you merge it, and you tag the merge commit cp2:\ngit checkout main && git pull\ngit tag cp2\ngit push origin cp2",
+    "text": "⑦ Hand in with a pull request and the tag cp2\nAs at Checkpoint 1: a pull request from a branch such as cp2-draft to main, a teammate approves it, you merge it, and you tag the merge commit cp2. The tag must reach your course repository on github.students:\ngit switch main\ngit pull origin main\ngit tag cp2\ngit push origin cp2\ngit push course cp2      # if you build on github.com, with a separate course remote\ngit ls-remote course cp2 # or origin, if you build on github.students\nThe commit git ls-remote shows is the one the teaching team reads: it must be the merge commit of your pull request.",
     "crumbs": [
       "Milestones",
       "Checkpoint 2"
