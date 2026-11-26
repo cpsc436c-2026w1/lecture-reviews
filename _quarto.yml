@@ -115,8 +115,8 @@ website:
             text: "Setup and proposal"
           - href: project-checkpoint1.qmd
             text: "Checkpoint 1"
-          - href: project-budget-check.qmd
-            text: "Budget and sandbox check"
+          - href: project-checkpoint2.qmd
+            text: "Checkpoint 2"
           - text: "---"
           - text: "Guidelines"
           - href: project-startup.qmd
@@ -125,6 +125,8 @@ website:
             text: "Coding assistant setup"
           - href: project-mcp-scenarios.qmd
             text: "Course server with your assistant"
+          - href: project-budget-check.qmd
+            text: "Budget and sandbox check"
           - href: project-behave.qmd
             text: "Behave for your project"
           - href: tutorials.qmd#b5-t2
