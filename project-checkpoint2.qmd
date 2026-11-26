@@ -56,16 +56,17 @@ hand-in, written for the rides case. Each file name below links to it in that st
 <tr><td class="t">├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/features">features/</a></td><td><span class="chg">change</span></td><td>the rules of Checkpoint 1, now with examples that run; <code>@todo</code> on an example whose AWS part is not built yet</td></tr>
 <tr><td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/features/steps">steps/</a></td><td><span class="fill">fill in</span></td><td>step code, so that every example runs</td></tr>
 <tr><td class="t">├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/src">src/</a></td><td><span class="add">add</span></td><td>your system's code: the first slice, one job story end to end</td></tr>
-<tr><td class="t">├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/tools">tools/check_trace.py</a></td><td><span class="chg">change</span></td><td>the current traceability script: copy it from the example if yours is older</td></tr>
+<tr><td class="t">├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/tools/check_trace.py">tools/check_trace.py</a></td><td><span class="chg">change</span></td><td>the current traceability script: copy it from the example if yours is older or missing</td></tr>
 <tr><td class="t">└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/scripts">scripts/</a></td><td><span class="add">add</span></td><td>one script for each service that creates it on AWS, safe to run again, and <code>teardown.sh</code>, which deletes everything they create</td></tr>
 </table>
 ```
 
 | File | What it shows | Traceability |
 |---|---|---|
-| `sim/` | each simulated data set of `## Data`, generated: the data your demos run on | the folder is the SIM ID (`sim/data/SIM01/`), the same ID as the bullet and the `Given` |
+| `sim/` | the data your demos run on: each simulated data set of `## Data`, written by its generator | the folder is the SIM ID (`sim/data/SIM01/`), the same ID as the bullet and the `Given` |
 | `features/steps/` | the code behind each `Given`, `When` and `Then` | runs the rules tagged with IDs (`@R010`, `@RF010`) |
 | `scripts/`, `src/` | the slice on AWS and the code it runs | each resource is a row of `## Resources` in `docs/design.md`, with its IDs |
+| `evidence/` | what the deployed slice returned | named in the `Read:` of the RF or RQ it answers (in the example, RF050 names `evidence/deploy-tags.txt`) |
 | `docs/review.md` | the questions you asked of your design and what changed | names the best-practice ID of each question and the file and line it is about |
 
 : {tbl-colwidths="[22,44,34]"}
@@ -98,22 +99,24 @@ its injected faults when a requirement is about a problem in the data. Now a gen
 examples show your system working on it.
 
 1. Write the generator of your SIM01 from its bullet: first the rows of what it shows (in the example, one rush hour
-   of trip requests in three zones), then any injected faults the bullet names, with a fixed seed. Start from the worked example of your shape in B5T2's
+   of trip requests in three zones), then any injected faults the bullet names. Give it a fixed seed, so that the same
+   command writes the same data every time. Start from the worked example of your shape in B5T2's
    [`shapes/`](https://github.com/cpsc436c-2026w1/b5-t2-behave-sim/tree/main/shapes) (lakehouse, operational,
-   generative AI; B5T2 Part B4 runs it), and change its events, and any faults, to your bullet's.
-2. Check the files. Copy B5T2's `sim/check.py` into your `sim/` and run it: every line is one of your event models,
-   every delivered event is in the truth, and each injected fault of the kinds it knows (`twice`, `never`, `late`,
-   `changed`) is recounted. Then check that the files hold the numbers your bullet gives. The example's SIM01 bullet
-   says 837 trips in zones 48, 161 and 230, 2,515 deliveries, 4 requests that arrive twice and 2 that arrive 6 to 10
-   minutes late; `sim/expected.toml` gives each number with the query on the files that must return it, and the
-   example's copy of `sim/check.py` runs those queries (it also checks its own fault kinds, such as `duplicate`). With a
-   coding assistant,
+   generative AI; B5T2 Part B4 runs it), and change its events, and any faults, to your bullet's. With a coding
+   assistant,
    [B5T2 Part B5](https://github.com/cpsc436c-2026w1/b5-t2-behave-sim#b5-have-your-assistant-write-your-projects-sim01-then-check-it)
-   has it draft the same generator from your bullet; you check it the same way.
-3. Keep two kinds of files in each data set's folder: what the system receives (`sim/data/SIM01/`), and, in
+   has it draft the generator from your bullet; you check it as in steps 2 and 3.
+2. Check the files. If you follow the simulation standards (JSON Lines, one Pydantic model for each event type),
+   copy B5T2's `sim/check.py` into your `sim/` and run it: every line is one of your event models, every delivered
+   event is in the truth, and each injected fault of the kinds it knows (`twice`, `never`, `late`, `changed`) is
+   recounted. With another format, check the same things with a script of your own.
+3. Check that the files hold the numbers your bullet gives. The example's SIM01 bullet says 837 trips in zones 48,
+   161 and 230, 2,515 deliveries, 4 requests that arrive twice and 2 that arrive 6 to 10 minutes late;
+   `sim/expected.toml` gives each number with the query on the files that must return it, and the example's copy of
+   `sim/check.py` runs those queries (it also checks the example's own fault kinds, such as `duplicate`).
+4. Keep two kinds of files in each data set's folder: what the system receives (`sim/data/SIM01/`), and, in
    `sim/data/SIM01/_truth/`, the events as they happened and any faults the generator added. Your examples' expected
    answers come from the example's rows or from the truth, always worked out before your system runs.
-4. Seed the generator, so that the same command writes the same data every time.
 5. Make your system read only what it receives: the files of `sim/data/SIM01/` outside `_truth/`. To check it,
    change a field that exists only in `_truth/` and run the example again: the system's result must not change.
 6. Do the same for every other data set your examples name.
@@ -330,7 +333,7 @@ commands and their output).
    fixed, or has your team's decision printed beside it. The command exits with code 1 while it prints any problem:
    read each decision against that exact problem, and do not change a choice you made on purpose just to make the
    command pass. Read each line it prints beside the requirement, rule or data definition it names.
-3. Each data set checks clean with `sim/check.py`.
+3. Each data set checks clean: `sim/check.py` (or your own check of the same things), and the numbers of its bullet.
 4. Your clean-up removes everything the slice created: run it once, deploy again, check the slice works, then run
    the clean-up again so nothing keeps costing money. Then list what is still running, with the inventory of the
    `cost-and-teardown` recipe or the list commands of the [budget and sandbox check](project-budget-check.qmd): a
