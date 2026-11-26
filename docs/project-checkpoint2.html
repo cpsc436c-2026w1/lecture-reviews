@@ -640,7 +640,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/sim/data/SIM01">data/SIM01/</a></td>
 <td><span class="add">add</span></td>
-<td>what the system receives; <code>_truth/</code> inside it holds the events as they happened and any injected faults</td>
+<td>what the system receives; <code>_truth/</code> inside it (optional, recommended) holds the events as they happened and any injected faults</td>
 <td class="tr">the folder is the SIM ID, the same ID as the bullet in <code>## Data</code> and the <code>Given</code></td>
 </tr>
 <tr class="even">
@@ -797,8 +797,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Write the generator of your SIM01 from its bullet: first the rows of what it shows (in the example, one rush hour of trip requests in three zones), then any injected faults the bullet names. Give it a fixed seed, so that the same command writes the same data every time. Start from the worked example of your shape in B5T2’s <a href="https://github.com/cpsc436c-2026w1/b5-t2-behave-sim/tree/main/shapes"><code>shapes/</code></a> (lakehouse, operational, generative AI; B5T2 Part B4 runs it), and change its events, and any faults, to your bullet’s. With a coding assistant, <a href="https://github.com/cpsc436c-2026w1/b5-t2-behave-sim#b5-have-your-assistant-write-your-projects-sim01-then-check-it">B5T2 Part B5</a> has it draft the generator from your bullet; you check it as in steps 2 and 3.</p></li>
 <li><p>Check the files. If you follow the simulation standards (JSON Lines, one Pydantic model for each event type), copy B5T2’s <code>sim/check.py</code> into your <code>sim/</code> and run it: every line is one of your event models, every delivered event is in the truth, and each injected fault of the kinds it knows (<code>twice</code>, <code>never</code>, <code>late</code>, <code>changed</code>) is recounted. With another format, check the same things with a script of your own.</p></li>
 <li><p>Check that the files hold the numbers your bullet gives. The example’s SIM01 bullet says 837 trips in zones 48, 161 and 230, 2,515 deliveries, 4 requests that arrive twice and 2 that arrive 6 to 10 minutes late; <code>sim/expected.toml</code> gives each number with the query on the files that must return it, and the example’s copy of <code>sim/check.py</code> runs those queries (it also checks the example’s own fault kinds, such as <code>duplicate</code>).</p></li>
-<li><p>Keep two kinds of files in each data set’s folder: what the system receives (<code>sim/data/SIM01/</code>), and, in <code>sim/data/SIM01/_truth/</code>, the events as they happened and any faults the generator added. Your examples’ expected answers come from the example’s rows or from the truth, always worked out before your system runs.</p></li>
-<li><p>Make your system read only what it receives: the files of <code>sim/data/SIM01/</code> outside <code>_truth/</code>. To check it, change a field that exists only in <code>_truth/</code> and run the example again: the system’s result must not change.</p></li>
+<li><p>Optional, recommended: keep two kinds of files in each data set’s folder: what the system receives (<code>sim/data/SIM01/</code>), and, in <code>sim/data/SIM01/_truth/</code>, the events as they happened and any faults the generator added. Your examples’ expected answers then come from the example’s rows or from the truth, worked out before your system runs, from files your system never reads: a passing example shows that the system found the answer, not that it read it.</p></li>
+<li><p>If you keep a <code>_truth/</code> folder, make your system read only what it receives: the files of <code>sim/data/SIM01/</code> outside <code>_truth/</code>. To check it, change a field that exists only in <code>_truth/</code> and run the example again: the system’s result must not change.</p></li>
 <li><p>Keep the data where the teaching team can read it: in the repository, or in a public S3 bucket with its <code>s3://</code> path in the scenario’s <code>Given</code>. Create such a bucket in your S3 account regional namespace, so that no other account can take or reuse its name; if your lease refuses to make it public, keep the files in the repository:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>B=&lt;team-id&gt;-sim-&lt;account-id&gt;-ca-central-1-an</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>aws s3api create-bucket --bucket $B --bucket-namespace account-regional \</span>
@@ -835,7 +835,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <figcaption>One line of fields for each kind of event</figcaption>
 </figure>
 </div>
-<p>A simulated data set is for a demo: it shows your system doing what a job story asks, on enough data to see it (a rush hour, a quiet zone, two drivers who accept the same trip). It holds injected faults only when a requirement is about a problem in the data. Each line of event fields in <code>## Data</code> becomes one kind of record in the files, with the same field names your examples’ tables use. The injected faults are not fields of the events: the system you test must not be told which events are faulty. They are recorded in <code>_truth/</code>, where the test reads them.</p>
+<p>A simulated data set is for a demo: it shows your system doing what a job story asks, on enough data to see it (a rush hour, a quiet zone, two drivers who accept the same trip). It holds injected faults only when a requirement is about a problem in the data. Each line of event fields in <code>## Data</code> becomes one kind of record in the files, with the same field names your examples’ tables use. The injected faults are not fields of the events: the system you test must not be told which events are faulty. We recommend recording them in <code>_truth/</code>, where the test reads them and the system does not.</p>
 <p>The other conventions of the <a href="https://github.com/cpsc436c-2026w1/b5-t2-behave-sim/blob/main/docs/simulation-standards.md">simulation standards</a> (JSON Lines, one Pydantic model for each event type, Parquet as a separate step) are recommended, not required.</p>
 </div>
 </div>
@@ -858,7 +858,7 @@ rng = random.Random()
 # This (sim/datasets.py and sim/generate.py of the example)
 SEED = 436
 cfg, rng = DATA_SETS[sim_id], random.Random(SEED)</code></pre>
-<p><strong>Problem: The files the system receives say which events are faulty.</strong> A fault <em>must</em> be recorded only in <code>_truth/</code>, see example below:</p>
+<p><strong>Problem: The files the system receives say which events are faulty.</strong> The system <em>must</em> not be told which events are faulty: record each fault apart from what the system reads, in <code>_truth/</code> (recommended) or in your examples’ expected values, see example below:</p>
 <pre class="nt-ex"><code># Not this, in sim/data/SIM01/: a delivery row with <em>"is_duplicate": true</em>
 # This, in sim/data/SIM01/_truth/faults.jsonl
 {"fault": "duplicate", "event_id": "ev-000358"}</code></pre>
@@ -1150,7 +1150,7 @@ assert actual == expected</code></pre>
 <li><strong>Step code:</strong> the Python functions behave runs for each <code>Given</code>, <code>When</code> and <code>Then</code> line, in <code>features/steps/</code>.</li>
 <li><strong>Generator:</strong> the script that writes a simulated data set from its bullet in <code>## Data</code>, with a fixed seed.</li>
 <li><strong>Simulated data set:</strong> data your team generates to demonstrate your system in the situations your examples show; when a requirement is about a problem in the data, it also holds injected faults.</li>
-<li><strong>Truth:</strong> the folder <code>_truth/</code> inside a data set’s folder: the events as they happened and any faults the generator added. An example’s expected answer can come from it.</li>
+<li><strong>Truth:</strong> the folder <code>_truth/</code> inside a data set’s folder (optional, recommended): the events as they happened and any faults the generator added. An example’s expected answer can come from it.</li>
 <li><strong>Decision line:</strong> one line in <code>docs/requirements.md</code> that says what your team decided about something a check listed: keep, later, or check is wrong, with the reason.</li>
 <li><strong>Clean-up:</strong> <code>scripts/teardown.sh</code>, which deletes everything your scripts create.</li>
 <li><strong>Idle resource:</strong> a resource that costs money as long as it exists, even when nobody uses it, such as a stream, a cluster or a load balancer.</li>
