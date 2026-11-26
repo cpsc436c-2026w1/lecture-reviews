@@ -74,10 +74,12 @@ Serverless collections, MSK clusters, ElastiCache nodes, SageMaker endpoints, pu
 itself: Fargate charges for a task's vCPU and memory while the task runs, so a service at zero tasks costs nothing,
 but its load balancer (about 4.16 USD a week) and a NAT gateway (8.40 a week) cost money as long as they exist. For
 each resource in your design, say what costs money (the instance, the nodes, the stream, the address, the storage)
-and how your clean-up script stops it after each run: create it for a run, then delete it.
+and how your clean-up script stops it after each run: create it for a run, then delete it. S3 storage and DynamoDB
+on-demand tables are not idle resources: they charge for what they store and for the requests they serve, so list
+them with what your team keeps between runs.
 
-**Problem: your design does not say what your system costs in a month when nobody uses it.** Add up every idle
-resource for 30 days. If the total is more than a few dollars, your design should create those resources only
+**Problem: your design has an idle resource and does not say what your system costs in a month when nobody uses
+it.** Add up every idle resource for 30 days. If the total is more than a few dollars, your design should create those resources only
 for runs and demos.
 
 **Problem: you chose a service whose smallest setting costs more than your budget.** OpenSearch Serverless is

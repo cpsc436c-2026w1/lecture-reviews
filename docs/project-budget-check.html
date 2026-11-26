@@ -579,12 +579,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="run">Run it</h2>
 <p>With the course server connected to your assistant, ask: “Run the budget and sandbox check on our repository.” It reads the files each question names under <strong>Look in</strong>, writes one file, <code>docs/reviews/budget-check.md</code>, and changes nothing else in your repository or in your lease. For BC005 it asks you whether your team has a budget.</p>
 <p>By hand: go through each Problem above, look in the places its question names, and note each line of your design or scripts that it describes, with its file and line. Decide which of them to change before you deploy.</p>
-<p>When you have checked your design, go back to building your first slice: step ③ of the Checkpoint 2 page.</p>
+<p>When you have checked your design, go back to building your first slice: <a href="project-checkpoint2.qmd#slice">step ④ of the Checkpoint 2 page</a>.</p>
 </section>
 <section id="after" class="level2">
 <h2 class="anchored" data-anchor-id="after">After the check</h2>
 <p>Take one Problem at a time and fix what you choose. In <code>docs/design.md</code> Resources, replace the service, or say when it is created and deleted. Put the delete command for each resource in <code>scripts/teardown.sh</code>, and write down what your team keeps between runs (for example the data in S3). Then run the check again: a later run shows what is gone.</p>
-<p>If your team decides not to change something this check lists, record it as a decision line, as <a href="project-checkpoint2.qmd#check">Checkpoint 2, step ⑥</a> describes. The check keeps the item on its list with your reason beside it.</p>
+<p>If your team decides not to change something this check lists, record it as a decision line, as <a href="project-checkpoint2.qmd#checks">Checkpoint 2, step ①</a> describes. The check keeps the item on its list with your reason beside it.</p>
 </section>
 <section id="again" class="level2">
 <h2 class="anchored" data-anchor-id="again">When to run it again</h2>
