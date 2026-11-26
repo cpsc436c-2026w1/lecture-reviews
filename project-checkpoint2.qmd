@@ -275,7 +275,8 @@ cfg, rng = DATA_SETS[sim_id], random.Random(SEED)</code></pre>
 ```
 
 **Problem: A scenario reads data only from a team member's laptop or a private bucket.** The data *must* be in the
-repository, or at a public S3 path written in the scenario, see example below:
+repository, or at a public S3 path written in the scenario; check that `.gitignore` does not leave it out (a line such
+as `sim/data/`), see example below:
 
 ```{=html}
 <pre class="nt-ex"><code># Not this

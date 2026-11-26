@@ -669,7 +669,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>In the example repo:</strong> <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/reviews/budget-check.md">docs/reviews/budget-check.md</a> and the decision lines in <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/requirements.md">docs/requirements.md</a>.</p>
 <ol type="1">
 <li>Run the budget and sandbox check before you create anything in your lease (what it looks for: <a href="project-budget-check.qmd">budget and sandbox check</a>), and the Checkpoint 2 check. With the course MCP server connected, ask your assistant, for example, “Run the budget and sandbox check on our repository.” Without an assistant, go through the same questions by hand from the repository <a href="https://github.students.cs.ubc.ca/CPSC436C-2026W-T1/mcp-static-content">mcp-static-content</a>.</li>
-<li>Each check writes one file in <code>docs/reviews/</code>, such as <code>docs/reviews/budget-check.md</code>, and changes nothing else. Commit at least one of these files.</li>
+<li>Each check writes one file in <code>docs/reviews/</code>, such as <code>docs/reviews/budget-check.md</code>, and changes nothing else. Commit at least one report of a check for Checkpoint 2: the budget and sandbox check, the Checkpoint 2 check, or the Checkpoint 1 check run again.</li>
 <li>Compare the reports of two team members who ran the same check: the assistant’s model writes them, so they differ. Keep what your team agrees is a real problem.</li>
 <li>For each item a check lists, decide: change it (in <code>docs/requirements.md</code>, <code>docs/design.md</code> or your scripts), or keep it and write a decision line in <code>docs/requirements.md</code>.</li>
 <li>Run the check again after your changes: its part “Since the last run” says what is gone and what is new.</li>
@@ -712,7 +712,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <em>- Decision (budget-check BC010, t00-trip-events, PR #3): keep. …</em>
 # This, in docs/requirements.md under ## Decisions
 - Decision (budget-check BC010, t00-trip-events, PR #3): keep. …</code></pre>
-<p><strong>Problem: No check report is in the repository at the tag.</strong> At least one <code>docs/reviews/&lt;check&gt;.md</code> <em>must</em> be committed.</p>
+<p><strong>Problem: A check report is committed, but nothing answers it.</strong> Your triage <em>must</em> show: a change in <code>docs/requirements.md</code> or <code>docs/design.md</code> for what you fixed, or a decision line for what you keep. You don’t have to fix everything.</p>
+<p><strong>Problem: No check report is in the repository at the tag.</strong> At least one report of a check for Checkpoint 2 (the budget and sandbox check, the Checkpoint 2 check, or the Checkpoint 1 check run again) <em>must</em> be in <code>docs/reviews/</code>; a report of the proposal check does not count.</p>
 </div>
 </div>
 </div>
