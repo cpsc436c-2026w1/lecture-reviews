@@ -14,7 +14,8 @@ that shows it, and what to do. Many of them are about an idle resource: one that
 even when nobody uses it.
 
 The prices are from the course price sheet, `436c-student/prices.md` on the course server (ca-central-1, USD), and
-the lease's limits from `436c-student/resources.md` on the course server.
+the lease's limits from `436c-student/resources.md` on the course server. Each number below is one example, worked
+from the sheet for one size and one length of time; price your own design with its own sizes and hours.
 
 ## BC005 Your team's budget alert {#bc005}
 
@@ -49,12 +50,16 @@ aws budgets describe-notifications-for-budget --account-id "$ACCOUNT" --budget-n
   --query 'Notifications[].Threshold'
 ```
 
-The last command should print the five amounts. The budget's figures update about once a day, so an alert can
-come a day after the spending: it does not replace deleting idle resources.
+The last command should print the five amounts. AWS updates budget figures up to three times a day, usually 8 to 12
+hours apart, so an alert can come hours after the spending: after each run, check that your resources are deleted
+instead of waiting for an alert.
+AWS guide: [Managing your costs with AWS Budgets](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html).
 
-To see what is costing money: `aws ce get-cost-and-usage --time-period Start=<first of month>,End=<tomorrow>
---granularity DAILY --metrics UnblendedCost --group-by Type=DIMENSION,Key=SERVICE` (Cost Explorer; read-only).
-AWS CLI reference: [get-cost-and-usage](https://docs.aws.amazon.com/cli/latest/reference/ce/get-cost-and-usage.html).
+To see what is costing money: open Cost Explorer in the console (**Billing and Cost Management → Cost Explorer**)
+and show daily costs grouped by service; the console view is free. From the CLI, `aws ce get-cost-and-usage
+--time-period Start=<first of month>,End=<tomorrow> --granularity DAILY --metrics UnblendedCost --group-by
+Type=DIMENSION,Key=SERVICE` gives the same figures: it only reads, but AWS charges for each Cost Explorer API request.
+AWS guide: [Analyzing your costs with AWS Cost Explorer](https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html).
 
 ## BC010 Things that cost money while nobody uses them (idle resources) {#bc010}
 
@@ -63,35 +68,48 @@ AWS CLI reference: [get-cost-and-usage](https://docs.aws.amazon.com/cli/latest/r
 This question looks for idle resources in your design and your scripts.
 
 **Problem: your design uses an idle resource and your clean-up script does not delete it.** Idle resources: EC2
-instances, EMR clusters, Kinesis streams, load balancers, ECS services, NAT gateways, RDS and Aurora databases,
-OpenSearch Serverless collections, MSK clusters, ElastiCache nodes, SageMaker endpoints. Three EMR nodes left on
-for a week cost about 112 USD; your team has 30 USD for the term. Create it for a run, then delete it.
+instances, EMR clusters, Kinesis streams, load balancers, NAT gateways, RDS and Aurora databases, OpenSearch
+Serverless collections, MSK clusters, ElastiCache nodes, SageMaker endpoints, public IPv4 addresses. Three EMR nodes
+left on for a week cost about 112 USD; your team has 30 USD for the term. An ECS service on Fargate is not one by
+itself: Fargate charges for a task's vCPU and memory while the task runs, so a service at zero tasks costs nothing,
+but its load balancer (about 4.16 USD a week) and a NAT gateway (8.40 a week) cost money as long as they exist. For
+each resource in your design, say what costs money (the instance, the nodes, the stream, the address, the storage)
+and how your clean-up script stops it after each run: create it for a run, then delete it.
 
 **Problem: your design does not say what your system costs in a month when nobody uses it.** Add up every idle
 resource for 30 days. If the total is more than a few dollars, your design should create those resources only
 for runs and demos.
 
-**Problem: you chose a service whose smallest setting costs more than your budget.** OpenSearch Serverless needs
-at least 2 OCUs, about 89 USD a week, unless its collection group can scale to zero; MSK Serverless is about 141
-USD a week; a SageMaker endpoint about 21.50 a week; Aurora Serverless v2 charges its minimum capacity, 23.52 a
-week for each ACU. For vectors use S3 Vectors or DynamoDB vector search; for queries Athena or DuckDB; for a small
-database RDS PostgreSQL `db.t4g.micro` (3.02 a week, plus storage).
+**Problem: you chose a service whose smallest setting costs more than your budget.** OpenSearch Serverless is
+charged in OpenSearch Compute Units (OCUs), units of indexing and search capacity: a collection needs OCUs for
+indexing and for search, at least 2, about 89 USD a week, unless its collection group can scale to zero. An MSK
+Serverless cluster costs about 141 USD a week while it exists. A SageMaker endpoint on `ml.m5.large` that runs all
+week costs about 21.50 USD. Aurora PostgreSQL Serverless v2 is charged in Aurora capacity units (ACUs) for every
+hour it runs: 23.52 USD a week for each ACU of its minimum capacity, plus storage. Price the setting your design
+names, for the hours it runs. For vectors use S3 Vectors or DynamoDB vector search; for queries Athena or DuckDB;
+for a small database RDS PostgreSQL `db.t4g.micro` (3.02 USD a week, plus storage).
 AWS guide: [Working with S3 Vectors and vector buckets](https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-vectors.html).
 
 **Problem: you plan a database server where a table would do.** An RDS PostgreSQL database is an idle resource:
-`db.t4g.micro` left on until the end of term (about three weeks) costs about 9.50 USD, a third of your budget. If the
-app reads items by key, DynamoDB on demand charges only for requests; if it runs analysis queries, Athena or
-DuckDB over Parquet does. RDS is not yet tried in a student lease: check that you can create it before you depend
+`db.t4g.micro` (single-AZ) left on until the end of term (three weeks, 504 hours) costs about 9.07 USD, nearly a
+third of your budget, plus its storage at 0.127 USD per GB-month. If the app reads items by key, DynamoDB on demand
+charges for the requests (0.6875 USD per million write request units, 0.1375 per million read request units) and for
+storage beyond the first 25 GB (0.275 USD per GB-month), plus any index or backup you turn on; if it runs analysis
+queries, Athena or DuckDB over Parquet charges only for the queries. RDS is not yet tried in a student lease: check that you can create it before you depend
 on it.
 
-**Problem: a stopped EC2 instance still costs money.** Its EBS volume and its public IPv4 address are still
-charged (the address is 0.005 USD an hour, more than a `t4g.nano`). Delete the volume and release the address, or
-terminate the instance.
-AWS guide: [Elastic IP addresses](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html).
+**Problem: a stopped EC2 instance still costs money.** A stopped instance is no longer charged for itself, but its EBS volume
+is still charged (gp3, 0.088 USD per GB-month), and so is an Elastic IP address your team allocated (0.005 USD an
+hour, more than a `t4g.nano`). A public IPv4 address that AWS assigned at launch is released when the instance
+stops. Copy any data you need off the volume, then delete the volume and release the Elastic IP address. After you
+terminate an instance, list what is left: `aws ec2 describe-volumes --filters Name=status,Values=available` and
+`aws ec2 describe-addresses`.
+AWS guides: [Public IPv4 addresses](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#concepts-public-addresses),
+[Elastic IP addresses](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html).
 
 ## BC020 Costs that grow with each query and each run {#bc020}
 
-**Look in:** `docs/design.md` (Data, Resources, the cost of your long-term horizon RQ), `scripts/`, `features/`.
+**Look in:** `docs/design.md` (Data, Resources), `docs/requirements.md` (your long-term horizon RQ's reply), `scripts/`, `features/`.
 
 **Problem: an Athena query reads the whole source data set instead of your subset.** Athena charges for the data
 scanned: 5.50 USD per TB in ca-central-1. A source data set on S3 can be far larger than the course preview:
@@ -104,20 +122,40 @@ JSON file, even the ones the query does not use. Convert to Parquet once, partit
 filter on, and compare the data scanned before and after.
 Athena guide: [Use columnar storage formats](https://docs.aws.amazon.com/athena/latest/ug/columnar-storage.html).
 
-**Problem: a job or query runs on a schedule, and each run has a minimum charge.** Athena charges at least 10 MB
-for each query (100,000 small queries cost about 5.50); Glue and EMR charge at least one minute for each run. A job
-every 15 minutes is 2,880 runs a month. Run it as often as your freshness requirement needs, no more.
+**Problem: an EventBridge Scheduler schedule or rule starts a job or query more often than your users need, and each
+run has a minimum charge.** An EventBridge Scheduler schedule or rule that runs every 15 minutes starts 2,880 runs a
+month. Athena charges at least 10 MB for each query (100,000 small queries cost about 5.50 USD). A Glue job is
+charged per DPU-hour (0.308 USD) with a one-minute minimum, and a Glue crawler at its own rate (0.44 USD per
+DPU-hour). EMR Serverless charges each worker's vCPU and memory with a one-minute minimum per worker. An EMR cluster
+on EC2 is charged for every second it runs, the time between its steps included. Run it as often as your freshness
+requirement needs, no more.
+
+**Problem: an EventBridge Scheduler schedule, an EventBridge rule or a Glue trigger still exists after your clean-up
+script ran, and keeps starting work.** An EventBridge Scheduler schedule, an EventBridge rule with a schedule
+expression (cron or rate), or an AWS Glue trigger of type `SCHEDULED` keeps starting a Glue or EMR job, a Step
+Functions workflow or a Lambda function, and that work can create resources again or keep writing data. A Glue job
+of 2 DPUs started every 15 minutes for a week is 672 runs, at least 6.90 USD at the one-minute minimum. Your clean-up
+script deletes these first: `aws scheduler delete-schedule --name <name>`; `aws events remove-targets --rule <name>
+--ids <target ids>`, then `aws events delete-rule --name <name>` (a rule that still has targets cannot be deleted);
+`aws glue delete-trigger --name <name>`. To list what is left: `aws scheduler list-schedules`, `aws events list-rules
+--name-prefix <your prefix>`, `aws glue get-triggers`.<!--src: ours (672 x 2 DPU x 1/60 h x 0.308, price sheet) -->
+AWS guides: [Deleting a schedule in EventBridge Scheduler](https://docs.aws.amazon.com/scheduler/latest/UserGuide/managing-schedule-delete.html),
+[DeleteRule](https://docs.aws.amazon.com/eventbridge/latest/APIReference/API_DeleteRule.html),
+[Glue triggers](https://docs.aws.amazon.com/glue/latest/dg/aws-glue-api-jobs-trigger.html).
 
 **Problem: the dashboard runs a query every time someone opens it.** Compute the number the dashboard shows once,
 store it, and read the stored result.
 
-**Problem: your LLM calls can use up your team's 5 USD before the demo.** Count the tokens of one answer, times the
-answers you expect, plus each eval run: cases × runs, every time you run your tests or push to CI. When the team's
-pool is used up, the course LLM gateway refuses every call (error 429 `team_budget_exhausted`). Run evals on
+**Problem: your LLM calls can use up your team's 5 USD before the demo.** For each model, multiply the input tokens
+and the output tokens of one measured request by their own rates (through the course LLM gateway, `gpt-6-luna` is
+0.29 CAD per million input tokens and 1.74 CAD per million output tokens), then by the requests you expect, plus
+each eval run: cases × repetitions, every time you run your tests or push to CI. Add the embedding calls, and
+compare the total with what is left of the pool (5 USD is 7.25 CAD). When the team's pool is used up, the course LLM gateway refuses every call (error 429 `team_budget_exhausted`). Run evals on
 demand, not on every push; embed your documents once and reuse the vectors.
 
-**Problem: you load your history into DynamoDB one row at a time.** 100 million rows cost about 69 USD in writes;
-importing from S3 costs 0.165 USD per GB (about 1.65 for 10 GB). Or keep the history in S3 and put in DynamoDB
+**Problem: you load your history into DynamoDB one row at a time.** 100 million writes of items up to 1 KB cost
+about 69 USD (68.75) in write request units, before any index writes and storage. An import from S3 into a new table
+costs 0.165 USD per GB of uncompressed source data (about 1.65 for 10 GB) and uses no write units. Or keep the history in S3 and put in DynamoDB
 only the items the app reads by key.
 DynamoDB guide: [Requesting a table import in DynamoDB](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/S3DataImport.Requesting.html).
 
@@ -125,8 +163,9 @@ DynamoDB guide: [Requesting a table import in DynamoDB](https://docs.aws.amazon.
 received. Log counts, errors and a sample, and set a short retention on the log group.
 CloudWatch guide: [Working with log groups and log streams](https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/Working-with-log-groups-and-streams.html).
 
-**Problem: your design moves data out of AWS or to another Region.** Data sent to the internet costs 0.09 USD per
-GB. Keep the processing in ca-central-1 and send only the result the app shows.
+**Problem: your design moves data out of AWS or to another Region.** On the price sheet, data sent to the internet
+costs 0.09 USD per GB (first 10 TB), and data sent to us-east-1 costs 0.02 USD per GB; another Region has its own
+rate. Keep the processing in ca-central-1 and send only the result the app shows.
 
 **Problem: your first run on AWS replays your whole simulated data set.** Run a small sample first (1%, or one
 batch), check the cost, then scale up.
@@ -141,9 +180,13 @@ run on ARM; other types are refused with `UnauthorizedOperation`. Test a type wi
 `aws ec2 run-instances --dry-run`: `DryRunOperation` means it is allowed.
 AWS CLI reference: [run-instances](https://docs.aws.amazon.com/cli/latest/reference/ec2/run-instances.html).
 
-**Problem: your design runs more than 10 Lambda functions at the same time.** The lease allows 10 at once
-(the AWS default is 1,000); the rest wait. Batch the work, or limit how many run at once.
-Lambda guide: [Configuring reserved concurrency for an Event Function](https://docs.aws.amazon.com/lambda/latest/dg/configuration-concurrency.html).
+**Problem: your design runs more than 10 Lambda invocations at the same time.** The lease allows 10 concurrent
+invocations across all your functions together (the AWS default is 1,000): eleven at once of one function is
+already over. Above that, a synchronous caller (API Gateway, your script) gets a throttling error (429); an
+asynchronous invocation goes back to Lambda's queue and is tried again later. Batch the work, or set reserved
+concurrency to limit how many run at once.
+Lambda guides: [Event Function scaling behavior](https://docs.aws.amazon.com/lambda/latest/dg/scaling-behavior.html),
+[Configuring reserved concurrency for an Event Function](https://docs.aws.amazon.com/lambda/latest/dg/configuration-concurrency.html).
 
 **Problem: your design uses a Region other than ca-central-1, or a model that is not offered there.** Everything
 runs in ca-central-1. Current Claude models are not offered on demand in ca-central-1; use the course LLM gateway.
@@ -173,13 +216,16 @@ reads the files each question names under **Look in**, writes one file, `docs/re
 nothing else in your repository or in your lease. For BC005 it asks you whether your team has a budget.
 
 By hand: go through each Problem above, look in the places its question names, and note each line of your design or
-scripts that it describes, with its file and line, and what you will change.
+scripts that it describes, with its file and line. Decide which of them to change before you deploy.
+
+When you have checked your design, go back to building your first slice: step ③ of the Checkpoint 2 page.
 
 ## After the check {#after}
 
-Take one Problem at a time. Change `docs/design.md` Resources: replace the service, or say when it is created and
-deleted, and add the delete to your clean-up script. Then run the check again, and keep the "What we changed"
-section of `docs/reviews/budget-check.md`.
+Take one Problem at a time and fix what you choose. In `docs/design.md` Resources, replace the service, or say when
+it is created and deleted. Put the delete command for each resource in your clean-up script, and write down what
+your team keeps between runs (for example the data in S3). Then run the check again: a later run shows what is
+gone.
 
 ## When to run it again {#again}
 
