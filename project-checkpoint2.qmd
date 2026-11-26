@@ -6,43 +6,93 @@ format:
     toc-depth: 2
 ---
 
-In this checkpoint, your system runs for the first time. You generate the simulated data sets your Checkpoint 1
-examples name, write the step code that runs those examples, deploy your first slice on AWS, and run a
-Well-Architected review of your design that leads to one change. You also answer the requests (RQ) and build the
-constraints (RF) of your feedback issue that waited for this checkpoint. The checkpoint is due **Tuesday 1 December,
-end of day**. You hand it in as before: a pull request to `main`, a teammate approves it, you merge it, and you tag
-the merged commit `cp2`.
+```{=html}
+<style>pre, pre code { white-space: pre; overflow-x: auto; }</style>
+```
 
-Tutorial [B5T2](https://github.com/cpsc436c-2026w1/b5-t2-behave-sim) does the step code and the simulated data step
-by step on the rides example, and its `shapes/` folder has a worked example for each project shape. The
-[course recipes](https://github.com/cpsc436c-2026w1/recipes) give you the AWS parts.
+In this checkpoint, your system runs for the first time. You generate the simulated data sets that your Checkpoint 1
+examples name, write the step code that runs those examples, deploy your first slice on AWS, answer the requests (RQ)
+and build the constraints (RF) of your proposal feedback issue that waited for this checkpoint, and run a
+Well-Architected review of your design that leads to one change. The checkpoint is due **Tuesday 1 December, end of
+day**. You hand it in as at Checkpoint 1: a pull request from a branch such as `cp2-draft` to `main`, a teammate
+approves it, you merge it, and you tag the merged commit on `main` as `cp2`.
 
-## What you hand in {#hand-in-list}
+The [example repository](https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2) has a tag `cp2` for the Checkpoint 2
+submission, the same rides case as at Checkpoint 1, now running. Compare it with its tag
+[cp1](https://github.com/cpsc436c-2026w1/cp1-example/tree/cp1) to see what changes between the checkpoints. You can
+reasonably deviate from the example, as long as all requirements from this page are satisfied. Tutorial
+[B5T2](https://github.com/cpsc436c-2026w1/b5-t2-behave-sim) does the step code and the simulated data step by step on
+the rides case, and the [course recipes](https://github.com/cpsc436c-2026w1/recipes) give you the AWS parts.
 
-| Path | What to include | Action |
+```{=html}
+<style>.callout-tip pre.markdown code{white-space:pre-wrap;word-break:break-word}</style>
+<style>pre.nt-ex{font-family:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;font-size:.875em;line-height:1.4;color:rgb(0,59,79);background-color:rgba(233,236,239,.65);border:1px solid rgba(233,236,239,.65);border-radius:0;padding:5.355px 5.355px 5.355px 0;margin:1em 0;white-space:pre;overflow-x:visible}pre.nt-ex code{font-size:.85em;padding:.125rem .25rem;color:inherit;background:transparent;white-space:pre-wrap;word-break:break-word}pre.nt-ex em{font-style:italic;text-decoration:none}</style>
+```
+
+## What changes in your repository {#repo}
+
+The [example repository](https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2) at tag `cp2` is a whole Checkpoint 2
+hand-in, written for the rides case. Each file name below links to it in that state.
+
+```{=html}
+<style>
+.repo-tab { width: 100%; border-collapse: collapse; font-size: 0.9em; margin: 0.6em 0 0.3em; }
+.repo-tab td { padding: 0.18em 0.5em; vertical-align: top; border-bottom: 1px solid #eee; }
+.repo-tab td.t { font-family: SFMono-Regular, Menlo, Consolas, monospace; white-space: nowrap; font-size: 0.92em; }
+.repo-tab td.t a { color: #1f4e8c; text-decoration: underline; }
+.repo-tab .add, .repo-legend .add { background: #d9f2df; color: #14532d; font-weight: 600; padding: 0 0.35em; border-radius: 3px; white-space: nowrap; }
+.repo-tab .fill, .repo-legend .fill { background: #fff1c2; color: #6b4b00; font-weight: 600; padding: 0 0.35em; border-radius: 3px; white-space: nowrap; }
+.repo-tab .chg, .repo-legend .chg { background: #fde2e1; color: #8a1c14; font-weight: 600; padding: 0 0.35em; border-radius: 3px; white-space: nowrap; }
+</style>
+<table class="repo-tab">
+<tr><td class="t">your-repository/</td><td><span class="add">add</span></td><td>tag <code>cp2</code> on <code>main</code>, after your pull request is merged</td></tr>
+<tr><td class="t">├── docs/</td><td></td><td></td></tr>
+<tr><td class="t">│&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/requirements.md">requirements.md</a></td><td><span class="chg">change</span></td><td>a <code>Reply:</code> with its answer for every RQ, a running rule for every testable RF, and your decisions</td></tr>
+<tr><td class="t">│&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/design.md">design.md</a></td><td><span class="chg">change</span></td><td>the resources you deployed, the sections your RQs ask for (such as Cost), and the change your review led to</td></tr>
+<tr><td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/review.md">review.md</a></td><td><span class="add">add</span></td><td>your Well-Architected review: the questions, your answers, and the change</td></tr>
+<tr><td class="t">├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/sim">sim/</a></td><td><span class="add">add</span></td><td>a generator for each simulated data set your examples name, its checker, and the data</td></tr>
+<tr><td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/sim/data/SIM01">data/SIM01/</a></td><td><span class="add">add</span></td><td>what the system receives; <code>_truth/</code> beside it holds the events as they happened and the faults</td></tr>
+<tr><td class="t">├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/features">features/</a></td><td><span class="chg">change</span></td><td>a rule with examples for every testable RF; <code>@todo</code> on an example whose AWS part is not built yet</td></tr>
+<tr><td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/features/steps">steps/</a></td><td><span class="fill">fill in</span></td><td>step code, so that every example runs</td></tr>
+<tr><td class="t">├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/src">src/</a></td><td><span class="add">add</span></td><td>your system's code: the first slice, one job story end to end</td></tr>
+<tr><td class="t">└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/scripts">scripts/</a></td><td><span class="add">add</span></td><td>one script for each service that creates it on AWS, safe to run again, and <code>teardown.sh</code>, which deletes everything they create</td></tr>
+</table>
+```
+
+| File | What it shows | Traceability |
 |---|---|---|
-| `sim/` | a generator for each simulated data set your examples name, and its data: what the system receives in one folder, the truth in another | add |
-| `features/steps/` | step code, so that every example of your Checkpoint 1 rules runs | add |
-| `features/` | for every testable RF, a rule with running examples, linked from the RF's line | change |
-| your code (`src/` or the layout of your shape) | the first slice: one job story end to end, deployed on AWS | add |
-| `docs/requirements.md` | a `Reply:` for every RQ, and a `[Scenario](…)` link on every testable RF | change |
-| `docs/review.md` | your Well-Architected review: the questions you chose, your answers, and the change it led to | add |
-| `docs/design.md` | the design after the review's change, and the resources you deployed | change |
-| tag `cp2` | on the merge commit on `main` | add |
+| `sim/` | each simulated data set of `## Data`, generated with its injected faults | the folder is the SIM ID (`sim/data/SIM01/`), the same ID as the bullet and the `Given` |
+| `features/steps/` | the code behind each `Given`, `When` and `Then` | runs the rules tagged with IDs (`@R010`, `@RF010`) |
+| `scripts/`, `src/` | the slice on AWS and the code it runs | each resource is a row of `## Resources` in `docs/design.md`, with its IDs |
+| `docs/review.md` | the questions you asked of your design and what changed | names the best-practice ID of each question and the file and line it is about |
 
-## Minimum hand-in {#minimum}
+: {tbl-colwidths="[22,44,34]"}
 
-- One job story runs end to end on AWS: data in, your store, the number or answer the user gets. Its examples pass
-  on your generated data, locally and against the deployed slice.
-- Every other rule has step code and runs. A rule whose AWS part is not built yet may fail; say so in its
-  example with the tag `@todo`.
-- Your review has at least three questions, with the change it led to made in the repository.
-- `uvx behave@1.3.3` runs without a `ParserError`, and its summary is in your pull request.
+**At Checkpoint 1 your files said what you will build; at Checkpoint 2 they run.**
+
+## Checklist
+
+- ① [Generate your simulated data](#simulate).
+- ② [Write the step code](#steps).
+- ③ [Build the first slice on AWS](#slice).
+- ④ [Answer your requests and build your constraints](#feedback).
+- ⑤ [Review your design and make one change](#review).
+- ⑥ [Check before you hand in](#check).
+- ⑦ [Hand in with a pull request and the tag cp2](#tag).
+
+The minimum for Tuesday: one job story runs end to end on AWS (data in, your store, the number or answer the user
+gets), and its examples pass on your generated data, locally and against the deployed slice. Every other rule has
+step code and runs; a rule whose AWS part is not built yet may fail, and says so with the tag `@todo` on its example.
+Your review has at least three questions, with the change it led to made in the repository. `uvx behave@1.3.3` runs
+without a `ParserError`, and its summary is in your pull request.
 
 ## ① Generate your simulated data {#simulate}
 
-Your `## Data` section names each simulated data set (SIM01, SIM02, …) with its size and its injected faults. Now
-a generator writes each one.
+**In the example repo:** [sim/](https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/sim) and its data
+[sim/data/SIM01/](https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/sim/data/SIM01).
+
+Your `## Data` section names each simulated data set (SIM01, SIM02 …) with its size and its injected faults. Now a
+generator writes each one.
 
 1. Write the generator of your SIM01 from its bullet: first the base rows, then each injected fault, with a fixed
    seed. Start from the worked example of your shape in B5T2's
@@ -50,18 +100,55 @@ a generator writes each one.
    generative AI; B5T2 Part B4 runs it), and change its events and faults to your bullet's.
 2. Check it against the bullet with B5T2's `sim/check.py`: the counts and fields of the files match the numbers your
    bullet gives (for example, a bullet that says 28 event rows for 9 barcodes, 2 of them delivered late, must give
-   exactly those). With a coding assistant, [B5T2 Part B5](https://github.com/cpsc436c-2026w1/b5-t2-behave-sim#b5-have-your-assistant-write-your-projects-sim01-then-check-it)
+   exactly those). With a coding assistant,
+   [B5T2 Part B5](https://github.com/cpsc436c-2026w1/b5-t2-behave-sim#b5-have-your-assistant-write-your-projects-sim01-then-check-it)
    has it draft the same generator from your bullet; you check it the same way.
 3. Keep two folders for each data set: what the system receives (`sim/data/SIM01/`), and the truth: the events as
    they happened and the faults the generator added (`sim/data/SIM01/_truth/`). Your examples' expected answers come
    from the truth, before your system runs.
 4. Seed the generator, so that the same command writes the same data every time.
-5. Check each data set with B5T2's `sim/check.py`: the counts in your bullet match the files.
+5. Do the same for every other data set your examples name.
+
+::: {.callout-note collapse="true" title="Guidelines: From the Data Bullet to Generated Files"}
+![Simulated data and the real data subset](img/l19/l19-data.png){fig-alt="L19 slide: Simulated data and the real data subset"}
+
+![One line of fields for each kind of event](img/l19/l19-st3.png){fig-alt="L19 slide: One line of fields for each kind of event"}
+
+Each line of event fields in `## Data` becomes one kind of record in the files, with the same field names your
+examples' tables use. The injected faults are not fields of the events: the system you test must not be told which
+events are faulty. They are recorded in `_truth/`, where the test reads them.
 
 The other conventions of the [simulation standards](https://github.com/cpsc436c-2026w1/b5-t2-behave-sim/blob/main/docs/simulation-standards.md)
 (JSON Lines, one Pydantic model for each event type, Parquet as a separate step) are recommended, not required.
+:::
+
+::: {.callout-tip collapse="true" title="Typical problems: simulated data"}
+**Problem: The generator writes different data on each run.** It *must* use a fixed seed, so that an example's
+expected answer stays true, see example below:
+
+```{=html}
+<pre class="nt-ex"><code># Not this
+rng = random.Random()
+# This
+rng = random.Random(436)</code></pre>
+```
+
+**Problem: The files the system receives say which events are faulty.** A fault *must* be recorded only in
+`_truth/`, see example below:
+
+```{=html}
+<pre class="nt-ex"><code># Not this, in sim/data/SIM01/: a delivery row with <em>"is_duplicate": true</em>
+# This, in sim/data/SIM01/_truth/faults.jsonl
+{"fault": "duplicate", "event_id": "ev-000101"}</code></pre>
+```
+
+**Problem: The files do not match the numbers in the bullet.** The checker *must* pass for every data set; when it
+does not, fix the generator or the bullet, so that both say the same thing.
+:::
 
 ## ② Write the step code {#steps}
+
+**In the example repo:** [features/steps/](https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/features/steps).
 
 Every example of your Checkpoint 1 rules now runs.
 
@@ -73,7 +160,32 @@ Every example of your Checkpoint 1 rules now runs.
 4. Run `uvx behave@1.3.3` and fix what fails. A failing example that shows a real fault in your code stays failing
    until the code is fixed; do not change the example to pass.
 
-## ③ Build the first slice {#slice}
+::: {.callout-tip collapse="true" title="Typical problems: step code"}
+**Problem: A `Then` checks a value the step computed itself.** It *must* compare the system's result with the value
+from the example's rows or from `_truth/`, see example below:
+
+```{=html}
+<pre class="nt-ex"><code># Not this
+count = len(set(r["event_id"] for r in context.rows))
+assert count == expected
+# This
+count = counting.read_count(context.store, zone=161, start="09:10", end="09:15")
+assert count == expected</code></pre>
+```
+
+**Problem: An example is changed so that it passes.** When an example shows a real fault in your code, the example
+*must* stay as it is and the code *must* be fixed; if the requirement itself was wrong, change the requirement first,
+then the example.
+
+**Problem: An example whose AWS part is not built yet fails without saying why.** It *must* carry the tag `@todo`,
+so the failure is expected and visible in the summary.
+:::
+
+## ③ Build the first slice on AWS {#slice}
+
+**In the example repo:** [scripts/](https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/scripts),
+[src/](https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/src) and
+[docs/design.md, Resources](https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/design.md).
 
 Before you create anything in your team's lease for this step, run the
 [budget and sandbox check](project-budget-check.qmd) on your design and scripts.
@@ -93,20 +205,60 @@ the data to your own:
 | change data capture to the lake | `cdc-to-lake` |
 | model routing, agent with tools, retrieval | `model-routing`, `agent-agentcore`, `hybrid-retrieval-eval` |
 
+: {tbl-colwidths="[40,60]"}
+
+1. Write one script in `scripts/` for each service your slice uses, safe to run more than once, that creates what
+   its row of `## Resources` names, with your team's name prefix and the course tags.
+2. Put the delete command of each resource in `scripts/teardown.sh`.
+3. Deploy, then run the examples of your job story against the deployed slice.
+
+::: {.callout-note collapse="true" title="Guidelines: Course Constraints for the Slice"}
+![docs/design.md lists each planned resource](img/l19/l19-st7.png){fig-alt="L19 slide: docs/design.md lists each planned resource"}
+
 Each recipe's README has a Decisions table: what it chose, why, and the course constraint behind it. Keep the
-course constraints: everything in `ca-central-1`, every resource name starting with your team's prefix, model
-calls through the course LLM gateway with your course token, and a clean-up for everything you create.
+course constraints: everything in `ca-central-1`, every resource name starting with your team's prefix, LLM calls
+through the course LLM gateway with your course token, and a clean-up for everything you create.
+:::
+
+::: {.callout-tip collapse="true" title="Typical problems: the slice"}
+**Problem: A stream, cluster or other resource that costs money while it exists stays up after the run.** Its delete
+command *must* be in `scripts/teardown.sh`, and the slice *must* be deleted when you are not using it (the
+[budget and sandbox check](project-budget-check.qmd) lists these resources).
+
+**Problem: The first run on AWS replays the whole simulated data set.** Run a small part first (one batch), check what
+it cost, then the rest.
+
+**Problem: A resource is created by hand in the console.** It *must* be created by a script in `scripts/`, so that
+your team can create it again and `scripts/teardown.sh` can delete it.
+:::
 
 ## ④ Answer your requests and build your constraints {#feedback}
 
+**In the example repo:** [docs/requirements.md, Stakeholder input](https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/requirements.md).
+
 At Checkpoint 1 you listed every RF and RQ of your feedback issue under `## Stakeholder input`. Now:
 
-- **Each RQ** gets its answer in its `Reply:`: the calculation with its numbers and where they come from, or the
-  test and its result.
-- **Each testable RF** has a rule in `features/` with running examples, and its line ends with `[Scenario](…)`.
-- **An RF a test cannot check** keeps its `Read:` line and says, in one or two sentences, how your design meets it.
+| From the proposal feedback issue | What to do for Checkpoint 2 |
+|---|---|
+| **Request** (RQ …) | `docs/requirements.md`: its `Reply:` gives the answer: the calculation with its numbers and where they come from, or the test and its result. The `Read at Checkpoint 2:` it names exists |
+| **Constraint** (RF …) that a test can check | `features/`: a rule tagged with its ID, with examples that run. `docs/requirements.md`: its line ends with `[Scenario](…)` |
+| **Constraint** we can't test | `docs/requirements.md`: its `Read:` line says, in one or two sentences, how your design meets it |
+
+: {tbl-colwidths="[38,62]"}
+
+::: {.callout-tip collapse="true" title="Typical problems: requests and constraints"}
+**Problem: An RQ's `Reply:` still says what you will do.** At Checkpoint 2 it *must* give the answer.
+
+**Problem: An RF that a test can check has no running rule.** Its rule *must* have step code and pass, and its line
+*must* end with `[Scenario](…)`.
+
+**Problem: A `Read at Checkpoint 2:` line names a section that does not exist.** The section it names *must* be in
+the file it names.
+:::
 
 ## ⑤ Review your design and make one change {#review}
+
+**In the example repo:** [docs/review.md](https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/review.md).
 
 A Well-Architected review asks questions about your design, one pillar at a time (operational excellence,
 security, reliability, performance efficiency, cost optimization, sustainability), and each answer can lead to a
@@ -116,7 +268,9 @@ change. Choose three to five questions from the lens for your shape:
 |---|---|
 | lakehouse first, streaming | [Analytics Lens](https://docs.aws.amazon.com/wellarchitected/latest/analytics-lens/analytics-lens.html) |
 | operational first | [Serverless Applications Lens](https://docs.aws.amazon.com/wellarchitected/latest/serverless-applications-lens/welcome.html), and the [DynamoDB Lens](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/bp-wal.html) if you use DynamoDB |
-| generative AI first, or a model in your system | [Generative AI Lens](https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/generative-ai-lens.html) |
+| generative AI first, or an LLM in your system | [Generative AI Lens](https://docs.aws.amazon.com/wellarchitected/latest/generative-ai-lens/generative-ai-lens.html) |
+
+: {tbl-colwidths="[40,60]"}
 
 Write `docs/review.md` with one section for each question:
 
@@ -129,7 +283,19 @@ At least one question leads to a change you made for this checkpoint. A coding a
 through the AWS Knowledge server (`https://knowledge-mcp.global.api.aws`, no account needed); use it to read and
 review, not to create resources.
 
+::: {.callout-tip collapse="true" title="Typical problems: the review"}
+**Problem: A question has no best-practice ID.** It *must* name the ID and link the lens page it comes from.
+
+**Problem: `Now:` describes the design in general.** It *must* name the file and line that do what it says.
+
+**Problem: Every question ends with "no change".** At least one question *must* lead to a change you made, and
+`docs/design.md` *must* show it.
+:::
+
 ## ⑥ Check before you hand in {#check}
+
+**In the example repo:** [DEMO.md, Checkpoint 2](https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/DEMO.md) (the
+commands and their output).
 
 1. `uvx behave@1.3.3` runs, and every rule tagged with an ID has examples that run.
 2. `python3 tools/check_trace.py`, run in your team's repository after the course update brings in its current
@@ -144,34 +310,94 @@ review, not to create resources.
    the [budget and sandbox check](project-budget-check.qmd) again if your design changed.
 6. When your team decides not to change something a check listed, write one decision line in
    `docs/requirements.md`, indented under the requirement, RF or RQ it concerns, or under a section `## Decisions`
-   naming the item when no requirement fits (a resource, a simulated data set, your budget alert):
-
-   ```
-     Decision (cp1-check CP020, PR #12): keep. The Monday report is one deadline a week; there is no percentile to take.
-   - Decision (budget-check BC010, tXX-product-edits, PR #34): later, Checkpoint 2. Created only for a replay run; teardown.sh deletes it.
-   ```
-
-   The answers are `keep`, `later, <checkpoint>` or `check is wrong`. The checks keep the item on their list with your
-   reason beside it, and `tools/check_trace.py` lists every decision as DECISION. Ideally you would group pull
-   requests: one pull request for each fix that belongs together, with the check ID in the pull request and the pull
-   request number in your decision. Before you tag, read each decision once more: it still holds only if what it is
-   about has not changed.
+   naming the item when no requirement fits (a resource, a simulated data set, your budget alert).
 7. Run the checks one last time after your last fix, with your assistant or by hand on the final files. A review
    file is not part of the hand-in: the teaching team reads your files at the tag and your decision lines.
 
+::: {.callout-note collapse="true" title="Guidelines: Decision Lines"}
+**In the example repo:** [docs/requirements.md, Decisions](https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/requirements.md).
+
+A decision line says what your team decided about something a check listed:
+
+```markdown
+  Decision (cp1-check CP020, PR #12): keep. The Monday report is one deadline a week; there is no percentile to take.
+- Decision (budget-check BC010, tXX-product-edits, PR #34): later, Checkpoint 2. Created only for a replay run; teardown.sh deletes it.
+```
+
+The answers are `keep`, `later, <checkpoint>` or `check is wrong`. The checks keep the item on their list with your
+reason beside it, and `tools/check_trace.py` lists every decision as DECISION. Ideally you would group pull
+requests: one pull request for each fix that belongs together, with the check ID in the pull request and the pull
+request number in your decision. Before you tag, read each decision once more: it still holds only if what it is
+about has not changed.
+:::
+
 ## ⑦ Hand in with a pull request and the tag cp2 {#tag}
 
-As at Checkpoint 1: a pull request from a branch such as `cp2-draft` to `main`, a teammate approves it, you merge
-it, and you tag the merge commit `cp2`. The tag must reach your course repository on github.students:
+**In the example repo:** [the tag cp2](https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/).
 
-```bash
+Your team hands in through a pull request, as at Checkpoint 1: no direct pushes to `main`, one approval from someone
+other than the author, and no squash merge.
+
+1. Commit your changes on a branch such as `cp2-draft`. If you build on github.com, first merge your course
+   repository's `main` into the branch.
+2. Open a pull request from the branch to `main` where you build. In its description, name the IDs it touches and
+   paste the summary of `uvx behave@1.3.3`.
+3. Ask a teammate to approve it, then merge it with a merge commit, not a squash merge.
+4. Tag the merged commit on `main` as `cp2`, and push the tag to your course repository on github.students.
+5. Check on github.students that the tag `cp2` points at the merge commit of your pull request.
+
+::: {.callout-note collapse="true" title="Guidelines: Hand-In with a Pull Request and a Tag"}
+**If you build in your course repository** (github.students, remote `origin`), after the pull request is merged:
+
+```default
+git switch main
+git pull
+git tag cp2
+git push origin cp2
+git ls-remote origin refs/tags/cp2 'refs/tags/cp2^{}'
+```
+
+**If you build on github.com**, with the `course` remote of Checkpoint 1, after the pull request is merged on
+github.com:
+
+```default
 git switch main
 git pull origin main
 git tag cp2
 git push origin cp2
-git push course cp2      # if you build on github.com, with a separate course remote
-git ls-remote course refs/tags/cp2 'refs/tags/cp2^{}'   # or origin, if you build on github.students
+git push course cp2
+git ls-remote course refs/tags/cp2 'refs/tags/cp2^{}'
 ```
 
 The teaching team reads the commit of the tag: on the `refs/tags/cp2^{}` line if there is one (an annotated tag),
 else on the `refs/tags/cp2` line. It must be the merge commit of your pull request.
+:::
+
+::: {.callout-tip collapse="true" title="Typical git problems"}
+The problems of Checkpoint 1 apply with `cp2` in place of `cp1`: see
+[Typical git problems](project-checkpoint1.qmd#hand-in) on the Checkpoint 1 page.
+
+**Problem: You fixed something after you tagged.** The fix *must* be merged with a pull request and the tag moved to
+the new merge commit, see the commands below. The `course` line is only for teams that build on github.com:
+
+```default
+git switch main
+git pull origin main
+git tag -f cp2
+git push -f origin cp2
+git push -f course cp2      # if you build on github.com
+```
+:::
+
+## Words used on this page {#words}
+
+- **Slice:** one job story working end to end on AWS: data in, your store, the number or answer the user gets.
+- **Step code:** the Python functions behave runs for each `Given`, `When` and `Then` line, in `features/steps/`.
+- **Generator:** the script that writes a simulated data set from its bullet in `## Data`, with a fixed seed.
+- **Truth:** the folder `_truth/` beside a data set: the events as they happened and the faults the generator added.
+  Your examples' expected answers come from it.
+- **Well-Architected review:** questions from an AWS lens asked of your design, each with a best-practice ID, your
+  answer and what changed.
+- **Decision line:** one line in `docs/requirements.md` that says what your team decided about something a check
+  listed: keep, later, or check is wrong, with the reason.
+- **Clean-up:** `scripts/teardown.sh`, which deletes everything your scripts create.
