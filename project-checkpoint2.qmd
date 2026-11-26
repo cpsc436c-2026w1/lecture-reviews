@@ -47,12 +47,12 @@ hand-in, written for the rides case. Each file name below links to it in that st
 <table class="repo-tab">
 <tr><td class="t">your-repository/</td><td><span class="add">add</span></td><td>tag <code>cp2</code> on <code>main</code>, after your pull request is merged</td></tr>
 <tr><td class="t">├── docs/</td><td></td><td></td></tr>
-<tr><td class="t">│&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/requirements.md">requirements.md</a></td><td><span class="chg">change</span></td><td>a <code>Reply:</code> with its answer for every RQ, a running rule for every testable RF, and your decisions</td></tr>
+<tr><td class="t">│&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/requirements.md">requirements.md</a></td><td><span class="chg">change</span></td><td>the <code>Reply:</code> of each RQ now gives the answer (at Checkpoint 1 it said what you will do); each <code>Read:</code> RF says how your design meets it; <code>Decision (…)</code> lines for what your team decides about a check's findings</td></tr>
 <tr><td class="t">│&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/design.md">design.md</a></td><td><span class="chg">change</span></td><td>the resources you deployed, the sections your RQs ask for (such as Cost), and the change your review led to</td></tr>
 <tr><td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/review.md">review.md</a></td><td><span class="add">add</span></td><td>your Well-Architected review: the questions, your answers, and the change</td></tr>
 <tr><td class="t">├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/sim">sim/</a></td><td><span class="add">add</span></td><td>a generator for each simulated data set your examples name, its checker, and the data</td></tr>
 <tr><td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/sim/data/SIM01">data/SIM01/</a></td><td><span class="add">add</span></td><td>what the system receives; <code>_truth/</code> beside it holds the events as they happened and the faults</td></tr>
-<tr><td class="t">├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/features">features/</a></td><td><span class="chg">change</span></td><td>a rule with examples for every testable RF; <code>@todo</code> on an example whose AWS part is not built yet</td></tr>
+<tr><td class="t">├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/features">features/</a></td><td><span class="chg">change</span></td><td>the rules of Checkpoint 1, now with examples that run; <code>@todo</code> on an example whose AWS part is not built yet</td></tr>
 <tr><td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/features/steps">steps/</a></td><td><span class="fill">fill in</span></td><td>step code, so that every example runs</td></tr>
 <tr><td class="t">├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/src">src/</a></td><td><span class="add">add</span></td><td>your system's code: the first slice, one job story end to end</td></tr>
 <tr><td class="t">└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/scripts">scripts/</a></td><td><span class="add">add</span></td><td>one script for each service that creates it on AWS, safe to run again, and <code>teardown.sh</code>, which deletes everything they create</td></tr>
@@ -131,8 +131,9 @@ expected answer stays true, see example below:
 ```{=html}
 <pre class="nt-ex"><code># Not this
 rng = random.Random()
-# This
-rng = random.Random(436)</code></pre>
+# This (sim/datasets.py and sim/generate.py of the example)
+SEED = 436
+cfg, rng = DATA_SETS[sim_id], random.Random(SEED)</code></pre>
 ```
 
 **Problem: The files the system receives say which events are faulty.** A fault *must* be recorded only in
@@ -141,7 +142,7 @@ rng = random.Random(436)</code></pre>
 ```{=html}
 <pre class="nt-ex"><code># Not this, in sim/data/SIM01/: a delivery row with <em>"is_duplicate": true</em>
 # This, in sim/data/SIM01/_truth/faults.jsonl
-{"fault": "duplicate", "event_id": "ev-000101"}</code></pre>
+{"fault": "duplicate", "event_id": "ev-000358"}</code></pre>
 ```
 
 **Problem: The files do not match the numbers in the bullet.** The checker *must* pass for every data set; when it
@@ -154,7 +155,7 @@ does not, fix the generator or the bullet, so that both say the same thing.
 
 Every example of your Checkpoint 1 rules now runs.
 
-1. Read the behave guide's [Level 1](project-behave.qmd): a first step function, setup in `environment.py`, steps
+1. Read the behave guide's [Level 1](project-behave.qmd#level-1): a first step function, setup in `environment.py`, steps
    with parameters.
 2. Do B5T2 Parts A and C if you have not: write the steps of one rule by hand, then run a scenario on SIM01.
 3. A step's `When` calls your code, not a copy of the answer. A `Then` compares your system's result with the
@@ -167,12 +168,13 @@ Every example of your Checkpoint 1 rules now runs.
 from the example's rows or from `_truth/`, see example below:
 
 ```{=html}
-<pre class="nt-ex"><code># Not this
-count = len(set(r["event_id"] for r in context.rows))
-assert count == expected
-# This
-count = counting.read_count(context.store, zone=161, start="09:10", end="09:15")
-assert count == expected</code></pre>
+<pre class="nt-ex"><code># Not this: the step counts the rows itself
+actual = len(set(r["event_id"] for r in context.rows))
+assert actual == expected
+# This (features/steps/count_steps.py of the example): When runs the system's code, Then reads its result
+context.counts = count_requests(context.deliveries, read_at=time)
+actual = show(context.counts, zone, start_of(start))
+assert actual == expected</code></pre>
 ```
 
 **Problem: An example is changed so that it passes.** When an example shows a real fault in your code, the example
