@@ -591,19 +591,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>at least one check report: the file a check writes, such as <code>budget-check.md</code></td>
 </tr>
 <tr class="even">
+<td class="t">│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/reviews/well-architected.md">well-architected.md</a></td>
+<td><span class="opt">optional</span></td>
+<td>your Well-Architected review: the questions, your answers, and the change</td>
+</tr>
+<tr class="odd">
 <td class="t">│&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/requirements.md">requirements.md</a></td>
 <td><span class="chg">change</span></td>
 <td>what your triage changed; <code>Decision (…)</code> lines for the check findings your team decides not to change; RQ answers when you have them (they can come after Checkpoint 2)</td>
 </tr>
-<tr class="odd">
-<td class="t">│&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/design.md">design.md</a></td>
+<tr class="even">
+<td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/design.md">design.md</a></td>
 <td><span class="chg">change</span></td>
 <td>what your triage changed; if you build, the rows of <code>## Resources</code> say what you deployed</td>
-</tr>
-<tr class="even">
-<td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/review.md">review.md</a></td>
-<td><span class="opt">optional</span></td>
-<td>your Well-Architected review: the questions, your answers, and the change</td>
 </tr>
 <tr class="odd">
 <td class="t">├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/evidence">evidence/</a></td>
@@ -687,7 +687,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td>each line names its file and line; your decision lines name the check and question ID</td>
 </tr>
 <tr class="even">
-<td><code>docs/review.md</code></td>
+<td><code>docs/reviews/well-architected.md</code></td>
 <td>the questions you asked of your design and what changed</td>
 <td>names the best-practice ID of each question and the file and line it is about</td>
 </tr>
@@ -805,7 +805,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="review" class="level3">
 <h3 class="anchored" data-anchor-id="review">A Well-Architected review (optional)</h3>
-<p><strong>In the example repo:</strong> <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/review.md">docs/review.md</a>.</p>
+<p><strong>In the example repo:</strong> <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/reviews/well-architected.md">docs/reviews/well-architected.md</a>.</p>
 <p>A Well-Architected review asks questions about your design, one pillar at a time (operational excellence, security, reliability, performance efficiency, cost optimization, sustainability), and each answer can lead to a change. This step is optional at Checkpoint 2: don’t be overwhelmed by the output, pick what makes sense to account for. Choose three to five questions from the lens for your shape:</p>
 <table class="caption-top table">
 <colgroup>
@@ -833,7 +833,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
-<p>Write <code>docs/review.md</code> with one section for each question:</p>
+<p>Write <code>docs/reviews/well-architected.md</code>, next to the check reports, with one section for each question:</p>
 <ul>
 <li><strong>Question</strong> and its best-practice ID (for example <code>COST01-BP09</code>), with a link;</li>
 <li><strong>Now:</strong> what your design does, with the file and line;</li>
