@@ -91,9 +91,9 @@ hand-in, written for the rides case. Each file name below links to it in that st
 <tr><td class="t">your-repository/</td><td><span class="add">add</span></td><td>tag <code>cp2</code> on <code>main</code>, after your last pull request is merged</td></tr>
 <tr><td class="t">├── docs/</td><td></td><td></td></tr>
 <tr><td class="t">│&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/docs/reviews">reviews/</a></td><td><span class="add">add</span></td><td>at least one check report: the file a check writes, such as <code>budget-check.md</code></td></tr>
+<tr><td class="t">│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/reviews/well-architected.md">well-architected.md</a></td><td><span class="opt">optional</span></td><td>your Well-Architected review: the questions, your answers, and the change</td></tr>
 <tr><td class="t">│&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/requirements.md">requirements.md</a></td><td><span class="chg">change</span></td><td>what your triage changed; <code>Decision (…)</code> lines for the check findings your team decides not to change; RQ answers when you have them (they can come after Checkpoint 2)</td></tr>
-<tr><td class="t">│&nbsp;&nbsp;&nbsp;├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/design.md">design.md</a></td><td><span class="chg">change</span></td><td>what your triage changed; if you build, the rows of <code>## Resources</code> say what you deployed</td></tr>
-<tr><td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/review.md">review.md</a></td><td><span class="opt">optional</span></td><td>your Well-Architected review: the questions, your answers, and the change</td></tr>
+<tr><td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/design.md">design.md</a></td><td><span class="chg">change</span></td><td>what your triage changed; if you build, the rows of <code>## Resources</code> say what you deployed</td></tr>
 <tr><td class="t">├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/evidence">evidence/</a></td><td><span class="opt">optional</span></td><td>if you deploy: what the deployed slice returned, kept before the clean-up</td></tr>
 <tr><td class="t">├── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/sim">sim/</a></td><td><span class="add">add</span></td><td>a generator for each simulated data set your scenarios use, and the data (or its path in a public S3 bucket)</td></tr>
 <tr><td class="t">│&nbsp;&nbsp;&nbsp;└── <a href="https://github.com/cpsc436c-2026w1/cp1-example/tree/cp2/sim/data/SIM01">data/SIM01/</a></td><td><span class="add">add</span></td><td>what the system receives; <code>_truth/</code> inside it holds the events as they happened and any injected faults</td></tr>
@@ -112,7 +112,7 @@ hand-in, written for the rides case. Each file name below links to it in that st
 | `scripts/`, `src/` | the slice on AWS and the code it runs | each resource is a row of `## Resources` in `docs/design.md`, with its IDs |
 | `evidence/` | what the deployed slice returned | named in the `Read:` of the RF or RQ it answers (in the example, RF050 names `evidence/deploy-tags.txt`) |
 | `docs/reviews/` | what a check found, question by question | each line names its file and line; your decision lines name the check and question ID |
-| `docs/review.md` | the questions you asked of your design and what changed | names the best-practice ID of each question and the file and line it is about |
+| `docs/reviews/well-architected.md` | the questions you asked of your design and what changed | names the best-practice ID of each question and the file and line it is about |
 
 : {tbl-colwidths="[22,44,34]"}
 
@@ -201,7 +201,7 @@ and what it names *must* be in the file it names.
 
 ### A Well-Architected review (optional) {#review}
 
-**In the example repo:** [docs/review.md](https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/review.md).
+**In the example repo:** [docs/reviews/well-architected.md](https://github.com/cpsc436c-2026w1/cp1-example/blob/cp2/docs/reviews/well-architected.md).
 
 A Well-Architected review asks questions about your design, one pillar at a time (operational excellence,
 security, reliability, performance efficiency, cost optimization, sustainability), and each answer can lead to a
@@ -216,7 +216,7 @@ for. Choose three to five questions from the lens for your shape:
 
 : {tbl-colwidths="[40,60]"}
 
-Write `docs/review.md` with one section for each question:
+Write `docs/reviews/well-architected.md`, next to the check reports, with one section for each question:
 
 - **Question** and its best-practice ID (for example `COST01-BP09`), with a link;
 - **Now:** what your design does, with the file and line;
